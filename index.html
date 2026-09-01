@@ -2148,6 +2148,15 @@
     });
   }
 
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function addBubble(role, text, questionForFeedback) {
     const win = document.getElementById('chat-window');
     win.style.display = 'flex';
@@ -2171,7 +2180,7 @@
     const deeperHtml = deeperPrompt ? `
       <div class="go-deeper-block">
         <div class="go-deeper-label">✦ Want to go deeper?</div>
-        <div class="go-deeper-prompt">"${deeperPrompt}"</div>
+        <div class="go-deeper-prompt">"${escapeHtml(deeperPrompt)}"</div>
         <div class="go-deeper-actions">
           <button class="go-deeper-copy" onclick="copyPrompt(this, ${JSON.stringify(deeperPrompt)})">Copy prompt</button>
           <span class="copy-confirm">✓ Copied</span>
@@ -2189,7 +2198,7 @@
 
     bubble.innerHTML = `
       <div class="bubble-label">${role === 'user' ? 'You' : 'Pelham AI'}</div>
-      <div class="bubble-text">${displayText.replace(/\n/g, '<br>')}</div>
+      <div class="bubble-text">${escapeHtml(displayText).replace(/\n/g, '<br>')}</div>
       ${deeperHtml}
       ${feedbackHtml}
     `;
