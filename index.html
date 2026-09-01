@@ -136,8 +136,57 @@
     padding: 0 32px;
     display: flex;
     gap: 0;
-    overflow-x: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
   }
+  .nav-inner::-webkit-scrollbar { display: none; }
+
+  .nav-dropdown-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+  }
+  .nav-dropdown-trigger {
+    display: block;
+    padding: 16px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--slate);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .nav-dropdown-wrap:hover .nav-dropdown-trigger {
+    color: var(--navy);
+    border-bottom-color: var(--gold);
+  }
+  .nav-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--gold);
+    min-width: 200px;
+    z-index: 200;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .nav-dropdown-wrap:hover .nav-dropdown { display: block; }
+  .nav-dropdown a {
+    display: block;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--slate);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .nav-dropdown a:last-child { border-bottom: none; }
+  .nav-dropdown a:hover { background: var(--light); color: var(--navy); }
 
   .nav-inner a {
     display: block;
@@ -629,6 +678,224 @@
     .involved-card[style*="grid-column"] > div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
   }
 
+
+  /* ── MEETING SUMMARIES ── */
+  .mtg-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-top: 4px solid var(--border);
+    padding: 14px 18px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-width: 160px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .mtg-selector:hover {
+    border-color: var(--navy);
+    border-top-color: var(--gold);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+  }
+  .mtg-selector.active-mtg {
+    border-color: var(--navy);
+    border-top-color: var(--gold);
+    background: var(--navy);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  }
+  .mtg-sel-body {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    font-family: 'Playfair Display', serif;
+  }
+  .mtg-selector.active-mtg .mtg-sel-body { color: var(--white); }
+  .mtg-sel-date {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--slate);
+    letter-spacing: 0.03em;
+  }
+  .mtg-selector.active-mtg .mtg-sel-date { color: #8899b0; }
+
+  .detail-tab {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 10px 20px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--slate);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    margin-bottom: -2px;
+  }
+  .detail-tab:hover { color: var(--navy); }
+  .detail-tab.active-tab {
+    color: var(--navy);
+    border-bottom-color: var(--navy);
+    font-weight: 600;
+  }
+
+  .mtg-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mtg-meta-item {
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--slate);
+  }
+  .mtg-video-link {
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 1px;
+  }
+  .mtg-video-link:hover { color: var(--gold); }
+
+  .exec-summary p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--navy);
+    margin-bottom: 14px;
+  }
+  .exec-votes {
+    margin-top: 24px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .exec-votes-label {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 12px;
+  }
+  .vote-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .vote-row:last-child { border-bottom: none; }
+  .vote-result {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 3px 8px;
+  }
+  .vote-result.pass { background: #ddf0e8; color: var(--green); }
+  .vote-result.defer { background: #fef3cd; color: #7a5800; }
+  .vote-result.fail { background: #fde8e8; color: var(--red); }
+  .vote-desc { color: var(--navy); }
+
+  .detail-section {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin-bottom: 28px;
+    transition: border-color 0.2s;
+  }
+  .detail-section:hover { border-left-color: var(--gold); }
+  .detail-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .detail-timestamp {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--slate);
+    white-space: nowrap;
+  }
+  .detail-section-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--navy);
+  }
+  .detail-body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  .detail-list {
+    margin: 10px 0;
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .detail-list li {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+  }
+  .detail-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 11px;
+    top: 2px;
+  }
+
+  .transcript-body {
+    background: #f9fafb;
+    border: 1px solid var(--border);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: 520px;
+    overflow-y: auto;
+    font-size: 14px;
+  }
+  .transcript-block {
+    display: grid;
+    grid-template-columns: 80px 200px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    align-items: baseline;
+    line-height: 1.6;
+  }
+  .transcript-block:last-child { border-bottom: none; }
+  .ts-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #999;
+    white-space: nowrap;
+  }
+  .ts-speaker {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .ts-text { color: #333; }
+  .ts-ellipsis { grid-template-columns: 1fr; padding: 16px 0; }
+  .mtg-panel { animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+
   /* ── SCROLL ANIMATION ── */
   .fade-in {
     opacity: 0;
@@ -702,6 +969,7 @@
   <div class="hero-stripe"></div>
   <div class="hero-inner">
     <div>
+      <div style="font-family:'Playfair Display',serif; font-size:clamp(14px,2vw,18px); font-weight:700; color:var(--white); letter-spacing:0.02em; margin-bottom:8px;">The Pelham Engagement Project</div>
       <div class="hero-stamp">Westchester County · New York State · Est. 1654</div>
       <h1>Your guide to <em>Pelham</em> civic life.</h1>
       <p class="hero-lead">Our mission is to increase civic awareness and engagement in local matters in Pelham, NY — by making public information accessible, understandable, and actionable for every resident.</p>
@@ -737,7 +1005,14 @@
     <a href="#who-governs">Who Governs</a>
     <a href="#elections" style="color: #dd8899; font-weight: 600;">🗳 Nov 2026 Elections</a>
     <a href="#ask-pelham" style="color: var(--gold); font-weight: 600;">Ask Pelham AI ✦</a>
-    <a href="#explore">Explore More</a>
+    <div class="nav-dropdown-wrap">
+      <a href="#explore" class="nav-dropdown-trigger">Explore More ▾</a>
+      <div class="nav-dropdown">
+        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[0].click()">📋 Meeting Summaries</a>
+        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[1].click()">💰 Your Taxes</a>
+        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[2].click()">🔔 Current Issues</a>
+      </div>
+    </div>
     <a href="#get-involved">Get Involved</a>
     <a href="#meetings">Meeting Schedule</a>
     <a href="#about">About & Corrections</a>
@@ -1619,19 +1894,14 @@ When someone asks for help writing a public comment, letter to the editor, or an
     addTyping();
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          system: SYSTEM_PROMPT,
-          messages: conversationHistory
-        })
+        body: JSON.stringify({ messages: conversationHistory })
       });
 
       const data = await response.json();
-      const answer = data.content?.[0]?.text || 'Sorry, I couldn\'t get a response. Please try again.';
+      const answer = data.answer || 'Sorry, I couldn\'t get a response. Please try again.';
 
       removeTyping();
       addBubble('assistant', answer, question);
@@ -1653,8 +1923,8 @@ When someone asks for help writing a public comment, letter to the editor, or an
   <div class="content-wrap">
     <div class="section-eyebrow">Part 3 — Explore More</div>
     <h2 class="section-title">Dive Deeper</h2>
-    <p class="section-intro">Meeting summaries, your tax breakdown, and current issues — all in one place. Pick a tab to explore.</p>
-    <div style="display:flex; gap:0; border-bottom: 2px solid var(--border); margin-bottom:0; overflow-x:auto;">
+    <p class="section-intro">Meeting summaries, your tax breakdown, and current issues — pick a tab to explore.</p>
+    <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:0;overflow-x:auto;">
       <button class="explore-tab active-explore-tab" onclick="selectExplore(this,'explore-meetings')">📋 Meeting Summaries</button>
       <button class="explore-tab" onclick="selectExplore(this,'explore-taxes')">💰 Your Taxes</button>
       <button class="explore-tab" onclick="selectExplore(this,'explore-issues')">🔔 Current Issues</button>
@@ -1662,17 +1932,17 @@ When someone asks for help writing a public comment, letter to the editor, or an
   </div>
 </section>
 <style>
-  .explore-tab { background:none; border:none; border-bottom:3px solid transparent; padding:14px 24px; font-family:'IBM Plex Sans',sans-serif; font-size:14px; font-weight:500; color:var(--slate); cursor:pointer; margin-bottom:-2px; transition:color 0.15s,border-color 0.15s; white-space:nowrap; }
-  .explore-tab:hover { color:var(--navy); }
-  .active-explore-tab { color:var(--navy); border-bottom-color:var(--navy); font-weight:700; }
-  .explore-panel { display:none; }
-  .explore-panel.active-panel { display:block; }
+  .explore-tab{background:none;border:none;border-bottom:3px solid transparent;padding:14px 24px;font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:500;color:var(--slate);cursor:pointer;margin-bottom:-2px;transition:color 0.15s,border-color 0.15s;white-space:nowrap;}
+  .explore-tab:hover{color:var(--navy);}
+  .active-explore-tab{color:var(--navy);border-bottom-color:var(--navy);font-weight:700;}
+  .explore-panel{display:none;}
+  .explore-panel.active-panel{display:block;}
 </style>
 <script>
-  function selectExplore(btn, panelId) {
-    document.querySelectorAll('.explore-tab').forEach(b => b.classList.remove('active-explore-tab'));
+  function selectExplore(btn,panelId){
+    document.querySelectorAll('.explore-tab').forEach(b=>b.classList.remove('active-explore-tab'));
     btn.classList.add('active-explore-tab');
-    document.querySelectorAll('.explore-panel').forEach(p => p.classList.remove('active-panel'));
+    document.querySelectorAll('.explore-panel').forEach(p=>p.classList.remove('active-panel'));
     document.getElementById(panelId).classList.add('active-panel');
     document.getElementById('explore').scrollIntoView({behavior:'smooth',block:'start'});
   }
@@ -1683,396 +1953,117 @@ When someone asks for help writing a public comment, letter to the editor, or an
   <div class="content-wrap">
     <div class="section-eyebrow">Part 3 — Meeting Intelligence</div>
     <h2 class="section-title">Meeting Summaries</h2>
-    <p class="section-intro">Every public meeting is recorded. We watch them so you don't have to — generating three layers of detail automatically from each session. Select a meeting and choose your level of detail.</p>
-
-    <!-- Meeting selector -->
-    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px;">
-      <button class="mtg-selector active-mtg" onclick="selectMeeting(this, 'pelham-board-jul2026')">
-        <span class="mtg-sel-body">Village of Pelham</span>
-        <span class="mtg-sel-date">Board of Trustees · July 14, 2026</span>
-      </button>
-      <button class="mtg-selector" onclick="selectMeeting(this, 'coming-soon-1')">
-        <span class="mtg-sel-body">Town of Pelham</span>
-        <span class="mtg-sel-date">Coming soon</span>
-      </button>
-      <button class="mtg-selector" onclick="selectMeeting(this, 'coming-soon-2')">
-        <span class="mtg-sel-body">Village of Pelham Manor</span>
-        <span class="mtg-sel-date">Coming soon</span>
-      </button>
-      <button class="mtg-selector" onclick="selectMeeting(this, 'coming-soon-3')">
-        <span class="mtg-sel-body">Board of Education</span>
-        <span class="mtg-sel-date">Coming soon</span>
-      </button>
+    <p class="section-intro">Every public meeting is recorded. We process them automatically to generate three layers of detail. Select a meeting and a level of detail.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;">
+      <button class="mtg-selector active-mtg" onclick="selectMeeting(this,'pelham-board-jul2026')"><span class="mtg-sel-body">Village of Pelham</span><span class="mtg-sel-date">Board of Trustees · July 14, 2026</span></button>
+      <button class="mtg-selector" onclick="selectMeeting(this,'coming-soon-1')"><span class="mtg-sel-body">Town of Pelham</span><span class="mtg-sel-date">Coming soon</span></button>
+      <button class="mtg-selector" onclick="selectMeeting(this,'coming-soon-2')"><span class="mtg-sel-body">Village of Pelham Manor</span><span class="mtg-sel-date">Coming soon</span></button>
+      <button class="mtg-selector" onclick="selectMeeting(this,'coming-soon-3')"><span class="mtg-sel-body">Board of Education</span><span class="mtg-sel-date">Coming soon</span></button>
     </div>
-
-    <!-- Detail level tabs -->
-    <div style="display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid var(--border);">
-      <button class="detail-tab active-tab" onclick="selectTab(this, 'exec')">Executive Summary</button>
-      <button class="detail-tab" onclick="selectTab(this, 'detailed')">Detailed Summary</button>
-      <button class="detail-tab" onclick="selectTab(this, 'transcript')">Full Transcript</button>
+    <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border);">
+      <button class="detail-tab active-tab" onclick="selectTab(this,'exec')">Executive Summary</button>
+      <button class="detail-tab" onclick="selectTab(this,'detailed')">Detailed Summary</button>
+      <button class="detail-tab" onclick="selectTab(this,'transcript')">Full Transcript</button>
     </div>
-
-    <!-- Accuracy disclaimer -->
     <div class="summary-disclaimer">
       <span class="summary-disclaimer-icon">⚠️</span>
-      <div>
-        <strong>AI-generated summaries — not official records.</strong> These summaries are produced automatically from meeting recordings using speech-to-text and AI. Speaker attributions and quotes are approximate. Votes are cross-referenced with posted minutes where available.
-        Always verify specific quotes, decisions, or vote counts against the <a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank">official recording</a> and <a href="https://www.pelhamny.gov/AgendaCenter" target="_blank">posted meeting minutes</a> before citing or acting on this information.
-      </div>
+      <div><strong>AI-generated — not official records.</strong> Always verify against the <a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank">official recording</a> and <a href="https://www.pelhamny.gov/AgendaCenter" target="_blank">posted minutes</a>.</div>
     </div>
-
-    <!-- Content panels -->
     <div id="mtg-content">
-
-      <!-- EXECUTIVE SUMMARY -->
       <div id="panel-exec" class="mtg-panel">
         <div class="mtg-meta">
           <span class="mtg-meta-item">📅 July 14, 2026</span>
           <span class="mtg-meta-item">⏱ 46 min</span>
-          <span class="mtg-meta-item">👥 Deputy Mayor Carpenter (chair) · 5 Trustees · ~15 residents</span>
+          <span class="mtg-meta-item">👥 Deputy Mayor Carpenter (chair) · 5 Trustees</span>
           <a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank" class="mtg-meta-item mtg-video-link">▶ Watch recording</a>
         </div>
         <div class="exec-summary">
-          <p>The Board held its regular July meeting, chaired by Deputy Mayor Carpenter in Mayor Mullen's absence. The session addressed a mix of infrastructure, public safety, and neighborhood quality-of-life concerns. Residents raised urgent complaints about construction disruption near Hudson House and ongoing illegal fireworks near Fini Park, both of which prompted board commitments to follow up. All formal votes passed unanimously.</p>
-          <p>The board took delivery of the final items from its $200,000+ NYSERDA Clean Energy Communities grant — two electric refuse haulers — and received preliminary approval from Westchester County for approximately <strong>$24.25 million in stormwater funding</strong>. The Mayor (via written report) outlined plans to sign a letter supporting county-wide sewer system consolidation, noting the thorny equity issue of communities like Pelham that have already invested heavily in their systems.</p>
+          <p>The Board held its regular July meeting chaired by Deputy Mayor Carpenter (Mayor Mullen absent). The session covered infrastructure, public safety, and quality-of-life concerns. Two residents raised urgent complaints about Hudson House construction disruption and nightly illegal fireworks near Fini Park — both prompted board action commitments. All formal votes passed unanimously 6-0.</p>
+          <p>Key highlights: final delivery of NYSERDA grant items (two electric refuse haulers completing a $200,000+ fleet electrification); preliminary approval from Westchester County for <strong>$24.25 million in stormwater funding</strong>; and a mayor's plan to sign a letter supporting county-wide sewer consolidation.</p>
         </div>
         <div class="exec-votes">
-          <div class="exec-votes-label">Key Votes — All Unanimous (6-0, Mayor Mullen absent)</div>
+          <div class="exec-votes-label">Key Votes — All 6-0 (Mayor Mullen absent)</div>
           <div class="vote-row"><span class="vote-result pass">✓ PASSED 6–0</span><span class="vote-desc">Appointing Deputy Village Treasurer</span></div>
-          <div class="vote-row"><span class="vote-result pass">✓ PASSED 6–0</span><span class="vote-desc">Appointing Part-Time Summer Intern — Sofia Pizzatello, Building Dept., $16.00/hr</span></div>
-          <div class="vote-row"><span class="vote-result pass">✓ PASSED 6–0</span><span class="vote-desc">Authorizing Year-End Budget Amendments & Transfers — FY2025–26</span></div>
-          <div class="vote-row"><span class="vote-result pass">✓ PASSED 6–0</span><span class="vote-desc">Authorizing Accounts Payable — $775,017.49 (General Fund + Capital Projects)</span></div>
-          <div class="vote-row"><span class="vote-result pass">✓ PASSED 4–0–2</span><span class="vote-desc">June 1 Special Meeting Minutes — Carpenter & Howell abstained (were absent)</span></div>
+          <div class="vote-row"><span class="vote-result pass">✓ PASSED 6–0</span><span class="vote-desc">Sofia Pizzatello appointed Building Dept. intern — $16.00/hr</span></div>
+          <div class="vote-row"><span class="vote-result pass">✓ PASSED 6–0</span><span class="vote-desc">Year-End Budget Amendments & Transfers FY2025-26</span></div>
+          <div class="vote-row"><span class="vote-result pass">✓ PASSED 6–0</span><span class="vote-desc">Accounts Payable — $775,017.49 (General Fund $429,785.63 + Capital $344,531.86)</span></div>
         </div>
-
-        <!-- Key Takeaways -->
-        <div class="exec-votes" style="margin-top: 24px;">
-          <div class="exec-votes-label">Key Takeaways</div>
-          <div class="vote-row" style="display:block; padding: 10px 0; border-bottom: 1px solid var(--border);">
-            <strong style="color:var(--navy);">$24.25M stormwater funding:</strong> <span style="color:var(--slate); font-size:13px;"> Preliminary approval from Westchester County Stormwater Advisory Board. Deputy Mayor Carpenter, Trustee Howell, and Administrator Scelza meeting with county the following day. Number likely to change — no press release issued.</span>
-          </div>
-          <div class="vote-row" style="display:block; padding: 10px 0; border-bottom: 1px solid var(--border);">
-            <strong style="color:var(--navy);">Hudson House construction:</strong> <span style="color:var(--slate); font-size:13px;"> Resident Ari Schwartz (2 Fifth Ave) reported cracked walls, partial structural collapse, and daily vibrations — pile driving had to go 70 feet due to unexpected bedrock. Fix (piers/underpinning) approved by third-party engineer. Report early start violations to <a href="mailto:chance.mallini@pelhamny.gov">chance.mallini@pelhamny.gov</a>.</span>
-          </div>
-          <div class="vote-row" style="display:block; padding: 10px 0; border-bottom: 1px solid var(--border);">
-            <strong style="color:var(--navy);">Fini Park fireworks:</strong> <span style="color:var(--slate); font-size:13px;"> Resident Gemma Mosknerman (64 Store Ave) reported nightly fireworks past 11pm, escalating to sticks thrown at a home. Trustee Howell committed to increased PPD patrols 8–11pm on Harman/Store Ave corridor. Send videos to <a href="mailto:crystal.howell@pelhamny.gov">crystal.howell@pelhamny.gov</a>.</span>
-          </div>
-          <div class="vote-row" style="display:block; padding: 10px 0;">
-            <strong style="color:var(--navy);">NYSERDA grant complete:</strong> <span style="color:var(--slate); font-size:13px;"> Final delivery of two electric MaxEV refuse haulers. Previously received: one electric riding mower and two electric parking enforcement vehicles. Grant total: $200,000+.</span>
-          </div>
-        </div>
-
-        <!-- Action Items Table -->
-        <div class="exec-votes" style="margin-top: 24px;">
-          <div class="exec-votes-label">Action Items & Follow-ups</div>
-          <div style="overflow-x: auto;">
-            <table style="width:100%; border-collapse:collapse; font-size:13px; margin-top:8px;">
-              <thead>
-                <tr style="background: var(--navy); color: var(--white);">
-                  <th style="padding:8px 12px; text-align:left; font-weight:500; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;">Owner</th>
-                  <th style="padding:8px 12px; text-align:left; font-weight:500; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;">Task</th>
-                  <th style="padding:8px 12px; text-align:left; font-weight:500; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;">Deadline</th>
-                </tr>
-              </thead>
+        <div class="exec-votes" style="margin-top:24px;">
+          <div class="exec-votes-label">Action Items</div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;">
+              <thead><tr style="background:var(--navy);color:var(--white);">
+                <th style="padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;">Owner</th>
+                <th style="padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;">Task</th>
+                <th style="padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;">Deadline</th>
+              </tr></thead>
               <tbody>
-                <tr style="border-bottom:1px solid var(--border);">
-                  <td style="padding:8px 12px; color:var(--navy); font-weight:600;">Mayor</td>
-                  <td style="padding:8px 12px; color:var(--slate);">Report back on outcome of Westchester County stormwater funding meeting (Carpenter, Howell, Scelza attending July 15)</td>
-                  <td style="padding:8px 12px; color:var(--slate); white-space:nowrap;">After July 15</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border); background:#f9fafb;">
-                  <td style="padding:8px 12px; color:var(--navy); font-weight:600;">Mayor</td>
-                  <td style="padding:8px 12px; color:var(--slate);">Sign letter supporting Westchester County sanitary sewer consolidation conversation</td>
-                  <td style="padding:8px 12px; color:var(--slate); white-space:nowrap;">Not specified</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border);">
-                  <td style="padding:8px 12px; color:var(--navy); font-weight:600;">Administrator Scelza</td>
-                  <td style="padding:8px 12px; color:var(--slate);">Arrange health dept. assessment of standing water/algae in Hudson House excavation pit</td>
-                  <td style="padding:8px 12px; color:var(--slate); white-space:nowrap;">Not specified</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border); background:#f9fafb;">
-                  <td style="padding:8px 12px; color:var(--navy); font-weight:600;">Building Inspector</td>
-                  <td style="padding:8px 12px; color:var(--slate);">Monitor Hudson House contractor for start-time violations — residents email <a href="mailto:chance.mallini@pelhamny.gov" style="color:var(--navy);">chance.mallini@pelhamny.gov</a></td>
-                  <td style="padding:8px 12px; color:var(--slate); white-space:nowrap;">Ongoing</td>
-                </tr>
-                <tr style="border-bottom:1px solid var(--border);">
-                  <td style="padding:8px 12px; color:var(--navy); font-weight:600;">Trustee Howell</td>
-                  <td style="padding:8px 12px; color:var(--slate);">Coordinate with Pelham PD to increase patrols on Harman/Store Ave 8–11pm — send fireworks videos to <a href="mailto:crystal.howell@pelhamny.gov" style="color:var(--navy);">crystal.howell@pelhamny.gov</a></td>
-                  <td style="padding:8px 12px; color:var(--slate); white-space:nowrap;">Ongoing</td>
-                </tr>
-                <tr>
-                  <td style="padding:8px 12px; color:var(--navy); font-weight:600; background:#f9fafb;">Pelham PD</td>
-                  <td style="padding:8px 12px; color:var(--slate); background:#f9fafb;">Formally counter New Rochelle PD's claim that fireworks originate from Pelham side; pursue professional courtesy with New Rochelle PD</td>
-                  <td style="padding:8px 12px; color:var(--slate); white-space:nowrap; background:#f9fafb;">Not specified</td>
-                </tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;font-weight:600;color:var(--navy);">Mayor</td><td style="padding:8px 12px;color:var(--slate);">Report back on outcome of $24.25M stormwater funding meeting with Westchester County (July 15)</td><td style="padding:8px 12px;color:var(--slate);">After July 15</td></tr>
+                <tr style="border-bottom:1px solid var(--border);background:#f9fafb;"><td style="padding:8px 12px;font-weight:600;color:var(--navy);">Administrator Scelza</td><td style="padding:8px 12px;color:var(--slate);">Health dept. assessment of standing water/algae in Hudson House excavation pit</td><td style="padding:8px 12px;color:var(--slate);">TBD</td></tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;font-weight:600;color:var(--navy);">Building Inspector</td><td style="padding:8px 12px;color:var(--slate);">Monitor Hudson House hours — residents email <a href="mailto:chance.mallini@pelhamny.gov">chance.mallini@pelhamny.gov</a></td><td style="padding:8px 12px;color:var(--slate);">Ongoing</td></tr>
+                <tr><td style="padding:8px 12px;font-weight:600;color:var(--navy);background:#f9fafb;">Trustee Howell</td><td style="padding:8px 12px;color:var(--slate);background:#f9fafb;">Increase PPD patrols 8-11pm Harman/Store Ave — fireworks videos to <a href="mailto:crystal.howell@pelhamny.gov">crystal.howell@pelhamny.gov</a></td><td style="padding:8px 12px;color:var(--slate);background:#f9fafb;">Ongoing</td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
-
-      <!-- DETAILED SUMMARY -->
       <div id="panel-detailed" class="mtg-panel" style="display:none;">
-        <div class="mtg-meta">
-          <span class="mtg-meta-item">📅 July 14, 2026</span>
-          <span class="mtg-meta-item">⏱ 46 min</span>
-          <span class="mtg-meta-item">👥 Deputy Mayor Carpenter (chair) · 5 Trustees · ~15 residents</span>
-          <a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank" class="mtg-meta-item mtg-video-link">▶ Watch recording</a>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-header">
-            <span class="detail-timestamp">0:00 – 0:02</span>
-            <span class="detail-section-title">Call to Order & Roll Call</span>
-          </div>
-          <p class="detail-body">Deputy Mayor Carpenter called the meeting to order at 8:00 PM with Mayor Mullen absent. Roll call question of the evening: "Do you stand in line or online?" Trustee Otondi voted online; Trustee Howell and others stood in line.</p>
-          <p class="detail-body"><strong>Present:</strong> Deputy Mayor Carpenter, Trustee Anderson, Trustee Howell, Trustee Otondi, Trustee Solomon, Administrator Scelza (virtual). <strong>Absent:</strong> Mayor Mullen, Trustee Eldahry.</p>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-header">
-            <span class="detail-timestamp">0:02 – 0:09</span>
-            <span class="detail-section-title">Trustee Reports</span>
-          </div>
-          <p class="detail-body"><strong>Trustee Anderson (DPW/Sustainability):</strong> DPW focused on storm cleanup from prior week's severe weather, street sweeping, and sidewalk replacement for ADA accessibility. Announced completion of NYSERDA Clean Energy Communities grant — final items delivered this week: two electric MaxEV refuse haulers. Previously received: electric riding mower and two electric parking enforcement vehicles. Also launched the Pelham Liberty Tree Initiative on July 4th — collaborative native tree planting across all three Pelham governments planned for October, with Con Ed offering free seedlings in April. Reminded residents of Con Ed GridRewards event the following day (July 15), 4–8pm.</p>
-          <p class="detail-body"><strong>Trustee Howell (Fire/Arts):</strong> Council on the Arts concert series dates — July 25, August 8, August 22, September 25. Fire department had ~80 calls in prior month including mutual aid to Pelham Manor (covered with tower ladder while Manor's was out for maintenance). Annual 9/11 Memorial Service: September 11 at 8:30am at town monument. Heat wave advisory — cooling center open. Storm safety reminder — downed wires may be live; call 1-800-75-ConEd, Pelham FD, or PD.</p>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-header">
-            <span class="detail-timestamp">0:09 – 0:10</span>
-            <span class="detail-section-title">Administrator's Report</span>
-          </div>
-          <p class="detail-body">Administrator Scelza reported successful completion of the annual road paving program before July 4th, including ADA ramp installations. Also re-engaged Pavement Management Group (contracted in 2023) to update the village's pavement management study this year — results expected in coming months.</p>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-header">
-            <span class="detail-timestamp">0:10 – 0:17</span>
-            <span class="detail-section-title">Mayor's Report — Sewer Consolidation & Stormwater Funding</span>
-          </div>
-          <p class="detail-body"><strong>Sewer consolidation:</strong> Mayor Mullen (via Carpenter) plans to sign a letter urging Westchester County to explore consolidating all 45 municipalities' sewer systems under county management. Current problem: inconsistent maintenance across municipalities causes inflow and infiltration during storms, overwhelming treatment plants and polluting waterways. Lorraine Walls is coordinating the effort. Key equity concern: communities like Pelham that have invested heavily may resist paying the same rate as those needing significant work — tiered rates for ~20 years proposed as solution.</p>
-          <p class="detail-body"><strong>Stormwater funding:</strong> Village received preliminary approval from Westchester County Stormwater Advisory Board for approximately $24.25M. Deputy Mayor Carpenter, Trustee Howell, and Administrator Scelza meeting with county July 15 to clarify next steps. Mayor cautioned the number may change — no press release. County also updating its law mid-process. Thanks to Blanca Lopez, Westchester County Planning Commissioner, for arranging the meeting.</p>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-header">
-            <span class="detail-timestamp">0:17 – 0:30</span>
-            <span class="detail-section-title">Public Comment — Hudson House Construction</span>
-          </div>
-          <p class="detail-body"><strong>Resident Ari Schwartz, 2 Fifth Avenue</strong> (moved to Pelham March/April 2023) reported serious construction impacts from the Hudson House project next door. Key complaints:</p>
-          <ul class="detail-list">
-            <li>Construction company repeatedly violated village noise code — pile driving as early as 6am; police called multiple times with no effective enforcement</li>
-            <li>Building has been shaking; resident's wife placed an earthquake meter app on her phone to measure vibrations</li>
-            <li>Walls cracked, parking lot cracked; a partial structural collapse occurred approximately two months prior</li>
-            <li>Residents — not just property owners — deserve to be informed about what is happening</li>
-          </ul>
-          <p class="detail-body"><strong>Mayor's response (via Carpenter):</strong> Rock was found 70 feet down instead of expected depth — pressure tests on initial piles failed, requiring deeper piling and underpinning of surrounding buildings. Foam was injected around adjacent building. Firehouse stairwells had been sinking because parking deck was leaning against it. A resolution has been found — piers/underpinning plan approved by third-party engineer. The most disruptive phase should be ending soon. Report early starts to <strong>chance.mallini@pelhamny.gov</strong>.</p>
-          <p class="detail-body">A second commenter raised the standing water/green algae in the excavation pit as a potential health hazard. Staff clarified it is natural groundwater (water table) that cannot be pumped until supportive excavation is complete. Board suggested a health department assessment.</p>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-header">
-            <span class="detail-timestamp">0:30 – 0:40</span>
-            <span class="detail-section-title">Public Comment — Fireworks at Fini Park</span>
-          </div>
-          <p class="detail-body"><strong>Resident Gemma Mosknerman, 64 Store Avenue</strong>, speaking on behalf of an informal neighborhood group near the Pelham/New Rochelle border, reported:</p>
-          <ul class="detail-list">
-            <li>Large fireworks set off nightly from Fini Park for several weeks — past 11pm, sometimes midnight, especially during World Cup nights</li>
-            <li>Group has been calling New Rochelle PD consistently since late June — multiple households calling up to 6 times per night</li>
-            <li>New Rochelle's own records show only 12 calls logged since Memorial Day — residents believe calls are being undercounted</li>
-            <li>June 7 incident: blockbuster fireworks set off in front of a home on Harman Ave, then the following night sticks were thrown at the house, hitting a window where 2- and 6-year-olds play</li>
-            <li>Requests: sustained police presence (not reactive one-off patrols) and Pelham pressing New Rochelle counterparts</li>
-          </ul>
-          <p class="detail-body"><strong>Trustee Howell</strong> took the lead: committed to increased PPD patrols on Harman/Store Avenue corridor during peak hours (8–11pm). Contact: <strong>crystal.howell@pelhamny.gov</strong>. Trustee Solomon also suggested coordinating with PD to increase patrols on the corridor.</p>
-        </div>
-
-        <div class="detail-section">
-          <div class="detail-section-header">
-            <span class="detail-timestamp">0:40 – 0:46</span>
-            <span class="detail-section-title">Resolutions & Adjournment</span>
-          </div>
-          <p class="detail-body">All resolutions passed unanimously 6-0. Deputy Village Treasurer position filled (position had been vacant while Administrator Scelza managed the annual audit and other priorities). Sofia Pizzatello of Pelham appointed as Part-Time Summer Intern in Building Department at $16.00/hour. Year-end budget amendments and transfers for FY2025-26 authorized. Accounts payable of $775,017.49 approved (General Fund $429,785.63 + Capital Projects Fund $344,531.86). June meeting minutes authorized (4-0-2 for June 1 special meeting, with Carpenter and Howell abstaining as they were absent). Next meeting: Tuesday, August 11th.</p>
-        </div>
+        <div class="mtg-meta"><span class="mtg-meta-item">📅 July 14, 2026</span><a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank" class="mtg-meta-item mtg-video-link">▶ Watch recording</a></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:00–0:02</span><span class="detail-section-title">Call to Order</span></div><p class="detail-body">Deputy Mayor Carpenter chaired. Mayor Mullen and Trustee Eldahry absent. Roll call icebreaker: "Do you stand in line or online?"</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:02–0:09</span><span class="detail-section-title">Trustee Reports</span></div><p class="detail-body"><strong>Trustee Anderson:</strong> NYSERDA grant complete — two electric MaxEV refuse haulers delivered. Pelham Liberty Tree Initiative launched July 4th — native tree plantings October 2026. Con Ed GridRewards event July 15, 4–8pm.<br><br><strong>Trustee Howell:</strong> Arts concerts: July 25, Aug 8, Aug 22, Sept 25. Fire dept ~80 calls. 9/11 Memorial Sept 11, 8:30am. Cooling center open. Storm wire safety reminder.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:10–0:17</span><span class="detail-section-title">Mayor's Report — Sewer & Stormwater</span></div><p class="detail-body">Mayor plans to sign letter urging Westchester County to consolidate all 45 municipalities' sewer systems. Equity concern: Pelham invested heavily — may resist subsidizing others. Tiered rates for ~20 years proposed as solution.<br><br>Preliminary $24.25M stormwater approval from Westchester County Stormwater Advisory Board. Number may change. Carpenter, Howell, Scelza meeting with county July 15. Thanks to Blanca Lopez, Westchester County Planning Commissioner.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:17–0:30</span><span class="detail-section-title">Public Comment — Hudson House Construction</span></div><p class="detail-body"><strong>Resident Ari Schwartz, 2 Fifth Avenue:</strong> Repeated noise violations (pile driving from 6am), earthquake-like shaking, cracked walls, partial structural collapse ~2 months ago. Residents not informed — only property owners.</p><p class="detail-body"><strong>Board response:</strong> Rock found 70 feet down (expected shallower). Pressure tests failed. Foam injected around adjacent building. Firehouse stairwells had been sinking. Third-party engineer approved fix (piers/underpinning). Report violations: <strong>chance.mallini@pelhamny.gov</strong>. Health dept. assessment of algae pit suggested.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:30–0:40</span><span class="detail-section-title">Public Comment — Fini Park Fireworks</span></div><p class="detail-body"><strong>Resident Gemma Mosknerman, 64 Store Avenue:</strong> Nightly fireworks past 11pm from Fini Park for weeks. Group calling NR PD up to 6x/night — only 12 calls logged in NR records since Memorial Day. June 7: blockbuster fireworks in front of Harman Ave home; next night sticks thrown at window where toddlers play.</p><p class="detail-body"><strong>Trustee Howell:</strong> Increased PPD patrols 8–11pm on Harman/Store corridor. Videos to <strong>crystal.howell@pelhamny.gov</strong>.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:40–0:46</span><span class="detail-section-title">Resolutions & Adjournment</span></div><p class="detail-body">All 6-0. Deputy Village Treasurer appointed. Sofia Pizzatello (Pelham) hired as Building Dept. intern at $16/hr. Year-end budget amendments and $775,017.49 AP authorized. Next meeting: August 11.</p></div>
       </div>
-
-      <!-- TRANSCRIPT -->
       <div id="panel-transcript" class="mtg-panel" style="display:none;">
-        <div class="mtg-meta">
-          <span class="mtg-meta-item">📅 July 14, 2026</span>
-          <span class="mtg-meta-item">⏱ 46 min</span>
-          <span class="mtg-meta-item">🤖 AI-generated transcript · verify with recording</span>
-          <a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank" class="mtg-meta-item mtg-video-link">▶ Watch recording</a>
-        </div>
+        <div class="mtg-meta"><span class="mtg-meta-item">📅 July 14, 2026</span><span class="mtg-meta-item">🤖 AI-generated · verify with recording</span><a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank" class="mtg-meta-item mtg-video-link">▶ Watch recording</a></div>
         <div class="transcript-body">
-          <div class="transcript-block">
-            <span class="ts-time">[0:00:33]</span>
-            <span class="ts-speaker">DEPUTY MAYOR CARPENTER:</span>
-            <span class="ts-text">Calling to order this Village of Pelham Board of Trustees regular meeting. It is Tuesday, July 14th, and right at eight o'clock PM. Please rise and join me in saying the Pledge of Allegiance.</span>
-          </div>
-          <div class="transcript-block">
-            <span class="ts-time">[0:02:14]</span>
-            <span class="ts-speaker">TRUSTEE ANDERSON:</span>
-            <span class="ts-text">I'd also like to recognize both NYSERDA and our Department of Public Works on an important milestone. Last year the village was awarded over $200,000 for a Clean Energy Communities grant through NYSERDA to purchase electric vehicles and equipment for both the police department and DPW. I'm pleased to report that the village took delivery just this week of the final pieces of equipment under the grant, which are two electric MaxEV refuse haulers.</span>
-          </div>
-          <div class="transcript-block">
-            <span class="ts-time">[0:10:13]</span>
-            <span class="ts-speaker">MAYOR MULLEN (read by Carpenter):</span>
-            <span class="ts-text">I've been asked to sign on to a letter to push Westchester County to consider a plan for consolidating our sewer systems. Not our storm drains, but our sewage — it flows out through pipes, eventually making its way to I think it's seven different wastewater treatment plants around Westchester County. If you have one municipality that isn't on top of it, you get lots of inflow and infiltration, and when you have a severe storm the treatment plant gets overwhelmed and you get pollution in all our waterways.</span>
-          </div>
-          <div class="transcript-block">
-            <span class="ts-time">[0:15:57]</span>
-            <span class="ts-speaker">MAYOR MULLEN (read by Carpenter):</span>
-            <span class="ts-text">We received preliminary approval from the Westchester County Stormwater Advisory Board for $24.25 million, I think. Now we're on to the next step — that number is likely to change, just to be clear. I'm not sending out a press release. But the county is also updating its law in the middle of this process, so we're interested to see how the process might change and what they need from us.</span>
-          </div>
-          <div class="transcript-block">
-            <span class="ts-time">[0:19:46]</span>
-            <span class="ts-speaker">RESIDENT (ARI SCHWARTZ, 2 FIFTH AVE):</span>
-            <span class="ts-text">The construction company was allowed repeatedly to violate the village's code by starting work before the allowed hours — to pile drive before the allowed hours. I called the police multiple times when this was being built. Nothing happened. My wife literally put an earthquake meter on her phone because the building shakes so much. The walls have cracked. And then the parking lot cracked. And then the semi-collapse happened.</span>
-          </div>
-          <div class="transcript-block">
-            <span class="ts-time">[0:24:56]</span>
-            <span class="ts-speaker">DEPUTY MAYOR CARPENTER:</span>
-            <span class="ts-text">Where we thought rock was — it was not where rock was. When they first did their pile driving to get down to that rock, they drove it all in, did the pressure test, the pressure test failed. So they had to go further down. They ended up going down 70 feet in order to find that rock. As a result, even things like the underpinning for other buildings — they're now having to go in and basically pile drive all around the other buildings to make sure the soil down below doesn't go out.</span>
-          </div>
-          <div class="transcript-block">
-            <span class="ts-time">[0:29:47]</span>
-            <span class="ts-speaker">DEPUTY MAYOR CARPENTER:</span>
-            <span class="ts-text">Just flip me an email — chance.mallini@pelhamny.gov — and I'll take care of it right away.</span>
-          </div>
-          <div class="transcript-block">
-            <span class="ts-time">[0:30:59]</span>
-            <span class="ts-speaker">RESIDENT (GEMMA MOSKNERMAN, 64 STORE AVE):</span>
-            <span class="ts-text">We all live on the Pelham/New Rochelle border near Fini Park and we're experiencing, for the past several weeks, large fireworks set off from Fini Park on a nightly basis. It's every night and it continues past 11pm, occasionally as late as midnight. Our group has been calling New Rochelle PD consistently since late June. Multiple households call multiple times per night — sometimes I call six times. The City of New Rochelle's own records state that only 12 calls have been logged since Memorial Day. That does not in any way line up with the amount of calls we are making.</span>
-          </div>
-          <div class="transcript-block">
-            <span class="ts-time">[0:33:05]</span>
-            <span class="ts-speaker">RESIDENT (GEMMA MOSKNERMAN):</span>
-            <span class="ts-text">On the 7th of June a group set off blockbuster fireworks right in front of his home on Harman Avenue. It sounded like gunshots. The following night the same group threw sticks at the house — hit the window of the playroom where their two-year-old and six-year-old play.</span>
-          </div>
-          <div class="transcript-block">
-            <span class="ts-time">[0:35:50]</span>
-            <span class="ts-speaker">TRUSTEE HOWELL:</span>
-            <span class="ts-text">crystal.howell@pelhamny.gov. You can contact me directly. I think in the interim maybe we can have Pelham police patrol more there. One police department typically has professional courtesy to another department — we could do that. And if you have any videos where you could see them doing the fireworks, if you can send that to us, I'd appreciate that.</span>
-          </div>
-          <div class="transcript-block ts-ellipsis">
-            <span style="color: #888; font-style: italic; font-size: 13px;">· · · full transcript generated from July 14, 2026 recording via Whisper AI · · · verify at official recording link above · · ·</span>
-          </div>
+          <div class="transcript-block"><span class="ts-time">[0:00:33]</span><span class="ts-speaker">DEPUTY MAYOR CARPENTER:</span><span class="ts-text">Calling to order this Village of Pelham Board of Trustees regular meeting. It is Tuesday, July 14th, right at eight o'clock PM.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:02:50]</span><span class="ts-speaker">TRUSTEE ANDERSON:</span><span class="ts-text">The village took delivery just this week of the final pieces of equipment under the NYSERDA grant — two electric MaxEV refuse haulers. Along with the electric riding mower and two electric parking enforcement vehicles already in service.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:15:57]</span><span class="ts-speaker">MAYOR MULLEN (via Carpenter):</span><span class="ts-text">We received preliminary approval from the Westchester County Stormwater Advisory Board for $24.25 million. That number is likely to change — we're not sending out a press release.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:19:46]</span><span class="ts-speaker">RESIDENT (ARI SCHWARTZ, 2 FIFTH AVE):</span><span class="ts-text">The construction company was allowed repeatedly to violate the village's code — pile driving before the allowed hours. I called the police multiple times. My wife literally put an earthquake meter on her phone because the building shakes so much. The walls have cracked. The semi-collapse happened.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:24:56]</span><span class="ts-speaker">DEPUTY MAYOR CARPENTER:</span><span class="ts-text">They ended up going down 70 feet to find that rock. The pressure test failed. They've found a resolution — approved by a third-party engineer.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:29:47]</span><span class="ts-speaker">DEPUTY MAYOR CARPENTER:</span><span class="ts-text">Just flip me an email — chance.mallini@pelhamny.gov — and I'll take care of it right away.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:30:59]</span><span class="ts-speaker">RESIDENT (GEMMA MOSKNERMAN, 64 STORE AVE):</span><span class="ts-text">We're experiencing large fireworks from Fini Park nightly — past 11pm, sometimes midnight. Our group has been calling New Rochelle PD. Sometimes I call six times a night. New Rochelle's own records show only 12 calls logged since Memorial Day. That does not line up.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:35:50]</span><span class="ts-speaker">TRUSTEE HOWELL:</span><span class="ts-text">crystal.howell@pelhamny.gov — contact me directly. We can have Pelham police patrol more there. Send us any videos of the fireworks.</span></div>
+          <div class="transcript-block ts-ellipsis"><span style="color:#888;font-style:italic;font-size:13px;">· · · full transcript generated from July 14, 2026 recording via Whisper AI · verify at official recording · · ·</span></div>
         </div>
-        <div style="margin-top: 16px; font-size: 12px; color: var(--slate); font-style: italic;">
-          This transcript was auto-generated by AI (OpenAI Whisper) from the meeting recording. Speaker labels are approximate. Proper nouns may be misspelled. Always verify quotes against the <a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank">official recording</a> before citing.
-        </div>
+        <p style="margin-top:16px;font-size:12px;color:var(--slate);font-style:italic;">Auto-generated by OpenAI Whisper. Speaker labels approximate. Verify against <a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank">official recording</a>.</p>
       </div>
-
-    </div><!-- end mtg-content -->
-
+    </div>
   </div>
 </section>
-
 <script>
-  const meetings = {
-    'pelham-board-jul2026': { title: 'Village of Pelham · Board of Trustees · July 14, 2026' },
-    'coming-soon-1': { title: 'Town of Pelham · coming soon' },
-    'coming-soon-2': { title: 'Village of Pelham Manor · coming soon' },
-    'coming-soon-3': { title: 'Board of Education · coming soon' }
-  };
-
-  function selectMeeting(btn, id) {
-    document.querySelectorAll('.mtg-selector').forEach(b => b.classList.remove('active-mtg'));
-    btn.classList.add('active-mtg');
-    if (id !== 'pelham-board-jul2026') {
-      document.getElementById('mtg-content').innerHTML = '<div style="padding: 40px; text-align: center; color: var(--slate); font-size: 14px;">📋 Meeting summaries for <strong>' + meetings[id].title + '</strong> will appear here once the recording is processed by the AI pipeline.</div>';
-    } else {
-      location.reload();
-    }
-  }
-
-  function selectTab(btn, panel) {
-    document.querySelectorAll('.detail-tab').forEach(b => b.classList.remove('active-tab'));
-    btn.classList.add('active-tab');
-    document.querySelectorAll('.mtg-panel').forEach(p => p.style.display = 'none');
-    document.getElementById('panel-' + panel).style.display = 'block';
-  }
+  const meetings = {'pelham-board-jul2026':{title:'Village of Pelham · Board of Trustees · July 14, 2026'},'coming-soon-1':{title:'Town of Pelham · coming soon'},'coming-soon-2':{title:'Village of Pelham Manor · coming soon'},'coming-soon-3':{title:'Board of Education · coming soon'}};
+  function selectMeeting(btn,id){document.querySelectorAll('.mtg-selector').forEach(b=>b.classList.remove('active-mtg'));btn.classList.add('active-mtg');if(id!=='pelham-board-jul2026'){document.getElementById('mtg-content').innerHTML='<div style="padding:40px;text-align:center;color:var(--slate);font-size:14px;">📋 Summaries for <strong>'+meetings[id].title+'</strong> will appear here once processed.</div>';}else{location.reload();}}
+  function selectTab(btn,panel){document.querySelectorAll('.detail-tab').forEach(b=>b.classList.remove('active-tab'));btn.classList.add('active-tab');document.querySelectorAll('.mtg-panel').forEach(p=>p.style.display='none');document.getElementById('panel-'+panel).style.display='block';}
 </script>
-
+</div>
+<div id="explore-taxes" class="explore-panel">
 <!-- YOUR TAXES -->
 <section id="your-taxes" class="section">
   <div class="content-wrap">
     <div class="section-eyebrow">Part 3 — Follow the Money</div>
     <h2 class="section-title">Where Do Your Property Taxes Go?</h2>
-    <p class="section-intro">Pelham property tax bills reflect five layers of government. The school district is by far the largest share — which is why the annual May school budget vote matters so much.</p>
-
+    <p class="section-intro">Village taxes represent approximately 25% of your total property tax bill (per Mayor Mullen, Pelham Examiner May 2026). The school district is the largest share.</p>
     <div class="tax-layout">
       <div class="tax-visual">
-        <div class="tax-bar-row fade-in">
-          <div class="tax-bar-header">
-            <span class="tax-bar-name">🏫 School District (PUFSD)</span>
-            <span class="tax-bar-pct">largest share*</span>
-          </div>
-          <div class="tax-bar-track"><div class="tax-bar-fill bar-school" style="width:60%"></div></div>
-        </div>
-        <div class="tax-bar-row fade-in">
-          <div class="tax-bar-header">
-            <span class="tax-bar-name">🏛️ Westchester County</span>
-            <span class="tax-bar-pct">est. — verify*</span>
-          </div>
-          <div class="tax-bar-track"><div class="tax-bar-fill bar-county" style="width:12%"></div></div>
-        </div>
-        <div class="tax-bar-row fade-in">
-          <div class="tax-bar-header">
-            <span class="tax-bar-name">🏘️ Village (Pelham or Manor)</span>
-            <span class="tax-bar-pct">~25% ✓</span>
-          </div>
-          <div class="tax-bar-track"><div class="tax-bar-fill bar-village" style="width:25%"></div></div>
-        </div>
-        <div class="tax-bar-row fade-in">
-          <div class="tax-bar-header">
-            <span class="tax-bar-name">🏡 Town of Pelham</span>
-            <span class="tax-bar-pct">~3–5%</span>
-          </div>
-          <div class="tax-bar-track"><div class="tax-bar-fill bar-town" style="width:4%"></div></div>
-        </div>
-
-        <div class="tax-note fade-in">
-          <strong>Note:</strong> The village portion of your bill is approximately 25% of the total, per Village of Pelham Mayor Mullen (Pelham Examiner, May 2026). The school district is the largest share — significantly more than the village portion. The county and town percentages shown are estimates; your exact breakdown depends on your assessed value, exemptions (STAR, senior, veterans), and which village you live in. For your specific bill, call the <strong>Town Receiver of Taxes at 914-738-1642</strong> or Town Assessor at 914-738-2878.
-        </div>
+        <div class="tax-bar-row fade-in"><div class="tax-bar-header"><span class="tax-bar-name">🏫 School District (PUFSD)</span><span class="tax-bar-pct">largest share*</span></div><div class="tax-bar-track"><div class="tax-bar-fill bar-school" style="width:60%"></div></div></div>
+        <div class="tax-bar-row fade-in"><div class="tax-bar-header"><span class="tax-bar-name">🏘️ Village (Pelham or Manor)</span><span class="tax-bar-pct">~25% ✓</span></div><div class="tax-bar-track"><div class="tax-bar-fill bar-village" style="width:25%"></div></div></div>
+        <div class="tax-bar-row fade-in"><div class="tax-bar-header"><span class="tax-bar-name">🏛️ Westchester County</span><span class="tax-bar-pct">est. — verify*</span></div><div class="tax-bar-track"><div class="tax-bar-fill bar-county" style="width:12%"></div></div></div>
+        <div class="tax-bar-row fade-in"><div class="tax-bar-header"><span class="tax-bar-name">🏡 Town of Pelham</span><span class="tax-bar-pct">~3–5%</span></div><div class="tax-bar-track"><div class="tax-bar-fill bar-town" style="width:4%"></div></div></div>
+        <div class="tax-note fade-in"><strong>Note:</strong> Village ~25% confirmed (Mayor Mullen/Examiner). School district is the largest share — no published %. County % unverified. Average village tax: Village of Pelham ~$7,387/yr (FY2026-27); Pelham Manor ~$6,035 for equivalent assessed value. Call Town Receiver of Taxes (914-738-1642) for your specific breakdown.</div>
       </div>
-
       <div class="tax-explainer">
-        <div class="tax-explainer-block fade-in">
-          <div class="teb-title">🏫 School District — The Big One</div>
-          <div class="teb-desc">The 2025–26 PUFSD budget is $96.3M, up 2.9% from the year prior. The tax levy rose 3.48% — exactly at the state-mandated cap. Residents voted on this in May 2025, and also weighed in on four capital bond propositions totaling $143.6M for building repairs and expansions. The district is also pursuing a $1.85M property purchase at 29 Franklin Place for office space.</div>
-          <a href="https://www.pelhamschools.org/district/about/financials" target="_blank" class="issue-source-link">View school budget documents</a>
-        </div>
-        <div class="tax-explainer-block gold fade-in">
-          <div class="teb-title">🏛️ Westchester County</div>
-          <div class="teb-desc">County government funds regional services — health, parks, social services, and more. County taxes appear on the same bill. Your County Legislature representative advocates for Pelham's share of county resources and spending.</div>
-          <a href="https://www.westchestercountyny.gov/government/departments/budget" target="_blank" class="issue-source-link">View county budget</a>
-        </div>
-        <div class="tax-explainer-block red fade-in">
-          <div class="teb-title">🏘️ Village Services</div>
-          <div class="teb-desc">Village taxes fund police, fire, garbage collection, road repair, the water department, and the building department — the services you see and use daily. In 2026, Village of Pelham homeowners faced significant increases; the 2026–27 budget is projected to push past the state tax cap with an ~8.5% increase being discussed.</div>
-          <a href="https://www.pelhamny.gov/173/Adopted-Village-Budgets" target="_blank" class="issue-source-link">Village of Pelham adopted budgets</a>
-        </div>
-        <div class="tax-explainer-block green fade-in">
-          <div class="teb-title">🏡 Town of Pelham</div>
-          <div class="teb-desc">Town taxes are the smallest share but cover courts, tax assessment, recreation programs (summer camps, senior services), the public library, and ambulance service — all shared between both villages.</div>
-          <a href="https://townofpelhamny.gov/budgets-and-reports/" target="_blank" class="issue-source-link">Town budgets & reports</a>
-        </div>
+        <div class="tax-explainer-block fade-in"><div class="teb-title">🏫 School District</div><div class="teb-desc">2025-26 PUFSD budget: $96.3M (up 2.9%). Tax levy rose 3.48% — at state cap. Voters approved Props 1 & 2 of $143.6M capital bond in May 2025.</div><a href="https://www.pelhamschools.org/district/about/financials" target="_blank" class="issue-source-link">School budget documents</a></div>
+        <div class="tax-explainer-block gold fade-in"><div class="teb-title">🏛️ Westchester County</div><div class="teb-desc">County funds regional services — health, parks, social services. Your 14th District legislator advocates for Pelham's share.</div><a href="https://www.westchestercountyny.gov/government/departments/budget" target="_blank" class="issue-source-link">County budget</a></div>
+        <div class="tax-explainer-block red fade-in"><div class="teb-title">🏘️ Village Services</div><div class="teb-desc">Village taxes fund police, fire, garbage, roads, water, and building dept. Village of Pelham passed $20.5M budget (10.1% increase) for FY2026-27, overriding the state tax cap.</div><a href="https://www.pelhamny.gov/173/Adopted-Village-Budgets" target="_blank" class="issue-source-link">Village adopted budgets</a></div>
+        <div class="tax-explainer-block green fade-in"><div class="teb-title">🏡 Town of Pelham</div><div class="teb-desc">Smallest share — covers courts, assessor, recreation, library, and ambulance service shared between both villages.</div><a href="https://townofpelhamny.gov/budgets-and-reports/" target="_blank" class="issue-source-link">Town budgets & reports</a></div>
       </div>
     </div>
   </div>
 </section>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
 </div>
 <div id="explore-issues" class="explore-panel">
 <!-- CURRENT ISSUES -->
@@ -2080,86 +2071,20 @@ When someone asks for help writing a public comment, letter to the editor, or an
   <div class="content-wrap">
     <div class="section-eyebrow">Part 4 — What's Happening Now</div>
     <h2 class="section-title">Current Issues</h2>
-    <p class="section-intro">These are the issues actively being debated in board meetings, at community events, and in local coverage. Knowing these going in means you can ask sharper questions and engage more meaningfully. Last updated August 2026.</p>
-
+    <p class="section-intro">Issues actively being debated in board meetings and local coverage. Last updated August 2026.</p>
     <div class="issues-grid">
-
-      <!-- 1. RISING TAXES & DEBT -->
-      <div class="issue-card fade-in">
-        <span class="issue-tag tag-budget">Budget / Taxes</span>
-        <h3>Rising Property Taxes & Village Debt</h3>
-        <p>The Village of Pelham adopted a $20.5M budget for FY2026-27 — a 10.1% increase that overrode the state tax cap for the first time in recent memory. Median homeowners will see village taxes rise ~$580. The deeper issue: village debt has grown from $4.26M in 2021 to $17.88M by early 2026, driving a 40.5% spike in debt service. Town Assessor Joe Battaglia publicly disputed the board's explanation of how tax rates work, adding to resident confusion. The fiscal debate is now a central issue in the November 2026 election.</p>
-        <div class="issue-status"><div class="status-dot dot-watch"></div>FY2026-27 budget adopted — structural debt debate ongoing</div>
-        <a href="https://pelhamexaminer.com/82552/latest-news/village-board-passes-20-5-million-budget-most-homeowners-tax-bills-will-rise-10-board-discusses-updating-bdfz-9th-avenue-parking/" target="_blank" class="issue-source-link">Pelham Examiner coverage</a>
-      </div>
-
-      <!-- 2. NOVEMBER 2026 ELECTIONS -->
-      <div class="issue-card fade-in">
-        <span class="issue-tag tag-energy">Elections</span>
-        <h3>November 2026 — First Contested Village Race Since 2019</h3>
-        <p>Three contested races in November: Village of Pelham trustees (three seats, Democrats vs. Neighborhood Party/Republican challengers focused on fiscal management), Village of Pelham Manor trustees (two seats, Bennett/Liberatore vs. Kurtz/Dlutkowski), and Town Supervisor and Clerk (Mohan and Miller defending against Wolfgang and Borsella, required to re-run under new state law). Hanan Eldahry is not seeking reelection after serving since 2018.</p>
-        <div class="issue-status"><div class="status-dot dot-active"></div>Active — campaigns underway, election November 2026</div>
-        <a href="#elections" class="issue-source-link">See full candidate profiles above</a>
-      </div>
-
-      <!-- 3. PICTURE HOUSE -->
-      <div class="issue-card fade-in">
-        <span class="issue-tag tag-infrastructure">Development</span>
-        <h3>Pelham Picture House — Future Still Uncertain</h3>
-        <p>The 105-year-old cinema's future remains unresolved. In February 2026 the board approved an MOU with developer PHP Partners for a mixed-use Wolfs Lane redevelopment — then reversed course within days when Mayor Mullen gave his blessing to developer James Smithmeyer (who owns the adjacent lot at 163 Wolfs Lane) to work directly with the Picture House instead. The PHP Partners MOU was terminated. Smithmeyer and Picture House leadership are in ongoing discussions. No development plan has been approved. The Picture House continues to operate and ran a successful family film series through summer 2026.</p>
-        <div class="issue-status"><div class="status-dot dot-watch"></div>Ongoing — Smithmeyer/Picture House discussions continue</div>
-        <a href="https://pelhamexaminer.com" target="_blank" class="issue-source-link">Search "Picture House" at Pelham Examiner</a>
-      </div>
-
-      <!-- 4. COLONIAL AC -->
-      <div class="issue-card fade-in">
-        <span class="issue-tag tag-education">Education</span>
-        <h3>Colonial Elementary — No Air Conditioning</h3>
-        <p>Colonial Elementary School lacks air conditioning in its lower floors, making classrooms dangerously hot in warm weather. In June 2026, teachers and students were "dripping" in the heat during the final weeks of school, with parents speaking at the June 24 Board of Education meeting to demand an interim fix before September. The approved $56.2M bond (Proposition 1, May 2025) includes funds for AC at Colonial and Prospect Hill — but construction timelines mean relief may not arrive before fall 2026. Superintendent Champ has said renovations will begin this summer.</p>
-        <div class="issue-status"><div class="status-dot dot-urgent"></div>Urgent — school resumes September 2026</div>
-        <a href="https://pelhamexaminer.com/83761/schools/colonial-parents-urge-champ-board-of-ed-to-come-up-with-interim-fix-for-lack-of-air-conditioning-before-school-begins-in-september/" target="_blank" class="issue-source-link">Pelham Examiner — July 2026</a>
-      </div>
-
-      <!-- 5. LIBRARY TRANSFORMATION -->
-      <div class="issue-card fade-in">
-        <span class="issue-tag tag-budget">Public Facilities</span>
-        <h3>Pelham Public Library — $15-20M Transformation Project</h3>
-        <p>What began in 2019 as a building maintenance review has expanded into a $15-20 million "Library Transformation Project." The Town Council was informed in May 2026 that it does not view the project as a top priority, given competing demands including a permanent ambulance bay and deferred maintenance at Town Hall and Daronco Town House. A public letter to the editor in August 2026 questioned whether the project aligns with taxpayer priorities; the library board trustees responded publicly defending the plan. The debate over cost, scope, and timing is active.</p>
-        <div class="issue-status"><div class="status-dot dot-watch"></div>Under review — Town Council and library board in discussion</div>
-        <a href="https://pelhamexaminer.com/84133/letters-to-the-editor/the-pelham-public-library-has-come-up-with-a-15-20-million-transformation-project-is-that-really-a-pelham-priority/" target="_blank" class="issue-source-link">Pelham Examiner — August 2026</a>
-      </div>
-
-      <!-- 6. MANOR TRACTOR TRAILER BAN -->
-      <div class="issue-card fade-in">
-        <span class="issue-tag tag-transit">Transportation</span>
-        <h3>Pelham Manor — Tractor-Trailer Ban on Boston Post Road</h3>
-        <p>The Village of Pelham Manor Board of Trustees voted unanimously in July 2026 to begin the lengthy process required to ban tractor-trailer trucks from the Boston Post Road (Route 1). The board submitted a request to the New York State Department of Transportation. The process is expected to take considerable time and coordination with state agencies, but the vote marks a significant first step in addressing a longstanding quality-of-life concern for Manor residents near Route 1.</p>
-        <div class="issue-status"><div class="status-dot dot-active"></div>In progress — request submitted to NYS DOT</div>
-        <a href="https://pelhamexaminer.com" target="_blank" class="issue-source-link">Search "Boston Post Road" at Pelham Examiner</a>
-      </div>
-
-      <!-- 7. EMS STATION -->
-      <div class="issue-card fade-in">
-        <span class="issue-tag tag-infrastructure">EMS / Emergency Services</span>
-        <h3>EMS Station & Community Church — First Street Decisions Ahead</h3>
-        <p>Two overlapping issues on First Street: the proposed EMS station site near the Post Office continues to draw community opposition over pedestrian safety and loss of green space. Separately, the Community Church of the Pelhams appeared to be up for sale again as of April 2026, with residents raising the possibility of that site as an alternative EMS location at the Town Council meeting. No formal vote has been taken on the EMS station site. The town is also managing deferred maintenance needs at Town Hall and Daronco Town House alongside EMS facility planning.</p>
-        <div class="issue-status"><div class="status-dot dot-watch"></div>Under review — no vote taken; Community Church site emerging as alternative</div>
-        <a href="https://pelhamexaminer.com/82282/latest-news/community-church-appears-to-be-for-sale-again-says-neighborhood-group-second-avenue-resident-raises-objections-to-new-ems-hq/" target="_blank" class="issue-source-link">Pelham Examiner — April 2026</a>
-      </div>
-
-      <!-- 8. CON EDISON / FIREWORKS -->
-      <div class="issue-card fade-in">
-        <span class="issue-tag tag-energy">Energy / Public Safety</span>
-        <h3>Con Edison Rate Hike & Fini Park Fireworks</h3>
-        <p><strong>Con Edison:</strong> The rate case filed with the NY PSC in early 2025 seeking an 18% electric rate hike remains under review. The Village of Pelham joined a municipal coalition opposing it. No final PSC decision has been announced. <strong>Fini Park fireworks:</strong> The nightly illegal fireworks near the Pelham/New Rochelle border at Fini Park — which drew impassioned public comment at the July 2026 board meeting — continued through summer 2026. Trustee Howell committed to increased PPD patrols and pressing New Rochelle counterparts. Residents asked to submit videos to crystal.howell@pelhamny.gov.</p>
-        <div class="issue-status"><div class="status-dot dot-watch"></div>Both ongoing — PSC review in progress; fireworks patrols active</div>
-        <a href="https://www3.dps.ny.gov/pscweb/WebFileRoom.nsf/Web/RateCase" target="_blank" class="issue-source-link">NY PSC rate case filings</a>
-      </div>
-
+      <div class="issue-card fade-in"><span class="issue-tag tag-budget">Budget / Taxes</span><h3>Rising Property Taxes & Village Debt</h3><p>Village of Pelham adopted $20.5M FY2026-27 budget — 10.1% increase overriding the state tax cap. Village debt grew from $4.26M in 2021 to $17.88M by early 2026. The fiscal debate is central to November 2026 election.</p><div class="issue-status"><div class="status-dot dot-watch"></div>FY2026-27 adopted — structural debt debate ongoing</div><a href="https://pelhamexaminer.com/82552/latest-news/village-board-passes-20-5-million-budget-most-homeowners-tax-bills-will-rise-10-board-discusses-updating-bdfz-9th-avenue-parking/" target="_blank" class="issue-source-link">Pelham Examiner coverage</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-energy">Elections</span><h3>November 2026 — First Contested Village Race Since 2019</h3><p>Three contested races: Village of Pelham trustees (Democrats vs. Neighborhood Party/Republican challengers), Village of Pelham Manor trustees (two seats), and Town Supervisor and Clerk (Mohan and Miller re-running per new state law).</p><div class="issue-status"><div class="status-dot dot-active"></div>Campaigns underway — election November 2026</div><a href="#elections" class="issue-source-link">See full candidate profiles</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-infrastructure">Development</span><h3>Pelham Picture House — Future Still Uncertain</h3><p>MOU with PHP Partners terminated. Developer James Smithweyer working directly with Picture House. No plan approved. Picture House continues to operate and ran a successful summer film series.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Smithweyer/Picture House discussions ongoing</div><a href="https://pelhamexaminer.com" target="_blank" class="issue-source-link">Search "Picture House" at Pelham Examiner</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-education">Education</span><h3>Colonial Elementary — No Air Conditioning</h3><p>Teachers and students "dripping" in June 2026. Parents spoke at June 24 Board of Ed meeting demanding interim fix before September. Prop 1 bond funds AC — but construction timeline unclear.</p><div class="issue-status"><div class="status-dot dot-urgent"></div>Urgent — school resumes September 2026</div><a href="https://pelhamexaminer.com/83761/schools/colonial-parents-urge-champ-board-of-ed-to-come-up-with-interim-fix-for-lack-of-air-conditioning-before-school-begins-in-september/" target="_blank" class="issue-source-link">Pelham Examiner — July 2026</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-budget">Public Facilities</span><h3>Pelham Public Library — $15-20M Transformation Project</h3><p>What started as maintenance review in 2019 expanded to $15-20M project. Town Council said it's not a top priority (May 2026). Public debate underway via letters to the editor and trustee response in August 2026.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Town Council and library board in discussion</div><a href="https://pelhamexaminer.com/84133/letters-to-the-editor/the-pelham-public-library-has-come-up-with-a-15-20-million-transformation-project-is-that-really-a-pelham-priority/" target="_blank" class="issue-source-link">Pelham Examiner — August 2026</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-transit">Transportation</span><h3>Pelham Manor — Tractor-Trailer Ban on Boston Post Road</h3><p>Manor board voted unanimously in July 2026 to begin process of banning tractor-trailers from Route 1 (Boston Post Road). Request submitted to NYS DOT. Long process ahead.</p><div class="issue-status"><div class="status-dot dot-active"></div>Request submitted to NYS DOT</div><a href="https://pelhamexaminer.com" target="_blank" class="issue-source-link">Pelham Examiner coverage</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-infrastructure">EMS / Emergency Services</span><h3>EMS Station & Community Church — First Street</h3><p>Proposed EMS station near Post Office draws opposition over pedestrian safety and green space. Community Church of the Pelhams appeared for sale in April 2026 — raised as alternative site at Town Council meeting. No vote taken.</p><div class="issue-status"><div class="status-dot dot-watch"></div>No vote taken — Community Church site emerging as alternative</div><a href="https://pelhamexaminer.com/82282/latest-news/community-church-appears-to-be-for-sale-again-says-neighborhood-group-second-avenue-resident-raises-objections-to-new-ems-hq/" target="_blank" class="issue-source-link">Pelham Examiner — April 2026</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-energy">Energy / Public Safety</span><h3>Con Edison Rate Hike & Fini Park Fireworks</h3><p><strong>Con Edison:</strong> 18% rate hike request at NYS PSC under review. Village joined coalition opposing it. <strong>Fini Park:</strong> Nightly illegal fireworks through summer 2026. Trustee Howell committed to increased PPD patrols. Videos to crystal.howell@pelhamny.gov.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Both ongoing</div><a href="https://www3.dps.ny.gov/pscweb/WebFileRoom.nsf/Web/RateCase" target="_blank" class="issue-source-link">NY PSC rate case filings</a></div>
     </div>
   </div>
 </section>
-
+</div>
 <!-- GET INVOLVED -->
 <section id="get-involved" class="section involved-section">
   <div class="content-wrap">
