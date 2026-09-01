@@ -1901,7 +1901,7 @@ When someone asks for help writing a public comment, letter to the editor, or an
       });
 
       const data = await response.json();
-      const answer = data.answer || 'Sorry, I couldn\'t get a response. Please try again.';
+      const answer = data.answer || data.content?.[0]?.text || 'Sorry, I couldn\'t get a response. Please try again.';
 
       removeTyping();
       addBubble('assistant', answer, question);
