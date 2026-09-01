@@ -1,0 +1,13 @@
+# Netlify configuration for the Pelham Civic Guide
+
+[build]
+  # Static site — no build step. Serve everything from the repo root.
+  publish = "."
+  functions = "netlify/functions"
+
+# Front-end calls /api/ask; route it to the proxy function.
+[[redirects]]
+  from = "/api/ask"
+  to = "/.netlify/functions/ask-pelham"
+  status = 200
+  force = true

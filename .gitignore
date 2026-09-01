@@ -1,0 +1,14 @@
+# Secrets — never commit
+.env
+.env.*
+*.key
+
+# Netlify
+.netlify/
+
+# Node (if you ever add dependencies for the function)
+node_modules/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db

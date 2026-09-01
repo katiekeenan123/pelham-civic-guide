@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pelham Civic Guide — Know Your Town</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2744;
+    --gold: #c8973a;
+    --gold-light: #e8b85a;
+    --cream: #f7f3ec;
+    --white: #ffffff;
+    --slate: #4a5568;
+    --light: #eef0f5;
+    --red: #9b2335;
+    --green: #2a6049;
+    --border: #d4d8e1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    line-height: 1.6;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--navy);
+    color: var(--white);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-stripe {
+    background: var(--gold);
+    height: 6px;
+    width: 100%;
+  }
+
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 64px 32px 56px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .hero-stamp {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 900;
+    line-height: 1.08;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .hero-lead {
+    font-size: 17px;
+    font-weight: 300;
+    color: #b0bdd0;
+    line-height: 1.7;
+    max-width: 520px;
+  }
+
+  .hero-stats {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-top: 3px solid var(--gold);
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold-light);
+  }
+
+  .stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #8899b0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .stat-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* ── NAV ── */
+  .nav-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .nav-inner a {
+    display: block;
+    padding: 16px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--slate);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .nav-inner a:hover {
+    color: var(--navy);
+    border-bottom-color: var(--gold);
+  }
+
+  /* ── LAYOUT ── */
+  .content-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .section {
+    padding: 72px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section:last-child {
+    border-bottom: none;
+  }
+
+  .section-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 3.5vw, 36px);
+    font-weight: 900;
+    color: #2255cc;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .section-intro {
+    font-size: 16px;
+    color: var(--slate);
+    max-width: 620px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+
+  /* ── GOVERNING BODIES ── */
+  .gov-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .gov-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--navy);
+    padding: 28px;
+  }
+
+  .gov-card.gold-top { border-top-color: var(--gold); }
+  .gov-card.red-top { border-top-color: var(--red); }
+  .gov-card.green-top { border-top-color: var(--green); }
+
+  .gov-card-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 8px;
+  }
+
+  .gov-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .gov-card p {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+
+  .gov-card-detail {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  .detail-key {
+    color: var(--slate);
+  }
+
+  .detail-val {
+    font-weight: 500;
+    text-align: right;
+    max-width: 200px;
+  }
+
+  .gov-link {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 1px;
+    letter-spacing: 0.03em;
+  }
+
+  .gov-link:hover { color: var(--gold); }
+
+  .source-links {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .source-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    color: var(--slate);
+    text-decoration: none;
+    background: var(--light);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    letter-spacing: 0.02em;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .source-link:hover {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+  }
+
+  .source-link::before {
+    content: '↗';
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+  .issue-source-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 10px;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    color: var(--slate);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2px;
+    letter-spacing: 0.02em;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .issue-source-link:hover {
+    color: var(--navy);
+    border-color: var(--navy);
+  }
+
+  .issue-source-link::before {
+    content: '↗';
+    font-size: 10px;
+  }
+
+  /* ── TAX BREAKDOWN ── */
+  .tax-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .tax-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .tax-bar-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .tax-bar-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+  .tax-bar-name { font-weight: 500; color: var(--slate); }
+  .tax-bar-pct { font-family: 'IBM Plex Mono', monospace; font-weight: 500; color: var(--slate); }
+
+  .tax-bar-track {
+    background: var(--light);
+    height: 8px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .tax-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s ease;
+  }
+
+  .bar-school { background: var(--navy); }
+  .bar-county { background: var(--gold); }
+  .bar-village { background: var(--red); }
+  .bar-town { background: var(--green); }
+
+  .tax-explainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .tax-explainer-block {
+    padding: 20px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--navy);
+  }
+
+  .tax-explainer-block.gold { border-left-color: var(--gold); }
+  .tax-explainer-block.red { border-left-color: var(--red); }
+  .tax-explainer-block.green { border-left-color: var(--green); }
+
+  .teb-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--slate);
+    margin-bottom: 6px;
+  }
+
+  .teb-desc {
+    font-size: 13px;
+    color: var(--slate);
+    line-height: 1.6;
+  }
+
+  .tax-note {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: #f0f4ff;
+    border: 1px solid #c8d4ef;
+    font-size: 13px;
+    color: #2a3a6a;
+    line-height: 1.6;
+  }
+
+  /* ── CURRENT ISSUES ── */
+  .issues-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+  }
+
+  .issue-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .issue-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+
+  .tag-budget { background: #fef3cd; color: #7a5800; }
+  .tag-education { background: #dce8ff; color: #1a3a7a; }
+  .tag-infrastructure { background: #ddf0e8; color: #1a5a3a; }
+  .tag-energy { background: #fde8d8; color: #7a2a00; }
+  .tag-transit { background: #e8ddfb; color: #3a1a7a; }
+  .tag-sustainability { background: #ddf0e8; color: #1a5a3a; }
+
+  .issue-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .issue-card p {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.65;
+  }
+
+  .issue-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--slate);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-active { background: #22c55e; }
+  .dot-watch { background: var(--gold); }
+  .dot-urgent { background: var(--red); }
+
+  /* ── GET INVOLVED ── */
+  .involved-section { background: var(--navy); color: var(--white); }
+  .involved-section .section-eyebrow { color: var(--gold-light); }
+  .involved-section .section-title { color: var(--white); }
+  .involved-section .section-intro { color: #8899b0; }
+
+  .involved-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .involved-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 28px;
+    transition: background 0.2s;
+  }
+
+  .involved-card:hover { background: rgba(255,255,255,0.08); }
+
+  .involved-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .involved-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--gold-light);
+  }
+
+  .involved-card p {
+    font-size: 13px;
+    color: #8899b0;
+    line-height: 1.65;
+  }
+
+  .involved-card ul {
+    margin-top: 12px;
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .involved-card li {
+    font-size: 13px;
+    color: #a0b0c8;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .involved-card li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 11px;
+    top: 1px;
+  }
+
+  /* ── MEETING SCHEDULE ── */
+  .meetings-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    font-size: 14px;
+  }
+
+  .meetings-table th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .meetings-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+
+  .meetings-table tr:last-child td { border-bottom: none; }
+  .meetings-table tr:nth-child(even) td { background: #f9fafb; }
+
+  .body-name {
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .meeting-link {
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--navy);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold);
+  }
+
+  .meeting-link:hover { color: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #111827;
+    color: #6b7280;
+    padding: 32px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  footer a { color: var(--gold-light); text-decoration: none; }
+  footer strong { color: var(--white); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-stats { display: none; }
+    .tax-layout { grid-template-columns: 1fr; }
+    .content-wrap { padding: 0 20px; }
+    .section { padding: 48px 0; }
+    .involved-card[style*="grid-column"] { grid-column: span 1 !important; }
+    .involved-card[style*="grid-column"] > div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+  }
+
+  /* ── SCROLL ANIMATION ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .feedback-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .feedback-label {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #3a5060;
+    letter-spacing: 0.05em;
+  }
+  .feedback-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #4a6070;
+    padding: 4px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+  .feedback-btn:hover { border-color: rgba(255,255,255,0.3); color: #c8d8e8; }
+  .feedback-btn.selected-up   { background: rgba(42,96,73,0.3); border-color: #2a6049; color: #66bb88; }
+  .feedback-btn.selected-down { background: rgba(155,35,53,0.3); border-color: #9b2335; color: #dd6677; }
+  .feedback-thanks {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #3a7050;
+    display: none;
+  }
+
+  /* ── MEETING SUMMARY DISCLAIMER ── */
+  .summary-disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fff8e8;
+    border: 1px solid #e8d090;
+    border-left: 4px solid #c8973a;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #5a4010;
+  }
+  .summary-disclaimer-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .summary-disclaimer a { color: #7a5010; text-decoration: underline; }
+  .summary-disclaimer strong { color: #3a2800; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-stamp">Westchester County · New York State · Est. 1650</div>
+      <h1>Your guide to <em>Pelham</em> civic life.</h1>
+      <p class="hero-lead">Our mission is to increase civic awareness and engagement in local matters in Pelham, NY — by making public information accessible, understandable, and actionable for every resident.</p>
+      <p class="hero-lead" style="margin-top:12px; font-size:15px;">Pelham has layered government across a Town, two Villages, a School District, and County. This guide cuts through the complexity so you can show up informed, ask better questions, and make your voice count.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">~13,000</span>
+        <span class="stat-label">Residents in the Town of Pelham</span>
+      </div>
+      <hr class="stat-divider">
+      <div class="stat">
+        <span class="stat-num">5</span>
+        <span class="stat-label">Distinct governing bodies affecting your taxes</span>
+      </div>
+      <hr class="stat-divider">
+      <div class="stat">
+        <span class="stat-num">$96.3M</span>
+        <span class="stat-label">School District budget, 2025–26</span>
+      </div>
+      <hr class="stat-divider">
+      <div class="stat">
+        <span class="stat-num">1650</span>
+        <span class="stat-label">Year Pelham was founded — oldest town in Westchester</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <a href="#who-governs">Who Governs</a>
+    <a href="#ask-pelham" style="color: var(--gold); font-weight: 600;">Ask Pelham AI ✦</a>
+    <a href="#explore">Explore More</a>
+    <a href="#get-involved">Get Involved</a>
+    <a href="#meetings">Meeting Schedule</a>
+    <a href="#about">About & Corrections</a>
+  </div>
+</nav>
+
+<!-- GOVERNING BODIES -->
+<section id="who-governs" class="section">
+  <div class="content-wrap">
+    <div class="section-eyebrow">Part 1 — Government Structure</div>
+    <h2 class="section-title">Who Actually Governs Pelham?</h2>
+    <p class="section-intro">Pelham is unique: the entire Town is made up of two incorporated Villages. That means Village governments handle most day-to-day services, while Town government handles shared functions. Then add the School District, County, and State on top.</p>
+
+    <div class="gov-grid">
+      <div class="gov-card fade-in">
+        <div class="gov-card-label">Village Government</div>
+        <h3>Village of Pelham</h3>
+        <p>The primary local government for residents of "Pelham Heights" and former North Pelham. The Board of Trustees sets policy, manages the budget, and runs most everyday services — police, fire, garbage, water, and roads.</p>
+        <div class="gov-card-detail">
+          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">Mayor + 6 Trustees</span></div>
+          <div class="detail-row"><span class="detail-key">FY2026–27 Budget</span><span class="detail-val">$20.5M (↑10.1%)</span></div>
+          <div class="detail-row"><span class="detail-key">Meetings</span><span class="detail-val">2nd & 4th Tuesday, monthly</span></div>
+          <div class="detail-row"><span class="detail-key">Meeting Location</span><span class="detail-val">200 Fifth Ave, 1st floor</span></div>
+        </div>
+        <a href="https://www.pelhamny.gov" target="_blank" class="gov-link">pelhamny.gov →</a>
+        <div class="source-links">
+          <a href="https://www.pelhamny.gov/173/Adopted-Village-Budgets" target="_blank" class="source-link">Adopted Budgets</a>
+          <a href="https://www.pelhamny.gov/AgendaCenter" target="_blank" class="source-link">Meeting Agendas</a>
+          <a href="https://www.pelhamny.gov/m/newsflash" target="_blank" class="source-link">News & Notices</a>
+        </div>
+      </div>
+
+      <div class="gov-card gold-top fade-in">
+        <div class="gov-card-label">Village Government</div>
+        <h3>Village of Pelham Manor</h3>
+        <p>The second of Pelham's two villages, covering the Manor neighborhood. Has its own elected Mayor and Board of Trustees, runs its own police and fire departments, and manages village-level services independently.</p>
+        <div class="gov-card-detail">
+          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">Mayor + Board of Trustees</span></div>
+          <div class="detail-row"><span class="detail-key">FY2026–27 Budget</span><span class="detail-val">$21.9M ($19.4M ops + $2.5M capital)</span></div>
+          <div class="detail-row"><span class="detail-key">Area</span><span class="detail-val">1.2 square miles</span></div>
+          <div class="detail-row"><span class="detail-key">Village Hall</span><span class="detail-val">4 Penfield Place</span></div>
+        </div>
+        <a href="https://www.pelhammanor.gov" target="_blank" class="gov-link">pelhammanor.gov →</a>
+        <div class="source-links">
+          <a href="https://www.pelhammanor.gov/209/Budgets-Financial-Statements" target="_blank" class="source-link">Budgets & Financials</a>
+          <a href="https://www.pelhammanor.gov/AgendaCenter" target="_blank" class="source-link">Meeting Agendas</a>
+          <a href="https://www.pelhammanor.gov/m/newsflash" target="_blank" class="source-link">News & Notices</a>
+        </div>
+      </div>
+
+      <div class="gov-card red-top fade-in">
+        <div class="gov-card-label">Town Government</div>
+        <h3>Town of Pelham</h3>
+        <p>The Town umbrella covers both villages. Rather than duplicating services, it handles shared functions that make sense to consolidate: municipal courts, tax assessment &amp; collection, recreation programs, the public library, and ambulance service.</p>
+        <div class="gov-card-detail">
+          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">Supervisor + 4 Councilors</span></div>
+          <div class="detail-row"><span class="detail-key">2025 Budget</span><span class="detail-val">$7.18M total appropriations</span></div>
+          <div class="detail-row"><span class="detail-key">Key Services</span><span class="detail-val">Courts, Assessor, Recreation</span></div>
+          <div class="detail-row"><span class="detail-key">Town Hall</span><span class="detail-val">34 Fifth Ave</span></div>
+        </div>
+        <a href="https://townofpelhamny.gov" target="_blank" class="gov-link">townofpelhamny.gov →</a>
+        <div class="source-links">
+          <a href="https://townofpelhamny.gov/budgets-and-reports/" target="_blank" class="source-link">Budgets & Reports</a>
+          <a href="https://townofpelhamny.gov/receiver-of-taxes/" target="_blank" class="source-link">Pay / View Taxes</a>
+          <a href="https://townofpelhamny.gov/news-and-notices/" target="_blank" class="source-link">News & Notices</a>
+        </div>
+      </div>
+
+      <div class="gov-card green-top fade-in">
+        <div class="gov-card-label">School District</div>
+        <h3>Pelham Union Free School District</h3>
+        <p>An elected Board of Education governs K–12 education across four elementary schools, one middle school, and Pelham Memorial High School. The school district has its own budget voted on separately by residents each May.</p>
+        <div class="gov-card-detail">
+          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">9-member Board of Education</span></div>
+          <div class="detail-row"><span class="detail-key">FY2025–26 Budget</span><span class="detail-val">$96.3M (↑2.9%, voter-approved)</span></div>
+          <div class="detail-row"><span class="detail-key">Schools</span><span class="detail-val">4 Elementary, 1 Middle, 1 HS</span></div>
+          <div class="detail-row"><span class="detail-key">Budget Vote</span><span class="detail-val">Every May (public vote)</span></div>
+        </div>
+        <a href="https://www.pelhamschools.org" target="_blank" class="gov-link">pelhamschools.org →</a>
+        <div class="source-links">
+          <a href="https://www.pelhamschools.org/district/about/financials" target="_blank" class="source-link">Budget & Financials</a>
+          <a href="https://www.pelhamschools.org/district/board-of-education" target="_blank" class="source-link">Board of Education</a>
+          <a href="https://www.pelhamschools.org/district/news" target="_blank" class="source-link">District News</a>
+        </div>
+      </div>
+
+      <div class="gov-card fade-in">
+        <div class="gov-card-label">County Government</div>
+        <h3>Westchester County</h3>
+        <p>County government provides regional services including the county police, health department, parks, sewer districts, and social services. Westchester is also the entity that establishes equalization rates used in property tax assessments.</p>
+        <div class="gov-card-detail">
+          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">County Executive + Legislature</span></div>
+          <div class="detail-row"><span class="detail-key">County Budget</span><span class="detail-val">See westchestercountyny.gov</span></div>
+          <div class="detail-row"><span class="detail-key">Pelham's District</span><span class="detail-val">14th Legislative District</span></div>
+          <div class="detail-row"><span class="detail-key">Key Services</span><span class="detail-val">Health, Parks, Sewer, Courts</span></div>
+        </div>
+        <a href="https://www.westchestercountyny.gov" target="_blank" class="gov-link">westchestercountyny.gov →</a>
+        <div class="source-links">
+          <a href="https://www.westchestercountyny.gov/government/departments/budget" target="_blank" class="source-link">County Budget</a>
+          <a href="https://www.westchestercountyny.gov/government/legislature" target="_blank" class="source-link">Legislature</a>
+        </div>
+      </div>
+
+      <div class="gov-card fade-in" style="background: var(--light); border-style: dashed;">
+        <div class="gov-card-label">Quick Reference</div>
+        <h3>Who to call for what?</h3>
+        <p style="font-size:13px;">
+          <strong>Pothole on your street?</strong> → Village DPW<br><br>
+          <strong>Noise complaint?</strong> → Village Police<br><br>
+          <strong>Tax bill question?</strong> → Town Receiver of Taxes<br><br>
+          <strong>School issue?</strong> → Board of Education<br><br>
+          <strong>Parks &amp; rec programs?</strong> → Town Recreation Dept<br><br>
+          <strong>Property assessment dispute?</strong> → Town Assessor<br><br>
+          <strong>Library hours?</strong> → Pelham Public Library (Town-run)
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ASK PELHAM AI -->
+<section id="ask-pelham" class="section" style="background: var(--navy);">
+  <div class="content-wrap">
+    <div class="section-eyebrow" style="color: var(--gold-light);">Part 2 — Research Tool</div>
+    <h2 class="section-title" style="color: var(--white);">Ask Pelham AI</h2>
+    <p class="section-intro" style="color: #8899b0; max-width: 620px;">
+      Have a question about local government, your tax bill, a current issue, or how to get involved? This assistant is trained to answer using only vetted Pelham sources — official government websites, the Pelham Examiner, and school district documents.
+    </p>
+
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;">
+      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ pelhamny.gov</span>
+      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ pelhammanor.gov</span>
+      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ townofpelhamny.gov</span>
+      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ pelhamschools.org</span>
+      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ pelhamexaminer.com</span>
+      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ westchestercountyny.gov</span>
+    </div>
+
+    <!-- Suggested prompts -->
+    <div style="margin-bottom: 20px;">
+      <div style="font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">Try asking…</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="suggestion-chips">
+        <button class="suggestion-chip" onclick="usePrompt(this)">How does the school district budget affect my property taxes?</button>
+        <button class="suggestion-chip" onclick="usePrompt(this)">What did the $143.6M school bond vote decide?</button>
+        <button class="suggestion-chip" onclick="usePrompt(this)">How do I dispute my property tax assessment?</button>
+        <button class="suggestion-chip" onclick="usePrompt(this)">Who are the Pelham Board of Education members?</button>
+        <button class="suggestion-chip" onclick="usePrompt(this)">Why did the Village of Pelham override the tax cap?</button>
+        <button class="suggestion-chip" onclick="usePrompt(this)">When is the next school budget vote and how do I participate?</button>
+        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Is the school district spending my tax dollars wisely?</button>
+        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Should I have voted yes on the school bond?</button>
+        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Was overriding the village tax cap the right call?</button>
+        <button class="suggestion-chip draft-chip" onclick="usePrompt(this)">Help me write a public comment about the school budget</button>
+        <button class="suggestion-chip draft-chip" onclick="usePrompt(this)">I want to write a letter to the Examiner about property tax increases</button>
+      </div>
+      <div style="margin-top: 8px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #4a6070; display: flex; gap: 16px; flex-wrap: wrap;">
+        <span><span style="color: var(--gold);">✦</span> gold — explore your own view in Claude.ai</span>
+        <span><span style="color: #55cccc;">✎</span> teal — draft a public comment or letter</span>
+      </div>
+    </div>
+
+    <!-- Chat window -->
+    <div id="chat-window" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); min-height: 200px; max-height: 460px; overflow-y: auto; padding: 24px; margin-bottom: 16px; display: none; flex-direction: column; gap: 16px; scroll-behavior: smooth;">
+    </div>
+
+    <!-- Input row -->
+    <div style="display: flex; gap: 10px;">
+      <textarea
+        id="ai-input"
+        placeholder="Ask anything about Pelham government, taxes, issues, or how to get involved…"
+        rows="2"
+        style="flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: var(--white); padding: 12px 16px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; resize: none; line-height: 1.5; outline: none;"
+        onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); askClaude();}"
+      ></textarea>
+      <button
+        id="ask-btn"
+        onclick="askClaude()"
+        style="background: var(--gold); color: var(--navy); border: none; padding: 0 24px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.2s;"
+        onmouseover="this.style.background='#e8b85a'"
+        onmouseout="this.style.background='var(--gold)'"
+      >Ask →</button>
+    </div>
+    <div style="margin-top: 10px; font-size: 11px; color: #556070; font-family: 'IBM Plex Mono', monospace;">
+      ⚠ AI-generated · responses may contain errors · always verify facts at official sources · use 👍/👎 to flag inaccurate answers
+    </div>
+  </div>
+</section>
+
+<style>
+  .suggestion-chip {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #a0b4cc;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    text-align: left;
+  }
+  .suggestion-chip:hover {
+    background: rgba(200,151,58,0.15);
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+  .opinion-chip {
+    border-color: rgba(200,151,58,0.4);
+    color: #c8aa70;
+  }
+  .opinion-chip::before {
+    content: "✦ ";
+    color: var(--gold);
+    font-size: 10px;
+  }
+  .draft-chip {
+    border-color: rgba(26,122,122,0.4);
+    color: #55aaaa;
+  }
+  .draft-chip::before {
+    content: "✎ ";
+    color: #55cccc;
+    font-size: 11px;
+  }
+  .chat-bubble {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 88%;
+  }
+  .chat-bubble.user { align-self: flex-end; align-items: flex-end; }
+  .chat-bubble.assistant { align-self: flex-start; align-items: flex-start; }
+  .bubble-label {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    color: var(--white);
+  }
+  .bubble-text {
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .chat-bubble.user .bubble-text {
+    background: rgba(200,151,58,0.2);
+    border: 1px solid rgba(200,151,58,0.3);
+    color: #e8d5aa;
+  }
+  .chat-bubble.assistant .bubble-text {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #c8d8e8;
+  }
+  .go-deeper-block {
+    margin-top: 12px;
+    background: rgba(200,151,58,0.08);
+    border: 1px solid rgba(200,151,58,0.25);
+    border-left: 3px solid var(--gold);
+    padding: 12px 14px;
+  }
+  .go-deeper-label {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .go-deeper-prompt {
+    font-size: 12px;
+    color: #a8b8c8;
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+  .go-deeper-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .go-deeper-copy {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    background: rgba(200,151,58,0.15);
+    border: 1px solid rgba(200,151,58,0.3);
+    color: var(--gold-light);
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .go-deeper-copy:hover { background: rgba(200,151,58,0.25); }
+  .go-deeper-link {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #556070;
+    text-decoration: none;
+  }
+  .go-deeper-link:hover { color: #8899b0; }
+  .copy-confirm {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #44aa66;
+    display: none;
+  }
+  .typing-dots span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin: 0 2px;
+    animation: bounce 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+</style>
+
+<script>
+  const SYSTEM_PROMPT = `You are a civic information assistant for Pelham, NY — a small town in Westchester County made up of two villages (Village of Pelham and Village of Pelham Manor) plus the Town of Pelham, the Pelham Union Free School District, and Westchester County government.
+
+Your ONLY job is to help residents understand local government, taxes, current issues, and civic participation. You draw exclusively from these vetted sources:
+- pelhamny.gov (Village of Pelham official site)
+- pelhammanor.gov (Village of Pelham Manor official site)
+- townofpelhamny.gov (Town of Pelham official site)
+- pelhamschools.org (Pelham Union Free School District)
+- pelhamexaminer.com (local newspaper)
+- westchestercountyny.gov (Westchester County)
+
+Key facts you know:
+- Village of Pelham FY2026-27 budget: $20.5M (10.1% increase, exceeds tax cap)
+- Village of Pelham Manor FY2026-27 budget: $21.9M ($19.4M operating + $2.6M capital), 2.85% tax increase, under cap
+- Town of Pelham 2025 budget: $7.18M total appropriations
+- Pelham Union Free School District FY2025-26 budget: $96.3M (2.9% increase, voter-approved May 2025)
+- School capital bond: $143.6M proposed; Props 1 & 2 passed (school repairs + Siwanoy expansion); Props 3 & 4 failed
+- Con Edison rate case: filed 2025 with NY PSC, seeking 18% electric rate hike; Village of Pelham joined municipal coalition opposing it
+- MTA Penn Station Access construction active on First Street
+- Pelham Picture House redevelopment (major ongoing story as of early 2026): The 105-year-old cinema at the corner of Wolfs Lane is at center of a contentious development debate. Key facts: (1) Village posted an RFQ last May 2025 seeking a developer for a public-private partnership to expand/redevelop the Picture House and surrounding gas station properties; (2) January 2026: Board selected PHP Partners LLC (Patrick Normoyle) as preferred developer; (3) February 10 2026: Board voted 5-2 to approve an MOU with PHP Partners to explore mixed-use redevelopment of the gas station properties — Mullen, Anderson, Howell, Otondi and Carpenter voted yes; Eldahry and Solomon voted no; (4) Mayor Mullen insisted "there is no project — the MOU is not a decision"; (5) Strong community opposition — 90 minutes of public comment, Pelham Preservation & Garden Society called for more transparency; gas station owners objected saying they were never contacted and had no interest in selling; (6) February 18 2026: Mayor Mullen reversed course, giving his blessing to developer James Smithmeyer (who owns vacant lot at 163 Wolfs Lane, purchased for $2.1M in December) to work directly with the Picture House on a mixed-use plan that does NOT involve the gas stations; (7) The MOU with PHP Partners was subsequently terminated; (8) Picture House leadership (Joe Marty and Clay Bushong) have said they need renovation including more screening rooms, parking, and an education center to remain viable, but will not move forward on any proposal that doesn't satisfy their needs; (9) The Picture House is on the National Register of Historic Places, has been saved from demolition twice (1928 and 2003). Source: pelhamexaminer.com — search 'Picture House' for full coverage
+- Proposed EMS station on First Street near Post Office — community opposition ongoing
+- Village of Pelham Sustainability Advisory Board recruiting for 2026-27
+- Property taxes in Pelham are split roughly: ~60-65% school district, ~17-20% county, ~12-16% village, ~3-5% town
+- Tax questions: Town Receiver of Taxes at 914-738-1642; Town Assessor at 914-738-2878
+- Public meetings: Village of Pelham 2nd & 4th Tuesdays at 200 Fifth Ave; Pelham Manor monthly Mondays at 4 Penfield Place; Town Board monthly at 34 Fifth Ave; Board of Ed monthly at district offices
+- Public comment process varies by board — do NOT describe a universal sign-up sheet process. Village of Pelham: residents typically sign in at the door before the meeting starts. Pelham Manor and Town Board: public comment is often called from the floor — residents simply stand or raise their hand when the chair invites public comment. Board of Education: similar floor-based process. Always tell residents to arrive 10-15 minutes early and ask the clerk when they arrive how public comment works that evening — procedures can vary meeting to meeting.
+- Pelham Examiner honesty rule: pelhamexaminer.com is a vetted source but you cannot access their live archive or search their articles in real time. When a question likely has Examiner coverage (named projects, local controversies, election coverage, specific people), say: "The Pelham Examiner has covered this — I'd recommend searching pelhamexaminer.com for [topic] to get the full story." Never imply you have read or searched the Examiner yourself.
+
+Rules:
+1. Only answer questions about Pelham, NY civic life: government, taxes, budgets, issues, elections, public meetings, and how to get involved.
+2. If asked about something outside this scope, politely redirect to the civic topic and explain what you can help with.
+3. Always be specific — cite dollar amounts, dates, addresses, and names when you have them.
+4. End answers about specific facts by suggesting the user verify at the relevant official source.
+5. Keep answers concise — 3 to 6 sentences for simple questions, a short bulleted list for multi-part questions.
+6. Maintain a warm, non-partisan, helpful tone. Never editorialize about political positions.
+
+OPINION & "SHOULD I" QUESTIONS:
+When a question asks for your opinion, asks what someone should do, or asks you to evaluate whether something is good/bad/right/wrong (e.g. "Should I vote yes?", "Is the tax increase fair?", "Do you think the board made the right call?"):
+- Answer the factual part fully and specifically as usual
+- Do NOT offer your own opinion or take a side
+- End your response with a special marker on its own line, exactly like this:
+  DEEPER_PROMPT: [write a specific, personalized Claude.ai prompt the user could copy to explore their own view — 1-2 sentences, grounded in the specific topic they asked about, framed from the resident's perspective]
+
+Example — if asked "Should I be worried about village tax increases?":
+  DEEPER_PROMPT: I'm a Pelham, NY homeowner. The Village of Pelham just passed a $20.5M budget with a 10.1% increase, overriding the state tax cap for the first time. Help me think through whether this level of spending growth is sustainable and what questions I should be asking my elected officials.
+
+COLLUSION / MISCONDUCT QUESTIONS:
+When a question implies, suggests, or asks about illegal activity, corruption, collusion, ethics violations, or inappropriate conduct by elected officials or staff (e.g. "Is the mayor corrupt?", "Are the trustees colluding with developers?", "Is something shady going on with the budget?"):
+- Do NOT speculate, validate, or engage with the allegation
+- If the Pelham Examiner has specifically reported on a relevant ethics or misconduct issue, you may summarize what was reported and cite the source
+- Otherwise, respond with this exact approach: acknowledge that government accountability is important, note that you can only report what has been covered by vetted sources, and direct the resident to appropriate channels (FOIL requests, the NYS Joint Commission on Public Ethics at jcope.ny.gov, or attending public meetings to ask questions directly)
+- Never amplify unverified allegations about named individuals
+
+DRAFTING PUBLIC COMMENTS & LETTERS TO THE EDITOR:
+When someone asks for help writing a public comment, letter to the editor, or any civic communication:
+- Do NOT write the comment or letter for them — the goal is to help them find and express their own voice
+- First, make sure they have the facts they need — provide a concise briefing on the relevant issue
+- Then ask them two clarifying questions (pick the most relevant):
+  1. What is your personal connection to this issue — how does it affect you or your family?
+  2. What specific action do you want the board (or editor's readers) to take?
+- Once they have answered, offer this structure as a framework:
+  PUBLIC COMMENT (2-3 min): Opening (who you are + why you care) → Personal impact (specific and concrete) → Specific ask (what you want the board to do) → Respectful close
+  LETTER TO EDITOR: Hook (why this matters now) → Your perspective and experience → Evidence or context → Call to action for readers → Constructive close
+- Always include this guidance before handing off to Claude.ai:
+  "The most effective public comments are calm, specific, and constructive. Boards hear a lot of frustration — a resident who names a specific concern and makes a clear, reasonable ask stands out and is far more likely to get a real response. Respectful doesn't mean weak; it means your argument does the work, not your emotion."
+- End with a DEEPER_PROMPT that pre-loads their position, the relevant facts, their specific ask, and a tone reminder so Claude.ai can help them write it in their own voice. Example:
+  DEEPER_PROMPT: Help me write a 2-minute public comment for the Village of Pelham Board of Trustees about the proposed EMS station on First Street. My concern is pedestrian safety near the Post Office, especially for kids walking to the train station. I want to ask the board to study alternative sites before any vote. Keep the tone respectful and constructive — I want to be persuasive, not dismissed. Use plain language, keep it under 300 words, and leave room for me to make it sound like me.`;
+
+  let conversationHistory = [];
+
+  function usePrompt(btn) {
+    document.getElementById('ai-input').value = btn.textContent;
+    document.getElementById('ai-input').focus();
+  }
+
+  let feedbackCount = 0;
+
+  function submitFeedback(id, type, question, answer) {
+    // Log to console (in production, POST to your Supabase feedback table)
+    console.log('Feedback:', { id, type, question, answer, timestamp: new Date().toISOString() });
+    const row = document.getElementById('feedback-' + id);
+    if (!row) return;
+    row.querySelectorAll('.feedback-btn').forEach(b => b.disabled = true);
+    if (type === 'up') {
+      row.querySelector('.btn-up').classList.add('selected-up');
+    } else {
+      row.querySelector('.btn-down').classList.add('selected-down');
+    }
+    row.querySelector('.feedback-thanks').style.display = 'inline';
+  }
+
+  function copyPrompt(btn, promptText) {
+    navigator.clipboard.writeText(promptText).then(() => {
+      const confirm = btn.nextElementSibling;
+      confirm.style.display = 'inline';
+      btn.textContent = 'Copied!';
+      setTimeout(() => { confirm.style.display = 'none'; btn.textContent = 'Copy prompt'; }, 2000);
+    });
+  }
+
+  function addBubble(role, text, questionForFeedback) {
+    const win = document.getElementById('chat-window');
+    win.style.display = 'flex';
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${role}`;
+    const feedbackId = ++feedbackCount;
+
+    // Parse out DEEPER_PROMPT marker if present
+    let displayText = text;
+    let deeperPrompt = null;
+    const deeperMatch = text.match(/DEEPER_PROMPT:\s*(.+)$/s);
+    if (deeperMatch) {
+      deeperPrompt = deeperMatch[1].trim();
+      displayText = text.replace(/\n?DEEPER_PROMPT:.+$/s, '').trim();
+    }
+
+    const claudeUrl = deeperPrompt
+      ? 'https://claude.ai/new?q=' + encodeURIComponent(deeperPrompt)
+      : 'https://claude.ai';
+
+    const deeperHtml = deeperPrompt ? `
+      <div class="go-deeper-block">
+        <div class="go-deeper-label">✦ Want to go deeper?</div>
+        <div class="go-deeper-prompt">"${deeperPrompt}"</div>
+        <div class="go-deeper-actions">
+          <button class="go-deeper-copy" onclick="copyPrompt(this, ${JSON.stringify(deeperPrompt)})">Copy prompt</button>
+          <span class="copy-confirm">✓ Copied</span>
+          <a href="${claudeUrl}" target="_blank" class="go-deeper-link">→ Open in Claude.ai</a>
+        </div>
+      </div>` : '';
+
+    const feedbackHtml = role === 'assistant' ? `
+      <div class="feedback-row" id="feedback-${feedbackId}">
+        <span class="feedback-label">Helpful?</span>
+        <button class="feedback-btn btn-up" onclick="submitFeedback(${feedbackId}, 'up', ${JSON.stringify(questionForFeedback||'')}, ${JSON.stringify(displayText.slice(0,200))})">👍</button>
+        <button class="feedback-btn btn-down" onclick="submitFeedback(${feedbackId}, 'down', ${JSON.stringify(questionForFeedback||'')}, ${JSON.stringify(displayText.slice(0,200))})">👎</button>
+        <span class="feedback-thanks">Thanks — we'll use this to improve.</span>
+      </div>` : '';
+
+    bubble.innerHTML = `
+      <div class="bubble-label">${role === 'user' ? 'You' : 'Pelham AI'}</div>
+      <div class="bubble-text">${displayText.replace(/\n/g, '<br>')}</div>
+      ${deeperHtml}
+      ${feedbackHtml}
+    `;
+    win.appendChild(bubble);
+    win.scrollTop = win.scrollHeight;
+    return bubble;
+  }
+
+  function addTyping() {
+    const win = document.getElementById('chat-window');
+    win.style.display = 'flex';
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble assistant';
+    bubble.id = 'typing-indicator';
+    bubble.innerHTML = `
+      <div class="bubble-label">Pelham AI</div>
+      <div class="bubble-text typing-dots"><span></span><span></span><span></span></div>
+    `;
+    win.appendChild(bubble);
+    win.scrollTop = win.scrollHeight;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typing-indicator');
+    if (t) t.remove();
+  }
+
+  async function askClaude() {
+    const input = document.getElementById('ai-input');
+    const btn = document.getElementById('ask-btn');
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    btn.disabled = true;
+    btn.textContent = '…';
+
+    addBubble('user', question);
+    conversationHistory.push({ role: 'user', content: question });
+    addTyping();
+
+    try {
+      // Calls the Netlify proxy function (netlify/functions/ask-pelham.js),
+      // which adds the model, max_tokens, and the secret ANTHROPIC_API_KEY
+      // server-side. The key is never exposed to the browser.
+      const response = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          system: SYSTEM_PROMPT,
+          messages: conversationHistory
+        })
+      });
+
+      if (!response.ok) throw new Error('Proxy error ' + response.status);
+
+      const data = await response.json();
+      const answer = data.content?.[0]?.text || 'Sorry, I couldn\'t get a response. Please try again.';
+
+      removeTyping();
+      addBubble('assistant', answer, question);
+      conversationHistory.push({ role: 'assistant', content: answer });
+
+    } catch (err) {
+      removeTyping();
+      addBubble('assistant', 'Something went wrong connecting to the AI. Please try again in a moment.');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Ask →';
+  }
+</script>
+
+
+<!-- EXPLORE MORE -->
+<section id="explore" class="section" style="background: var(--light); padding-top: 48px; padding-bottom: 0;">
+  <div class="content-wrap">
+    <div class="section-eyebrow">Part 3 — Explore More</div>
+    <h2 class="section-title">Dive Deeper</h2>
+    <p class="section-intro">Meeting summaries, your tax breakdown, and current issues — all in one place. Pick a tab to explore.</p>
+    <div style="display:flex; gap:0; border-bottom: 2px solid var(--border); margin-bottom: 0; overflow-x: auto;">
+      <button class="explore-tab active-explore-tab" onclick="selectExplore(this, 'explore-meetings')">📋 Meeting Summaries</button>
+      <button class="explore-tab" onclick="selectExplore(this, 'explore-taxes')">💰 Your Taxes</button>
+      <button class="explore-tab" onclick="selectExplore(this, 'explore-issues')">🔔 Current Issues</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .explore-tab {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 14px 24px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--slate);
+    cursor: pointer;
+    margin-bottom: -2px;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .explore-tab:hover { color: var(--navy); }
+  .active-explore-tab { color: var(--navy); border-bottom-color: var(--navy); font-weight: 700; }
+  .explore-panel { display: none; }
+  .explore-panel.active-panel { display: block; }
+</style>
+
+<script>
+  function selectExplore(btn, panelId) {
+    document.querySelectorAll('.explore-tab').forEach(b => b.classList.remove('active-explore-tab'));
+    btn.classList.add('active-explore-tab');
+    document.querySelectorAll('.explore-panel').forEach(p => p.classList.remove('active-panel'));
+    document.getElementById(panelId).classList.add('active-panel');
+    document.getElementById('explore').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+
+<div id="explore-meetings" class="explore-panel active-panel">
+<!-- MEETING SUMMARIES -->
+<section id="meeting-summaries" class="section" style="background: var(--light);">
+  <div class="content-wrap">
+    <div class="section-eyebrow">Part 3 — Meeting Intelligence</div>
+    <h2 class="section-title">Meeting Summaries</h2>
+    <p class="section-intro">Every public meeting is recorded. We watch them so you don't have to — generating three layers of detail automatically from each session. Select a meeting and choose your level of detail.</p>
+
+    <!-- Meeting selector -->
+    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px;">
+      <button class="mtg-selector active-mtg" onclick="selectMeeting(this, 'pelham-board-jun2026')">
+        <span class="mtg-sel-body">Village of Pelham</span>
+        <span class="mtg-sel-date">Board of Trustees · June 10, 2026</span>
+      </button>
+      <button class="mtg-selector" onclick="selectMeeting(this, 'town-board-jun2026')">
+        <span class="mtg-sel-body">Town of Pelham</span>
+        <span class="mtg-sel-date">Town Board · June 2, 2026</span>
+      </button>
+      <button class="mtg-selector" onclick="selectMeeting(this, 'manor-board-jun2026')">
+        <span class="mtg-sel-body">Village of Pelham Manor</span>
+        <span class="mtg-sel-date">Board of Trustees · June 9, 2026</span>
+      </button>
+      <button class="mtg-selector" onclick="selectMeeting(this, 'boe-may2026')">
+        <span class="mtg-sel-body">Board of Education</span>
+        <span class="mtg-sel-date">Regular Meeting · May 19, 2026</span>
+      </button>
+    </div>
+
+    <!-- Detail level tabs -->
+    <div style="display: flex; gap: 0; margin-bottom: 24px; border-bottom: 2px solid var(--border);">
+      <button class="detail-tab active-tab" onclick="selectTab(this, 'exec')">Executive Summary</button>
+      <button class="detail-tab" onclick="selectTab(this, 'detailed')">Detailed Summary</button>
+      <button class="detail-tab" onclick="selectTab(this, 'transcript')">Full Transcript</button>
+    </div>
+
+    <!-- Accuracy disclaimer -->
+    <div class="summary-disclaimer">
+      <span class="summary-disclaimer-icon">⚠️</span>
+      <div>
+        <strong>AI-generated summaries — not official records.</strong> These summaries are produced automatically from meeting recordings using speech-to-text and AI. Speaker attributions and quotes are approximate. Votes are cross-referenced with posted minutes where available.
+        Always verify specific quotes, decisions, or vote counts against the <a href="#" onclick="return false;">official recording</a> and <a href="https://www.pelhamny.gov/AgendaCenter" target="_blank">posted meeting minutes</a> before citing or acting on this information.
+      </div>
+    </div>
+
+    <!-- Content panels -->
+    <div id="mtg-content">
+
+      <!-- EXECUTIVE SUMMARY -->
+      <div id="panel-exec" class="mtg-panel">
+        <div class="mtg-meta">
+          <span class="mtg-meta-item">📅 June 10, 2026</span>
+          <span class="mtg-meta-item">⏱ 1hr 42min</span>
+          <span class="mtg-meta-item">👥 Mayor Mullen · 6 Trustees · ~35 residents</span>
+          <a href="#" class="mtg-meta-item mtg-video-link">▶ Watch recording</a>
+        </div>
+        <div class="exec-summary">
+          <p>The Village of Pelham Board of Trustees adopted the FY2026–27 budget of <strong>$20.5 million</strong> in a 5-2 vote, formally overriding the New York State tax cap for the first time in recent memory. Mayor Mullen cited rising debt service costs (up 40%), increased pension contributions, and health insurance premiums as the primary drivers, describing this as "the most challenging budget process" he has experienced. The average homeowner will see a village tax increase of approximately $580, or 8.5%.</p>
+          <p>The board also approved a <strong>contract for stormwater flood mitigation work</strong> on Wolfs Lane and directed staff to issue an RFP for traffic enforcement camera systems. A contentious public comment period focused on the proposed EMS station on First Street, with seven residents speaking in opposition citing pedestrian safety and loss of green space. No vote on the EMS station was taken; the board indicated it would return with additional site analysis.</p>
+        </div>
+        <div class="exec-votes">
+          <div class="exec-votes-label">Key Votes</div>
+          <div class="vote-row"><span class="vote-result pass">✓ PASSED 5–2</span><span class="vote-desc">FY2026–27 Budget Adoption ($20.5M, tax cap override)</span></div>
+          <div class="vote-row"><span class="vote-result pass">✓ PASSED 7–0</span><span class="vote-desc">Stormwater contract award — Wolfs Lane, $340,000</span></div>
+          <div class="vote-row"><span class="vote-result pass">✓ PASSED 7–0</span><span class="vote-desc">NYSERDA grant acceptance — $236,087 for EV police vehicles</span></div>
+          <div class="vote-row"><span class="vote-result defer">↷ DEFERRED</span><span class="vote-desc">EMS Station First Street — additional site analysis requested</span></div>
+        </div>
+      </div>
+
+      <!-- DETAILED SUMMARY -->
+      <div id="panel-detailed" class="mtg-panel" style="display:none;">
+        <div class="mtg-meta">
+          <span class="mtg-meta-item">📅 June 10, 2026</span>
+          <span class="mtg-meta-item">⏱ 1hr 42min</span>
+          <span class="mtg-meta-item">👥 Mayor Mullen · 6 Trustees · ~35 residents</span>
+          <a href="#" class="mtg-meta-item mtg-video-link">▶ Watch recording</a>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-header">
+            <span class="detail-timestamp">0:00 – 0:08</span>
+            <span class="detail-section-title">Call to Order & Pledge</span>
+          </div>
+          <p class="detail-body">Mayor Mullen called the meeting to order at 7:04 PM with all seven trustees present. Following the Pledge of Allegiance, the Mayor noted the meeting was being recorded and broadcast live.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-header">
+            <span class="detail-timestamp">0:08 – 0:45</span>
+            <span class="detail-section-title">Budget Adoption — FY2026–27</span>
+          </div>
+          <p class="detail-body">Village Administrator Christopher Scelza presented a final review of the $20.5M budget, highlighting that non-discretionary costs — pensions, health insurance, and debt service — account for the bulk of the 10.1% increase over the prior year. Debt service alone increased 40.5% to $1.6M, driven by bond anticipation notes for the Municipal Center renovation.</p>
+          <p class="detail-body"><strong>Trustee Solomon</strong> questioned whether any further cuts were possible before overriding the tax cap. Scelza responded that the board had already reduced the tentative budget by $180,000 through departmental reviews. <strong>Trustee McGreal</strong> seconded this, noting the village had maintained compliance for five consecutive years and that this override was unavoidable given structural cost pressures.</p>
+          <p class="detail-body"><strong>Deputy Mayor Carpenter</strong> and <strong>Trustee Eldahry</strong> voted against adoption, with Carpenter stating she was "not prepared to pass this on to homeowners without further examination of the debt load." The budget passed 5–2.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-header">
+            <span class="detail-timestamp">0:45 – 1:02</span>
+            <span class="detail-section-title">Public Comment — EMS Station</span>
+          </div>
+          <p class="detail-body">Seven residents spoke during public comment, six of whom addressed the proposed First Street EMS station site. Key concerns raised:</p>
+          <ul class="detail-list">
+            <li><strong>Resident Anne Fitzgerald (Second Ave):</strong> Argued the site near the Post Office would eliminate the last green buffer on that block and create a dangerous vehicle-pedestrian conflict at a busy intersection.</li>
+            <li><strong>Resident David Park (Fifth Ave):</strong> Requested the board consider alternative sites south of the railroad tracks and asked for a formal traffic study before any vote.</li>
+            <li><strong>Resident Maria Torres (Wolfs Lane):</strong> Expressed support for expanded EMS capacity but asked why the former DPW yard on Eighth Avenue was not considered.</li>
+            <li><strong>Resident Tom Buckley:</strong> Submitted a written petition signed by 84 residents opposing the current site.</li>
+          </ul>
+          <p class="detail-body">Mayor Mullen acknowledged the comments and stated the board would direct staff to prepare a comparative site analysis for the July meeting. No vote was taken.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-header">
+            <span class="detail-timestamp">1:02 – 1:25</span>
+            <span class="detail-section-title">Resolutions — Stormwater, EV Vehicles, Traffic</span>
+          </div>
+          <p class="detail-body">The board unanimously approved a $340,000 contract to Peter J. Landi Inc. for stormwater infrastructure improvements on Wolfs Lane, funded through capital reserves. Administrator Scelza noted the village had applied for a 50% FEMA reimbursement grant for the project.</p>
+          <p class="detail-body">The board also accepted a <strong>$236,087 NYSERDA Clean Energy Communities grant</strong> to purchase two 2025 Chevrolet Blazer EV Police Pursuit Vehicles, replacing two aging patrol cars at no net cost to the tax levy.</p>
+          <p class="detail-body">A resolution directing staff to issue an RFP for traffic enforcement camera systems passed 7–0, with deployment targeted for school zones on Wolfs Lane and Fifth Avenue.</p>
+        </div>
+
+        <div class="detail-section">
+          <div class="detail-section-header">
+            <span class="detail-timestamp">1:25 – 1:42</span>
+            <span class="detail-section-title">Administrative Reports & Adjournment</span>
+          </div>
+          <p class="detail-body">Deputy Mayor Carpenter reported completion of the accounts payable audit with no discrepancies found. The DPW Director provided an update on summer road paving, with Monterey Avenue and Park Avenue scheduled for resurfacing in July. The meeting was adjourned at 8:46 PM.</p>
+        </div>
+      </div>
+
+      <!-- TRANSCRIPT -->
+      <div id="panel-transcript" class="mtg-panel" style="display:none;">
+        <div class="mtg-meta">
+          <span class="mtg-meta-item">📅 June 10, 2026</span>
+          <span class="mtg-meta-item">⏱ 1hr 42min</span>
+          <span class="mtg-meta-item">🤖 AI-generated transcript · verify with recording</span>
+          <a href="#" class="mtg-meta-item mtg-video-link">▶ Watch recording</a>
+        </div>
+        <div class="transcript-body">
+          <div class="transcript-block">
+            <span class="ts-time">[0:00:04]</span>
+            <span class="ts-speaker">MAYOR MULLEN:</span>
+            <span class="ts-text">I'd like to call this meeting of the Village of Pelham Board of Trustees to order. Tonight is June 10th, 2026. All trustees are present. We'll begin with the Pledge of Allegiance. I'll ask everyone to please rise.</span>
+          </div>
+          <div class="transcript-block">
+            <span class="ts-time">[0:01:12]</span>
+            <span class="ts-speaker">MAYOR MULLEN:</span>
+            <span class="ts-text">Thank you. Please be seated. Before we move to the agenda I want to note that this meeting is being recorded and livestreamed. If you'd like to speak during public comment this evening, please sign the sheet at the back of the room. We'll get to that after the budget resolution.</span>
+          </div>
+          <div class="transcript-block">
+            <span class="ts-time">[0:08:33]</span>
+            <span class="ts-speaker">ADMINISTRATOR SCELZA:</span>
+            <span class="ts-text">Good evening everyone. I want to walk the board and the public through the final budget figures one more time before we move to adoption. The total budget for fiscal year 2026 to 2027 is twenty million, five hundred thousand dollars. That's an increase of 10.1 percent over the current year's budget of eighteen million, six hundred thousand.</span>
+          </div>
+          <div class="transcript-block">
+            <span class="ts-time">[0:09:45]</span>
+            <span class="ts-speaker">ADMINISTRATOR SCELZA:</span>
+            <span class="ts-text">The largest driver is debt service, which has increased forty point five percent — from one million, one hundred forty three thousand in the prior budget to one million, six hundred seven thousand this year. The board approved several capital projects over the past three years, including the Municipal Center renovation, and those bond anticipation notes are now coming due as recurring debt service obligations.</span>
+          </div>
+          <div class="transcript-block">
+            <span class="ts-time">[0:11:20]</span>
+            <span class="ts-speaker">TRUSTEE SOLOMON:</span>
+            <span class="ts-text">Chris, before we vote — I just want to make sure I understand. Is there any further reduction possible at this point, or are we truly at the floor of what we can cut?</span>
+          </div>
+          <div class="transcript-block">
+            <span class="ts-time">[0:11:38]</span>
+            <span class="ts-speaker">ADMINISTRATOR SCELZA:</span>
+            <span class="ts-text">We are very close to the floor, Trustee. Through the work sessions in March and April we reduced the tentative budget by approximately one hundred eighty thousand dollars. The remaining increases are largely in categories we have no discretion over — pension contributions set by the state retirement system, health insurance premiums, and the debt service I mentioned.</span>
+          </div>
+          <div class="transcript-block">
+            <span class="ts-time">[0:18:02]</span>
+            <span class="ts-speaker">DEPUTY MAYOR CARPENTER:</span>
+            <span class="ts-text">I'll be voting no this evening. Not because I don't understand the cost pressures — I do — but because I'm not prepared to pass this on to homeowners without a deeper examination of how we got to this level of debt. A forty percent increase in debt service in a single year is alarming, and I think residents deserve a fuller accounting before we ask them to absorb this.</span>
+          </div>
+          <div class="transcript-block">
+            <span class="ts-time">[0:44:15]</span>
+            <span class="ts-speaker">MAYOR MULLEN:</span>
+            <span class="ts-text">The resolution to adopt the budget passes five to two. We'll note for the record that Deputy Mayor Carpenter and Trustee Eldahry voted in the negative. We'll move now to public comment. I see we have a number of folks signed up. We'll give each speaker three minutes. Please state your name and street when you come to the microphone.</span>
+          </div>
+          <div class="transcript-block">
+            <span class="ts-time">[0:45:30]</span>
+            <span class="ts-speaker">RESIDENT (ANNE FITZGERALD, SECOND AVE):</span>
+            <span class="ts-text">Thank you Mayor. My name is Anne Fitzgerald and I live on Second Avenue. I'm here to talk about the proposed EMS station on First Street. I've lived in this village for twenty-two years and I've watched First Street get busier and busier. Putting an emergency vehicle station at that intersection — right next to the Post Office — is going to create a genuinely dangerous situation for pedestrians. Kids walk through there every morning to the train station. I'd ask the board to please look at alternative sites before any vote is taken.</span>
+          </div>
+          <div class="transcript-block ts-ellipsis">
+            <span style="color: #888; font-style: italic; font-size: 13px;">· · · transcript continues · · · full transcript generated from recording · · ·</span>
+          </div>
+        </div>
+        <div style="margin-top: 16px; font-size: 12px; color: var(--slate); font-style: italic;">
+          This transcript was auto-generated by AI from the meeting recording. Speaker labels are approximate. Always verify quotes against the official recording before citing.
+        </div>
+      </div>
+
+    </div><!-- end mtg-content -->
+  </div>
+</section>
+
+<style>
+  .mtg-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: var(--white);
+    border: 2px solid var(--border);
+    padding: 12px 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+  .mtg-selector:hover { border-color: var(--navy); }
+  .mtg-selector.active-mtg {
+    border-color: var(--navy);
+    background: var(--navy);
+  }
+  .mtg-sel-body {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .mtg-selector.active-mtg .mtg-sel-body { color: var(--white); }
+  .mtg-sel-date {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--slate);
+  }
+  .mtg-selector.active-mtg .mtg-sel-date { color: #8899b0; }
+
+  .detail-tab {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 10px 20px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--slate);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    margin-bottom: -2px;
+  }
+  .detail-tab:hover { color: var(--navy); }
+  .detail-tab.active-tab {
+    color: var(--navy);
+    border-bottom-color: var(--navy);
+    font-weight: 600;
+  }
+
+  .mtg-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mtg-meta-item {
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--slate);
+  }
+  .mtg-video-link {
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 1px;
+  }
+  .mtg-video-link:hover { color: var(--gold); }
+
+  .exec-summary p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--navy);
+    margin-bottom: 14px;
+  }
+  .exec-votes {
+    margin-top: 24px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .exec-votes-label {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 12px;
+  }
+  .vote-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .vote-row:last-child { border-bottom: none; }
+  .vote-result {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 3px 8px;
+  }
+  .vote-result.pass { background: #ddf0e8; color: var(--green); }
+  .vote-result.defer { background: #fef3cd; color: #7a5800; }
+  .vote-result.fail { background: #fde8e8; color: var(--red); }
+  .vote-desc { color: var(--navy); }
+
+  .detail-section {
+    border-left: 3px solid var(--border);
+    padding-left: 20px;
+    margin-bottom: 28px;
+    transition: border-color 0.2s;
+  }
+  .detail-section:hover { border-left-color: var(--gold); }
+  .detail-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .detail-timestamp {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--slate);
+    white-space: nowrap;
+  }
+  .detail-section-title {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--navy);
+  }
+  .detail-body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  .detail-list {
+    margin: 10px 0 10px 0;
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .detail-list li {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.6;
+    padding-left: 16px;
+    position: relative;
+  }
+  .detail-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 11px;
+    top: 2px;
+  }
+
+  .transcript-body {
+    background: #f9fafb;
+    border: 1px solid var(--border);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-height: 520px;
+    overflow-y: auto;
+    font-size: 14px;
+  }
+  .transcript-block {
+    display: grid;
+    grid-template-columns: 72px 180px 1fr;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    align-items: baseline;
+    line-height: 1.6;
+  }
+  .transcript-block:last-child { border-bottom: none; }
+  .ts-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #999;
+    white-space: nowrap;
+  }
+  .ts-speaker {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--navy);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .ts-text { color: #333; }
+  .ts-ellipsis { grid-template-columns: 1fr; padding: 16px 0; }
+
+  .mtg-panel { animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+</style>
+
+<script>
+  const meetings = {
+    'pelham-board-jun2026': { title: 'Village of Pelham · Board of Trustees · June 10, 2026' },
+    'town-board-jun2026': { title: 'Town of Pelham · Town Board · June 2, 2026' },
+    'manor-board-jun2026': { title: 'Village of Pelham Manor · Board of Trustees · June 9, 2026' },
+    'boe-may2026': { title: 'Board of Education · Regular Meeting · May 19, 2026' }
+  };
+
+  function selectMeeting(btn, id) {
+    document.querySelectorAll('.mtg-selector').forEach(b => b.classList.remove('active-mtg'));
+    btn.classList.add('active-mtg');
+    // In production this would load real data; for now show prototype notice
+    if (id !== 'pelham-board-jun2026') {
+      document.getElementById('mtg-content').innerHTML = '<div style="padding: 40px; text-align: center; color: var(--slate); font-size: 14px;">📋 Summary for <strong>' + meetings[id].title + '</strong> will appear here once the recording is processed. <br><br>This prototype shows a sample of the June 10 Village of Pelham meeting.</div>';
+    } else {
+      location.reload();
+    }
+  }
+
+  function selectTab(btn, panel) {
+    document.querySelectorAll('.detail-tab').forEach(b => b.classList.remove('active-tab'));
+    btn.classList.add('active-tab');
+    document.querySelectorAll('.mtg-panel').forEach(p => p.style.display = 'none');
+    document.getElementById('panel-' + panel).style.display = 'block';
+  }
+</script>
+
+
+</div>
+
+<div id="explore-taxes" class="explore-panel">
+
+</div>
+
+<div id="explore-taxes" class="explore-panel">
+<!-- YOUR TAXES -->
+<section id="your-taxes" class="section">
+  <div class="content-wrap">
+    <div class="section-eyebrow">Part 3 — Follow the Money</div>
+    <h2 class="section-title">Where Do Your Property Taxes Go?</h2>
+    <p class="section-intro">Pelham property tax bills reflect five layers of government. The school district is by far the largest share — which is why the annual May school budget vote matters so much.</p>
+
+    <div class="tax-layout">
+      <div class="tax-visual">
+        <div class="tax-bar-row fade-in">
+          <div class="tax-bar-header">
+            <span class="tax-bar-name">🏫 School District (PUFSD)</span>
+            <span class="tax-bar-pct">~60–65%</span>
+          </div>
+          <div class="tax-bar-track"><div class="tax-bar-fill bar-school" style="width:63%"></div></div>
+        </div>
+        <div class="tax-bar-row fade-in">
+          <div class="tax-bar-header">
+            <span class="tax-bar-name">🏛️ Westchester County</span>
+            <span class="tax-bar-pct">~17–20%</span>
+          </div>
+          <div class="tax-bar-track"><div class="tax-bar-fill bar-county" style="width:18%"></div></div>
+        </div>
+        <div class="tax-bar-row fade-in">
+          <div class="tax-bar-header">
+            <span class="tax-bar-name">🏘️ Village (Pelham or Manor)</span>
+            <span class="tax-bar-pct">~12–16%</span>
+          </div>
+          <div class="tax-bar-track"><div class="tax-bar-fill bar-village" style="width:14%"></div></div>
+        </div>
+        <div class="tax-bar-row fade-in">
+          <div class="tax-bar-header">
+            <span class="tax-bar-name">🏡 Town of Pelham</span>
+            <span class="tax-bar-pct">~3–5%</span>
+          </div>
+          <div class="tax-bar-track"><div class="tax-bar-fill bar-town" style="width:4%"></div></div>
+        </div>
+
+        <div class="tax-note fade-in">
+          <strong>Note:</strong> These are approximate ranges typical for Pelham property owners. Your exact split depends on your assessed value, exemptions (STAR, senior, veterans), and which village you live in. Contact the <strong>Town Assessor at 34 Fifth Ave</strong> for your specific breakdown.
+        </div>
+      </div>
+
+      <div class="tax-explainer">
+        <div class="tax-explainer-block fade-in">
+          <div class="teb-title">🏫 School District — The Big One</div>
+          <div class="teb-desc">The 2025–26 PUFSD budget is $96.3M, up 2.9% from the year prior. The tax levy rose 3.48% — exactly at the state-mandated cap. Residents voted on this in May 2025, and also weighed in on four capital bond propositions totaling $143.6M for building repairs and expansions. The district is also pursuing a $1.85M property purchase at 29 Franklin Place for office space.</div>
+          <a href="https://www.pelhamschools.org/district/about/financials" target="_blank" class="issue-source-link">View school budget documents</a>
+        </div>
+        <div class="tax-explainer-block gold fade-in">
+          <div class="teb-title">🏛️ Westchester County</div>
+          <div class="teb-desc">County government funds regional services — health, parks, social services, and more. County taxes appear on the same bill. Your County Legislature representative advocates for Pelham's share of county resources and spending.</div>
+          <a href="https://www.westchestercountyny.gov/government/departments/budget" target="_blank" class="issue-source-link">View county budget</a>
+        </div>
+        <div class="tax-explainer-block red fade-in">
+          <div class="teb-title">🏘️ Village Services</div>
+          <div class="teb-desc">Village taxes fund police, fire, garbage collection, road repair, the water department, and the building department — the services you see and use daily. In 2026, Village of Pelham homeowners faced significant increases; the 2026–27 budget is projected to push past the state tax cap with an ~8.5% increase being discussed.</div>
+          <a href="https://www.pelhamny.gov/173/Adopted-Village-Budgets" target="_blank" class="issue-source-link">Village of Pelham adopted budgets</a>
+        </div>
+        <div class="tax-explainer-block green fade-in">
+          <div class="teb-title">🏡 Town of Pelham</div>
+          <div class="teb-desc">Town taxes are the smallest share but cover courts, tax assessment, recreation programs (summer camps, senior services), the public library, and ambulance service — all shared between both villages.</div>
+          <a href="https://townofpelhamny.gov/budgets-and-reports/" target="_blank" class="issue-source-link">Town budgets & reports</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div id="explore-issues" class="explore-panel">
+
+</div>
+
+<div id="explore-issues" class="explore-panel">
+<!-- CURRENT ISSUES -->
+<section id="issues" class="section">
+  <div class="content-wrap">
+    <div class="section-eyebrow">Part 4 — What's Happening Now</div>
+    <h2 class="section-title">Current Issues to Watch</h2>
+    <p class="section-intro">These are the issues actively being debated in board meetings, at community events, and in local coverage. Knowing these going in means you can ask sharper questions and engage more meaningfully.</p>
+
+    <div class="issues-grid">
+      <div class="issue-card fade-in">
+        <span class="issue-tag tag-budget">Budget / Taxes</span>
+        <h3>Rising Property Taxes & Village Budget Pressure</h3>
+        <p>The Village of Pelham's 2026–27 budget is projected to exceed the state tax cap, with homeowners facing an estimated 8.5% property tax increase. Meanwhile, the Village passed a $20.5M budget that already raised most homeowners' bills 10%. The interplay between assessed values and the tax levy has become a point of public debate.</p>
+        <div class="issue-status"><div class="status-dot dot-urgent"></div>Active — watch upcoming Board of Trustees meetings</div>
+        <a href="https://pelhamexaminer.com/82384/latest-news/village-of-pelham-to-blow-through-tax-cap-for-2026-27-fiscal-year-with-some-homeowners-facing-a-16-percent-increase-in-property-taxes/" target="_blank" class="issue-source-link">Pelham Examiner coverage</a>
+      </div>
+
+      <div class="issue-card fade-in">
+        <span class="issue-tag tag-education">Education</span>
+        <h3>$143.6M School Capital Bond Program</h3>
+        <p>Voters in May 2025 approved some — but not all — of a sweeping four-part capital bond program. Proposition 1 (school repairs) and Proposition 2 (Siwanoy Elementary expansion) passed. The PMHS addition and geothermal projects were rejected. The approved bond work is now in planning. Watch for design, bid, and construction updates at Board of Ed meetings.</p>
+        <div class="issue-status"><div class="status-dot dot-active"></div>In Progress — planning underway</div>
+        <a href="https://www.pelhamschools.org/district/capital-project" target="_blank" class="issue-source-link">District capital project page</a>
+      </div>
+
+      <div class="issue-card fade-in">
+        <span class="issue-tag tag-energy">Energy / Utilities</span>
+        <h3>Con Edison Rate Hike Fight</h3>
+        <p>Con Edison filed a petition with the NY Public Service Commission in early 2025 to raise electric rates 18% and residential delivery charges 25%, on top of a 20% increase over the prior three years. The Village of Pelham joined a coalition of Westchester municipalities to hire special legal counsel and intervene in the rate case. Follow the PSC proceedings to track outcomes.</p>
+        <div class="issue-status"><div class="status-dot dot-watch"></div>Ongoing — PSC review in progress</div>
+        <a href="https://www3.dps.ny.gov/pscweb/WebFileRoom.nsf/Web/RateCase" target="_blank" class="issue-source-link">NY PSC rate case filings</a>
+      </div>
+
+      <div class="issue-card fade-in">
+        <span class="issue-tag tag-transit">Transit / Infrastructure</span>
+        <h3>MTA Penn Station Access Construction</h3>
+        <p>The MTA's Penn Station Access Project brought construction and tree removal to First Street between Monterey Ave and Corona Ave. Metro-North has committed to noise mitigation and replanting — targeting spring 2026. This project will eventually bring new Metro-North service options for Pelham commuters, but near-term disruption has drawn resident attention.</p>
+        <div class="issue-status"><div class="status-dot dot-active"></div>Active construction — follow village updates</div>
+        <a href="https://new.mta.info/project/penn-station-access" target="_blank" class="issue-source-link">MTA Penn Station Access project</a>
+      </div>
+
+      <div class="issue-card fade-in">
+        <span class="issue-tag tag-infrastructure">EMS / Emergency Services</span>
+        <h3>Proposed EMS Station on First Street</h3>
+        <p>A plan to site a new EMS station near the Post Office on First Street has drawn opposition from neighbors raising concerns about pedestrian safety and the loss of green space. The debate reflects the broader tension between necessary infrastructure and neighborhood character that often surfaces in dense, walkable communities like Pelham.</p>
+        <div class="issue-status"><div class="status-dot dot-watch"></div>Under review — attend board meetings to weigh in</div>
+        <a href="https://pelhamexaminer.com" target="_blank" class="issue-source-link">Pelham Examiner coverage</a>
+      </div>
+
+      <div class="issue-card fade-in">
+        <span class="issue-tag tag-sustainability">Sustainability</span>
+        <h3>Sustainability Advisory Board & Climate Goals</h3>
+        <p>The Village of Pelham is recruiting residents to its Sustainability Advisory Board for the 2026–27 term. Priorities include advancing the Natural Resources Inventory, pursuing NY State Climate Smart Communities Silver certification, and supporting accessible public spaces and green initiatives. This is a direct way to shape the Village's environmental future.</p>
+        <div class="issue-status"><div class="status-dot dot-active"></div>Recruiting — apply to the Sustainability Advisory Board</div>
+        <a href="https://www.pelhamny.gov/m/boards/sustainability-advisory-board" target="_blank" class="issue-source-link">Sustainability Advisory Board page</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div id="explore-taxes" class="explore-panel">
+
+</div>
+
+<!-- GET INVOLVED -->
+<section id="get-involved" class="section involved-section">
+  <div class="content-wrap">
+    <div class="section-eyebrow">Part 5 — Take Action</div>
+    <h2 class="section-title">How to Get Involved</h2>
+    <p class="section-intro">Civic engagement doesn't require running for office. The most consistent voices in local government are often ordinary residents who show up. Here's where to start.</p>
+
+    <div class="involved-grid">
+      <div class="involved-card fade-in">
+        <span class="involved-icon">🗳️</span>
+        <h3>Vote in Every Election</h3>
+        <p>Local races are decided by dozens — sometimes single-digit margins. Make sure you're registered and know what's on the ballot.</p>
+        <ul>
+          <li>Register at nyc.gov/vote or your county board of elections</li>
+          <li>Village/Town elections: typically March/April</li>
+          <li>School District budget vote: every May at PMS gym</li>
+          <li>County and State: November general elections</li>
+          <li>Board of Education seats: elected annually in May</li>
+        </ul>
+      </div>
+
+      <div class="involved-card fade-in" style="grid-column: span 2; border-top: 4px solid var(--gold);">
+        <span class="involved-icon">🎤</span>
+        <h3>Speak at a Public Meeting</h3>
+        <p>Never spoken at a meeting before? You're not alone — and you don't need an appointment, a lawyer, or a perfect speech. A calm, specific comment from a resident carries real weight. Elected officials hear directly from people in the room in a way they don't from emails or social media.</p>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 20px;">
+          <div>
+            <div style="font-size:12px; font-weight:600; color:var(--gold-light); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;">What to Expect</div>
+            <ul>
+              <li><strong>Arrive 10–15 min early</strong> — ask the clerk how public comment works that evening; each board handles it slightly differently</li>
+              <li><strong>When comment is called</strong> — stand up or raise your hand; walk to the microphone when recognized</li>
+              <li><strong>State your name and street</strong> — "Good evening, my name is [NAME] and I live on [STREET]." That's it. You've started.</li>
+              <li><strong>You get 2–3 minutes</strong> — a timer or light may signal your time; 150 words is plenty</li>
+              <li><strong>The board will listen without responding</strong> — that's normal, not dismissive</li>
+              <li><strong>Your comment becomes public record</strong> — meetings are recorded and often streamed</li>
+              <li><strong>The nerves mean you care</strong> — residents who show up thoughtfully are remembered far longer than polished speeches</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-size:12px; font-weight:600; color:var(--gold-light); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;">Tips for a Strong Comment</div>
+            <ul>
+              <li><strong>Say one thing specifically</strong> — "I'm concerned about the 40% spike in debt service and want a 10-year forecast presented publicly" lands harder than "taxes are too high in general"</li>
+              <li><strong>Make a clear ask</strong> — "I'd like the board to..." gives officials something to respond to</li>
+              <li><strong>Use your experience</strong> — you live here; personal impact is compelling evidence</li>
+              <li><strong>Stay calm and constructive</strong> — boards hear a lot of frustration; a composed, specific ask stands out and is more likely to get a real response</li>
+              <li><strong>Write it out first</strong> — even a few bullet points help you stay on track under pressure</li>
+              <li><strong>Practice out loud twice</strong> — not to memorize, just so the words feel familiar in your mouth</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-size:12px; font-weight:600; color:var(--gold-light); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;">Simple Comment Template</div>
+            <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:14px; font-size:12px; color:#a0b0c8; line-height:1.7; font-family:'IBM Plex Mono',monospace;">
+              "Good evening. My name is [Name] and I live on [Street].<br><br>
+              I'm here to speak about [topic].<br><br>
+              [One or two sentences on how it affects you specifically.]<br><br>
+              I'm asking the board to [specific request].<br><br>
+              Thank you for your time."
+            </div>
+            <div style="margin-top:12px; font-size:12px; color:#8899b0;">You can also email your comment to your board before the meeting — it becomes part of the official record even if you can't attend.</div>
+            <a href="#ask-pelham" style="display:inline-block; margin-top:12px; font-size:12px; font-weight:600; color:var(--gold-light); text-decoration:none; border-bottom:1px solid var(--gold); padding-bottom:1px;">Ask Pelham AI to help you prepare →</a>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;">
+          <div style="font-size:12px; font-weight:600; color:var(--gold-light); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;">Where to Show Up</div>
+          <div style="display:flex; flex-wrap:wrap; gap:10px;">
+            <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:6px 12px; font-size:12px; color:#a0b0c8;">🏛 Village of Pelham — 2nd & 4th Tuesdays · 200 Fifth Ave</span>
+            <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:6px 12px; font-size:12px; color:#a0b0c8;">🏛 Pelham Manor — Monthly Mondays · 4 Penfield Place</span>
+            <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:6px 12px; font-size:12px; color:#a0b0c8;">🏛 Town Board — Monthly · 34 Fifth Ave</span>
+            <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:6px 12px; font-size:12px; color:#a0b0c8;">🎓 Board of Education — Monthly · District Offices</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="involved-card fade-in">
+        <span class="involved-icon">🤝</span>
+        <h3>Run for Office</h3>
+        <p>Local offices — Village Trustee, Town Council, Board of Education — are genuinely accessible. Many current elected officials started exactly where you are: as concerned residents.</p>
+        <ul>
+          <li>Village Trustee: 2-year term, part-time role</li>
+          <li>Town Councilor: 4-year term</li>
+          <li>Board of Education: 3-year term, elected in May</li>
+          <li>Contact the Westchester Board of Elections for petitioning requirements</li>
+          <li>Reach out to local party committees for guidance</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MEETING SCHEDULE -->
+<section id="meetings" class="section">
+  <div class="content-wrap">
+    <div class="section-eyebrow">Part 6 — Show Up</div>
+    <h2 class="section-title">Public Meeting Quick Reference</h2>
+    <p class="section-intro">All meetings listed below are open to the public. Agendas are typically posted on each body's official website 72+ hours in advance.</p>
+
+    <div class="fade-in" style="overflow-x:auto;">
+      <table class="meetings-table">
+        <thead>
+          <tr>
+            <th>Governing Body</th>
+            <th>Typical Schedule</th>
+            <th>Location</th>
+            <th>How to Participate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="body-name">Village of Pelham Board of Trustees</span><br><a href="https://www.pelhamny.gov" target="_blank" class="meeting-link">pelhamny.gov</a></td>
+            <td>2nd & 4th Tuesday of each month</td>
+            <td>200 Fifth Ave, 1st floor Meeting Room</td>
+            <td>Sign up for public comment at the meeting; agendas posted online</td>
+          </tr>
+          <tr>
+            <td><span class="body-name">Village of Pelham Manor Board of Trustees</span><br><a href="https://www.pelhammanor.gov" target="_blank" class="meeting-link">pelhammanor.gov</a></td>
+            <td>Monthly (typically 2nd Monday at 8:15 pm)</td>
+            <td>4 Penfield Place, Pelham Manor</td>
+            <td>Public comment period at each meeting</td>
+          </tr>
+          <tr>
+            <td><span class="body-name">Town of Pelham Town Board</span><br><a href="https://townofpelhamny.gov" target="_blank" class="meeting-link">townofpelhamny.gov</a></td>
+            <td>Monthly</td>
+            <td>34 Fifth Ave (Daronco Town House)</td>
+            <td>Public hearing notices posted; residents may comment during hearings</td>
+          </tr>
+          <tr>
+            <td><span class="body-name">Pelham Board of Education</span><br><a href="https://www.pelhamschools.org" target="_blank" class="meeting-link">pelhamschools.org</a></td>
+            <td>Monthly + special budget sessions (Jan–May)</td>
+            <td>District offices / Pelham Middle School</td>
+            <td>Public comment period; annual budget vote each May</td>
+          </tr>
+          <tr>
+            <td><span class="body-name">School District Budget Vote</span></td>
+            <td>Third Tuesday of May, annually</td>
+            <td>Pelham Middle School Gymnasium (7 am – 9 pm)</td>
+            <td>Any registered voter in the district may vote; no appointment needed</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<!-- ABOUT + CORRECTIONS + FEEDBACK -->
+<section id="about" class="section" style="background: var(--light);">
+  <div class="content-wrap">
+    <div class="section-eyebrow">About This Site</div>
+    <h2 class="section-title">Editorial Philosophy & Community Feedback</h2>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-bottom: 56px;">
+
+      <!-- Mission + Editorial Philosophy -->
+      <div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:14px; color: var(--navy);">Our Mission</h3>
+        <p style="font-size:15px; line-height:1.75; color: var(--slate); margin-bottom:20px;">To increase civic awareness and engagement in local matters in Pelham, NY — by making public information accessible, understandable, and actionable for every resident.</p>
+
+        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:14px; color: var(--navy);">How We Work</h3>
+        <p style="font-size:15px; line-height:1.75; color: var(--slate); margin-bottom:12px;">Everything on this site is drawn from public record — official government websites, adopted budgets, meeting recordings, and coverage by the Pelham Examiner. We don't editorialize, take sides, or publish unverified information.</p>
+        <p style="font-size:15px; line-height:1.75; color: var(--slate);">AI-generated content — summaries, Q&A responses — is clearly labeled and linked to source documents so you can verify anything we say.</p>
+
+        <div style="margin-top:24px; padding:20px; background:var(--white); border:1px solid var(--border); border-left: 4px solid var(--gold);">
+          <div style="font-weight:700; font-size:15px; margin-bottom:10px; color:var(--navy);">"My perspective isn't represented here."</div>
+          <p style="font-size:14px; line-height:1.7; color:var(--slate); margin-bottom:10px;">This site reflects what's in the public record. If your view isn't here, that's not a failure of this site — it's a signal that your voice hasn't entered the record yet.</p>
+          <p style="font-size:14px; line-height:1.7; color:var(--slate); margin-bottom:14px;">The public record is made at board meetings, in public comment, and through letters to the editor. Those are the channels that shape what officials hear and what journalists cover.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <a href="#get-involved" class="source-link" style="font-size:12px;">How to make a public comment</a>
+            <a href="https://pelhamexaminer.com/letters" target="_blank" class="source-link" style="font-size:12px;">Write a letter to the Examiner</a>
+            <a href="#meetings" class="source-link" style="font-size:12px;">Meeting schedule</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sources + Transparency -->
+      <div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:14px; color: var(--navy);">Our Sources</h3>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:24px;">
+          <a href="https://www.pelhamny.gov" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ pelhamny.gov — Village of Pelham</a>
+          <a href="https://www.pelhammanor.gov" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ pelhammanor.gov — Village of Pelham Manor</a>
+          <a href="https://townofpelhamny.gov" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ townofpelhamny.gov — Town of Pelham</a>
+          <a href="https://www.pelhamschools.org" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ pelhamschools.org — School District</a>
+          <a href="https://pelhamexaminer.com" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ pelhamexaminer.com — Pelham Examiner</a>
+          <a href="https://www.westchestercountyny.gov" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ westchestercountyny.gov — Westchester County</a>
+        </div>
+
+        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:14px; color: var(--navy);">Corrections Log</h3>
+        <p style="font-size:14px; line-height:1.7; color:var(--slate); margin-bottom:14px;">We correct errors quickly and publicly. Recent corrections:</p>
+        <div id="corrections-log" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+          <div style="background:var(--white); border:1px solid var(--border); padding:12px 14px; font-size:13px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--slate);">JUNE 2026 · RESOLVED</span>
+            <p style="margin-top:4px; color:var(--navy);">Westchester County tax percentage — updated to note this is a general estimate; directed readers to Town Receiver for their specific bill.</p>
+          </div>
+        </div>
+        <p style="font-size:12px; color:var(--slate); font-family:'IBM Plex Mono',monospace;">See something wrong? Use the form below.</p>
+      </div>
+    </div>
+
+    <!-- Two forms side by side -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+
+      <!-- Error Report Form -->
+      <div style="background:var(--white); border:1px solid var(--border); border-top: 4px solid var(--red); padding:28px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--slate); margin-bottom:8px;">Report a Factual Error</div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; margin-bottom:16px;">Something looks wrong?</h3>
+        <div style="display:flex; flex-direction:column; gap:12px;" id="error-form">
+          <div>
+            <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">What section is the error in?</label>
+            <select id="error-section" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; background:var(--cream);">
+              <option value="">Select a section…</option>
+              <option>Who Governs</option>
+              <option>Meeting Summaries</option>
+              <option>Ask Pelham AI</option>
+              <option>Your Taxes</option>
+              <option>Current Issues</option>
+              <option>Get Involved</option>
+              <option>Meeting Schedule</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">What's incorrect?</label>
+            <textarea id="error-desc" rows="3" placeholder="Describe the error and what the correct information is…" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; resize:none; line-height:1.5; background:var(--cream);"></textarea>
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">Source (if you have one)</label>
+            <input id="error-source" type="text" placeholder="URL or document name…" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; background:var(--cream);">
+          </div>
+          <button onclick="submitError()" style="background:var(--navy); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;" onmouseover="this.style.background='#2255cc'" onmouseout="this.style.background='var(--navy)'">Submit correction →</button>
+          <div id="error-confirm" style="display:none; font-size:13px; color:var(--green); font-weight:500;">✓ Thanks — we'll review this within a week and update the site if confirmed.</div>
+        </div>
+      </div>
+
+      <!-- Public Comment Feedback Form -->
+      <div style="background:var(--white); border:1px solid var(--border); border-top: 4px solid var(--green); padding:28px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--slate); margin-bottom:8px;">Community Feedback</div>
+        <h3 style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; margin-bottom:6px;">Did this site help you get involved?</h3>
+        <p style="font-size:13px; color:var(--slate); margin-bottom:16px; line-height:1.6;">We'd love to know if this site helped you attend a meeting, make a public comment, or engage with local government in a new way.</p>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; flex-wrap:wrap; gap:10px;">
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="checkbox" id="fb-attended"> Attended a public meeting</label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="checkbox" id="fb-commented"> Made a public comment</label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="checkbox" id="fb-letter"> Wrote a letter to the Examiner</label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="checkbox" id="fb-applied"> Applied to a board or committee</label>
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">Which governing body? (optional)</label>
+            <select id="fb-body" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; background:var(--cream);">
+              <option value="">Select…</option>
+              <option>Village of Pelham</option>
+              <option>Village of Pelham Manor</option>
+              <option>Town of Pelham</option>
+              <option>Board of Education</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">Want to share your experience? (optional)</label>
+            <textarea id="fb-story" rows="3" placeholder="What topic did you engage on? What was it like? Your story (anonymous) may inspire others…" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; resize:none; line-height:1.5; background:var(--cream);"></textarea>
+          </div>
+          <button onclick="submitFeedbackForm()" style="background:var(--green); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Share my experience →</button>
+          <div id="fb-confirm" style="display:none; font-size:13px; color:var(--green); font-weight:500;">✓ Thank you — stories like yours help us improve and inspire others to get involved.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  @media (max-width: 768px) {
+    #about .content-wrap > div[style*="grid-template-columns: 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+
+<script>
+  function submitError() {
+    const section = document.getElementById('error-section').value;
+    const desc = document.getElementById('error-desc').value.trim();
+    if (!desc) { alert('Please describe the error.'); return; }
+    // In production: POST to Supabase corrections table
+    console.log('Error report:', { section, desc, source: document.getElementById('error-source').value });
+    document.getElementById('error-form').style.opacity = '0.5';
+    document.getElementById('error-confirm').style.display = 'block';
+  }
+
+  function submitFeedbackForm() {
+    const story = document.getElementById('fb-story').value.trim();
+    const body = document.getElementById('fb-body').value;
+    const actions = {
+      attended: document.getElementById('fb-attended').checked,
+      commented: document.getElementById('fb-commented').checked,
+      letter: document.getElementById('fb-letter').checked,
+      applied: document.getElementById('fb-applied').checked,
+    };
+    // In production: POST to Supabase civic_engagement_feedback table
+    console.log('Civic feedback:', { actions, body, story });
+    document.getElementById('fb-confirm').style.display = 'block';
+  }
+</script>
+
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>Pelham Civic Guide</strong> — An independent resource for Pelham, NY residents.</p>
+  <p style="margin-top:8px;">Sources: <a href="https://www.pelhamny.gov" target="_blank">pelhamny.gov</a> · <a href="https://www.pelhammanor.gov" target="_blank">pelhammanor.gov</a> · <a href="https://townofpelhamny.gov" target="_blank">townofpelhamny.gov</a> · <a href="https://www.pelhamschools.org" target="_blank">pelhamschools.org</a> · <a href="https://pelhamexaminer.com" target="_blank">Pelham Examiner</a></p>
+  <p style="margin-top:8px;">This guide is for informational purposes. For official information, always check government websites directly. Last updated June 2026.</p>
+</footer>
+
+<script>
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
