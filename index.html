@@ -1199,6 +1199,11 @@
       grid-template-columns: 1fr !important;
     }
   }
+
+  /* Button hover backgrounds — migrated from inline onmouseover/onmouseout.
+     !important overrides the element's inline style="background:…". */
+  .btn-ask:hover { background: #e8b85a !important; }
+  .btn-submit-correction:hover { background: #2255cc !important; }
 </style>
 </head>
 <body>
@@ -1649,10 +1654,9 @@
       ></textarea>
       <button
         id="ask-btn"
+        class="btn-ask"
         onclick="askClaude()"
         style="background: var(--gold); color: var(--navy); border: none; padding: 0 24px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.2s;"
-        onmouseover="this.style.background='#e8b85a'"
-        onmouseout="this.style.background='var(--gold)'"
       >Ask →</button>
     </div>
     <div style="margin-top: 10px; font-size: 11px; color: #556070; font-family: 'IBM Plex Mono', monospace;">
@@ -2035,7 +2039,7 @@
             <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">Source (if you have one)</label>
             <input id="error-source" type="text" placeholder="URL or document name…" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; background:var(--cream);">
           </div>
-          <button onclick="submitError()" style="background:var(--navy); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;" onmouseover="this.style.background='#2255cc'" onmouseout="this.style.background='var(--navy)'">Submit correction →</button>
+          <button onclick="submitError()" class="btn-submit-correction" style="background:var(--navy); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Submit correction →</button>
           <div id="error-confirm" style="display:none; font-size:13px; color:var(--green); font-weight:500;">✓ Thanks — we'll review this within a week and update the site if confirmed.</div>
         </div>
       </div>
