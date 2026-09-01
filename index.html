@@ -175,7 +175,12 @@
     z-index: 200;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
-  .nav-dropdown-wrap:hover .nav-dropdown { display: block; }
+  .nav-dropdown-wrap:hover .nav-dropdown,
+  .nav-dropdown-wrap.open .nav-dropdown { display: block; }
+  .nav-dropdown-wrap.open .nav-dropdown-trigger {
+    color: var(--navy);
+    border-bottom-color: var(--gold);
+  }
   .nav-dropdown a {
     display: block;
     padding: 12px 16px;
@@ -735,6 +740,7 @@
     margin-bottom: -2px;
   }
   .detail-tab:hover { color: var(--navy); }
+  .detail-tab-transcript { font-size: 11px; opacity: 0.65; }
   .detail-tab.active-tab {
     color: var(--navy);
     border-bottom-color: var(--navy);
@@ -1260,8 +1266,8 @@
       </div>
       <hr class="stat-divider">
       <div class="stat">
-        <span class="stat-num">$96.3M</span>
-        <span class="stat-label">School District budget, 2025–26</span>
+        <span class="stat-num">$98.3M</span>
+        <span class="stat-label">School District budget, 2026–27</span>
       </div>
       <hr class="stat-divider">
       <div class="stat">
@@ -1275,141 +1281,22 @@
 <!-- NAV -->
 <nav class="nav-bar">
   <div class="nav-inner">
-    <a href="#who-governs">Who Governs</a>
     <a href="#elections" style="color: #dd8899; font-weight: 600;">🗳 Nov 2026 Elections</a>
-    <a href="#ask-pelham" style="color: var(--gold); font-weight: 600;">Ask Pelham AI ✦</a>
     <div class="nav-dropdown-wrap">
-      <a href="#explore" class="nav-dropdown-trigger">Explore More ▾</a>
+      <a href="#explore" class="nav-dropdown-trigger" onclick="toggleDropdown(event)">Explore More ▾</a>
       <div class="nav-dropdown">
-        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[0].click()">📋 Meeting Summaries</a>
-        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[1].click()">💰 Your Taxes</a>
-        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[2].click()">🔔 Current Issues</a>
+        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[0].click();closeDropdown()">📋 Meeting Summaries</a>
+        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[1].click();closeDropdown()">💰 Your Taxes</a>
+        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[2].click();closeDropdown()">🔔 Current Issues</a>
+        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[3].click();closeDropdown()">🏛 Who Governs</a>
       </div>
     </div>
+    <a href="#ask-pelham" style="color: var(--gold); font-weight: 600;">Ask Pelham AI ✦</a>
     <a href="#get-involved">Get Involved</a>
     <a href="#meetings">Meeting Schedule</a>
     <a href="#about">About & Corrections</a>
   </div>
 </nav>
-
-<!-- GOVERNING BODIES -->
-<section id="who-governs" class="section">
-  <div class="content-wrap">
-    <div class="section-eyebrow">Part 1 — Government Structure</div>
-    <h2 class="section-title">Who Actually Governs Pelham?</h2>
-    <p class="section-intro">Pelham is unique: the entire Town is made up of two incorporated Villages. That means Village governments handle most day-to-day services, while Town government handles shared functions. Then add the School District, County, and State on top.</p>
-
-    <div class="gov-grid">
-      <div class="gov-card fade-in">
-        <div class="gov-card-label">Village Government</div>
-        <h3>Village of Pelham</h3>
-        <p>The primary local government for residents of "Pelham Heights" and former North Pelham. The Board of Trustees sets policy, manages the budget, and runs most everyday services — police, fire, garbage, water, and roads.</p>
-        <div class="gov-card-detail">
-          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">Mayor + 6 Trustees</span></div>
-          <div class="detail-row"><span class="detail-key">FY2026–27 Budget</span><span class="detail-val">$20.5M (↑10.1%)</span></div>
-          <div class="detail-row"><span class="detail-key">Meetings</span><span class="detail-val">2nd & 4th Tuesday, monthly</span></div>
-          <div class="detail-row"><span class="detail-key">Meeting Location</span><span class="detail-val">200 Fifth Ave, 1st floor</span></div>
-        </div>
-        <a href="https://www.pelhamny.gov" target="_blank" class="gov-link">pelhamny.gov →</a>
-        <div class="source-links">
-          <a href="https://www.pelhamny.gov/194/Mayor-Village-Board-of-Trustees" target="_blank" class="source-link">Board of Trustees</a>
-          <a href="https://www.pelhamny.gov/173/Adopted-Village-Budgets" target="_blank" class="source-link">Adopted Budgets</a>
-          <a href="https://www.pelhamny.gov/AgendaCenter" target="_blank" class="source-link">Meeting Agendas</a>
-          <a href="https://www.pelhamny.gov/m/newsflash" target="_blank" class="source-link">News & Notices</a>
-        </div>
-      </div>
-
-      <div class="gov-card gold-top fade-in">
-        <div class="gov-card-label">Village Government</div>
-        <h3>Village of Pelham Manor</h3>
-        <p>The second of Pelham's two villages, covering the Manor neighborhood. Has its own elected Mayor and Board of Trustees, runs its own police and fire departments, and manages village-level services independently.</p>
-        <div class="gov-card-detail">
-          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">Mayor + Board of Trustees</span></div>
-          <div class="detail-row"><span class="detail-key">FY2026–27 Budget</span><span class="detail-val">$21.9M ($19.4M ops + $2.5M capital)</span></div>
-          <div class="detail-row"><span class="detail-key">Area</span><span class="detail-val">1.2 square miles</span></div>
-          <div class="detail-row"><span class="detail-key">Village Hall</span><span class="detail-val">4 Penfield Place</span></div>
-        </div>
-        <a href="https://www.pelhammanor.gov" target="_blank" class="gov-link">pelhammanor.gov →</a>
-        <div class="source-links">
-          <a href="https://www.pelhammanor.gov/199/Board-of-Trustees" target="_blank" class="source-link">Board of Trustees</a>
-          <a href="https://www.pelhammanor.gov/209/Budgets-Financial-Statements" target="_blank" class="source-link">Budgets & Financials</a>
-          <a href="https://www.pelhammanor.gov/AgendaCenter" target="_blank" class="source-link">Meeting Agendas</a>
-          <a href="https://www.pelhammanor.gov/m/newsflash" target="_blank" class="source-link">News & Notices</a>
-        </div>
-      </div>
-
-      <div class="gov-card red-top fade-in">
-        <div class="gov-card-label">Town Government</div>
-        <h3>Town of Pelham</h3>
-        <p>The Town umbrella covers both villages. Rather than duplicating services, it handles shared functions that make sense to consolidate: municipal courts, tax assessment &amp; collection, recreation programs, the public library, and ambulance service.</p>
-        <div class="gov-card-detail">
-          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">Supervisor + 4 Councilors</span></div>
-          <div class="detail-row"><span class="detail-key">2025 Budget</span><span class="detail-val">$7.18M total appropriations</span></div>
-          <div class="detail-row"><span class="detail-key">Key Services</span><span class="detail-val">Courts, Assessor, Recreation</span></div>
-          <div class="detail-row"><span class="detail-key">Town Hall</span><span class="detail-val">34 Fifth Ave</span></div>
-          <div class="detail-row"><span class="detail-key">Founded</span><span class="detail-val">Est. 1654 · Incorporated 1788</span></div>
-        </div>
-        <a href="https://townofpelhamny.gov" target="_blank" class="gov-link">townofpelhamny.gov →</a>
-        <div class="source-links">
-          <a href="https://townofpelhamny.gov/town-officials/" target="_blank" class="source-link">Town Officials</a>
-          <a href="https://townofpelhamny.gov/budgets-and-reports/" target="_blank" class="source-link">Budgets & Reports</a>
-          <a href="https://townofpelhamny.gov/receiver-of-taxes/" target="_blank" class="source-link">Pay / View Taxes</a>
-          <a href="https://townofpelhamny.gov/news-and-notices/" target="_blank" class="source-link">News & Notices</a>
-        </div>
-      </div>
-
-      <div class="gov-card green-top fade-in">
-        <div class="gov-card-label">School District</div>
-        <h3>Pelham Union Free School District</h3>
-        <p>An elected Board of Education governs K–12 education across four elementary schools, one middle school, and Pelham Memorial High School. The school district has its own budget voted on separately by residents each May.</p>
-        <div class="gov-card-detail">
-          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">9-member Board of Education</span></div>
-          <div class="detail-row"><span class="detail-key">FY2025–26 Budget</span><span class="detail-val">$96.3M (↑2.9%, voter-approved)</span></div>
-          <div class="detail-row"><span class="detail-key">Schools</span><span class="detail-val">4 Elementary, 1 Middle, 1 HS</span></div>
-          <div class="detail-row"><span class="detail-key">Budget Vote</span><span class="detail-val">Every May (public vote)</span></div>
-        </div>
-        <a href="https://www.pelhamschools.org" target="_blank" class="gov-link">pelhamschools.org →</a>
-        <div class="source-links">
-          <a href="https://www.pelhamschools.org/district/about/financials" target="_blank" class="source-link">Budget & Financials</a>
-          <a href="https://www.pelhamschools.org/district/board-of-education" target="_blank" class="source-link">Board of Education</a>
-          <a href="https://www.pelhamschools.org/district/news" target="_blank" class="source-link">District News</a>
-        </div>
-      </div>
-
-      <div class="gov-card fade-in">
-        <div class="gov-card-label">County Government</div>
-        <h3>Westchester County</h3>
-        <p>County government provides regional services including the county police, health department, parks, sewer districts, and social services. Westchester is also the entity that establishes equalization rates used in property tax assessments.</p>
-        <div class="gov-card-detail">
-          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">County Executive + Legislature</span></div>
-          <div class="detail-row"><span class="detail-key">County Budget</span><span class="detail-val">See westchestercountyny.gov</span></div>
-          <div class="detail-row"><span class="detail-key">Pelham's District</span><span class="detail-val">14th Legislative District</span></div>
-          <div class="detail-row"><span class="detail-key">Key Services</span><span class="detail-val">Health, Parks, Sewer, Courts</span></div>
-        </div>
-        <a href="https://www.westchestercountyny.gov" target="_blank" class="gov-link">westchestercountyny.gov →</a>
-        <div class="source-links">
-          <a href="https://www.westchestercountyny.gov/government/departments/budget" target="_blank" class="source-link">County Budget</a>
-          <a href="https://www.westchestercountyny.gov/government/legislature" target="_blank" class="source-link">Legislature</a>
-        </div>
-      </div>
-
-      <div class="gov-card fade-in" style="background: var(--light); border-style: dashed;">
-        <div class="gov-card-label">Quick Reference</div>
-        <h3>Who to call for what?</h3>
-        <p style="font-size:13px;">
-          <strong>Pothole on your street?</strong> → Village DPW<br><br>
-          <strong>Noise complaint?</strong> → Village Police<br><br>
-          <strong>Tax bill question?</strong> → Town Receiver of Taxes<br><br>
-          <strong>School issue?</strong> → Board of Education<br><br>
-          <strong>Parks &amp; rec programs?</strong> → Town Recreation Dept<br><br>
-          <strong>Property assessment dispute?</strong> → Town Assessor<br><br>
-          <strong>Library hours?</strong> → Pelham Public Library (Town-run)
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
 
 <!-- ELECTIONS -->
 <section id="elections" class="section" style="background: var(--navy); color: var(--white);">
@@ -1628,89 +1515,25 @@
 
   </div>
 </section>
-<!-- ASK PELHAM AI -->
-<section id="ask-pelham" class="section" style="background: var(--navy);">
-  <div class="content-wrap">
-    <div class="section-eyebrow" style="color: var(--gold-light);">Part 2 — Research Tool</div>
-    <h2 class="section-title" style="color: var(--white);">Ask Pelham AI</h2>
-    <p class="section-intro" style="color: #8899b0; max-width: 620px;">
-      Have a question about local government, your tax bill, a current issue, or how to get involved? This assistant is trained to answer using only vetted Pelham sources — official government websites, the Pelham Examiner, and school district documents.
-    </p>
-
-    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;">
-      <span class="source-chip">✓ pelhamny.gov</span>
-      <span class="source-chip">✓ pelhammanor.gov</span>
-      <span class="source-chip">✓ townofpelhamny.gov</span>
-      <span class="source-chip">✓ pelhamschools.org</span>
-      <span class="source-chip">✓ pelhamexaminer.com</span>
-      <span class="source-chip">✓ westchestercountyny.gov</span>
-    </div>
-
-    <!-- Suggested prompts -->
-    <div style="margin-bottom: 20px;">
-      <div style="font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">Try asking…</div>
-      <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="suggestion-chips">
-        <button class="suggestion-chip" onclick="usePrompt(this)">How does the school district budget affect my property taxes?</button>
-        <button class="suggestion-chip" onclick="usePrompt(this)">What did the $143.6M school bond vote decide?</button>
-        <button class="suggestion-chip" onclick="usePrompt(this)">How do I dispute my property tax assessment?</button>
-        <button class="suggestion-chip" onclick="usePrompt(this)">Who are the Pelham Board of Education members?</button>
-        <button class="suggestion-chip" onclick="usePrompt(this)">Why did the Village of Pelham override the tax cap?</button>
-        <button class="suggestion-chip" onclick="usePrompt(this)">When is the next school budget vote and how do I participate?</button>
-        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Is the school district spending my tax dollars wisely?</button>
-        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Should I have voted yes on the school bond?</button>
-        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Was overriding the village tax cap the right call?</button>
-        <button class="suggestion-chip draft-chip" onclick="usePrompt(this)">Help me write a public comment about the school budget</button>
-        <button class="suggestion-chip draft-chip" onclick="usePrompt(this)">I want to write a letter to the Examiner about property tax increases</button>
-      </div>
-      <div style="margin-top: 8px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #4a6070; display: flex; gap: 16px; flex-wrap: wrap;">
-        <span><span style="color: var(--gold);">✦</span> gold — explore your own view in Claude.ai</span>
-        <span><span style="color: #55cccc;">✎</span> teal — draft a public comment or letter</span>
-      </div>
-    </div>
-
-    <!-- Chat window -->
-    <div id="chat-window" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); min-height: 200px; max-height: 460px; overflow-y: auto; padding: 24px; margin-bottom: 16px; display: none; flex-direction: column; gap: 16px; scroll-behavior: smooth;">
-    </div>
-
-    <!-- Input row -->
-    <div style="display: flex; gap: 10px;">
-      <textarea
-        id="ai-input"
-        placeholder="Ask anything about Pelham government, taxes, issues, or how to get involved…"
-        rows="2"
-        style="flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: var(--white); padding: 12px 16px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; resize: none; line-height: 1.5; outline: none;"
-        onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); askClaude();}"
-      ></textarea>
-      <button
-        id="ask-btn"
-        class="btn-ask"
-        onclick="askClaude()"
-        style="background: var(--gold); color: var(--navy); border: none; padding: 0 24px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.2s;"
-      >Ask →</button>
-    </div>
-    <div style="margin-top: 10px; font-size: 11px; color: #556070; font-family: 'IBM Plex Mono', monospace;">
-      ⚠ AI-generated · responses may contain errors · always verify facts at official sources · use 👍/👎 to flag inaccurate answers
-    </div>
-  </div>
-</section>
 <!-- EXPLORE MORE -->
 <section id="explore" class="section" style="background: var(--light); padding-top: 48px; padding-bottom: 0;">
   <div class="content-wrap">
-    <div class="section-eyebrow">Part 3 — Explore More</div>
+    <div class="section-eyebrow">Explore More</div>
     <h2 class="section-title">Dive Deeper</h2>
-    <p class="section-intro">Meeting summaries, your tax breakdown, and current issues — pick a tab to explore.</p>
+    <p class="section-intro">Current issues, meeting summaries, your tax breakdown, and who governs — pick a tab to explore.</p>
     <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:0;overflow-x:auto;">
-      <button class="explore-tab active-explore-tab" onclick="selectExplore(this,'explore-meetings')">📋 Meeting Summaries</button>
+      <button class="explore-tab" onclick="selectExplore(this,'explore-meetings')">📋 Meeting Summaries</button>
       <button class="explore-tab" onclick="selectExplore(this,'explore-taxes')">💰 Your Taxes</button>
-      <button class="explore-tab" onclick="selectExplore(this,'explore-issues')">🔔 Current Issues</button>
+      <button class="explore-tab active-explore-tab" onclick="selectExplore(this,'explore-issues')">🔔 Current Issues</button>
+      <button class="explore-tab" onclick="selectExplore(this,'explore-governs')">🏛 Who Governs</button>
     </div>
   </div>
 </section>
-<div id="explore-meetings" class="explore-panel active-panel">
+<div id="explore-meetings" class="explore-panel">
 <!-- MEETING SUMMARIES -->
 <section id="meeting-summaries" class="section" style="background: var(--light);">
   <div class="content-wrap">
-    <div class="section-eyebrow">Part 3 — Meeting Intelligence</div>
+    <div class="section-eyebrow">Meeting Intelligence</div>
     <h2 class="section-title">Meeting Summaries</h2>
     <p class="section-intro">Every public meeting is recorded. We process them automatically to generate three layers of detail. Select a meeting and a level of detail.</p>
     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;">
@@ -1722,7 +1545,7 @@
     <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border);">
       <button class="detail-tab active-tab" onclick="selectTab(this,'exec')">Executive Summary</button>
       <button class="detail-tab" onclick="selectTab(this,'detailed')">Detailed Summary</button>
-      <button class="detail-tab" onclick="selectTab(this,'transcript')">Full Transcript</button>
+      <button class="detail-tab detail-tab-transcript" onclick="selectTab(this,'transcript')">Full Transcript (raw) ↓</button>
     </div>
     <div class="summary-disclaimer">
       <span class="summary-disclaimer-icon">⚠️</span>
@@ -1798,7 +1621,7 @@
 <!-- YOUR TAXES -->
 <section id="your-taxes" class="section">
   <div class="content-wrap">
-    <div class="section-eyebrow">Part 3 — Follow the Money</div>
+    <div class="section-eyebrow">Follow the Money</div>
     <h2 class="section-title">Where Do Your Property Taxes Go?</h2>
     <p class="section-intro">Village taxes represent approximately 25% of your total property tax bill (per Mayor Mullen, Pelham Examiner May 2026). The school district is the largest share.</p>
     <div class="tax-layout">
@@ -1810,7 +1633,7 @@
         <div class="tax-note fade-in"><strong>Note:</strong> Village ~25% confirmed (Mayor Mullen/Examiner). School district is the largest share — no published %. County % unverified. Average village tax: Village of Pelham ~$7,387/yr (FY2026-27); Pelham Manor ~$6,035 for equivalent assessed value. Call Town Receiver of Taxes (914-738-1642) for your specific breakdown.</div>
       </div>
       <div class="tax-explainer">
-        <div class="tax-explainer-block fade-in"><div class="teb-title">🏫 School District</div><div class="teb-desc">2025-26 PUFSD budget: $96.3M (up 2.9%). Tax levy rose 3.48% — at state cap. Voters approved Props 1 & 2 of $143.6M capital bond in May 2025.</div><a href="https://www.pelhamschools.org/district/about/financials" target="_blank" class="issue-source-link">School budget documents</a></div>
+        <div class="tax-explainer-block fade-in"><div class="teb-title">🏫 School District</div><div class="teb-desc">FY2026-27 PUFSD budget: $98.3M, voter-approved May 2026. Tax levy rose 3.48% — at state cap. Voters approved Props 1 & 2 of $143.6M capital bond in May 2025.</div><a href="https://www.pelhamschools.org/district/about/financials" target="_blank" class="issue-source-link">School budget documents</a></div>
         <div class="tax-explainer-block gold fade-in"><div class="teb-title">🏛️ Westchester County</div><div class="teb-desc">County funds regional services — health, parks, social services. Your 14th District legislator advocates for Pelham's share.</div><a href="https://www.westchestercountyny.gov/government/departments/budget" target="_blank" class="issue-source-link">County budget</a></div>
         <div class="tax-explainer-block red fade-in"><div class="teb-title">🏘️ Village Services</div><div class="teb-desc">Village taxes fund police, fire, garbage, roads, water, and building dept. Village of Pelham passed $20.5M budget (10.1% increase) for FY2026-27, overriding the state tax cap.</div><a href="https://www.pelhamny.gov/173/Adopted-Village-Budgets" target="_blank" class="issue-source-link">Village adopted budgets</a></div>
         <div class="tax-explainer-block green fade-in"><div class="teb-title">🏡 Town of Pelham</div><div class="teb-desc">Smallest share — covers courts, assessor, recreation, library, and ambulance service shared between both villages.</div><a href="https://townofpelhamny.gov/budgets-and-reports/" target="_blank" class="issue-source-link">Town budgets & reports</a></div>
@@ -1819,11 +1642,11 @@
   </div>
 </section>
 </div>
-<div id="explore-issues" class="explore-panel">
+<div id="explore-issues" class="explore-panel active-panel">
 <!-- CURRENT ISSUES -->
 <section id="issues" class="section">
   <div class="content-wrap">
-    <div class="section-eyebrow">Part 4 — What's Happening Now</div>
+    <div class="section-eyebrow">What's Happening Now</div>
     <h2 class="section-title">Current Issues</h2>
     <p class="section-intro">Issues actively being debated in board meetings and local coverage. Last updated August 2026.</p>
     <div class="issues-grid">
@@ -1839,10 +1662,194 @@
   </div>
 </section>
 </div>
+<div id="explore-governs" class="explore-panel">
+<!-- GOVERNING BODIES -->
+<section id="who-governs" class="section">
+  <div class="content-wrap">
+    <div class="section-eyebrow">Government Structure</div>
+    <h2 class="section-title">Who Actually Governs Pelham?</h2>
+    <p class="section-intro">Pelham is unique: the entire Town is made up of two incorporated Villages. That means Village governments handle most day-to-day services, while Town government handles shared functions. Then add the School District, County, and State on top.</p>
+
+    <div class="gov-grid">
+      <div class="gov-card fade-in">
+        <div class="gov-card-label">Village Government</div>
+        <h3>Village of Pelham</h3>
+        <p>The primary local government for residents of "Pelham Heights" and former North Pelham. The Board of Trustees sets policy, manages the budget, and runs most everyday services — police, fire, garbage, water, and roads.</p>
+        <div class="gov-card-detail">
+          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">Mayor + 6 Trustees</span></div>
+          <div class="detail-row"><span class="detail-key">FY2026–27 Budget</span><span class="detail-val">$20.5M (↑10.1%)</span></div>
+          <div class="detail-row"><span class="detail-key">Meetings</span><span class="detail-val">2nd & 4th Tuesday, monthly</span></div>
+          <div class="detail-row"><span class="detail-key">Meeting Location</span><span class="detail-val">200 Fifth Ave, 1st floor</span></div>
+        </div>
+        <a href="https://www.pelhamny.gov" target="_blank" class="gov-link">pelhamny.gov →</a>
+        <div class="source-links">
+          <a href="https://www.pelhamny.gov/194/Mayor-Village-Board-of-Trustees" target="_blank" class="source-link">Board of Trustees</a>
+          <a href="https://www.pelhamny.gov/173/Adopted-Village-Budgets" target="_blank" class="source-link">Adopted Budgets</a>
+          <a href="https://www.pelhamny.gov/AgendaCenter" target="_blank" class="source-link">Meeting Agendas</a>
+          <a href="https://www.pelhamny.gov/m/newsflash" target="_blank" class="source-link">News & Notices</a>
+        </div>
+      </div>
+
+      <div class="gov-card gold-top fade-in">
+        <div class="gov-card-label">Village Government</div>
+        <h3>Village of Pelham Manor</h3>
+        <p>The second of Pelham's two villages, covering the Manor neighborhood. Has its own elected Mayor and Board of Trustees, runs its own police and fire departments, and manages village-level services independently.</p>
+        <div class="gov-card-detail">
+          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">Mayor + Board of Trustees</span></div>
+          <div class="detail-row"><span class="detail-key">FY2026–27 Budget</span><span class="detail-val">$21.9M ($19.4M ops + $2.5M capital)</span></div>
+          <div class="detail-row"><span class="detail-key">Area</span><span class="detail-val">1.2 square miles</span></div>
+          <div class="detail-row"><span class="detail-key">Village Hall</span><span class="detail-val">4 Penfield Place</span></div>
+        </div>
+        <a href="https://www.pelhammanor.gov" target="_blank" class="gov-link">pelhammanor.gov →</a>
+        <div class="source-links">
+          <a href="https://www.pelhammanor.gov/199/Board-of-Trustees" target="_blank" class="source-link">Board of Trustees</a>
+          <a href="https://www.pelhammanor.gov/209/Budgets-Financial-Statements" target="_blank" class="source-link">Budgets & Financials</a>
+          <a href="https://www.pelhammanor.gov/AgendaCenter" target="_blank" class="source-link">Meeting Agendas</a>
+          <a href="https://www.pelhammanor.gov/m/newsflash" target="_blank" class="source-link">News & Notices</a>
+        </div>
+      </div>
+
+      <div class="gov-card red-top fade-in">
+        <div class="gov-card-label">Town Government</div>
+        <h3>Town of Pelham</h3>
+        <p>The Town umbrella covers both villages. Rather than duplicating services, it handles shared functions that make sense to consolidate: municipal courts, tax assessment &amp; collection, recreation programs, the public library, and ambulance service.</p>
+        <div class="gov-card-detail">
+          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">Supervisor + 4 Councilors</span></div>
+          <div class="detail-row"><span class="detail-key">2025 Budget</span><span class="detail-val">$7.18M total appropriations</span></div>
+          <div class="detail-row"><span class="detail-key">Key Services</span><span class="detail-val">Courts, Assessor, Recreation</span></div>
+          <div class="detail-row"><span class="detail-key">Town Hall</span><span class="detail-val">34 Fifth Ave</span></div>
+          <div class="detail-row"><span class="detail-key">Founded</span><span class="detail-val">Est. 1654 · Incorporated 1788</span></div>
+        </div>
+        <a href="https://townofpelhamny.gov" target="_blank" class="gov-link">townofpelhamny.gov →</a>
+        <div class="source-links">
+          <a href="https://townofpelhamny.gov/town-officials/" target="_blank" class="source-link">Town Officials</a>
+          <a href="https://townofpelhamny.gov/budgets-and-reports/" target="_blank" class="source-link">Budgets & Reports</a>
+          <a href="https://townofpelhamny.gov/receiver-of-taxes/" target="_blank" class="source-link">Pay / View Taxes</a>
+          <a href="https://townofpelhamny.gov/news-and-notices/" target="_blank" class="source-link">News & Notices</a>
+        </div>
+      </div>
+
+      <div class="gov-card green-top fade-in">
+        <div class="gov-card-label">School District</div>
+        <h3>Pelham Union Free School District</h3>
+        <p>An elected Board of Education governs K–12 education across four elementary schools, one middle school, and Pelham Memorial High School. The school district has its own budget voted on separately by residents each May.</p>
+        <div class="gov-card-detail">
+          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">9-member Board of Education</span></div>
+          <div class="detail-row"><span class="detail-key">FY2025–26 Budget</span><span class="detail-val">$96.3M (↑2.9%, voter-approved)</span></div>
+          <div class="detail-row"><span class="detail-key">Schools</span><span class="detail-val">4 Elementary, 1 Middle, 1 HS</span></div>
+          <div class="detail-row"><span class="detail-key">Budget Vote</span><span class="detail-val">Every May (public vote)</span></div>
+        </div>
+        <a href="https://www.pelhamschools.org" target="_blank" class="gov-link">pelhamschools.org →</a>
+        <div class="source-links">
+          <a href="https://www.pelhamschools.org/district/about/financials" target="_blank" class="source-link">Budget & Financials</a>
+          <a href="https://www.pelhamschools.org/district/board-of-education" target="_blank" class="source-link">Board of Education</a>
+          <a href="https://www.pelhamschools.org/district/news" target="_blank" class="source-link">District News</a>
+        </div>
+      </div>
+
+      <div class="gov-card fade-in">
+        <div class="gov-card-label">County Government</div>
+        <h3>Westchester County</h3>
+        <p>County government provides regional services including the county police, health department, parks, sewer districts, and social services. Westchester is also the entity that establishes equalization rates used in property tax assessments.</p>
+        <div class="gov-card-detail">
+          <div class="detail-row"><span class="detail-key">Governing Body</span><span class="detail-val">County Executive + Legislature</span></div>
+          <div class="detail-row"><span class="detail-key">County Budget</span><span class="detail-val">See westchestercountyny.gov</span></div>
+          <div class="detail-row"><span class="detail-key">Pelham's District</span><span class="detail-val">14th Legislative District</span></div>
+          <div class="detail-row"><span class="detail-key">Key Services</span><span class="detail-val">Health, Parks, Sewer, Courts</span></div>
+        </div>
+        <a href="https://www.westchestercountyny.gov" target="_blank" class="gov-link">westchestercountyny.gov →</a>
+        <div class="source-links">
+          <a href="https://www.westchestercountyny.gov/government/departments/budget" target="_blank" class="source-link">County Budget</a>
+          <a href="https://www.westchestercountyny.gov/government/legislature" target="_blank" class="source-link">Legislature</a>
+        </div>
+      </div>
+
+      <div class="gov-card fade-in" style="background: var(--light); border-style: dashed;">
+        <div class="gov-card-label">Quick Reference</div>
+        <h3>Who to call for what?</h3>
+        <p style="font-size:13px;">
+          <strong>Pothole on your street?</strong> → Village DPW<br><br>
+          <strong>Noise complaint?</strong> → Village Police<br><br>
+          <strong>Tax bill question?</strong> → Town Receiver of Taxes<br><br>
+          <strong>School issue?</strong> → Board of Education<br><br>
+          <strong>Parks &amp; rec programs?</strong> → Town Recreation Dept<br><br>
+          <strong>Property assessment dispute?</strong> → Town Assessor<br><br>
+          <strong>Library hours?</strong> → Pelham Public Library (Town-run)
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+<!-- ASK PELHAM AI -->
+<section id="ask-pelham" class="section" style="background: var(--navy);">
+  <div class="content-wrap">
+    <div class="section-eyebrow" style="color: var(--gold-light);">Research Tool</div>
+    <h2 class="section-title" style="color: var(--white);">Ask Pelham AI</h2>
+    <p class="section-intro" style="color: #8899b0; max-width: 620px;">
+      Have a question about local government, your tax bill, a current issue, or how to get involved? This assistant is trained to answer using only vetted Pelham sources — official government websites, the Pelham Examiner, and school district documents.
+    </p>
+
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;">
+      <span class="source-chip">✓ pelhamny.gov</span>
+      <span class="source-chip">✓ pelhammanor.gov</span>
+      <span class="source-chip">✓ townofpelhamny.gov</span>
+      <span class="source-chip">✓ pelhamschools.org</span>
+      <span class="source-chip">✓ pelhamexaminer.com</span>
+      <span class="source-chip">✓ westchestercountyny.gov</span>
+    </div>
+
+    <!-- Suggested prompts -->
+    <div style="margin-bottom: 20px;">
+      <div style="font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">Try asking…</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="suggestion-chips">
+        <button class="suggestion-chip" onclick="usePrompt(this)">How does the school district budget affect my property taxes?</button>
+        <button class="suggestion-chip" onclick="usePrompt(this)">What did the $143.6M school bond vote decide?</button>
+        <button class="suggestion-chip" onclick="usePrompt(this)">How do I dispute my property tax assessment?</button>
+        <button class="suggestion-chip" onclick="usePrompt(this)">Who are the Pelham Board of Education members?</button>
+        <button class="suggestion-chip" onclick="usePrompt(this)">Why did the Village of Pelham override the tax cap?</button>
+        <button class="suggestion-chip" onclick="usePrompt(this)">When is the next school budget vote and how do I participate?</button>
+        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Is the school district spending my tax dollars wisely?</button>
+        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Should I have voted yes on the school bond?</button>
+        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Was overriding the village tax cap the right call?</button>
+        <button class="suggestion-chip draft-chip" onclick="usePrompt(this)">Help me write a public comment about the school budget</button>
+        <button class="suggestion-chip draft-chip" onclick="usePrompt(this)">I want to write a letter to the Examiner about property tax increases</button>
+      </div>
+      <div style="margin-top: 8px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #4a6070; display: flex; gap: 16px; flex-wrap: wrap;">
+        <span><span style="color: var(--gold);">✦</span> gold — explore your own view in Claude.ai</span>
+        <span><span style="color: #55cccc;">✎</span> teal — draft a public comment or letter</span>
+      </div>
+    </div>
+
+    <!-- Chat window -->
+    <div id="chat-window" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); min-height: 200px; max-height: 460px; overflow-y: auto; padding: 24px; margin-bottom: 16px; display: none; flex-direction: column; gap: 16px; scroll-behavior: smooth;">
+    </div>
+
+    <!-- Input row -->
+    <div style="display: flex; gap: 10px;">
+      <textarea
+        id="ai-input"
+        placeholder="Ask anything about Pelham government, taxes, issues, or how to get involved…"
+        rows="2"
+        style="flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: var(--white); padding: 12px 16px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; resize: none; line-height: 1.5; outline: none;"
+        onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); askClaude();}"
+      ></textarea>
+      <button
+        id="ask-btn"
+        class="btn-ask"
+        onclick="askClaude()"
+        style="background: var(--gold); color: var(--navy); border: none; padding: 0 24px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.2s;"
+      >Ask →</button>
+    </div>
+    <div style="margin-top: 10px; font-size: 11px; color: #556070; font-family: 'IBM Plex Mono', monospace;">
+      ⚠ AI-generated · responses may contain errors · always verify facts at official sources · use 👍/👎 to flag inaccurate answers
+    </div>
+  </div>
+</section>
 <!-- GET INVOLVED -->
 <section id="get-involved" class="section involved-section">
   <div class="content-wrap">
-    <div class="section-eyebrow">Part 5 — Take Action</div>
+    <div class="section-eyebrow">Take Action</div>
     <h2 class="section-title">How to Get Involved</h2>
     <p class="section-intro">Civic engagement doesn't require running for office. The most consistent voices in local government are often ordinary residents who show up. Here's where to start.</p>
 
@@ -1933,7 +1940,7 @@
 <!-- MEETING SCHEDULE -->
 <section id="meetings" class="section">
   <div class="content-wrap">
-    <div class="section-eyebrow">Part 6 — Show Up</div>
+    <div class="section-eyebrow">Show Up</div>
     <h2 class="section-title">Public Meeting Quick Reference</h2>
     <p class="section-intro">All meetings listed below are open to the public. Agendas are typically posted on each body's official website 72+ hours in advance.</p>
 
@@ -2270,6 +2277,22 @@
     document.getElementById(panelId).classList.add('active-panel');
     document.getElementById('explore').scrollIntoView({behavior:'smooth',block:'start'});
   }
+
+  // Nav "Explore More" dropdown — works on click as well as CSS :hover.
+  function toggleDropdown(event){
+    event.preventDefault();
+    event.stopPropagation();
+    const wrap = document.querySelector('.nav-dropdown-wrap');
+    if (wrap) wrap.classList.toggle('open');
+  }
+  function closeDropdown(){
+    const wrap = document.querySelector('.nav-dropdown-wrap');
+    if (wrap) wrap.classList.remove('open');
+  }
+  document.addEventListener('click', function(e){
+    const wrap = document.querySelector('.nav-dropdown-wrap');
+    if (wrap && !wrap.contains(e.target)) closeDropdown();
+  });
 
   const meetings = {'pelham-board-jul2026':{title:'Village of Pelham · Board of Trustees · July 14, 2026'},'coming-soon-1':{title:'Town of Pelham · coming soon'},'coming-soon-2':{title:'Village of Pelham Manor · coming soon'},'coming-soon-3':{title:'Board of Education · coming soon'}};
   function selectMeeting(btn,id){document.querySelectorAll('.mtg-selector').forEach(b=>b.classList.remove('active-mtg'));btn.classList.add('active-mtg');if(id!=='pelham-board-jul2026'){document.getElementById('mtg-content').innerHTML='<div style="padding:40px;text-align:center;color:var(--slate);font-size:14px;">📋 Summaries for <strong>'+meetings[id].title+'</strong> will appear here once processed.</div>';}else{location.reload();}}

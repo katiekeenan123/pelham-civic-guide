@@ -1,8 +1,9 @@
 // UI tests for the Pelham Civic Guide — run against the live deployed page.
 //
-// Covers: page load + title, the primary nav, the "Explore More" hover
-// dropdown, the Explore More tab switcher, the Meeting Summaries panel and its
-// Detailed Summary tab, the Elections section, and the scroll fade-in animation.
+// Covers: page load + title, the primary nav, the "Explore More" dropdown
+// (hover + click), the Explore More tab switcher (incl. the Who Governs tab),
+// the Meeting Summaries panel and its Detailed Summary tab, the Elections
+// section, and the scroll fade-in animation.
 
 const { test, expect } = require('@playwright/test');
 
@@ -18,11 +19,12 @@ test('all primary navigation links are present', async ({ page }) => {
   const nav = page.locator('nav.nav-bar');
   await expect(nav).toBeVisible();
 
+  // "Who Governs" is no longer a top-level nav link — it lives inside the
+  // Explore More dropdown / tabs.
   const expected = [
-    'Who Governs',
     'Nov 2026 Elections',
-    'Ask Pelham AI',
     'Explore More',
+    'Ask Pelham AI',
     'Get Involved',
     'Meeting Schedule',
     'About',
@@ -35,20 +37,33 @@ test('all primary navigation links are present', async ({ page }) => {
   }
 });
 
-test('Explore More dropdown appears on hover with its three sub-items', async ({ page }) => {
+test('Explore More dropdown opens on hover and on click, with its four sub-items', async ({ page }) => {
   const wrap = page.locator('.nav-dropdown-wrap');
+  const trigger = page.locator('.nav-dropdown-trigger');
   const menu = page.locator('.nav-dropdown');
 
   await expect(menu).toBeHidden();
 
+  // hover opens it
   await wrap.hover();
   await expect(menu).toBeVisible();
 
   const items = menu.locator('a');
-  await expect(items).toHaveCount(3);
+  await expect(items).toHaveCount(4);
   await expect(items.nth(0)).toContainText('Meeting Summaries');
   await expect(items.nth(1)).toContainText('Your Taxes');
   await expect(items.nth(2)).toContainText('Current Issues');
+  await expect(items.nth(3)).toContainText('Who Governs');
+
+  // click also toggles it — independent of :hover (mouse parked in the corner)
+  await page.mouse.move(0, 0);
+  await expect(menu).toBeHidden();
+  await trigger.click();
+  await page.mouse.move(0, 0);
+  await expect(menu).toBeVisible();
+  await trigger.click();
+  await page.mouse.move(0, 0);
+  await expect(menu).toBeHidden();
 });
 
 test('Explore More tabs switch content — Your Taxes and Current Issues', async ({ page }) => {
@@ -69,6 +84,9 @@ test('Explore More tabs switch content — Your Taxes and Current Issues', async
 });
 
 test('Meeting Summaries — July 14 2026 meeting, Detailed Summary tab, Ari Schwartz', async ({ page }) => {
+  // Current Issues is the default Explore tab now — switch to Meeting Summaries first.
+  await page.getByRole('button', { name: 'Meeting Summaries' }).click();
+
   const meetings = page.locator('#explore-meetings');
   await expect(meetings).toBeVisible();
 
@@ -110,5 +128,22 @@ test('fade-in sections become visible on scroll', async ({ page }) => {
   });
 
   await expect(deep).toHaveClass(/(^|\s)visible(\s|$)/);
-  await expect(page.locator('#who-governs .fade-in').first()).toHaveClass(/(^|\s)visible(\s|$)/);
+  // #explore-issues is the default-active Explore panel and sits near the top.
+  await expect(page.locator('#explore-issues .fade-in').first()).toHaveClass(/(^|\s)visible(\s|$)/);
+});
+
+test('Explore More — Who Governs tab reveals the governing-bodies content', async ({ page }) => {
+  const governs = page.locator('#explore-governs');
+
+  // Not the default tab — hidden until selected.
+  await expect(governs).toBeHidden();
+
+  await page.getByRole('button', { name: 'Who Governs' }).click();
+
+  await expect(governs).toBeVisible();
+  await expect(
+    governs.getByRole('heading', { name: /Who Actually Governs Pelham\?/i }),
+  ).toBeVisible();
+  await expect(governs).toContainText('Village of Pelham Manor');
+  await expect(governs).toContainText('Westchester County');
 });
