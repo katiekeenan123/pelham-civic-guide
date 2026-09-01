@@ -1654,150 +1654,6 @@
     40% { transform: translateY(-6px); opacity: 1; }
   }
 </style>
-
-<script>
-  /* SYSTEM_PROMPT moved server-side -> netlify/functions/ask-pelham.js */
-
-  let conversationHistory = [];
-
-  function usePrompt(btn) {
-    document.getElementById('ai-input').value = btn.textContent;
-    document.getElementById('ai-input').focus();
-  }
-
-  let feedbackCount = 0;
-
-  function submitFeedback(id, type, question, answer) {
-    // Log to console (in production, POST to your Supabase feedback table)
-    console.log('Feedback:', { id, type, question, answer, timestamp: new Date().toISOString() });
-    const row = document.getElementById('feedback-' + id);
-    if (!row) return;
-    row.querySelectorAll('.feedback-btn').forEach(b => b.disabled = true);
-    if (type === 'up') {
-      row.querySelector('.btn-up').classList.add('selected-up');
-    } else {
-      row.querySelector('.btn-down').classList.add('selected-down');
-    }
-    row.querySelector('.feedback-thanks').style.display = 'inline';
-  }
-
-  function copyPrompt(btn, promptText) {
-    navigator.clipboard.writeText(promptText).then(() => {
-      const confirm = btn.nextElementSibling;
-      confirm.style.display = 'inline';
-      btn.textContent = 'Copied!';
-      setTimeout(() => { confirm.style.display = 'none'; btn.textContent = 'Copy prompt'; }, 2000);
-    });
-  }
-
-  function addBubble(role, text, questionForFeedback) {
-    const win = document.getElementById('chat-window');
-    win.style.display = 'flex';
-    const bubble = document.createElement('div');
-    bubble.className = `chat-bubble ${role}`;
-    const feedbackId = ++feedbackCount;
-
-    // Parse out DEEPER_PROMPT marker if present
-    let displayText = text;
-    let deeperPrompt = null;
-    const deeperMatch = text.match(/DEEPER_PROMPT:\s*(.+)$/s);
-    if (deeperMatch) {
-      deeperPrompt = deeperMatch[1].trim();
-      displayText = text.replace(/\n?DEEPER_PROMPT:.+$/s, '').trim();
-    }
-
-    const claudeUrl = deeperPrompt
-      ? 'https://claude.ai/new?q=' + encodeURIComponent(deeperPrompt)
-      : 'https://claude.ai';
-
-    const deeperHtml = deeperPrompt ? `
-      <div class="go-deeper-block">
-        <div class="go-deeper-label">✦ Want to go deeper?</div>
-        <div class="go-deeper-prompt">"${deeperPrompt}"</div>
-        <div class="go-deeper-actions">
-          <button class="go-deeper-copy" onclick="copyPrompt(this, ${JSON.stringify(deeperPrompt)})">Copy prompt</button>
-          <span class="copy-confirm">✓ Copied</span>
-          <a href="${claudeUrl}" target="_blank" class="go-deeper-link">→ Open in Claude.ai</a>
-        </div>
-      </div>` : '';
-
-    const feedbackHtml = role === 'assistant' ? `
-      <div class="feedback-row" id="feedback-${feedbackId}">
-        <span class="feedback-label">Helpful?</span>
-        <button class="feedback-btn btn-up" onclick="submitFeedback(${feedbackId}, 'up', ${JSON.stringify(questionForFeedback||'')}, ${JSON.stringify(displayText.slice(0,200))})">👍</button>
-        <button class="feedback-btn btn-down" onclick="submitFeedback(${feedbackId}, 'down', ${JSON.stringify(questionForFeedback||'')}, ${JSON.stringify(displayText.slice(0,200))})">👎</button>
-        <span class="feedback-thanks">Thanks — we'll use this to improve.</span>
-      </div>` : '';
-
-    bubble.innerHTML = `
-      <div class="bubble-label">${role === 'user' ? 'You' : 'Pelham AI'}</div>
-      <div class="bubble-text">${displayText.replace(/\n/g, '<br>')}</div>
-      ${deeperHtml}
-      ${feedbackHtml}
-    `;
-    win.appendChild(bubble);
-    win.scrollTop = win.scrollHeight;
-    return bubble;
-  }
-
-  function addTyping() {
-    const win = document.getElementById('chat-window');
-    win.style.display = 'flex';
-    const bubble = document.createElement('div');
-    bubble.className = 'chat-bubble assistant';
-    bubble.id = 'typing-indicator';
-    bubble.innerHTML = `
-      <div class="bubble-label">Pelham AI</div>
-      <div class="bubble-text typing-dots"><span></span><span></span><span></span></div>
-    `;
-    win.appendChild(bubble);
-    win.scrollTop = win.scrollHeight;
-  }
-
-  function removeTyping() {
-    const t = document.getElementById('typing-indicator');
-    if (t) t.remove();
-  }
-
-  async function askClaude() {
-    const input = document.getElementById('ai-input');
-    const btn = document.getElementById('ask-btn');
-    const question = input.value.trim();
-    if (!question) return;
-
-    input.value = '';
-    btn.disabled = true;
-    btn.textContent = '…';
-
-    addBubble('user', question);
-    conversationHistory.push({ role: 'user', content: question });
-    addTyping();
-
-    try {
-      const response = await fetch('/api/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: conversationHistory })
-      });
-
-      const data = await response.json();
-      const answer = data.answer || data.content?.[0]?.text || 'Sorry, I couldn\'t get a response. Please try again.';
-
-      removeTyping();
-      addBubble('assistant', answer, question);
-      conversationHistory.push({ role: 'assistant', content: answer });
-
-    } catch (err) {
-      removeTyping();
-      addBubble('assistant', 'Something went wrong connecting to the AI. Please try again in a moment.');
-    }
-
-    btn.disabled = false;
-    btn.textContent = 'Ask →';
-  }
-</script>
-
-
 <!-- EXPLORE MORE -->
 <section id="explore" class="section" style="background: var(--light); padding-top: 48px; padding-bottom: 0;">
   <div class="content-wrap">
@@ -1818,15 +1674,6 @@
   .explore-panel{display:none;}
   .explore-panel.active-panel{display:block;}
 </style>
-<script>
-  function selectExplore(btn,panelId){
-    document.querySelectorAll('.explore-tab').forEach(b=>b.classList.remove('active-explore-tab'));
-    btn.classList.add('active-explore-tab');
-    document.querySelectorAll('.explore-panel').forEach(p=>p.classList.remove('active-panel'));
-    document.getElementById(panelId).classList.add('active-panel');
-    document.getElementById('explore').scrollIntoView({behavior:'smooth',block:'start'});
-  }
-</script>
 <div id="explore-meetings" class="explore-panel active-panel">
 <!-- MEETING SUMMARIES -->
 <section id="meeting-summaries" class="section" style="background: var(--light);">
@@ -1914,11 +1761,6 @@
     </div>
   </div>
 </section>
-<script>
-  const meetings = {'pelham-board-jul2026':{title:'Village of Pelham · Board of Trustees · July 14, 2026'},'coming-soon-1':{title:'Town of Pelham · coming soon'},'coming-soon-2':{title:'Village of Pelham Manor · coming soon'},'coming-soon-3':{title:'Board of Education · coming soon'}};
-  function selectMeeting(btn,id){document.querySelectorAll('.mtg-selector').forEach(b=>b.classList.remove('active-mtg'));btn.classList.add('active-mtg');if(id!=='pelham-board-jul2026'){document.getElementById('mtg-content').innerHTML='<div style="padding:40px;text-align:center;color:var(--slate);font-size:14px;">📋 Summaries for <strong>'+meetings[id].title+'</strong> will appear here once processed.</div>';}else{location.reload();}}
-  function selectTab(btn,panel){document.querySelectorAll('.detail-tab').forEach(b=>b.classList.remove('active-tab'));btn.classList.add('active-tab');document.querySelectorAll('.mtg-panel').forEach(p=>p.style.display='none');document.getElementById('panel-'+panel).style.display='block';}
-</script>
 </div>
 <div id="explore-taxes" class="explore-panel">
 <!-- YOUR TAXES -->
@@ -2241,8 +2083,165 @@
     }
   }
 </style>
-
+<!-- FOOTER -->
+<footer>
+  <p><strong>Pelham Civic Guide</strong> — An independent resource for Pelham, NY residents.</p>
+  <p style="margin-top:8px;">Sources: <a href="https://www.pelhamny.gov" target="_blank">pelhamny.gov</a> · <a href="https://www.pelhammanor.gov" target="_blank">pelhammanor.gov</a> · <a href="https://townofpelhamny.gov" target="_blank">townofpelhamny.gov</a> · <a href="https://www.pelhamschools.org" target="_blank">pelhamschools.org</a> · <a href="https://pelhamexaminer.com" target="_blank">Pelham Examiner</a></p>
+  <p style="margin-top:8px;">This guide is for informational purposes. For official information, always check government websites directly. Last updated June 2026.</p>
+</footer>
 <script>
+  /* SYSTEM_PROMPT moved server-side -> netlify/functions/ask-pelham.js */
+
+  let conversationHistory = [];
+
+  function usePrompt(btn) {
+    document.getElementById('ai-input').value = btn.textContent;
+    document.getElementById('ai-input').focus();
+  }
+
+  let feedbackCount = 0;
+
+  function submitFeedback(id, type, question, answer) {
+    // Log to console (in production, POST to your Supabase feedback table)
+    console.log('Feedback:', { id, type, question, answer, timestamp: new Date().toISOString() });
+    const row = document.getElementById('feedback-' + id);
+    if (!row) return;
+    row.querySelectorAll('.feedback-btn').forEach(b => b.disabled = true);
+    if (type === 'up') {
+      row.querySelector('.btn-up').classList.add('selected-up');
+    } else {
+      row.querySelector('.btn-down').classList.add('selected-down');
+    }
+    row.querySelector('.feedback-thanks').style.display = 'inline';
+  }
+
+  function copyPrompt(btn, promptText) {
+    navigator.clipboard.writeText(promptText).then(() => {
+      const confirm = btn.nextElementSibling;
+      confirm.style.display = 'inline';
+      btn.textContent = 'Copied!';
+      setTimeout(() => { confirm.style.display = 'none'; btn.textContent = 'Copy prompt'; }, 2000);
+    });
+  }
+
+  function addBubble(role, text, questionForFeedback) {
+    const win = document.getElementById('chat-window');
+    win.style.display = 'flex';
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${role}`;
+    const feedbackId = ++feedbackCount;
+
+    // Parse out DEEPER_PROMPT marker if present
+    let displayText = text;
+    let deeperPrompt = null;
+    const deeperMatch = text.match(/DEEPER_PROMPT:\s*(.+)$/s);
+    if (deeperMatch) {
+      deeperPrompt = deeperMatch[1].trim();
+      displayText = text.replace(/\n?DEEPER_PROMPT:.+$/s, '').trim();
+    }
+
+    const claudeUrl = deeperPrompt
+      ? 'https://claude.ai/new?q=' + encodeURIComponent(deeperPrompt)
+      : 'https://claude.ai';
+
+    const deeperHtml = deeperPrompt ? `
+      <div class="go-deeper-block">
+        <div class="go-deeper-label">✦ Want to go deeper?</div>
+        <div class="go-deeper-prompt">"${deeperPrompt}"</div>
+        <div class="go-deeper-actions">
+          <button class="go-deeper-copy" onclick="copyPrompt(this, ${JSON.stringify(deeperPrompt)})">Copy prompt</button>
+          <span class="copy-confirm">✓ Copied</span>
+          <a href="${claudeUrl}" target="_blank" class="go-deeper-link">→ Open in Claude.ai</a>
+        </div>
+      </div>` : '';
+
+    const feedbackHtml = role === 'assistant' ? `
+      <div class="feedback-row" id="feedback-${feedbackId}">
+        <span class="feedback-label">Helpful?</span>
+        <button class="feedback-btn btn-up" onclick="submitFeedback(${feedbackId}, 'up', ${JSON.stringify(questionForFeedback||'')}, ${JSON.stringify(displayText.slice(0,200))})">👍</button>
+        <button class="feedback-btn btn-down" onclick="submitFeedback(${feedbackId}, 'down', ${JSON.stringify(questionForFeedback||'')}, ${JSON.stringify(displayText.slice(0,200))})">👎</button>
+        <span class="feedback-thanks">Thanks — we'll use this to improve.</span>
+      </div>` : '';
+
+    bubble.innerHTML = `
+      <div class="bubble-label">${role === 'user' ? 'You' : 'Pelham AI'}</div>
+      <div class="bubble-text">${displayText.replace(/\n/g, '<br>')}</div>
+      ${deeperHtml}
+      ${feedbackHtml}
+    `;
+    win.appendChild(bubble);
+    win.scrollTop = win.scrollHeight;
+    return bubble;
+  }
+
+  function addTyping() {
+    const win = document.getElementById('chat-window');
+    win.style.display = 'flex';
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble assistant';
+    bubble.id = 'typing-indicator';
+    bubble.innerHTML = `
+      <div class="bubble-label">Pelham AI</div>
+      <div class="bubble-text typing-dots"><span></span><span></span><span></span></div>
+    `;
+    win.appendChild(bubble);
+    win.scrollTop = win.scrollHeight;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typing-indicator');
+    if (t) t.remove();
+  }
+
+  async function askClaude() {
+    const input = document.getElementById('ai-input');
+    const btn = document.getElementById('ask-btn');
+    const question = input.value.trim();
+    if (!question) return;
+
+    input.value = '';
+    btn.disabled = true;
+    btn.textContent = '…';
+
+    addBubble('user', question);
+    conversationHistory.push({ role: 'user', content: question });
+    addTyping();
+
+    try {
+      const response = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversationHistory })
+      });
+
+      const data = await response.json();
+      const answer = data.answer || data.content?.[0]?.text || 'Sorry, I couldn\'t get a response. Please try again.';
+
+      removeTyping();
+      addBubble('assistant', answer, question);
+      conversationHistory.push({ role: 'assistant', content: answer });
+
+    } catch (err) {
+      removeTyping();
+      addBubble('assistant', 'Something went wrong connecting to the AI. Please try again in a moment.');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Ask →';
+  }
+
+  function selectExplore(btn,panelId){
+    document.querySelectorAll('.explore-tab').forEach(b=>b.classList.remove('active-explore-tab'));
+    btn.classList.add('active-explore-tab');
+    document.querySelectorAll('.explore-panel').forEach(p=>p.classList.remove('active-panel'));
+    document.getElementById(panelId).classList.add('active-panel');
+    document.getElementById('explore').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  const meetings = {'pelham-board-jul2026':{title:'Village of Pelham · Board of Trustees · July 14, 2026'},'coming-soon-1':{title:'Town of Pelham · coming soon'},'coming-soon-2':{title:'Village of Pelham Manor · coming soon'},'coming-soon-3':{title:'Board of Education · coming soon'}};
+  function selectMeeting(btn,id){document.querySelectorAll('.mtg-selector').forEach(b=>b.classList.remove('active-mtg'));btn.classList.add('active-mtg');if(id!=='pelham-board-jul2026'){document.getElementById('mtg-content').innerHTML='<div style="padding:40px;text-align:center;color:var(--slate);font-size:14px;">📋 Summaries for <strong>'+meetings[id].title+'</strong> will appear here once processed.</div>';}else{location.reload();}}
+  function selectTab(btn,panel){document.querySelectorAll('.detail-tab').forEach(b=>b.classList.remove('active-tab'));btn.classList.add('active-tab');document.querySelectorAll('.mtg-panel').forEach(p=>p.style.display='none');document.getElementById('panel-'+panel).style.display='block';}
+
   function submitError() {
     const section = document.getElementById('error-section').value;
     const desc = document.getElementById('error-desc').value.trim();
@@ -2266,17 +2265,7 @@
     console.log('Civic feedback:', { actions, body, story });
     document.getElementById('fb-confirm').style.display = 'block';
   }
-</script>
 
-
-<!-- FOOTER -->
-<footer>
-  <p><strong>Pelham Civic Guide</strong> — An independent resource for Pelham, NY residents.</p>
-  <p style="margin-top:8px;">Sources: <a href="https://www.pelhamny.gov" target="_blank">pelhamny.gov</a> · <a href="https://www.pelhammanor.gov" target="_blank">pelhammanor.gov</a> · <a href="https://townofpelhamny.gov" target="_blank">townofpelhamny.gov</a> · <a href="https://www.pelhamschools.org" target="_blank">pelhamschools.org</a> · <a href="https://pelhamexaminer.com" target="_blank">Pelham Examiner</a></p>
-  <p style="margin-top:8px;">This guide is for informational purposes. For official information, always check government websites directly. Last updated June 2026.</p>
-</footer>
-
-<script>
   // Fade-in on scroll
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
