@@ -1204,6 +1204,35 @@
      !important overrides the element's inline style="background:…". */
   .btn-ask:hover { background: #e8b85a !important; }
   .btn-submit-correction:hover { background: #2255cc !important; }
+
+  /* ── Elections · voter-info boxes ── */
+  .voter-info-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 20px; }
+  .voter-info-label { font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
+  .voter-info-value { font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+  .voter-info-note { font-size: 12px; color: #8899b0; }
+
+  /* ── Ask Pelham · vetted-source chips ── */
+  .source-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace; }
+
+  /* ── Get Involved · repeated labels & chips ── */
+  .involved-eyebrow { font-size: 12px; font-weight: 600; color: var(--gold-light); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+  .meeting-chip { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; font-size: 12px; color: #a0b0c8; }
+
+  /* ── About · headings, body copy, editorial callout ── */
+  .about-h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 14px; color: var(--navy); }
+  .about-body { font-size: 15px; line-height: 1.75; color: var(--slate); }
+  .editorial-callout { margin-top: 24px; padding: 20px; background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--gold); }
+
+  /* ── About · correction & feedback forms ── */
+  .about-form-card { background: var(--white); border: 1px solid var(--border); padding: 28px; }
+  .about-form-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--slate); margin-bottom: 8px; }
+  .about-form-h3 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; }
+  .form-fields { display: flex; flex-direction: column; gap: 12px; }
+  .form-field-label { font-size: 12px; font-weight: 600; color: var(--navy); display: block; margin-bottom: 4px; }
+  .form-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border); font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; background: var(--cream); }
+  .fb-checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+  .form-confirm { display: none; font-size: 13px; color: var(--green); font-weight: 500; }
+  .about-source-link { font-size: 13px; padding: 8px 12px; }
 </style>
 </head>
 <body>
@@ -1580,20 +1609,20 @@
 
     <!-- VOTER INFO -->
     <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
-      <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 20px;">
-        <div style="font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px;">Election Date</div>
-        <div style="font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 6px;">Nov 4, 2026</div>
-        <div style="font-size: 12px; color: #8899b0;">Verify exact date at Westchester County Board of Elections</div>
+      <div class="voter-info-box">
+        <div class="voter-info-label">Election Date</div>
+        <div class="voter-info-value">Nov 4, 2026</div>
+        <div class="voter-info-note">Verify exact date at Westchester County Board of Elections</div>
       </div>
-      <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 20px;">
-        <div style="font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px;">Register to Vote</div>
-        <div style="font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 6px;">25 days before</div>
-        <div style="font-size: 12px; color: #8899b0;"><a href="https://www.elections.ny.gov" target="_blank" style="color: var(--gold-light);">elections.ny.gov</a> or Westchester County Board of Elections 914-995-5700</div>
+      <div class="voter-info-box">
+        <div class="voter-info-label">Register to Vote</div>
+        <div class="voter-info-value">25 days before</div>
+        <div class="voter-info-note"><a href="https://www.elections.ny.gov" target="_blank" style="color: var(--gold-light);">elections.ny.gov</a> or Westchester County Board of Elections 914-995-5700</div>
       </div>
-      <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 20px;">
-        <div style="font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px;">Where to Vote</div>
-        <div style="font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 6px;">6am – 9pm</div>
-        <div style="font-size: 12px; color: #8899b0;">Village of Pelham: Daronco Town House, 20 Fifth Ave · Pelham Manor: Our Lady of Perpetual Help, 575 Fowler Ave</div>
+      <div class="voter-info-box">
+        <div class="voter-info-label">Where to Vote</div>
+        <div class="voter-info-value">6am – 9pm</div>
+        <div class="voter-info-note">Village of Pelham: Daronco Town House, 20 Fifth Ave · Pelham Manor: Our Lady of Perpetual Help, 575 Fowler Ave</div>
       </div>
     </div>
 
@@ -1609,12 +1638,12 @@
     </p>
 
     <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;">
-      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ pelhamny.gov</span>
-      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ pelhammanor.gov</span>
-      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ townofpelhamny.gov</span>
-      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ pelhamschools.org</span>
-      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ pelhamexaminer.com</span>
-      <span style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace;">✓ westchestercountyny.gov</span>
+      <span class="source-chip">✓ pelhamny.gov</span>
+      <span class="source-chip">✓ pelhammanor.gov</span>
+      <span class="source-chip">✓ townofpelhamny.gov</span>
+      <span class="source-chip">✓ pelhamschools.org</span>
+      <span class="source-chip">✓ pelhamexaminer.com</span>
+      <span class="source-chip">✓ westchestercountyny.gov</span>
     </div>
 
     <!-- Suggested prompts -->
@@ -1838,7 +1867,7 @@
 
         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 20px;">
           <div>
-            <div style="font-size:12px; font-weight:600; color:var(--gold-light); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;">What to Expect</div>
+            <div class="involved-eyebrow">What to Expect</div>
             <ul>
               <li><strong>Arrive 10–15 min early</strong> — ask the clerk how public comment works that evening; each board handles it slightly differently</li>
               <li><strong>When comment is called</strong> — stand up or raise your hand; walk to the microphone when recognized</li>
@@ -1850,7 +1879,7 @@
             </ul>
           </div>
           <div>
-            <div style="font-size:12px; font-weight:600; color:var(--gold-light); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;">Tips for a Strong Comment</div>
+            <div class="involved-eyebrow">Tips for a Strong Comment</div>
             <ul>
               <li><strong>Say one thing specifically</strong> — "I'm concerned about the 40% spike in debt service and want a 10-year forecast presented publicly" lands harder than "taxes are too high in general"</li>
               <li><strong>Make a clear ask</strong> — "I'd like the board to..." gives officials something to respond to</li>
@@ -1861,7 +1890,7 @@
             </ul>
           </div>
           <div>
-            <div style="font-size:12px; font-weight:600; color:var(--gold-light); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;">Simple Comment Template</div>
+            <div class="involved-eyebrow">Simple Comment Template</div>
             <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:14px; font-size:12px; color:#a0b0c8; line-height:1.7; font-family:'IBM Plex Mono',monospace;">
               "Good evening. My name is [Name] and I live on [Street].<br><br>
               I'm here to speak about [topic].<br><br>
@@ -1875,12 +1904,12 @@
         </div>
 
         <div style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;">
-          <div style="font-size:12px; font-weight:600; color:var(--gold-light); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px;">Where to Show Up</div>
+          <div class="involved-eyebrow">Where to Show Up</div>
           <div style="display:flex; flex-wrap:wrap; gap:10px;">
-            <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:6px 12px; font-size:12px; color:#a0b0c8;">🏛 Village of Pelham — 2nd & 4th Tuesdays · 200 Fifth Ave</span>
-            <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:6px 12px; font-size:12px; color:#a0b0c8;">🏛 Pelham Manor — Monthly Mondays · 4 Penfield Place</span>
-            <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:6px 12px; font-size:12px; color:#a0b0c8;">🏛 Town Board — Monthly · 34 Fifth Ave</span>
-            <span style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); padding:6px 12px; font-size:12px; color:#a0b0c8;">🎓 Board of Education — Monthly · District Offices</span>
+            <span class="meeting-chip">🏛 Village of Pelham — 2nd & 4th Tuesdays · 200 Fifth Ave</span>
+            <span class="meeting-chip">🏛 Pelham Manor — Monthly Mondays · 4 Penfield Place</span>
+            <span class="meeting-chip">🏛 Town Board — Monthly · 34 Fifth Ave</span>
+            <span class="meeting-chip">🎓 Board of Education — Monthly · District Offices</span>
           </div>
         </div>
       </div>
@@ -1966,14 +1995,14 @@
 
       <!-- Mission + Editorial Philosophy -->
       <div>
-        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:14px; color: var(--navy);">Our Mission</h3>
-        <p style="font-size:15px; line-height:1.75; color: var(--slate); margin-bottom:20px;">To increase civic awareness and engagement in local matters in Pelham, NY — by making public information accessible, understandable, and actionable for every resident.</p>
+        <h3 class="about-h3">Our Mission</h3>
+        <p class="about-body" style="margin-bottom:20px;">To increase civic awareness and engagement in local matters in Pelham, NY — by making public information accessible, understandable, and actionable for every resident.</p>
 
-        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:14px; color: var(--navy);">How We Work</h3>
-        <p style="font-size:15px; line-height:1.75; color: var(--slate); margin-bottom:12px;">Everything on this site is drawn from public record — official government websites, adopted budgets, meeting recordings, and coverage by the Pelham Examiner. We don't editorialize, take sides, or publish unverified information.</p>
-        <p style="font-size:15px; line-height:1.75; color: var(--slate);">AI-generated content — summaries, Q&A responses — is clearly labeled and linked to source documents so you can verify anything we say.</p>
+        <h3 class="about-h3">How We Work</h3>
+        <p class="about-body" style="margin-bottom:12px;">Everything on this site is drawn from public record — official government websites, adopted budgets, meeting recordings, and coverage by the Pelham Examiner. We don't editorialize, take sides, or publish unverified information.</p>
+        <p class="about-body">AI-generated content — summaries, Q&A responses — is clearly labeled and linked to source documents so you can verify anything we say.</p>
 
-        <div style="margin-top:24px; padding:20px; background:var(--white); border:1px solid var(--border); border-left: 4px solid var(--gold);">
+        <div class="editorial-callout">
           <div style="font-weight:700; font-size:15px; margin-bottom:10px; color:var(--navy);">"My perspective isn't represented here."</div>
           <p style="font-size:14px; line-height:1.7; color:var(--slate); margin-bottom:10px;">This site reflects what's in the public record. If your view isn't here, that's not a failure of this site — it's a signal that your voice hasn't entered the record yet.</p>
           <p style="font-size:14px; line-height:1.7; color:var(--slate); margin-bottom:14px;">The public record is made at board meetings, in public comment, and through letters to the editor. Those are the channels that shape what officials hear and what journalists cover.</p>
@@ -1987,17 +2016,17 @@
 
       <!-- Sources + Transparency -->
       <div>
-        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:14px; color: var(--navy);">Our Sources</h3>
+        <h3 class="about-h3">Our Sources</h3>
         <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:24px;">
-          <a href="https://www.pelhamny.gov" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ pelhamny.gov — Village of Pelham</a>
-          <a href="https://www.pelhammanor.gov" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ pelhammanor.gov — Village of Pelham Manor</a>
-          <a href="https://townofpelhamny.gov" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ townofpelhamny.gov — Town of Pelham</a>
-          <a href="https://www.pelhamschools.org" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ pelhamschools.org — School District</a>
-          <a href="https://pelhamexaminer.com" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ pelhamexaminer.com — Pelham Examiner</a>
-          <a href="https://www.westchestercountyny.gov" target="_blank" class="source-link" style="font-size:13px; padding:8px 12px;">↗ westchestercountyny.gov — Westchester County</a>
+          <a href="https://www.pelhamny.gov" target="_blank" class="source-link about-source-link">↗ pelhamny.gov — Village of Pelham</a>
+          <a href="https://www.pelhammanor.gov" target="_blank" class="source-link about-source-link">↗ pelhammanor.gov — Village of Pelham Manor</a>
+          <a href="https://townofpelhamny.gov" target="_blank" class="source-link about-source-link">↗ townofpelhamny.gov — Town of Pelham</a>
+          <a href="https://www.pelhamschools.org" target="_blank" class="source-link about-source-link">↗ pelhamschools.org — School District</a>
+          <a href="https://pelhamexaminer.com" target="_blank" class="source-link about-source-link">↗ pelhamexaminer.com — Pelham Examiner</a>
+          <a href="https://www.westchestercountyny.gov" target="_blank" class="source-link about-source-link">↗ westchestercountyny.gov — Westchester County</a>
         </div>
 
-        <h3 style="font-family:'Playfair Display',serif; font-size:20px; font-weight:700; margin-bottom:14px; color: var(--navy);">Corrections Log</h3>
+        <h3 class="about-h3">Corrections Log</h3>
         <p style="font-size:14px; line-height:1.7; color:var(--slate); margin-bottom:14px;">We correct errors quickly and publicly. Recent corrections:</p>
         <div id="corrections-log" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
           <div style="background:var(--white); border:1px solid var(--border); padding:12px 14px; font-size:13px;">
@@ -2013,13 +2042,13 @@
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
 
       <!-- Error Report Form -->
-      <div style="background:var(--white); border:1px solid var(--border); border-top: 4px solid var(--red); padding:28px;">
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--slate); margin-bottom:8px;">Report a Factual Error</div>
-        <h3 style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; margin-bottom:16px;">Something looks wrong?</h3>
-        <div style="display:flex; flex-direction:column; gap:12px;" id="error-form">
+      <div class="about-form-card" style="border-top: 4px solid var(--red);">
+        <div class="about-form-eyebrow">Report a Factual Error</div>
+        <h3 class="about-form-h3" style="margin-bottom:16px;">Something looks wrong?</h3>
+        <div class="form-fields" id="error-form">
           <div>
-            <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">What section is the error in?</label>
-            <select id="error-section" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; background:var(--cream);">
+            <label class="form-field-label">What section is the error in?</label>
+            <select id="error-section" class="form-control">
               <option value="">Select a section…</option>
               <option>Who Governs</option>
               <option>Meeting Summaries</option>
@@ -2032,33 +2061,33 @@
             </select>
           </div>
           <div>
-            <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">What's incorrect?</label>
-            <textarea id="error-desc" rows="3" placeholder="Describe the error and what the correct information is…" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; resize:none; line-height:1.5; background:var(--cream);"></textarea>
+            <label class="form-field-label">What's incorrect?</label>
+            <textarea id="error-desc" rows="3" placeholder="Describe the error and what the correct information is…" class="form-control" style="resize:none; line-height:1.5;"></textarea>
           </div>
           <div>
-            <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">Source (if you have one)</label>
-            <input id="error-source" type="text" placeholder="URL or document name…" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; background:var(--cream);">
+            <label class="form-field-label">Source (if you have one)</label>
+            <input id="error-source" type="text" placeholder="URL or document name…" class="form-control">
           </div>
           <button onclick="submitError()" class="btn-submit-correction" style="background:var(--navy); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Submit correction →</button>
-          <div id="error-confirm" style="display:none; font-size:13px; color:var(--green); font-weight:500;">✓ Thanks — we'll review this within a week and update the site if confirmed.</div>
+          <div id="error-confirm" class="form-confirm">✓ Thanks — we'll review this within a week and update the site if confirmed.</div>
         </div>
       </div>
 
       <!-- Public Comment Feedback Form -->
-      <div style="background:var(--white); border:1px solid var(--border); border-top: 4px solid var(--green); padding:28px;">
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--slate); margin-bottom:8px;">Community Feedback</div>
-        <h3 style="font-family:'Playfair Display',serif; font-size:18px; font-weight:700; margin-bottom:6px;">Did this site help you get involved?</h3>
+      <div class="about-form-card" style="border-top: 4px solid var(--green);">
+        <div class="about-form-eyebrow">Community Feedback</div>
+        <h3 class="about-form-h3" style="margin-bottom:6px;">Did this site help you get involved?</h3>
         <p style="font-size:13px; color:var(--slate); margin-bottom:16px; line-height:1.6;">We'd love to know if this site helped you attend a meeting, make a public comment, or engage with local government in a new way.</p>
-        <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="form-fields">
           <div style="display:flex; flex-wrap:wrap; gap:10px;">
-            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="checkbox" id="fb-attended"> Attended a public meeting</label>
-            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="checkbox" id="fb-commented"> Made a public comment</label>
-            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="checkbox" id="fb-letter"> Wrote a letter to the Examiner</label>
-            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;"><input type="checkbox" id="fb-applied"> Applied to a board or committee</label>
+            <label class="fb-checkbox-label"><input type="checkbox" id="fb-attended"> Attended a public meeting</label>
+            <label class="fb-checkbox-label"><input type="checkbox" id="fb-commented"> Made a public comment</label>
+            <label class="fb-checkbox-label"><input type="checkbox" id="fb-letter"> Wrote a letter to the Examiner</label>
+            <label class="fb-checkbox-label"><input type="checkbox" id="fb-applied"> Applied to a board or committee</label>
           </div>
           <div>
-            <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">Which governing body? (optional)</label>
-            <select id="fb-body" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; background:var(--cream);">
+            <label class="form-field-label">Which governing body? (optional)</label>
+            <select id="fb-body" class="form-control">
               <option value="">Select…</option>
               <option>Village of Pelham</option>
               <option>Village of Pelham Manor</option>
@@ -2067,11 +2096,11 @@
             </select>
           </div>
           <div>
-            <label style="font-size:12px; font-weight:600; color:var(--navy); display:block; margin-bottom:4px;">Want to share your experience? (optional)</label>
-            <textarea id="fb-story" rows="3" placeholder="What topic did you engage on? What was it like? Your story (anonymous) may inspire others…" style="width:100%; padding:8px 10px; border:1px solid var(--border); font-family:'IBM Plex Sans',sans-serif; font-size:13px; resize:none; line-height:1.5; background:var(--cream);"></textarea>
+            <label class="form-field-label">Want to share your experience? (optional)</label>
+            <textarea id="fb-story" rows="3" placeholder="What topic did you engage on? What was it like? Your story (anonymous) may inspire others…" class="form-control" style="resize:none; line-height:1.5;"></textarea>
           </div>
           <button onclick="submitFeedbackForm()" style="background:var(--green); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Share my experience →</button>
-          <div id="fb-confirm" style="display:none; font-size:13px; color:var(--green); font-weight:500;">✓ Thank you — stories like yours help us improve and inspire others to get involved.</div>
+          <div id="fb-confirm" class="form-confirm">✓ Thank you — stories like yours help us improve and inspire others to get involved.</div>
         </div>
       </div>
 
