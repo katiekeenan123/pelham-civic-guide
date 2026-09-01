@@ -1,0 +1,16 @@
+{
+  "name": "pelham-civic-guide-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright end-to-end tests for the Pelham Civic Guide (https://pelhamengagementproject.netlify.app/)",
+  "scripts": {
+    "test": "playwright test --config=tests/playwright.config.js",
+    "test:ui": "playwright test --config=tests/playwright.config.js ui.spec.js",
+    "test:ai": "playwright test --config=tests/playwright.config.js ai.spec.js",
+    "test:headed": "playwright test --config=tests/playwright.config.js --headed",
+    "test:list": "playwright test --config=tests/playwright.config.js --list"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}
