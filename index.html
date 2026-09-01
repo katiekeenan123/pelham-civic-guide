@@ -2182,7 +2182,7 @@
         <div class="go-deeper-label">✦ Want to go deeper?</div>
         <div class="go-deeper-prompt">"${escapeHtml(deeperPrompt)}"</div>
         <div class="go-deeper-actions">
-          <button class="go-deeper-copy" onclick="copyPrompt(this, ${JSON.stringify(deeperPrompt)})">Copy prompt</button>
+          <button class="go-deeper-copy" onclick="copyPrompt(this, ${escapeHtml(JSON.stringify(deeperPrompt))})">Copy prompt</button>
           <span class="copy-confirm">✓ Copied</span>
           <a href="${claudeUrl}" target="_blank" class="go-deeper-link">→ Open in Claude.ai</a>
         </div>
@@ -2191,8 +2191,8 @@
     const feedbackHtml = role === 'assistant' ? `
       <div class="feedback-row" id="feedback-${feedbackId}">
         <span class="feedback-label">Helpful?</span>
-        <button class="feedback-btn btn-up" onclick="submitFeedback(${feedbackId}, 'up', ${JSON.stringify(questionForFeedback||'')}, ${JSON.stringify(displayText.slice(0,200))})">👍</button>
-        <button class="feedback-btn btn-down" onclick="submitFeedback(${feedbackId}, 'down', ${JSON.stringify(questionForFeedback||'')}, ${JSON.stringify(displayText.slice(0,200))})">👎</button>
+        <button class="feedback-btn btn-up" onclick="submitFeedback(${feedbackId}, 'up', ${escapeHtml(JSON.stringify(questionForFeedback||''))}, ${escapeHtml(JSON.stringify(displayText.slice(0,200)))})">👍</button>
+        <button class="feedback-btn btn-down" onclick="submitFeedback(${feedbackId}, 'down', ${escapeHtml(JSON.stringify(questionForFeedback||''))}, ${escapeHtml(JSON.stringify(displayText.slice(0,200)))})">👎</button>
         <span class="feedback-thanks">Thanks — we'll use this to improve.</span>
       </div>` : '';
 
