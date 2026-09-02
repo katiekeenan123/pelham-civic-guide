@@ -13,6 +13,9 @@
     --cream: #f7f3ec;
     --white: #ffffff;
     --slate: #4a5568;
+    --slate-light: #8899b0;
+    --slate-mid: #556070;
+    --slate-dark: #4a6070;
     --light: #eef0f5;
     --red: #9b2335;
     --green: #2a6049;
@@ -111,7 +114,7 @@
   .stat-label {
     font-size: 12px;
     font-weight: 500;
-    color: #8899b0;
+    color: var(--slate-light);
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
@@ -558,7 +561,7 @@
   .involved-section { background: var(--navy); color: var(--white); }
   .involved-section .section-eyebrow { color: var(--gold-light); }
   .involved-section .section-title { color: var(--white); }
-  .involved-section .section-intro { color: #8899b0; }
+  .involved-section .section-intro { color: var(--slate-light); }
 
   .involved-grid {
     display: grid;
@@ -590,7 +593,7 @@
 
   .involved-card p {
     font-size: 13px;
-    color: #8899b0;
+    color: var(--slate-light);
     line-height: 1.65;
   }
 
@@ -729,7 +732,7 @@
     color: var(--slate);
     letter-spacing: 0.03em;
   }
-  .mtg-selector.active-mtg .mtg-sel-date { color: #8899b0; }
+  .mtg-selector.active-mtg .mtg-sel-date { color: var(--slate-light); }
 
   .detail-tab {
     background: none;
@@ -936,7 +939,7 @@
   .feedback-btn {
     background: none;
     border: 1px solid rgba(255,255,255,0.1);
-    color: #4a6070;
+    color: var(--slate-dark);
     padding: 4px 10px;
     font-size: 14px;
     cursor: pointer;
@@ -989,7 +992,7 @@
   }
   .race-meta { display: flex; flex-direction: column; gap: 3px; }
   .race-body { font-size: 16px; font-weight: 700; color: var(--white); }
-  .race-type { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: #556070; }
+  .race-type { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--slate-mid); }
   .race-badge {
     font-size: 11px;
     font-family: 'IBM Plex Mono', monospace;
@@ -1035,12 +1038,12 @@
   .candidate-meta {
     font-size: 11px;
     font-family: 'IBM Plex Mono', monospace;
-    color: #556070;
+    color: var(--slate-mid);
     margin-bottom: 8px;
   }
   .candidate-summary {
     font-size: 13px;
-    color: #8899b0;
+    color: var(--slate-light);
     line-height: 1.65;
     margin-bottom: 8px;
   }
@@ -1058,10 +1061,10 @@
     border-top: 1px solid rgba(255,255,255,0.08);
     padding: 12px 20px;
     font-size: 13px;
-    color: #556070;
+    color: var(--slate-mid);
     line-height: 1.6;
   }
-  .race-context strong { color: #8899b0; }
+  .race-context strong { color: var(--slate-light); }
   @media (max-width: 768px) {
     .candidates-grid { grid-template-columns: 1fr; }
     .party-column { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -1174,10 +1177,10 @@
   .go-deeper-link {
     font-size: 11px;
     font-family: 'IBM Plex Mono', monospace;
-    color: #556070;
+    color: var(--slate-mid);
     text-decoration: none;
   }
-  .go-deeper-link:hover { color: #8899b0; }
+  .go-deeper-link:hover { color: var(--slate-light); }
   .copy-confirm {
     font-size: 11px;
     font-family: 'IBM Plex Mono', monospace;
@@ -1220,10 +1223,10 @@
   .voter-info-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 20px; }
   .voter-info-label { font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; }
   .voter-info-value { font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
-  .voter-info-note { font-size: 12px; color: #8899b0; }
+  .voter-info-note { font-size: 12px; color: var(--slate-light); }
 
   /* ── Ask Pelham · vetted-source chips ── */
-  .source-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: #8899b0; font-family: 'IBM Plex Mono', monospace; }
+  .source-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: var(--slate-light); font-family: 'IBM Plex Mono', monospace; }
 
   /* ── Get Involved · repeated labels & chips ── */
   .involved-eyebrow { font-size: 12px; font-weight: 600; color: var(--gold-light); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
@@ -1308,7 +1311,7 @@
   <div class="content-wrap">
     <div class="section-eyebrow" style="color: var(--gold-light);">November 4, 2026 · General Election</div>
     <h2 class="section-title" style="color: var(--white);">2026 Pelham Elections</h2>
-    <p class="section-intro" style="color: #8899b0;">Three contested races on the November ballot. For the first time since 2019, the Village of Pelham Board of Trustees election is competitive. Here's who's running and what they stand for — sourced entirely from Pelham Examiner coverage.</p>
+    <p class="section-intro" style="color: var(--slate-light);">Three contested races on the November ballot. For the first time since 2019, the Village of Pelham Board of Trustees election is competitive. Here's who's running and what they stand for — sourced entirely from Pelham Examiner coverage.</p>
 
     <div style="background: rgba(200,151,58,0.12); border: 1px solid rgba(200,151,58,0.3); border-left: 4px solid var(--gold); padding: 14px 18px; margin-bottom: 36px; font-size: 13px; color: #c8aa70; font-family: 'IBM Plex Sans', sans-serif; line-height: 1.6;">
       <strong style="color: var(--gold-light);">Editorial note:</strong> Candidate profiles are drawn from Pelham Examiner reporting and candidate statements. This site does not endorse any candidate. All facts sourced from <a href="https://pelhamexaminer.com" target="_blank" style="color: var(--gold-light);">pelhamexaminer.com</a>. Candidate statements will be added as they are published. Register to vote at <a href="https://www.elections.ny.gov" target="_blank" style="color: var(--gold-light);">elections.ny.gov</a> — registration deadline is typically 25 days before the election.
@@ -1450,7 +1453,7 @@
         <span class="race-badge contested">Re-run required by new state law</span>
       </div>
 
-      <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: #8899b0; line-height: 1.6;">
+      <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: var(--slate-light); line-height: 1.6;">
         A new state law shifts odd-year municipal elections to even years. As a result, Supervisor Mohan and Clerk Miller — both elected in November 2025 — must run again in 2026 to secure full two-year terms.
       </div>
 
@@ -1791,7 +1794,7 @@
   <div class="content-wrap">
     <div class="section-eyebrow" style="color: var(--gold-light);">Research Tool</div>
     <h2 class="section-title" style="color: var(--white);">Ask Pelham AI</h2>
-    <p class="section-intro" style="color: #8899b0; max-width: 620px;">
+    <p class="section-intro" style="color: var(--slate-light); max-width: 620px;">
       Have a question about local government, your tax bill, a current issue, or how to get involved? This assistant is trained to answer using only vetted Pelham sources — official government websites, the Pelham Examiner, and school district documents.
     </p>
 
@@ -1820,7 +1823,7 @@
         <button class="suggestion-chip draft-chip">Help me write a public comment about the school budget</button>
         <button class="suggestion-chip draft-chip">I want to write a letter to the Examiner about property tax increases</button>
       </div>
-      <div style="margin-top: 8px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #4a6070; display: flex; gap: 16px; flex-wrap: wrap;">
+      <div style="margin-top: 8px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: var(--slate-dark); display: flex; gap: 16px; flex-wrap: wrap;">
         <span><span style="color: var(--gold);">✦</span> gold — explore your own view in Claude.ai</span>
         <span><span style="color: #55cccc;">✎</span> teal — draft a public comment or letter</span>
       </div>
@@ -1845,7 +1848,7 @@
         style="background: var(--gold); color: var(--navy); border: none; padding: 0 24px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.2s;"
       >Ask →</button>
     </div>
-    <div style="margin-top: 10px; font-size: 11px; color: #556070; font-family: 'IBM Plex Mono', monospace;">
+    <div style="margin-top: 10px; font-size: 11px; color: var(--slate-mid); font-family: 'IBM Plex Mono', monospace;">
       ⚠ AI-generated · responses may contain errors · always verify facts at official sources · use 👍/👎 to flag inaccurate answers
     </div>
   </div>
@@ -1909,7 +1912,7 @@
               I'm asking the board to [specific request].<br><br>
               Thank you for your time."
             </div>
-            <div style="margin-top:12px; font-size:12px; color:#8899b0;">You can also email your comment to your board before the meeting — it becomes part of the official record even if you can't attend.</div>
+            <div style="margin-top:12px; font-size:12px; color:var(--slate-light);">You can also email your comment to your board before the meeting — it becomes part of the official record even if you can't attend.</div>
             <a href="#ask-pelham" style="display:inline-block; margin-top:12px; font-size:12px; font-weight:600; color:var(--gold-light); text-decoration:none; border-bottom:1px solid var(--gold); padding-bottom:1px;">Ask Pelham AI to help you prepare →</a>
           </div>
         </div>
