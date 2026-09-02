@@ -2081,7 +2081,7 @@
             <input id="error-source" type="text" placeholder="URL or document name…" class="form-control">
           </div>
           <button onclick="submitError()" class="btn-submit-correction" style="background:var(--navy); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Submit correction →</button>
-          <div id="error-confirm" class="form-confirm">✓ Thanks — we'll review this within a week and update the site if confirmed.</div>
+          <div id="error-confirm" class="form-confirm">✓ Noted — we'll review this once our database is connected. For urgent corrections email us directly.</div>
         </div>
       </div>
 
@@ -2112,7 +2112,7 @@
             <textarea id="fb-story" rows="3" placeholder="What topic did you engage on? What was it like? Your story (anonymous) may inspire others…" class="form-control" style="resize:none; line-height:1.5;"></textarea>
           </div>
           <button onclick="submitFeedbackForm()" style="background:var(--green); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Share my experience →</button>
-          <div id="fb-confirm" class="form-confirm">✓ Thank you — stories like yours help us improve and inspire others to get involved.</div>
+          <div id="fb-confirm" class="form-confirm">✓ Thanks for sharing — we'll record this once our database is connected.</div>
         </div>
       </div>
 
@@ -2259,6 +2259,22 @@
         body: JSON.stringify({ messages: conversationHistory })
       });
 
+      if (!response.ok) {
+        removeTyping();
+        let msg;
+        if (response.status === 429) {
+          msg = 'The assistant is getting a lot of requests right now (rate limited). Please wait a minute and try again.';
+        } else if (response.status >= 500) {
+          msg = 'The assistant is temporarily unavailable (server error ' + response.status + '). Please try again in a few minutes.';
+        } else {
+          msg = 'That request could not be completed (error ' + response.status + '). Please try again.';
+        }
+        addBubble('assistant', msg);
+        btn.disabled = false;
+        btn.textContent = 'Ask →';
+        return;
+      }
+
       const data = await response.json();
       const answer = data.answer || data.content?.[0]?.text || 'Sorry, I couldn\'t get a response. Please try again.';
 
@@ -2300,15 +2316,32 @@
   });
 
   const meetings = {'pelham-board-jul2026':{title:'Village of Pelham · Board of Trustees · July 14, 2026'},'coming-soon-1':{title:'Town of Pelham · coming soon'},'coming-soon-2':{title:'Village of Pelham Manor · coming soon'},'coming-soon-3':{title:'Board of Education · coming soon'}};
-  function selectMeeting(btn,id){document.querySelectorAll('.mtg-selector').forEach(b=>b.classList.remove('active-mtg'));btn.classList.add('active-mtg');if(id!=='pelham-board-jul2026'){document.getElementById('mtg-content').innerHTML='<div style="padding:40px;text-align:center;color:var(--slate);font-size:14px;">📋 Summaries for <strong>'+meetings[id].title+'</strong> will appear here once processed.</div>';}else{location.reload();}}
+  // Snapshot the real July 14 summary markup at load so we can restore it
+  // in place instead of reloading the page (which would wipe the chat history).
+  const mtgContentDefaultHTML = (document.getElementById('mtg-content') || {}).innerHTML || '';
+  function selectMeeting(btn,id){
+    document.querySelectorAll('.mtg-selector').forEach(b=>b.classList.remove('active-mtg'));
+    btn.classList.add('active-mtg');
+    const content = document.getElementById('mtg-content');
+    if(id!=='pelham-board-jul2026'){
+      content.innerHTML='<div style="padding:40px;text-align:center;color:var(--slate);font-size:14px;">📋 Summaries for <strong>'+meetings[id].title+'</strong> will appear here once processed.</div>';
+    }else{
+      // Restore the July 14 panels and reset to the Executive Summary tab —
+      // no location.reload(), so the Ask Pelham chat history survives.
+      content.innerHTML=mtgContentDefaultHTML;
+      document.querySelectorAll('.detail-tab').forEach((b,i)=>b.classList.toggle('active-tab', i===0));
+    }
+  }
   function selectTab(btn,panel){document.querySelectorAll('.detail-tab').forEach(b=>b.classList.remove('active-tab'));btn.classList.add('active-tab');document.querySelectorAll('.mtg-panel').forEach(p=>p.style.display='none');document.getElementById('panel-'+panel).style.display='block';}
 
   function submitError() {
     const section = document.getElementById('error-section').value;
     const desc = document.getElementById('error-desc').value.trim();
     if (!desc) { alert('Please describe the error.'); return; }
-    // In production: POST to Supabase corrections table
+    // TODO: POST to Supabase corrections table. Nothing is persisted yet — the
+    // confirmation copy below is deliberately provisional.
     console.log('Error report:', { section, desc, source: document.getElementById('error-source').value });
+    console.warn('Supabase write pending');
     document.getElementById('error-form').style.opacity = '0.5';
     document.getElementById('error-confirm').style.display = 'block';
   }
@@ -2322,8 +2355,10 @@
       letter: document.getElementById('fb-letter').checked,
       applied: document.getElementById('fb-applied').checked,
     };
-    // In production: POST to Supabase civic_engagement_feedback table
+    // TODO: POST to Supabase civic_engagement_feedback table. Nothing is
+    // persisted yet — the confirmation copy below is deliberately provisional.
     console.log('Civic feedback:', { actions, body, story });
+    console.warn('Supabase write pending');
     document.getElementById('fb-confirm').style.display = 'block';
   }
 
