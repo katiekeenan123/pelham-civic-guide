@@ -2140,8 +2140,17 @@
   let feedbackCount = 0;
 
   function submitFeedback(id, type, question, answer) {
-    // Log to console (in production, POST to your Supabase feedback table)
     console.log('Feedback:', { id, type, question, answer, timestamp: new Date().toISOString() });
+
+    // Fire-and-forget write to the Supabase `feedback` table via the proxy.
+    // Any failure is swallowed — the 👍/👎 acknowledgement below must never
+    // depend on the network round-trip.
+    fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'feedback', vote: type, question, answer_snippet: answer }),
+    }).catch(() => {});
+
     const row = document.getElementById('feedback-' + id);
     if (!row) return;
     row.querySelectorAll('.feedback-btn').forEach(b => b.disabled = true);
