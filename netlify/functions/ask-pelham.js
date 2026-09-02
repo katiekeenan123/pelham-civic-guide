@@ -9,6 +9,14 @@
 //
 // Set ANTHROPIC_API_KEY in: Netlify site -> Site configuration ->
 // Environment variables. It must NOT be committed to the repo.
+//
+// This function also records 👍/👎 feedback on assistant answers. A feedback
+// POST looks like { type: "feedback", vote: "up"|"down", question, answer_snippet }
+// and is INSERTed into the Supabase `feedback` table. Requires two more
+// environment variables in the same Netlify screen:
+//   SUPABASE_URL       - your project URL (https://xxxx.supabase.co)
+//   SUPABASE_ANON_KEY  - the project "anon"/public API key
+// If those are absent the chat path still works; only feedback writes fail.
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-6';   // civic Q&A; change here if you want a different model
@@ -160,6 +168,12 @@ exports.handler = async (event) => {
     return json(400, { error: 'Invalid JSON body' });
   }
 
+  // Feedback write path: { type: "feedback", vote, question, answer_snippet }.
+  // Handled before the chat validation below so it never touches Anthropic.
+  if (body && body.type === 'feedback') {
+    return recordFeedback(body);
+  }
+
   const { messages } = body;
   if (!Array.isArray(messages) || messages.length === 0) {
     return json(400, { error: 'messages must be a non-empty array' });
@@ -208,4 +222,40 @@ function json(statusCode, payload) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   };
+}
+
+// Lazily build a Supabase client so a bundling miss or missing env vars only
+// affects the feedback path, never the chat proxy above.
+function getSupabase() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  const { createClient } = require('@supabase/supabase-js');
+  return createClient(url, key, { auth: { persistSession: false } });
+}
+
+// Validate a feedback payload and INSERT one row into the `feedback` table.
+async function recordFeedback(body) {
+  const supabase = getSupabase();
+  if (!supabase) {
+    return json(500, { error: 'Server is missing SUPABASE_URL or SUPABASE_ANON_KEY' });
+  }
+
+  const vote = body.vote;
+  if (vote !== 'up' && vote !== 'down') {
+    return json(400, { error: "feedback 'vote' must be 'up' or 'down'" });
+  }
+
+  const clip = (v) => (typeof v === 'string' && v.trim() ? v.slice(0, 2000) : null);
+
+  const { error } = await supabase.from('feedback').insert({
+    vote,
+    question: clip(body.question),
+    answer_snippet: clip(body.answer_snippet),
+  });
+
+  if (error) {
+    return json(502, { error: 'Failed to record feedback', detail: error.message });
+  }
+  return json(200, { ok: true });
 }

@@ -10,6 +10,9 @@
     "test:headed": "playwright test --config=tests/playwright.config.js --headed",
     "test:list": "playwright test --config=tests/playwright.config.js --list"
   },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.112.4"
+  },
   "devDependencies": {
     "@playwright/test": "^1.62.1"
   }

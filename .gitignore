@@ -2,6 +2,7 @@
 .env
 .env.*
 *.key
+databasepw.txt
 
 # Netlify
 .netlify/
