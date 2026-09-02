@@ -1288,12 +1288,12 @@
   <div class="nav-inner">
     <a href="#elections" style="color: #dd8899; font-weight: 600;">🗳 Nov 2026 Elections</a>
     <div class="nav-dropdown-wrap">
-      <a href="#explore" class="nav-dropdown-trigger" onclick="toggleDropdown(event)">Explore More ▾</a>
+      <a href="#explore" class="nav-dropdown-trigger">Explore More ▾</a>
       <div class="nav-dropdown">
-        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[0].click();closeDropdown()">📋 Meeting Summaries</a>
-        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[1].click();closeDropdown()">💰 Your Taxes</a>
-        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[2].click();closeDropdown()">🔔 Current Issues</a>
-        <a href="#explore" onclick="document.querySelectorAll('.explore-tab')[3].click();closeDropdown()">🏛 Who Governs</a>
+        <a href="#explore" data-panel="explore-meetings">📋 Meeting Summaries</a>
+        <a href="#explore" data-panel="explore-taxes">💰 Your Taxes</a>
+        <a href="#explore" data-panel="explore-issues">🔔 Current Issues</a>
+        <a href="#explore" data-panel="explore-governs">🏛 Who Governs</a>
       </div>
     </div>
     <a href="#ask-pelham" style="color: var(--gold); font-weight: 600;">Ask Pelham AI ✦</a>
@@ -1527,10 +1527,10 @@
     <h2 class="section-title">Dive Deeper</h2>
     <p class="section-intro">Current issues, meeting summaries, your tax breakdown, and who governs — pick a tab to explore.</p>
     <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:0;overflow-x:auto;">
-      <button class="explore-tab" onclick="selectExplore(this,'explore-meetings')">📋 Meeting Summaries</button>
-      <button class="explore-tab" onclick="selectExplore(this,'explore-taxes')">💰 Your Taxes</button>
-      <button class="explore-tab active-explore-tab" onclick="selectExplore(this,'explore-issues')">🔔 Current Issues</button>
-      <button class="explore-tab" onclick="selectExplore(this,'explore-governs')">🏛 Who Governs</button>
+      <button class="explore-tab" data-panel="explore-meetings">📋 Meeting Summaries</button>
+      <button class="explore-tab" data-panel="explore-taxes">💰 Your Taxes</button>
+      <button class="explore-tab active-explore-tab" data-panel="explore-issues">🔔 Current Issues</button>
+      <button class="explore-tab" data-panel="explore-governs">🏛 Who Governs</button>
     </div>
   </div>
 </section>
@@ -1542,15 +1542,15 @@
     <h2 class="section-title">Meeting Summaries</h2>
     <p class="section-intro">Every public meeting is recorded. We process them automatically to generate three layers of detail. Select a meeting and a level of detail.</p>
     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;">
-      <button class="mtg-selector active-mtg" onclick="selectMeeting(this,'pelham-board-jul2026')"><span class="mtg-sel-body">Village of Pelham</span><span class="mtg-sel-date">Board of Trustees · July 14, 2026</span></button>
-      <button class="mtg-selector" onclick="selectMeeting(this,'coming-soon-1')"><span class="mtg-sel-body">Town of Pelham</span><span class="mtg-sel-date">Coming soon</span></button>
-      <button class="mtg-selector" onclick="selectMeeting(this,'coming-soon-2')"><span class="mtg-sel-body">Village of Pelham Manor</span><span class="mtg-sel-date">Coming soon</span></button>
-      <button class="mtg-selector" onclick="selectMeeting(this,'coming-soon-3')"><span class="mtg-sel-body">Board of Education</span><span class="mtg-sel-date">Coming soon</span></button>
+      <button class="mtg-selector active-mtg" data-meeting="pelham-board-jul2026"><span class="mtg-sel-body">Village of Pelham</span><span class="mtg-sel-date">Board of Trustees · July 14, 2026</span></button>
+      <button class="mtg-selector" data-meeting="coming-soon-1"><span class="mtg-sel-body">Town of Pelham</span><span class="mtg-sel-date">Coming soon</span></button>
+      <button class="mtg-selector" data-meeting="coming-soon-2"><span class="mtg-sel-body">Village of Pelham Manor</span><span class="mtg-sel-date">Coming soon</span></button>
+      <button class="mtg-selector" data-meeting="coming-soon-3"><span class="mtg-sel-body">Board of Education</span><span class="mtg-sel-date">Coming soon</span></button>
     </div>
     <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border);">
-      <button class="detail-tab active-tab" onclick="selectTab(this,'exec')">Executive Summary</button>
-      <button class="detail-tab" onclick="selectTab(this,'detailed')">Detailed Summary</button>
-      <button class="detail-tab detail-tab-transcript" onclick="selectTab(this,'transcript')">Full Transcript (raw) ↓</button>
+      <button class="detail-tab active-tab" data-tab="exec">Executive Summary</button>
+      <button class="detail-tab" data-tab="detailed">Detailed Summary</button>
+      <button class="detail-tab detail-tab-transcript" data-tab="transcript">Full Transcript (raw) ↓</button>
     </div>
     <div class="summary-disclaimer">
       <span class="summary-disclaimer-icon">⚠️</span>
@@ -1808,17 +1808,17 @@
     <div style="margin-bottom: 20px;">
       <div style="font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">Try asking…</div>
       <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="suggestion-chips">
-        <button class="suggestion-chip" onclick="usePrompt(this)">How does the school district budget affect my property taxes?</button>
-        <button class="suggestion-chip" onclick="usePrompt(this)">What did the $143.6M school bond vote decide?</button>
-        <button class="suggestion-chip" onclick="usePrompt(this)">How do I dispute my property tax assessment?</button>
-        <button class="suggestion-chip" onclick="usePrompt(this)">Who are the Pelham Board of Education members?</button>
-        <button class="suggestion-chip" onclick="usePrompt(this)">Why did the Village of Pelham override the tax cap?</button>
-        <button class="suggestion-chip" onclick="usePrompt(this)">When is the next school budget vote and how do I participate?</button>
-        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Is the school district spending my tax dollars wisely?</button>
-        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Should I have voted yes on the school bond?</button>
-        <button class="suggestion-chip opinion-chip" onclick="usePrompt(this)">Was overriding the village tax cap the right call?</button>
-        <button class="suggestion-chip draft-chip" onclick="usePrompt(this)">Help me write a public comment about the school budget</button>
-        <button class="suggestion-chip draft-chip" onclick="usePrompt(this)">I want to write a letter to the Examiner about property tax increases</button>
+        <button class="suggestion-chip">How does the school district budget affect my property taxes?</button>
+        <button class="suggestion-chip">What did the $143.6M school bond vote decide?</button>
+        <button class="suggestion-chip">How do I dispute my property tax assessment?</button>
+        <button class="suggestion-chip">Who are the Pelham Board of Education members?</button>
+        <button class="suggestion-chip">Why did the Village of Pelham override the tax cap?</button>
+        <button class="suggestion-chip">When is the next school budget vote and how do I participate?</button>
+        <button class="suggestion-chip opinion-chip">Is the school district spending my tax dollars wisely?</button>
+        <button class="suggestion-chip opinion-chip">Should I have voted yes on the school bond?</button>
+        <button class="suggestion-chip opinion-chip">Was overriding the village tax cap the right call?</button>
+        <button class="suggestion-chip draft-chip">Help me write a public comment about the school budget</button>
+        <button class="suggestion-chip draft-chip">I want to write a letter to the Examiner about property tax increases</button>
       </div>
       <div style="margin-top: 8px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #4a6070; display: flex; gap: 16px; flex-wrap: wrap;">
         <span><span style="color: var(--gold);">✦</span> gold — explore your own view in Claude.ai</span>
@@ -1842,7 +1842,6 @@
       <button
         id="ask-btn"
         class="btn-ask"
-        onclick="askClaude()"
         style="background: var(--gold); color: var(--navy); border: none; padding: 0 24px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.2s;"
       >Ask →</button>
     </div>
@@ -2080,7 +2079,7 @@
             <label class="form-field-label">Source (if you have one)</label>
             <input id="error-source" type="text" placeholder="URL or document name…" class="form-control">
           </div>
-          <button onclick="submitError()" class="btn-submit-correction" style="background:var(--navy); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Submit correction →</button>
+          <button class="btn-submit-correction" style="background:var(--navy); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Submit correction →</button>
           <div id="error-confirm" class="form-confirm">✓ Noted — we'll review this once our database is connected. For urgent corrections email us directly.</div>
         </div>
       </div>
@@ -2111,7 +2110,7 @@
             <label class="form-field-label">Want to share your experience? (optional)</label>
             <textarea id="fb-story" rows="3" placeholder="What topic did you engage on? What was it like? Your story (anonymous) may inspire others…" class="form-control" style="resize:none; line-height:1.5;"></textarea>
           </div>
-          <button onclick="submitFeedbackForm()" style="background:var(--green); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Share my experience →</button>
+          <button id="fb-share-btn" style="background:var(--green); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Share my experience →</button>
           <div id="fb-confirm" class="form-confirm">✓ Thanks for sharing — we'll record this once our database is connected.</div>
         </div>
       </div>
@@ -2194,7 +2193,7 @@
         <div class="go-deeper-label">✦ Want to go deeper?</div>
         <div class="go-deeper-prompt">"${escapeHtml(deeperPrompt)}"</div>
         <div class="go-deeper-actions">
-          <button class="go-deeper-copy" onclick="copyPrompt(this, ${escapeHtml(JSON.stringify(deeperPrompt))})">Copy prompt</button>
+          <button class="go-deeper-copy">Copy prompt</button>
           <span class="copy-confirm">✓ Copied</span>
           <a href="${claudeUrl}" target="_blank" class="go-deeper-link">→ Open in Claude.ai</a>
         </div>
@@ -2203,8 +2202,8 @@
     const feedbackHtml = role === 'assistant' ? `
       <div class="feedback-row" id="feedback-${feedbackId}">
         <span class="feedback-label">Helpful?</span>
-        <button class="feedback-btn btn-up" onclick="submitFeedback(${feedbackId}, 'up', ${escapeHtml(JSON.stringify(questionForFeedback||''))}, ${escapeHtml(JSON.stringify(displayText.slice(0,200)))})">👍</button>
-        <button class="feedback-btn btn-down" onclick="submitFeedback(${feedbackId}, 'down', ${escapeHtml(JSON.stringify(questionForFeedback||''))}, ${escapeHtml(JSON.stringify(displayText.slice(0,200)))})">👎</button>
+        <button class="feedback-btn btn-up">👍</button>
+        <button class="feedback-btn btn-down">👎</button>
         <span class="feedback-thanks">Thanks — we'll use this to improve.</span>
       </div>` : '';
 
@@ -2215,6 +2214,21 @@
       ${feedbackHtml}
     `;
     win.appendChild(bubble);
+
+    // Wire the dynamically-created buttons (replaces the old inline onclick="").
+    if (deeperPrompt) {
+      const copyBtn = bubble.querySelector('.go-deeper-copy');
+      if (copyBtn) copyBtn.addEventListener('click', function () { copyPrompt(this, deeperPrompt); });
+    }
+    if (role === 'assistant') {
+      const fbQuestion = questionForFeedback || '';
+      const fbAnswer = displayText.slice(0, 200);
+      const upBtn = bubble.querySelector('.btn-up');
+      const downBtn = bubble.querySelector('.btn-down');
+      if (upBtn) upBtn.addEventListener('click', () => submitFeedback(feedbackId, 'up', fbQuestion, fbAnswer));
+      if (downBtn) downBtn.addEventListener('click', () => submitFeedback(feedbackId, 'down', fbQuestion, fbAnswer));
+    }
+
     win.scrollTop = win.scrollHeight;
     return bubble;
   }
@@ -2374,6 +2388,47 @@
     console.warn('Supabase write pending');
     document.getElementById('fb-confirm').style.display = 'block';
   }
+
+  // ── Event wiring ──
+  // All click handlers are bound here instead of inline onclick="" attributes.
+  // Behavior and function names are unchanged. This script block sits at the end
+  // of <body>, so every element referenced below is already in the DOM.
+
+  document.querySelectorAll('.suggestion-chip').forEach(btn => {
+    btn.addEventListener('click', () => usePrompt(btn));
+  });
+
+  const askBtn = document.getElementById('ask-btn');
+  if (askBtn) askBtn.addEventListener('click', () => askClaude());
+
+  document.querySelectorAll('.explore-tab').forEach(btn => {
+    btn.addEventListener('click', () => selectExplore(btn, btn.dataset.panel));
+  });
+
+  document.querySelectorAll('.mtg-selector').forEach(btn => {
+    btn.addEventListener('click', () => selectMeeting(btn, btn.dataset.meeting));
+  });
+
+  document.querySelectorAll('.detail-tab').forEach(btn => {
+    btn.addEventListener('click', () => selectTab(btn, btn.dataset.tab));
+  });
+
+  const dropdownTrigger = document.querySelector('.nav-dropdown-trigger');
+  if (dropdownTrigger) dropdownTrigger.addEventListener('click', toggleDropdown);
+
+  document.querySelectorAll('.nav-dropdown a').forEach(link => {
+    link.addEventListener('click', () => {
+      const tab = document.querySelector('.explore-tab[data-panel="' + link.dataset.panel + '"]');
+      if (tab) tab.click();
+      closeDropdown();
+    });
+  });
+
+  const submitCorrectionBtn = document.querySelector('.btn-submit-correction');
+  if (submitCorrectionBtn) submitCorrectionBtn.addEventListener('click', () => submitError());
+
+  const shareFeedbackBtn = document.getElementById('fb-share-btn');
+  if (shareFeedbackBtn) shareFeedbackBtn.addEventListener('click', () => submitFeedbackForm());
 
   // Fade-in on scroll
   const observer = new IntersectionObserver((entries) => {
