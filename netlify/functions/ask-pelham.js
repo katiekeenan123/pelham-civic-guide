@@ -168,10 +168,13 @@ exports.handler = async (event) => {
     return json(400, { error: 'Invalid JSON body' });
   }
 
-  // Feedback write path: { type: "feedback", vote, question, answer_snippet }.
-  // Handled before the chat validation below so it never touches Anthropic.
-  if (body && body.type === 'feedback') {
-    return recordFeedback(body);
+  // Supabase write paths — handled before the chat validation below so they
+  // never touch Anthropic:
+  //   { type: "feedback",         vote, question, answer_snippet }
+  //   { type: "correction",       section, description, source }
+  //   { type: "civic_engagement", actions, governing_body, story }
+  if (body && (body.type === 'feedback' || body.type === 'correction' || body.type === 'civic_engagement')) {
+    return recordSubmission(body);
   }
 
   const { messages } = body;
@@ -234,28 +237,55 @@ function getSupabase() {
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
-// Validate a feedback payload and INSERT one row into the `feedback` table.
-async function recordFeedback(body) {
+// Validate a submission payload by its `type` and INSERT one row into the
+// matching Supabase table (feedback / corrections / civic_engagement).
+async function recordSubmission(body) {
   const supabase = getSupabase();
   if (!supabase) {
     return json(500, { error: 'Server is missing SUPABASE_URL or SUPABASE_ANON_KEY' });
   }
 
-  const vote = body.vote;
-  if (vote !== 'up' && vote !== 'down') {
-    return json(400, { error: "feedback 'vote' must be 'up' or 'down'" });
-  }
-
   const clip = (v) => (typeof v === 'string' && v.trim() ? v.slice(0, 2000) : null);
 
-  const { error } = await supabase.from('feedback').insert({
-    vote,
-    question: clip(body.question),
-    answer_snippet: clip(body.answer_snippet),
-  });
+  let table;
+  let row;
 
+  if (body.type === 'feedback') {
+    if (body.vote !== 'up' && body.vote !== 'down') {
+      return json(400, { error: "feedback 'vote' must be 'up' or 'down'" });
+    }
+    table = 'feedback';
+    row = {
+      vote: body.vote,
+      question: clip(body.question),
+      answer_snippet: clip(body.answer_snippet),
+    };
+  } else if (body.type === 'correction') {
+    if (!clip(body.description)) {
+      return json(400, { error: "correction 'description' is required" });
+    }
+    table = 'corrections';
+    row = {
+      section: clip(body.section),
+      description: clip(body.description),
+      source: clip(body.source),
+    };
+  } else if (body.type === 'civic_engagement') {
+    table = 'civic_engagement';
+    row = {
+      actions: Array.isArray(body.actions)
+        ? body.actions.filter((a) => typeof a === 'string').map((a) => a.slice(0, 100))
+        : null,
+      governing_body: clip(body.governing_body),
+      story: clip(body.story),
+    };
+  } else {
+    return json(400, { error: 'Unknown submission type' });
+  }
+
+  const { error } = await supabase.from(table).insert(row);
   if (error) {
-    return json(502, { error: 'Failed to record feedback', detail: error.message });
+    return json(502, { error: `Failed to record ${body.type}`, detail: error.message });
   }
   return json(200, { ok: true });
 }

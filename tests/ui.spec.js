@@ -206,3 +206,33 @@ test('Explore More ▾ nav link: dropdown opens on click and its items drive the
   ).toHaveClass(/(^|\s)active-explore-tab(\s|$)/);
   await expect(menu).toBeHidden();
 });
+
+// The two About-section forms POST their payload to /api/ask fire-and-forget.
+// These tests care about the UI acknowledgement, not the write, so they stub
+// /api/ask — that keeps every run from inserting a junk row into Supabase.
+test('error correction form — submit shows a success message, not the old false one', async ({ page }) => {
+  await page.route('**/api/ask', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }),
+  );
+
+  await page.selectOption('#error-section', 'Who Governs');
+  await page.fill('#error-desc', 'Test: the trustee list is missing a name.');
+  await page.fill('#error-source', 'https://www.pelhamny.gov');
+  await page.click('.btn-submit-correction');
+
+  const confirm = page.locator('#error-confirm');
+  await expect(confirm).toBeVisible();
+  // Guard against the old always-on false success copy ever returning.
+  await expect(confirm).not.toContainText("Thanks — we'll review this within a week");
+});
+
+test('civic engagement form — submit shows a success message', async ({ page }) => {
+  await page.route('**/api/ask', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }),
+  );
+
+  await page.check('#fb-attended');
+  await page.click('#fb-share-btn');
+
+  await expect(page.locator('#fb-confirm')).toBeVisible();
+});

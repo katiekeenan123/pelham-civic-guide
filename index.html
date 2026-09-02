@@ -2377,27 +2377,40 @@
     const section = document.getElementById('error-section').value;
     const desc = document.getElementById('error-desc').value.trim();
     if (!desc) { alert('Please describe the error.'); return; }
-    // TODO: POST to Supabase corrections table. Nothing is persisted yet — the
-    // confirmation copy below is deliberately provisional.
-    console.log('Error report:', { section, desc, source: document.getElementById('error-source').value });
-    console.warn('Supabase write pending');
+    const source = document.getElementById('error-source').value;
+    console.log('Error report:', { section, desc, source });
+
+    // Fire-and-forget write to the Supabase `corrections` table via the proxy.
+    // Any failure is swallowed — the confirmation below must never depend on it.
+    fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'correction', section, description: desc, source }),
+    }).catch(() => {});
+
     document.getElementById('error-form').style.opacity = '0.5';
     document.getElementById('error-confirm').style.display = 'block';
   }
 
   function submitFeedbackForm() {
     const story = document.getElementById('fb-story').value.trim();
-    const body = document.getElementById('fb-body').value;
-    const actions = {
-      attended: document.getElementById('fb-attended').checked,
-      commented: document.getElementById('fb-commented').checked,
-      letter: document.getElementById('fb-letter').checked,
-      applied: document.getElementById('fb-applied').checked,
-    };
-    // TODO: POST to Supabase civic_engagement_feedback table. Nothing is
-    // persisted yet — the confirmation copy below is deliberately provisional.
-    console.log('Civic feedback:', { actions, body, story });
-    console.warn('Supabase write pending');
+    const governingBody = document.getElementById('fb-body').value;
+    const actions = [
+      ['attended', 'fb-attended'],
+      ['commented', 'fb-commented'],
+      ['letter', 'fb-letter'],
+      ['applied', 'fb-applied'],
+    ].filter(([, elId]) => document.getElementById(elId).checked).map(([name]) => name);
+    console.log('Civic feedback:', { actions, governingBody, story });
+
+    // Fire-and-forget write to the Supabase `civic_engagement` table via the
+    // proxy. Any failure is swallowed — the confirmation below never waits on it.
+    fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'civic_engagement', actions, governing_body: governingBody, story }),
+    }).catch(() => {});
+
     document.getElementById('fb-confirm').style.display = 'block';
   }
 
