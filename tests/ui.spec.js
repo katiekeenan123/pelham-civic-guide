@@ -1,9 +1,9 @@
 // UI tests for the Pelham Civic Guide — run against the live deployed page.
 //
 // Covers: page load + title, the primary nav, the "Explore More" dropdown
-// (hover + click), the Explore More tab switcher (incl. the Who Governs tab),
-// the Meeting Summaries panel and its Detailed Summary tab, the Elections
-// section, and the scroll fade-in animation.
+// (hover + click, incl. clip-safe rendering), the Explore More tab switcher
+// (incl. the Who Governs tab), the Meeting Summaries panel and its Detailed
+// Summary tab, the Elections section, and the scroll fade-in animation.
 
 const { test, expect } = require('@playwright/test');
 
@@ -146,4 +146,63 @@ test('Explore More — Who Governs tab reveals the governing-bodies content', as
   ).toBeVisible();
   await expect(governs).toContainText('Village of Pelham Manor');
   await expect(governs).toContainText('Westchester County');
+});
+
+test('Explore More ▾ nav link: dropdown opens on click and its items drive the tabs', async ({ page }) => {
+  const trigger = page.getByRole('link', { name: /Explore More/ });
+  const menu = page.locator('.nav-dropdown');
+
+  // Start from a non-default Explore tab so the dropdown click has a visible effect.
+  await page.getByRole('button', { name: 'Meeting Summaries' }).click();
+  await expect(page.locator('#explore-meetings')).toHaveClass(/(^|\s)active-panel(\s|$)/);
+  await expect(page.locator('#explore-issues')).not.toHaveClass(/(^|\s)active-panel(\s|$)/);
+
+  // Click (not hover) the nav trigger, mouse parked away from the nav.
+  await page.mouse.move(0, 0);
+  await expect(menu).toBeHidden();
+  await trigger.click();
+  await page.mouse.move(0, 0);
+  await expect(menu).toBeVisible();
+
+  // All four items present, in order.
+  const items = menu.getByRole('link');
+  await expect(items).toHaveCount(4);
+  await expect(items.nth(0)).toContainText('Meeting Summaries');
+  await expect(items.nth(1)).toContainText('Your Taxes');
+  await expect(items.nth(2)).toContainText('Current Issues');
+  await expect(items.nth(3)).toContainText('Who Governs');
+
+  // Guard the original bug: `.nav-inner { overflow-x: hidden }` made overflow-y
+  // compute to `auto`, clipping the dropdown away below the bar. Every on-screen
+  // item must be the element actually painted at its own centre (not the section
+  // showing through the clipped-away menu).
+  const hitTest = await page.evaluate(() => {
+    const links = [...document.querySelectorAll('.nav-dropdown a')];
+    const onScreen = links.filter((a) => {
+      const r = a.getBoundingClientRect();
+      return r.top >= 0 && r.bottom <= window.innerHeight;
+    });
+    return {
+      checked: onScreen.length,
+      allHit: onScreen.every((a) => {
+        const r = a.getBoundingClientRect();
+        const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+        return top && (top === a || a.contains(top));
+      }),
+    };
+  });
+  expect(hitTest.checked).toBeGreaterThanOrEqual(2);
+  expect(hitTest.allHit).toBe(true);
+
+  // Clicking a dropdown item drives the Explore More tabs.
+  await menu.getByRole('link', { name: /Current Issues/ }).click();
+  await page.mouse.move(0, 0);
+
+  // The Explore More section's Current Issues tab/panel is now active; menu closed.
+  await expect(page.locator('#explore-issues')).toHaveClass(/(^|\s)active-panel(\s|$)/);
+  await expect(page.locator('#explore-issues')).toBeVisible();
+  await expect(
+    page.locator('.explore-tab', { hasText: 'Current Issues' }),
+  ).toHaveClass(/(^|\s)active-explore-tab(\s|$)/);
+  await expect(menu).toBeHidden();
 });
