@@ -2291,11 +2291,21 @@
     btn.textContent = 'Ask →';
   }
 
+  // Shared tab-switcher: clear the active class from every button matching
+  // btnSelector, set it on activeBtn, and (when panel args are given) move the
+  // activePanel class from its siblings onto #panelId.
+  function switchTab(activeBtn, btnSelector, activeClass, panelId, panelSelector, activePanel){
+    document.querySelectorAll(btnSelector).forEach(b=>b.classList.remove(activeClass));
+    activeBtn.classList.add(activeClass);
+    if(panelId && panelSelector && activePanel){
+      document.querySelectorAll(panelSelector).forEach(p=>p.classList.remove(activePanel));
+      const panel=document.getElementById(panelId);
+      if(panel) panel.classList.add(activePanel);
+    }
+  }
+
   function selectExplore(btn,panelId){
-    document.querySelectorAll('.explore-tab').forEach(b=>b.classList.remove('active-explore-tab'));
-    btn.classList.add('active-explore-tab');
-    document.querySelectorAll('.explore-panel').forEach(p=>p.classList.remove('active-panel'));
-    document.getElementById(panelId).classList.add('active-panel');
+    switchTab(btn,'.explore-tab','active-explore-tab',panelId,'.explore-panel','active-panel');
     document.getElementById('explore').scrollIntoView({behavior:'smooth',block:'start'});
   }
 
@@ -2320,8 +2330,7 @@
   // in place instead of reloading the page (which would wipe the chat history).
   const mtgContentDefaultHTML = (document.getElementById('mtg-content') || {}).innerHTML || '';
   function selectMeeting(btn,id){
-    document.querySelectorAll('.mtg-selector').forEach(b=>b.classList.remove('active-mtg'));
-    btn.classList.add('active-mtg');
+    switchTab(btn,'.mtg-selector','active-mtg');
     const content = document.getElementById('mtg-content');
     if(id!=='pelham-board-jul2026'){
       content.innerHTML='<div style="padding:40px;text-align:center;color:var(--slate);font-size:14px;">📋 Summaries for <strong>'+meetings[id].title+'</strong> will appear here once processed.</div>';
@@ -2332,7 +2341,11 @@
       document.querySelectorAll('.detail-tab').forEach((b,i)=>b.classList.toggle('active-tab', i===0));
     }
   }
-  function selectTab(btn,panel){document.querySelectorAll('.detail-tab').forEach(b=>b.classList.remove('active-tab'));btn.classList.add('active-tab');document.querySelectorAll('.mtg-panel').forEach(p=>p.style.display='none');document.getElementById('panel-'+panel).style.display='block';}
+  function selectTab(btn,panel){
+    switchTab(btn,'.detail-tab','active-tab');
+    document.querySelectorAll('.mtg-panel').forEach(p=>p.style.display='none');
+    document.getElementById('panel-'+panel).style.display='block';
+  }
 
   function submitError() {
     const section = document.getElementById('error-section').value;
