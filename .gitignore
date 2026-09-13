@@ -3,6 +3,7 @@
 .env.*
 *.key
 databasepw.txt
+anon public.txt
 
 # Netlify
 .netlify/
