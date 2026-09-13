@@ -59,7 +59,7 @@ Key facts you know:
     Board Member: Kara McLoughlin
     Board Member: Michael Jenks
     Town Clerk: Eileen Miller
-    Receiver of Taxes: Erica Winter
+    Receiver of Taxes: VACANT — Erica Winter resigned September 2026; Deputy Receiver Darlene Paolericio assuming duties (see Receiver of Taxes transition below)
   PELHAM UNION FREE SCHOOL DISTRICT (pelhamschools.org/board-of-education/members):
     Board President: Jackie De Angelis (term July 2025 - June 2028)
     Board Vice President: Natalie Marrero (term July 2025 - June 2028)
@@ -89,6 +89,8 @@ Key facts you know:
 - Town of Pelham 2025 budget: $7.18M total appropriations
 - Pelham Union Free School District FY2025-26 budget: $96.3M (2.9% increase, voter-approved May 2025)
 - School capital bond: $143.6M proposed; Props 1 & 2 passed (school repairs + Siwanoy expansion); Props 3 & 4 failed
+- Colonial Elementary AC — RESOLVED FOR FALL 2026: PTAs at Colonial, Siwanoy and Prospect Hill pledged to raise funds; window AC units installed in time for first day of school September 8 2026; full HVAC conversion still Summer 2027 per $56.2M capital bond
+- Erica Winter resigned as Town Receiver of Taxes September 2026 after less than one year; Deputy Receiver Darlene Paolericio assumed duties; Town Board meets September 14 2026 to appoint permanent replacement
 - Con Edison rate case: filed 2025 with NY PSC, seeking 18% electric rate hike; Village of Pelham joined municipal coalition opposing it
 - MTA Penn Station Access construction active on First Street
 - Pelham Picture House redevelopment (major ongoing story as of early 2026): The 105-year-old cinema at the corner of Wolfs Lane is at center of a contentious development debate. Key facts: (1) Village posted an RFQ last May 2025 seeking a developer for a public-private partnership to expand/redevelop the Picture House and surrounding gas station properties; (2) January 2026: Board selected PHP Partners LLC (Patrick Normoyle) as preferred developer; (3) February 10 2026: Board voted 5-2 to approve an MOU with PHP Partners to explore mixed-use redevelopment of the gas station properties — Mullen, Anderson, Howell, Otondi and Carpenter voted yes; Eldahry and Solomon voted no; (4) Mayor Mullen insisted "there is no project — the MOU is not a decision"; (5) Strong community opposition — 90 minutes of public comment, Pelham Preservation & Garden Society called for more transparency; gas station owners objected saying they were never contacted and had no interest in selling; (6) February 18 2026: Mayor Mullen reversed course, giving his blessing to developer James Smithmeyer (who owns vacant lot at 163 Wolfs Lane, purchased for $2.1M in December) to work directly with the Picture House on a mixed-use plan that does NOT involve the gas stations; (7) The MOU with PHP Partners was subsequently terminated; (8) Picture House leadership (Joe Marty and Clay Bushong) have said they need renovation including more screening rooms, parking, and an education center to remain viable, but will not move forward on any proposal that doesn't satisfy their needs; (9) The Picture House is on the National Register of Historic Places, has been saved from demolition twice (1928 and 2003). Source: pelhamexaminer.com — search 'Picture House' for full coverage
