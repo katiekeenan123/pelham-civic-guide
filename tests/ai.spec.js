@@ -67,3 +67,24 @@ test('officials — lists the Village of Pelham trustees', async ({ request }) =
     `expected at least 3 trustee surnames, found: ${found.join(', ') || '(none)'}`,
   ).toBeGreaterThanOrEqual(3);
 });
+
+// Regression guard for stale roster facts in SYSTEM_PROMPT. The prompt listed
+// "Receiver of Taxes: Erica Winter" for weeks after she resigned, and nothing
+// here noticed. Note the negative is deliberately NOT `not.toContain('Erica
+// Winter')` — a correct answer names her as the person who stepped down. What
+// must never happen is her being offered as the sitting officeholder.
+test('receiver of taxes — reported vacant, with Paolericio acting', async ({ request }) => {
+  const answer = await ask(request, 'who is the receiver of taxes in pelham?');
+
+  expect(
+    answer,
+    'expected the acting receiver or an explicit vacancy, got: ' + answer.slice(0, 200),
+  ).toMatch(/Paolericio|vacan|transition/i);
+
+  if (/Erica Winter/i.test(answer)) {
+    expect(
+      answer,
+      'named Erica Winter without noting she left — reads as if she still holds the office',
+    ).toMatch(/resign|stepped down|former|no longer/i);
+  }
+});

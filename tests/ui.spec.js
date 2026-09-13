@@ -1,9 +1,10 @@
 // UI tests for the Pelham Civic Guide — run against the live deployed page.
 //
-// Covers: page load + title, the primary nav, the "Explore More" dropdown
-// (hover + click, incl. clip-safe rendering), the Explore More tab switcher
-// (incl. the Who Governs tab), the Meeting Summaries panel and its Detailed
-// Summary tab, the Elections section, and the scroll fade-in animation.
+// Covers: page load + title, document structural integrity, the primary nav,
+// the "Explore More" dropdown (hover + click, incl. clip-safe rendering), the
+// Explore More tab switcher (incl. the Who Governs tab), the Meeting Summaries
+// panel and its Detailed Summary tab, the Elections section, and the scroll
+// fade-in animation.
 
 const { test, expect } = require('@playwright/test');
 
@@ -13,6 +14,39 @@ test.beforeEach(async ({ page }) => {
 
 test('page loads and the title identifies the Pelham Engagement Project', async ({ page }) => {
   await expect(page).toHaveTitle(/Pelham Engagement Project/i);
+});
+
+// Structural integrity. A bad paste once spliced a second copy of the whole
+// document into the middle of this page — two <head> blocks, two <body> tags,
+// and a duplicated id="elections" that pointed the "See full candidate
+// profiles" anchor at a truncated copy of the section. Browsers recover from
+// that silently and every selector below still matched the first hit, so the
+// suite stayed green across two commits while the live page rendered its hero
+// twice. These two guard that blind spot.
+// Note on <body>: the HTML parser merges duplicate <body>/<head> tags into a
+// single node, so counting them can never detect a spliced document — verified
+// against the broken revision, which served two <body> tags and still parsed to
+// exactly one. The assertion is kept as a cheap malformed-serve guard, but the
+// singleton landmarks below are what actually catch duplication: on that same
+// revision they came back 2, 2 and 2.
+test('page is a single document — one body, title, hero and nav', async ({ page }) => {
+  await expect(page.locator('body')).toHaveCount(1);
+  await expect(page.locator('title')).toHaveCount(1);
+  await expect(page.locator('section.hero')).toHaveCount(1);
+  await expect(page.locator('nav.nav-bar')).toHaveCount(1);
+});
+
+test('page has no duplicate ids', async ({ page }) => {
+  const duplicates = await page.evaluate(() => {
+    const counts = new Map();
+    for (const el of document.querySelectorAll('[id]')) {
+      counts.set(el.id, (counts.get(el.id) || 0) + 1);
+    }
+    return [...counts.entries()]
+      .filter(([, n]) => n > 1)
+      .map(([id, n]) => `${id} (${n}x)`);
+  });
+  expect(duplicates, `duplicate ids found: ${duplicates.join(', ') || '(none)'}`).toEqual([]);
 });
 
 test('all primary navigation links are present', async ({ page }) => {
