@@ -103,12 +103,13 @@ Key facts you know:
 - Town of Pelham 2025 budget: $7.18M total appropriations
 - Pelham Union Free School District FY2025-26 budget: $96.3M (2.9% increase, voter-approved May 2025)
 - School capital bond: $143.6M (total proposed); Props 1 & 2 passed (school repairs + Siwanoy expansion); Props 3 & 4 failed
-- Colonial Elementary AC — RESOLVED FOR FALL 2026: PTAs at Colonial, Siwanoy and Prospect Hill pledged to raise funds; window AC units installed in time for first day of school September 8 2026; full HVAC conversion still Summer 2027 per $56.2M capital bond (Props 1 and 2, approved by voters May 2025; Props 3 and 4 failed)
+- Colonial Elementary AC — RESOLVED FOR FALL 2026: PTAs at Colonial, Siwanoy and Prospect Hill pledged to raise funds; window AC units installed in time for first day of school September 8 2026; full HVAC conversion still Summer 2027 per $56.2M (Props 1 & 2 of the $143.6M total bond, voter-approved May 2025; Props 3 & 4 failed)
 - Erica Winter resigned as Town Receiver of Taxes September 2026 after less than one year; Deputy Receiver Darlene Paolericio assumed duties; Town Board appointment scheduled for September 14 2026 — not yet held as of prompt writing; update once appointment is made
 - Con Edison rate case: filed 2025 with NY PSC, seeking 18% electric rate hike; Village of Pelham joined municipal coalition opposing it
 - MTA Penn Station Access construction active on First Street
 - Pelham Picture House redevelopment (major ongoing story as of early 2026): The 105-year-old cinema at the corner of Wolfs Lane is at center of a contentious development debate. Key facts: (1) Village posted an RFQ last May 2025 seeking a developer for a public-private partnership to expand/redevelop the Picture House and surrounding gas station properties; (2) January 2026: Board selected PHP Partners LLC (Patrick Normoyle) as preferred developer; (3) February 10 2026: Board voted 5-2 to approve an MOU with PHP Partners to explore mixed-use redevelopment of the gas station properties — Mullen, Anderson, Howell, Otondi and Carpenter voted yes; Eldahry and Solomon voted no; (4) Mayor Mullen insisted "there is no project — the MOU is not a decision"; (5) Strong community opposition — 90 minutes of public comment, Pelham Preservation & Garden Society called for more transparency; gas station owners objected saying they were never contacted and had no interest in selling; (6) February 18 2026: Mayor Mullen reversed course, giving his blessing to developer James Smithmeyer (who owns vacant lot at 163 Wolfs Lane, purchased for $2.1M in December) to work directly with the Picture House on a mixed-use plan that does NOT involve the gas stations; (7) The MOU with PHP Partners was subsequently terminated; (8) Picture House leadership (Joe Marty and Clay Bushong) have said they need renovation including more screening rooms, parking, and an education center to remain viable, but will not move forward on any proposal that doesn't satisfy their needs; (9) The Picture House is on the National Register of Historic Places, has been saved from demolition twice (1928 and 2003). Source: pelhamexaminer.com — search 'Picture House' for full coverage
 - Proposed EMS station on First Street near Post Office — community opposition ongoing
+- Pelham Public Library — $15-20M transformation project proposed; what began as a 2019 maintenance review expanded into a major renovation plan; Town Council said it's not a top priority (May 2026); public debate via letter to editor from Steve Shakane questioning taxpayer priorities; library board trustees responded publicly defending the plan (August 2026)
 - Village of Pelham Sustainability Advisory Board recruiting for 2026-27
 - Property taxes in Pelham: Village of Pelham taxes represent approximately 25% of the total property tax bill (source: Mayor Mullen letter, Pelham Examiner May 2026); school district is the largest share but exact % not published in a verified source — do not state a specific school or county percentage; instead say "the school district is the largest share of your bill — significantly more than the village portion"; average Village of Pelham residential tax payment FY2025-26 was $6,806; FY2026-27 median homeowner village tax ~$7,387 (up ~$580); Village of Pelham homeowner with assessed value $1,045,204 pays ~$6,807 in village taxes vs ~$6,035 in Pelham Manor — a 12.8% higher rate in Village (source: Pelham Examiner January 2026 letter); for exact breakdown of any individual tax bill call Town Receiver of Taxes 914-738-1642
 - Tax questions: Town Receiver of Taxes at 914-738-1642; Town Assessor at 914-738-2878
@@ -366,7 +367,10 @@ const KNOWN_ISSUES = {
   'Picture House': ['picture house'],
   'Colonial Elementary AC': ['colonial', 'air conditioning', 'air-conditioning', 'hvac'],
   'EMS station': ['ems', 'ambulance', 'emergency medical', 'paramedic'],
-  'library transformation': ['library'],
+  'library transformation': [
+    'library', 'library board', 'library renovation',
+    'transformation project', 'shakane',
+  ],
   'tractor-trailer ban': ['tractor-trailer', 'tractor trailer', 'truck ban', 'trucks', 'trucking'],
   'Con Edison rate': ['con edison', 'coned', 'con ed', 'utility rate'],
   'rising taxes': ['tax levy', 'taxes', 'tax rate', 'assessment'],
