@@ -247,14 +247,44 @@ function json(statusCode, payload) {
   };
 }
 
+/**
+ * Normalize whatever is in SUPABASE_URL down to the project origin.
+ *
+ * supabase-js appends `/rest/v1/<table>` itself, so the env var has to be the
+ * bare origin (https://<ref>.supabase.co). The dashboard's API page displays
+ * the full REST endpoint ending in /rest/v1, which is an easy thing to copy by
+ * mistake; that yields a request path of /rest/v1/rest/v1/<table>, and the
+ * Supabase API gateway rejects it with "Invalid path specified in request URL"
+ * before PostgREST is ever reached.
+ *
+ * Trailing slashes and stray whitespace are already handled inside
+ * createClient, so they are not the failure mode -- a duplicated path prefix
+ * is. Only that suffix is stripped rather than the whole path, so a
+ * self-hosted Supabase mounted under a sub-path keeps working.
+ */
+function normalizeSupabaseUrl(raw) {
+  if (typeof raw !== 'string') return null;
+  const trimmed = raw.trim().replace(/\/+$/, '');
+  if (!trimmed) return null;
+  return trimmed.replace(/\/rest\/v\d+$/, '');
+}
+
 // Lazily build a Supabase client so a bundling miss or missing env vars only
 // affects the feedback path, never the chat proxy above.
 function getSupabase() {
-  const url = process.env.SUPABASE_URL;
+  const url = normalizeSupabaseUrl(process.env.SUPABASE_URL);
   const key = process.env.SUPABASE_ANON_KEY;
   if (!url || !key) return null;
-  const { createClient } = require('@supabase/supabase-js');
-  return createClient(url, key, { auth: { persistSession: false } });
+  try {
+    const { createClient } = require('@supabase/supabase-js');
+    return createClient(url, key, { auth: { persistSession: false } });
+  } catch (err) {
+    // createClient throws on a malformed URL (e.g. a missing scheme). Log the
+    // reason -- the caller only sees null and would otherwise report it as a
+    // missing environment variable.
+    console.warn('[supabase] could not build client:', String(err));
+    return null;
+  }
 }
 
 // Validate a submission payload by its `type` and INSERT one row into the
@@ -547,7 +577,9 @@ function buildSearchPlan(terms) {
  * browser-facing key requires a select policy for `anon` on the table.
  */
 async function runSearch(supabase, narrow, signal) {
-  const { data, error } = await narrow(
+  // Built in a named step rather than awaited inline so the request path is
+  // available to the error branch below.
+  const query = narrow(
     supabase
       .from('articles')
       .select('title, url, summary, published_at')
@@ -557,9 +589,18 @@ async function runSearch(supabase, narrow, signal) {
     .limit(RAG_LIMIT)
     .abortSignal(signal);
 
+  const { data, error } = await query;
+
   if (error) {
-    // Netlify function logs only — the reader still gets a normal answer.
-    console.warn('[rag] articles search failed:', error.message);
+    // Netlify function logs only — the reader still gets a normal answer. The
+    // path is what distinguishes a misconfigured SUPABASE_URL (a doubled
+    // /rest/v1 prefix) from a genuine query or permission problem; the API key
+    // travels in a header, so nothing secret is logged here.
+    let path = 'unknown';
+    try {
+      path = new URL(query.url.toString()).pathname;
+    } catch { /* leave as unknown */ }
+    console.warn(`[rag] articles search failed (path ${path}):`, error.message);
     return [];
   }
   return (data || []).filter((row) => row && row.url && row.title);
