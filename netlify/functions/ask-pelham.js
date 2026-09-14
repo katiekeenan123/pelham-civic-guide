@@ -17,11 +17,25 @@
 //   SUPABASE_URL       - your project URL (https://xxxx.supabase.co)
 //   SUPABASE_ANON_KEY  - the project "anon"/public API key
 // If those are absent the chat path still works; only feedback writes fail.
+//
+// RETRIEVAL (RAG): before calling Anthropic, the newest user question is
+// matched against the Supabase `articles` table -- Pelham Examiner coverage
+// tagged nightly by the check_examiner.py pipeline in the companion repo. Any
+// hits are prepended to that question as context and listed back to the reader
+// as "Sources:". The whole retrieval path is best-effort: a missing env var, a
+// slow database or an empty result set all fall through to the plain answer,
+// and the reader never sees an error from it. The anon key is enough here
+// because this is a read of an already-public table.
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-6';   // civic Q&A; change here if you want a different model
 const MAX_TOKENS = 1000;
 const MAX_MESSAGES = 40;             // simple abuse guard on conversation length
+
+// --- Retrieval tuning ------------------------------------------------------ #
+const RAG_LIMIT = 3;        // articles injected per answer
+const RAG_MIN_RELEVANCE = 3; // articles.relevance_score floor (1-5 scale)
+const RAG_TIMEOUT_MS = 2500; // budget for the whole search; Anthropic needs the rest
 
 // Canonical system prompt for "Ask Pelham". This is the single source of
 // truth -- index.html no longer carries a copy. Edit it here, commit, push;
@@ -187,6 +201,10 @@ exports.handler = async (event) => {
     return json(400, { error: 'Conversation too long' });
   }
 
+  // Retrieval step. Never throws: on any failure `articles` is [] and the
+  // request proceeds as an ordinary prompt-only answer.
+  const articles = await findExaminerCoverage(latestQuestion(messages));
+
   try {
     const upstream = await fetch(ANTHROPIC_URL, {
       method: 'POST',
@@ -199,7 +217,7 @@ exports.handler = async (event) => {
         model: MODEL,
         max_tokens: MAX_TOKENS,
         system: SYSTEM_PROMPT,
-        messages,
+        messages: withExaminerContext(messages, articles),
       }),
     });
 
@@ -215,7 +233,7 @@ exports.handler = async (event) => {
         ? data.content[0].text
         : '';
 
-    return json(200, { answer });
+    return json(200, { answer: withSources(answer, articles) });
   } catch (err) {
     return json(502, { error: 'Upstream request failed', detail: String(err) });
   }
@@ -290,4 +308,336 @@ async function recordSubmission(body) {
     return json(502, { error: `Failed to record ${body.type}`, detail: error.message });
   }
   return json(200, { ok: true });
+}
+
+/* ========================================================================== *
+ * RETRIEVAL — recent Pelham Examiner coverage from the Supabase `articles`
+ * table.
+ *
+ * Rows are written by check_examiner.py (companion repo), which reads the
+ * Examiner RSS feed and has Claude tag each article with topic tags, a
+ * two-sentence summary, a 1-5 relevance score, and — the part that makes this
+ * cheap — the canonical name of the known issue and/or known candidate the
+ * article is actually about. Because those two columns hold exact canonical
+ * strings, matching a question to coverage is an equality filter rather than a
+ * similarity search, so no embeddings are involved.
+ *
+ * KNOWN_ISSUES and KNOWN_CANDIDATES below MUST stay spelled exactly as they are
+ * in check_examiner.py. The values are written verbatim to
+ * articles.matched_issue / articles.matched_candidate; a renamed entry here
+ * silently stops matching every row already stored under the old spelling.
+ * ========================================================================== */
+
+// Canonical issue name -> keywords that suggest the reader means that issue.
+// The keyword lists over-match on purpose; the longest keyword that hits wins
+// (see matchIssue), which is what keeps "who is the receiver of taxes" on the
+// "Receiver of Taxes transition" issue instead of the broader "rising taxes".
+const KNOWN_ISSUES = {
+  'Picture House': ['picture house'],
+  'Colonial Elementary AC': ['colonial', 'air conditioning', 'air-conditioning', 'hvac'],
+  'EMS station': ['ems', 'ambulance', 'emergency medical', 'paramedic'],
+  'library transformation': ['library'],
+  'tractor-trailer ban': ['tractor-trailer', 'tractor trailer', 'truck ban', 'trucks', 'trucking'],
+  'Con Edison rate': ['con edison', 'coned', 'con ed', 'utility rate'],
+  'rising taxes': ['tax levy', 'taxes', 'tax rate', 'assessment'],
+  debt: ['debt', 'bond', 'borrowing', 'capital plan'],
+  stormwater: ['stormwater', 'storm water', 'flooding', 'flood', 'sewer', 'drainage'],
+  'Siwanoy expansion': ['siwanoy'],
+  'Receiver of Taxes transition': ['receiver of taxes', 'erica winter', 'deputy receiver'],
+};
+
+// Canonical candidate surnames, as stored in articles.matched_candidate.
+const KNOWN_CANDIDATES = [
+  'Solomon', 'Howell', 'Burke', 'Long', 'Speros', 'Anzilotti', 'Bennett',
+  'Liberatore', 'Kurtz', 'Dlutkowski', 'Mohan', 'Wolfgang', 'Miller',
+  'Borsella', 'Eldahry',
+];
+
+// Surnames that are also ordinary English words. "How long is the meeting?"
+// must not retrieve coverage of candidate Arthur Long, so these only count as a
+// candidate when the reader actually capitalized them.
+const AMBIGUOUS_SURNAMES = new Set(['Long']);
+
+// Topic tag -> question keywords. Used only for the fallback search, so the
+// tags must match the TOPIC_TAGS enum in check_examiner.py exactly.
+const TOPIC_KEYWORDS = {
+  Budget: ['budget', 'spending', 'levy', 'fiscal', 'appropriation', 'tax cap', 'deficit', 'surplus'],
+  Elections: ['election', 'candidate', 'ballot', 'campaign', 'vote for', 'voting', 'running for', 'race'],
+  Education: ['curriculum', 'classroom', 'teacher', 'student', 'board of education', 'superintendent'],
+  Development: ['development', 'developer', 'zoning', 'redevelopment', 'construction', 'apartment', 'housing', 'building'],
+  Transportation: ['traffic', 'parking', 'train', 'metro-north', 'mta', 'road', 'street', 'sidewalk', 'commute'],
+  EMS: ['ems', 'ambulance', 'paramedic', 'emergency medical'],
+  Environment: ['environment', 'sustainability', 'climate', 'tree', 'solar', 'recycling'],
+  'Public Safety': ['police', 'crime', 'fire department', 'speeding', 'crosswalk', 'safety'],
+  Library: ['library'],
+  Schools: ['school', 'schools', 'district'],
+  Recreation: ['park', 'recreation', 'pool', 'playground', 'field'],
+  Personnel: ['resign', 'appointed', 'appointment', 'hired', 'retire', 'stepped down', 'vacancy'],
+};
+
+// Capitalized words that carry no signal as proper nouns here — question
+// openers, plus the place names that appear in nearly every question asked.
+const PROPER_NOUN_STOPWORDS = new Set([
+  'The', 'What', 'When', 'Where', 'Who', 'Why', 'How', 'Does', 'Did', 'Can',
+  'Should', 'Are', 'Was', 'Will', 'Would', 'Could', 'Has', 'Have', 'Pelham',
+  'Manor', 'Village', 'Town', 'County', 'Westchester', 'New', 'York', 'Board',
+  'Trustees', 'Trustee', 'Mayor', 'Examiner', 'And', 'But', 'For', 'This',
+  'That', 'There', 'Here', 'Tell', 'Give', 'Please', 'Also',
+]);
+
+/** The newest user message — the question retrieval should actually answer. */
+function latestQuestion(messages) {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m && m.role === 'user' && typeof m.content === 'string') return m.content;
+  }
+  return '';
+}
+
+// --- Step 1: keyword extraction -------------------------------------------- #
+
+/** Pull the handful of terms worth searching on out of a free-text question. */
+function extractSearchTerms(question) {
+  const text = typeof question === 'string' ? question.slice(0, 1000) : '';
+  const low = text.toLowerCase();
+  const properNouns = extractProperNouns(text);
+  return {
+    issue: matchIssue(low),
+    candidate: matchCandidate(low, properNouns),
+    topics: matchTopics(low),
+    properNouns,
+  };
+}
+
+/**
+ * Does `keyword` start a word in `text`?
+ *
+ * Deliberately NOT a substring test. "ems" appears inside "problems",
+ * "systems" and "items", so a plain includes() sends anyone asking about
+ * problems with the budget to the EMS station coverage. Anchoring the front to
+ * a word boundary while leaving the tail open keeps the useful stemming —
+ * "resign" still matches "resigned", "bond" still matches "bonds".
+ */
+function hasKeyword(text, keyword) {
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`\\b${escaped}\\w*`).test(text);
+}
+
+/**
+ * Most specific issue wins: score each issue by its LONGEST matching keyword,
+ * not by how many matched. "How do I appeal my tax assessment?" hits only
+ * "rising taxes"; "who replaced the receiver of taxes?" hits both that and the
+ * transition issue, and the longer phrase ("receiver of taxes") settles it.
+ */
+function matchIssue(low) {
+  let best = null;
+  let bestLength = 0;
+  for (const [issue, keywords] of Object.entries(KNOWN_ISSUES)) {
+    for (const keyword of keywords) {
+      if (keyword.length > bestLength && hasKeyword(low, keyword)) {
+        best = issue;
+        bestLength = keyword.length;
+      }
+    }
+  }
+  return best;
+}
+
+/** First known surname in the question, on word boundaries. */
+function matchCandidate(low, properNouns) {
+  for (const name of KNOWN_CANDIDATES) {
+    if (AMBIGUOUS_SURNAMES.has(name)) {
+      if (properNouns.includes(name)) return name;
+      continue;
+    }
+    if (new RegExp(`\\b${name.toLowerCase()}\\b`).test(low)) return name;
+  }
+  return null;
+}
+
+/** Topic tags ranked by how many of their keywords the question hit. */
+function matchTopics(low) {
+  return Object.entries(TOPIC_KEYWORDS)
+    .map(([tag, keywords]) => ({
+      tag,
+      hits: keywords.filter((k) => hasKeyword(low, k)).length,
+    }))
+    .filter((t) => t.hits > 0)
+    .sort((a, b) => b.hits - a.hits)
+    .slice(0, 2)
+    .map((t) => t.tag);
+}
+
+/**
+ * Capitalized words that are not sentence openers or boilerplate. Restricted to
+ * plain letters, which also means these are safe to drop into an ILIKE pattern
+ * without escaping — no %, _ or backslash can survive the match.
+ */
+function extractProperNouns(text) {
+  const found = text.match(/\b[A-Z][a-zA-Z]{2,}\b/g) || [];
+  const unique = [];
+  for (const word of found) {
+    if (!PROPER_NOUN_STOPWORDS.has(word) && !unique.includes(word)) unique.push(word);
+  }
+  return unique.slice(0, 3);
+}
+
+// --- Step 2: search --------------------------------------------------------- #
+
+/**
+ * Search `articles` for coverage matching the question. Returns [] rather than
+ * throwing for every failure mode: no Supabase config, a network error, a
+ * timeout, or simply nothing relevant.
+ */
+async function findExaminerCoverage(question) {
+  try {
+    const terms = extractSearchTerms(question);
+    const plan = buildSearchPlan(terms);
+    if (!plan.length) return [];
+
+    const supabase = getSupabase();
+    if (!supabase) return [];
+
+    // One budget for the whole plan, not per attempt — a slow database must not
+    // multiply into a Netlify function timeout.
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), RAG_TIMEOUT_MS);
+    try {
+      for (const narrow of plan) {
+        const rows = await runSearch(supabase, narrow, controller.signal);
+        if (rows.length) return rows;
+      }
+      return [];
+    } finally {
+      clearTimeout(timer);
+    }
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Ordered list of filters to try, most precise first, stopping at the first
+ * that returns anything. Issue and candidate are exact matches on columns a
+ * model already vetted, so they beat the tag and title guesses below them.
+ */
+function buildSearchPlan(terms) {
+  const plan = [];
+  if (terms.issue) plan.push((q) => q.eq('matched_issue', terms.issue));
+  if (terms.candidate) plan.push((q) => q.eq('matched_candidate', terms.candidate));
+  for (const tag of terms.topics) plan.push((q) => q.contains('tags', [tag]));
+  // Last resort: a proper noun the lists above do not know about — a street, a
+  // building, an official who is not on the ballot.
+  if (terms.properNouns.length) {
+    const noun = terms.properNouns[0];
+    plan.push((q) => q.ilike('title', `%${noun}%`));
+  }
+  return plan;
+}
+
+/**
+ * One filtered read. Each query shape here has a matching index in the
+ * pipeline repo's schema.sql: partial indexes on matched_issue and
+ * matched_candidate, a GIN index on tags, and published_at desc for the sort.
+ *
+ * NOTE ON PERMISSIONS: `articles` has RLS enabled with no permissive policy,
+ * because the ingest pipeline writes with the service role key (which bypasses
+ * RLS). Under that setup the anon key used here reads ZERO rows and gets NO
+ * error back — retrieval just looks permanently unlucky. Reading from the
+ * browser-facing key requires a select policy for `anon` on the table.
+ */
+async function runSearch(supabase, narrow, signal) {
+  const { data, error } = await narrow(
+    supabase
+      .from('articles')
+      .select('title, url, summary, published_at')
+      .gte('relevance_score', RAG_MIN_RELEVANCE),
+  )
+    .order('published_at', { ascending: false })
+    .limit(RAG_LIMIT)
+    .abortSignal(signal);
+
+  if (error) {
+    // Netlify function logs only — the reader still gets a normal answer.
+    console.warn('[rag] articles search failed:', error.message);
+    return [];
+  }
+  return (data || []).filter((row) => row && row.url && row.title);
+}
+
+// --- Step 3: context injection ---------------------------------------------- #
+
+/**
+ * Prepend the retrieved coverage to the newest user message. The messages array
+ * is copied rather than mutated, and anything unexpected (no user turn, a
+ * non-string content block) falls through to the original conversation.
+ */
+function withExaminerContext(messages, articles) {
+  if (!articles.length) return messages;
+
+  const index = messages.map((m) => m && m.role).lastIndexOf('user');
+  if (index === -1 || typeof messages[index].content !== 'string') return messages;
+
+  const copy = messages.slice();
+  copy[index] = {
+    ...messages[index],
+    content: `${buildContextBlock(articles)}\n\n${messages[index].content}`,
+  };
+  return copy;
+}
+
+function buildContextBlock(articles) {
+  const entries = articles.map((a, i) => [
+    `${i + 1}. "${a.title}" — ${formatDate(a.published_at)}`,
+    `   ${(a.summary || 'No summary available.').trim()}`,
+    `   ${a.url}`,
+  ].join('\n'));
+
+  return [
+    'Recent Pelham Examiner coverage relevant to this question:',
+    '',
+    entries.join('\n\n'),
+    '',
+    'Use this context to inform your answer and cite these sources where relevant.',
+    // Without this the system prompt's Examiner honesty rule applies and the
+    // model hedges ("I can't search the Examiner") over articles it is holding.
+    'These articles were retrieved and handed to you, so you may cite them',
+    'directly — the standing rule about not having searched the Examiner',
+    'yourself does not apply to these specific articles. Ignore any of them',
+    'that turn out not to bear on the question, and do not list the sources at',
+    'the end yourself; that is added for you.',
+  ].join('\n');
+}
+
+function formatDate(value) {
+  if (!value) return 'date unknown';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'date unknown';
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+}
+
+// --- Step 4: source attribution --------------------------------------------- #
+
+/**
+ * Append the sources the answer was given. Plain text, not markdown: the page
+ * renders answers with escapeHtml() and a newline-to-<br> pass, so a markdown
+ * link would show up as literal brackets.
+ */
+function withSources(answer, articles) {
+  if (!articles.length || !answer.trim()) return answer;
+
+  const block = ['Sources:', ...articles.map((a) => `• ${a.title} — ${a.url}`)].join('\n');
+
+  // index.html parses a trailing "DEEPER_PROMPT:" marker greedily to the end of
+  // the string, so the block has to go BEFORE that line — appended after it,
+  // the sources would be swallowed into the "Want to go deeper?" box and get
+  // copied into the reader's Claude.ai prompt.
+  const marker = answer.search(/\n?DEEPER_PROMPT:/);
+  if (marker === -1) return `${answer.trimEnd()}\n\n${block}`;
+  return `${answer.slice(0, marker).trimEnd()}\n\n${block}\n\n${answer.slice(marker).trim()}`;
 }
