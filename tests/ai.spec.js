@@ -89,27 +89,39 @@ test('receiver of taxes — reported vacant, with Paolericio acting', async ({ r
   }
 });
 
-// Village/Town attribution guard. The Amtrak Forest Road project was raised at
-// the VILLAGE of Pelham Board of Trustees on August 17 2026, but arrived here
-// in a batch of Town Council facts and was very nearly filed under the Town
-// (corrected in 540122e). Pelham has a Village board, a Manor board and a Town
-// board with genuinely different remits, so sending a resident to the wrong one
-// is a real failure — this pins the attribution in SYSTEM_PROMPT.
-test('Amtrak on Forest Road — a Village matter, not attributed to the Town', async ({ request }) => {
+// Body-attribution guard, and a cautionary tale. The Amtrak Forest Road project
+// was raised at the VILLAGE OF PELHAM MANOR board on August 17 2026. It first
+// arrived in a batch of Town Council facts and was filed under the Town; that
+// was caught and "corrected" to the Village of Pelham (540122e) — still wrong,
+// and fixed properly only when the Manor meeting itself was added.
+//
+// Pelham has three village/town boards with genuinely different remits and
+// different contact details, so an answer naming the wrong one sends a resident
+// to the wrong clerk. Asserting /Village/i is NOT enough here: "Village of
+// Pelham" and "Village of Pelham Manor" both satisfy it, which is exactly why
+// the earlier misattribution passed this test for two commits. Require Manor.
+test('Amtrak on Forest Road — attributed to Pelham Manor, not the Village of Pelham or the Town', async ({ request }) => {
   const answer = await ask(request, 'who is handling the Amtrak construction concerns on Forest Road?');
 
   expect(
     answer,
-    'expected the Village named as the responsible body, got: ' + answer.slice(0, 300),
-  ).toMatch(/Village/i);
+    'expected Pelham Manor named as the responsible body, got: ' + answer.slice(0, 300),
+  ).toMatch(/Manor/i);
 
-  // Deliberately not `not.toContain('Town Council')`: a good answer may name the
-  // Town precisely to rule it out ("a Village matter, not a Town Council one").
-  // What must never happen is the Town being described as handling the project.
+  // Deliberately not a bare `not.toContain`: a good answer may name the other
+  // boards precisely to rule them out. What must never happen is one of them
+  // being described as handling the project.
   expect(
     answer,
-    'attributed the Forest Road project to the Town — it is a Village of Pelham matter',
+    'attributed the Forest Road project to the Town — it is a Pelham Manor matter',
   ).not.toMatch(
     /(Town Council|Town of Pelham|Town Board)\s+(is|are|was|were|has|have|will)?\s*(currently\s+)?(handling|addressing|leading|overseeing|managing|responsible for|in charge of)/i,
+  );
+  // "Village of Pelham" without "Manor" is the specific mistake made twice.
+  expect(
+    answer,
+    'attributed the project to the Village of Pelham board rather than Pelham Manor',
+  ).not.toMatch(
+    /Village of Pelham(?! Manor)\s+(Board|board|Board of Trustees)\s+(is|are|was|has|will)?\s*(currently\s+)?(handling|addressing|leading|overseeing|managing|responsible for|in charge of)/i,
   );
 });

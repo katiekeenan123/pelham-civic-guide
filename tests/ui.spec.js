@@ -200,20 +200,29 @@ test('Meeting switcher — returning to the July meeting resets to Executive Sum
   await expect(detailTab(page, 'Executive Summary')).toHaveClass(/active-tab/);
 });
 
-// Pelham Manor is the last body with nothing processed — Board of Education
-// held this slot until its June 24 meeting was added. When Manor lands too,
-// point this at whatever placeholder remains rather than deleting it: the
-// fallback is what a reader sees for every body not yet covered.
-test('Meeting switcher — a body with nothing processed still shows the placeholder', async ({ page }) => {
+// Every governing body now has a real meeting, so there is no "coming soon"
+// button left to click — this used to select the last placeholder and assert
+// the fallback text. Inverted instead: walk every selector and require each to
+// open a real panel set, never the placeholder. That catches the failure the
+// old test could not, a selector added without matching .mtg-set markup, which
+// would silently show a reader "will appear here once processed" for a meeting
+// that has in fact been published.
+test('Meeting switcher — every selector opens a real panel set, never the placeholder', async ({ page }) => {
   await openMeetings(page);
-  await meetingButton(page, 'coming-soon-2').click();
 
-  const placeholder = page.locator('#mtg-placeholder');
-  await expect(placeholder).toContainText('will appear here once processed');
-  await expect(placeholder).toContainText('Pelham Manor');
-  await expect(page.locator('#panel-exec')).toBeHidden();
-  await expect(page.locator('#panel-town-exec')).toBeHidden();
-  await expect(page.locator('#panel-boe-exec')).toBeHidden();
+  const ids = await page.locator('.mtg-selector').evaluateAll((els) =>
+    els.map((el) => el.dataset.meeting),
+  );
+  expect(ids.length).toBeGreaterThanOrEqual(4);
+
+  for (const id of ids) {
+    await meetingButton(page, id).click();
+    const set = page.locator(`.mtg-set[data-meeting="${id}"]`);
+    await expect(set, `no .mtg-set markup for selector "${id}"`).toBeVisible();
+    // Default tab, and the fallback never surfaces for a published meeting.
+    await expect(set.locator('.mtg-panel[data-tab="exec"]')).toBeVisible();
+    await expect(page.locator('#mtg-placeholder')).toBeHidden();
+  }
 });
 
 test('Elections section — three race blocks and every candidate named', async ({ page }) => {
