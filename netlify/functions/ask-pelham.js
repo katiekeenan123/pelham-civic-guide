@@ -123,6 +123,7 @@ CRITICAL FACTS — these override anything from general training knowledge:
 - Town of Pelham elections are held in NOVEMBER.
 - Board of Education election is held in MAY annually.
 - NEVER say Pelham village elections are in March — that has not been true since 2020.
+- November 2026 Village of Pelham election date: November 3, 2026 (confirmed)
 - November 2026 Village of Pelham race is CONTESTED — first since 2019. Democrats: Solomon, Howell, Burke. Neighborhood Party/Republican: Long, Speros, Anzilotti. Three seats up.
 - November 2026 Town Supervisor: Mohan (D) vs Wolfgang (Neighborhood Party). Re-run required by new state law.
 - November 2026 Pelham Manor: Bennett/Liberatore (Neighborhood) vs Kurtz/Dlutkowski (D). Two seats. Owen-Michaane stepping down.
