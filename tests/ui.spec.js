@@ -3,8 +3,8 @@
 // Covers: page load + title, document structural integrity, the primary nav,
 // the "Explore More" dropdown (hover + click, incl. clip-safe rendering), the
 // Explore More tab switcher (incl. the Who Governs tab), the Meeting Summaries
-// panel and its Detailed Summary tab, the Elections section, and the scroll
-// fade-in animation.
+// panel and its Detailed Summary tab, the meeting switcher across the two
+// processed meetings, the Elections section, and the scroll fade-in animation.
 
 const { test, expect } = require('@playwright/test');
 
@@ -132,6 +132,83 @@ test('Meeting Summaries — July 14 2026 meeting, Detailed Summary tab, Ari Schw
   const detailed = page.locator('#panel-detailed');
   await expect(detailed).toBeVisible();
   await expect(detailed.getByText('Ari Schwartz', { exact: false }).first()).toBeVisible();
+});
+
+/* --- Meeting switcher ------------------------------------------------------
+ * Each processed meeting ships its own .mtg-set of three panels, shown and
+ * hidden by data-meeting; bodies with nothing processed yet fall back to
+ * #mtg-placeholder. Before that restructure the July panels were snapshotted at
+ * load and swapped in via innerHTML, which only ever supported one real
+ * meeting — these guard the switching now that there are two.
+ *
+ * Selector buttons are addressed by data-meeting rather than getByRole: their
+ * accessible name concatenates the body and the date, and "Board of Education"
+ * also appears on an Ask Pelham suggestion chip, so a name match is ambiguous.
+ */
+const meetingButton = (page, id) => page.locator(`.mtg-selector[data-meeting="${id}"]`);
+const detailTab = (page, label) => page.locator('.detail-tab', { hasText: label });
+
+async function openMeetings(page) {
+  await page.getByRole('button', { name: 'Meeting Summaries' }).click();
+  await expect(page.locator('#explore-meetings')).toBeVisible();
+}
+
+test('Meeting switcher — Town of Pelham panels render when that meeting is selected', async ({ page }) => {
+  await openMeetings(page);
+  await meetingButton(page, 'town-council-aug2026').click();
+
+  const exec = page.locator('#panel-town-exec');
+  await expect(exec).toBeVisible();
+  await expect(exec).toContainText('August 3, 2026');
+  // Council names are published from the verified roster, not the pipeline's
+  // ASR spellings (Rohan / Berg / McLaughlin / Jennings).
+  await expect(exec).toContainText('Theresa Mohan');
+  await expect(page.locator('#mtg-placeholder')).toBeHidden();
+});
+
+test('Meeting switcher — detail tabs scope to the selected meeting, not the July panels', async ({ page }) => {
+  await openMeetings(page);
+  await meetingButton(page, 'town-council-aug2026').click();
+
+  await detailTab(page, 'Detailed Summary').click();
+  const townDetailed = page.locator('#panel-town-detailed');
+  await expect(townDetailed).toBeVisible();
+  await expect(townDetailed).toContainText('Bruno Barbosa');
+  // The July set stays hidden: a tab click must not reveal the other meeting's
+  // panel of the same name.
+  await expect(page.locator('#panel-detailed')).toBeHidden();
+  await expect(page.locator('#panel-town-exec')).toBeHidden();
+
+  await detailTab(page, 'Full Transcript').click();
+  await expect(page.locator('#panel-town-transcript')).toBeVisible();
+  await expect(page.locator('#panel-transcript')).toBeHidden();
+});
+
+test('Meeting switcher — returning to the July meeting resets to Executive Summary', async ({ page }) => {
+  await openMeetings(page);
+  await meetingButton(page, 'town-council-aug2026').click();
+  await detailTab(page, 'Full Transcript').click();
+  await expect(page.locator('#panel-town-transcript')).toBeVisible();
+
+  await meetingButton(page, 'pelham-board-jul2026').click();
+
+  // Back on the July meeting, and reset to the first tab rather than holding
+  // the transcript tab the previous meeting was left on.
+  await expect(page.locator('#panel-exec')).toBeVisible();
+  await expect(page.locator('#panel-transcript')).toBeHidden();
+  await expect(page.locator('#panel-town-exec')).toBeHidden();
+  await expect(detailTab(page, 'Executive Summary')).toHaveClass(/active-tab/);
+});
+
+test('Meeting switcher — a body with nothing processed still shows the placeholder', async ({ page }) => {
+  await openMeetings(page);
+  await meetingButton(page, 'coming-soon-3').click();
+
+  const placeholder = page.locator('#mtg-placeholder');
+  await expect(placeholder).toContainText('will appear here once processed');
+  await expect(placeholder).toContainText('Board of Education');
+  await expect(page.locator('#panel-exec')).toBeHidden();
+  await expect(page.locator('#panel-town-exec')).toBeHidden();
 });
 
 test('Elections section — three race blocks and every candidate named', async ({ page }) => {
