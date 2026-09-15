@@ -574,14 +574,27 @@ function buildSearchPlan(terms) {
   const plan = [];
   if (terms.issue) plan.push({ narrow: (q) => q.eq('matched_issue', terms.issue) });
   if (terms.candidate) plan.push({ narrow: (q) => q.eq('matched_candidate', terms.candidate) });
-  for (const tag of terms.topics) {
-    plan.push({ narrow: (q) => q.contains('tags', [tag]), minRelevance: RAG_MIN_RELEVANCE_TAG });
-  }
-  // Last resort: a proper noun the lists above do not know about — a street, a
-  // building, an official who is not on the ballot.
+
+  // A question that names something specific — a street, a building, an agency,
+  // an official who is not on the ballot — gets the title search and nothing
+  // else. If we have no coverage of the thing the reader named, the honest
+  // answer is no sources at all; falling through to the topic tag below would
+  // answer a question they did not ask. "Who is handling the Amtrak
+  // construction on Forest Road?" tags as Development on the word
+  // "construction" alone, which cited a candidate platform story.
+  //
+  // Note the tag tier cannot be salvaged by a relevance floor here:
+  // relevance_score rates how important an article is, not whether it bears on
+  // this question, so the miscited story scored the maximum 5.
   if (terms.properNouns.length) {
     const noun = terms.properNouns[0];
     plan.push({ narrow: (q) => q.ilike('title', `%${noun}%`) });
+    return plan;
+  }
+
+  // Nothing named: a topic tag is the best guess left, held to a higher bar.
+  for (const tag of terms.topics) {
+    plan.push({ narrow: (q) => q.contains('tags', [tag]), minRelevance: RAG_MIN_RELEVANCE_TAG });
   }
   return plan;
 }
