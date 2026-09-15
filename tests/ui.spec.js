@@ -200,15 +200,20 @@ test('Meeting switcher — returning to the July meeting resets to Executive Sum
   await expect(detailTab(page, 'Executive Summary')).toHaveClass(/active-tab/);
 });
 
+// Pelham Manor is the last body with nothing processed — Board of Education
+// held this slot until its June 24 meeting was added. When Manor lands too,
+// point this at whatever placeholder remains rather than deleting it: the
+// fallback is what a reader sees for every body not yet covered.
 test('Meeting switcher — a body with nothing processed still shows the placeholder', async ({ page }) => {
   await openMeetings(page);
-  await meetingButton(page, 'coming-soon-3').click();
+  await meetingButton(page, 'coming-soon-2').click();
 
   const placeholder = page.locator('#mtg-placeholder');
   await expect(placeholder).toContainText('will appear here once processed');
-  await expect(placeholder).toContainText('Board of Education');
+  await expect(placeholder).toContainText('Pelham Manor');
   await expect(page.locator('#panel-exec')).toBeHidden();
   await expect(page.locator('#panel-town-exec')).toBeHidden();
+  await expect(page.locator('#panel-boe-exec')).toBeHidden();
 });
 
 test('Elections section — three race blocks and every candidate named', async ({ page }) => {
