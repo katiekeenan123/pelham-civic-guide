@@ -35,6 +35,13 @@ const MAX_MESSAGES = 40;             // simple abuse guard on conversation lengt
 // --- Retrieval tuning ------------------------------------------------------ #
 const RAG_LIMIT = 3;        // articles injected per answer
 const RAG_MIN_RELEVANCE = 3; // articles.relevance_score floor (1-5 scale)
+// Stricter floor for the topic-tag tier only. Issue and candidate matches are
+// exact values a model already vetted per article; a tag is a much looser
+// signal, so a single shared tag plus a middling relevance score was enough to
+// staple an unrelated article to an otherwise correct answer -- a question
+// about Amtrak work on Forest Road cited a candidate platform story, because
+// "construction" tags as Development and so did the platform piece.
+const RAG_MIN_RELEVANCE_TAG = 4;
 const RAG_TIMEOUT_MS = 2500; // budget for the whole search; Anthropic needs the rest
 
 // Canonical system prompt for "Ask Pelham". This is the single source of
@@ -540,8 +547,8 @@ async function findExaminerCoverage(question) {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), RAG_TIMEOUT_MS);
     try {
-      for (const narrow of plan) {
-        const rows = await runSearch(supabase, narrow, controller.signal);
+      for (const step of plan) {
+        const rows = await runSearch(supabase, step, controller.signal);
         if (rows.length) return rows;
       }
       return [];
@@ -554,20 +561,27 @@ async function findExaminerCoverage(question) {
 }
 
 /**
- * Ordered list of filters to try, most precise first, stopping at the first
- * that returns anything. Issue and candidate are exact matches on columns a
- * model already vetted, so they beat the tag and title guesses below them.
+ * Ordered list of steps to try, most precise first, stopping at the first that
+ * returns anything. Issue and candidate are exact matches on columns a model
+ * already vetted, so they beat the tag and title guesses below them.
+ *
+ * Each step is { narrow, minRelevance? }: `narrow` applies the filter, and the
+ * looser tiers carry their own relevance floor (see RAG_MIN_RELEVANCE_TAG).
+ * Precision of the filter and required relevance move together — the weaker the
+ * match, the better the article has to be to earn a citation.
  */
 function buildSearchPlan(terms) {
   const plan = [];
-  if (terms.issue) plan.push((q) => q.eq('matched_issue', terms.issue));
-  if (terms.candidate) plan.push((q) => q.eq('matched_candidate', terms.candidate));
-  for (const tag of terms.topics) plan.push((q) => q.contains('tags', [tag]));
+  if (terms.issue) plan.push({ narrow: (q) => q.eq('matched_issue', terms.issue) });
+  if (terms.candidate) plan.push({ narrow: (q) => q.eq('matched_candidate', terms.candidate) });
+  for (const tag of terms.topics) {
+    plan.push({ narrow: (q) => q.contains('tags', [tag]), minRelevance: RAG_MIN_RELEVANCE_TAG });
+  }
   // Last resort: a proper noun the lists above do not know about — a street, a
   // building, an official who is not on the ballot.
   if (terms.properNouns.length) {
     const noun = terms.properNouns[0];
-    plan.push((q) => q.ilike('title', `%${noun}%`));
+    plan.push({ narrow: (q) => q.ilike('title', `%${noun}%`) });
   }
   return plan;
 }
@@ -583,14 +597,14 @@ function buildSearchPlan(terms) {
  * error back — retrieval just looks permanently unlucky. Reading from the
  * browser-facing key requires a select policy for `anon` on the table.
  */
-async function runSearch(supabase, narrow, signal) {
+async function runSearch(supabase, step, signal) {
   // Built in a named step rather than awaited inline so the request path is
   // available to the error branch below.
-  const query = narrow(
+  const query = step.narrow(
     supabase
       .from('articles')
       .select('title, url, summary, published_at')
-      .gte('relevance_score', RAG_MIN_RELEVANCE),
+      .gte('relevance_score', step.minRelevance || RAG_MIN_RELEVANCE),
   )
     .order('published_at', { ascending: false })
     .limit(RAG_LIMIT)
