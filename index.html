@@ -1546,7 +1546,7 @@
     <p class="section-intro">Every public meeting is recorded. We process them automatically to generate three layers of detail. Select a meeting and a level of detail.</p>
     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;">
       <button class="mtg-selector active-mtg" data-meeting="pelham-board-jul2026"><span class="mtg-sel-body">Village of Pelham</span><span class="mtg-sel-date">Board of Trustees · July 14, 2026</span></button>
-      <button class="mtg-selector" data-meeting="coming-soon-1"><span class="mtg-sel-body">Town of Pelham</span><span class="mtg-sel-date">Coming soon</span></button>
+      <button class="mtg-selector" data-meeting="town-council-aug2026"><span class="mtg-sel-body">Town of Pelham</span><span class="mtg-sel-date">Town Council · August 3, 2026</span></button>
       <button class="mtg-selector" data-meeting="coming-soon-2"><span class="mtg-sel-body">Village of Pelham Manor</span><span class="mtg-sel-date">Coming soon</span></button>
       <button class="mtg-selector" data-meeting="coming-soon-3"><span class="mtg-sel-body">Board of Education</span><span class="mtg-sel-date">Coming soon</span></button>
     </div>
@@ -1555,12 +1555,13 @@
       <button class="detail-tab" data-tab="detailed">Detailed Summary</button>
       <button class="detail-tab detail-tab-transcript" data-tab="transcript">Full Transcript (raw) ↓</button>
     </div>
-    <div class="summary-disclaimer">
-      <span class="summary-disclaimer-icon">⚠️</span>
-      <div><strong>AI-generated — not official records.</strong> Always verify against the <a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank">official recording</a> and <a href="https://www.pelhamny.gov/AgendaCenter" target="_blank">posted minutes</a>.</div>
-    </div>
     <div id="mtg-content">
-      <div id="panel-exec" class="mtg-panel">
+      <div class="mtg-set" data-meeting="pelham-board-jul2026">
+      <div class="summary-disclaimer">
+        <span class="summary-disclaimer-icon">⚠️</span>
+        <div><strong>AI-generated — not official records.</strong> Always verify against the <a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank">official recording</a> and <a href="https://www.pelhamny.gov/AgendaCenter" target="_blank">posted minutes</a>.</div>
+      </div>
+      <div id="panel-exec" class="mtg-panel" data-tab="exec">
         <div class="mtg-meta">
           <span class="mtg-meta-item">📅 July 14, 2026</span>
           <span class="mtg-meta-item">⏱ 46 min</span>
@@ -1597,7 +1598,7 @@
           </div>
         </div>
       </div>
-      <div id="panel-detailed" class="mtg-panel" style="display:none;">
+      <div id="panel-detailed" class="mtg-panel" data-tab="detailed" style="display:none;">
         <div class="mtg-meta"><span class="mtg-meta-item">📅 July 14, 2026</span><a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank" class="mtg-meta-item mtg-video-link">▶ Watch recording</a></div>
         <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:00–0:02</span><span class="detail-section-title">Call to Order</span></div><p class="detail-body">Deputy Mayor Carpenter chaired. Mayor Mullen and Trustee Eldahry absent. Roll call icebreaker: "Do you stand in line or online?"</p></div>
         <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:02–0:09</span><span class="detail-section-title">Trustee Reports</span></div><p class="detail-body"><strong>Trustee Anderson:</strong> NYSERDA grant complete — two electric MaxEV refuse haulers delivered. Pelham Liberty Tree Initiative launched July 4th — native tree plantings October 2026. Con Ed GridRewards event July 15, 4–8pm.<br><br><strong>Trustee Howell:</strong> Arts concerts: July 25, Aug 8, Aug 22, Sept 25. Fire dept ~80 calls. 9/11 Memorial Sept 11, 8:30am. Cooling center open. Storm wire safety reminder.</p></div>
@@ -1606,7 +1607,7 @@
         <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:30–0:40</span><span class="detail-section-title">Public Comment — Fini Park Fireworks</span></div><p class="detail-body"><strong>Resident Gemma Mosknerman, 64 Store Avenue:</strong> Nightly fireworks past 11pm from Fini Park for weeks. Group calling NR PD up to 6x/night — only 12 calls logged in NR records since Memorial Day. June 7: blockbuster fireworks in front of Harman Ave home; next night sticks thrown at window where toddlers play.</p><p class="detail-body"><strong>Trustee Howell:</strong> Increased PPD patrols 8–11pm on Harman/Store corridor. Videos to <strong>crystal.howell@pelhamny.gov</strong>.</p></div>
         <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:40–0:46</span><span class="detail-section-title">Resolutions & Adjournment</span></div><p class="detail-body">All 6-0. Deputy Village Treasurer appointed. Sofia Pizzatello (Pelham) hired as Building Dept. intern at $16/hr. Year-end budget amendments and $775,017.49 AP authorized. Next meeting: August 11.</p></div>
       </div>
-      <div id="panel-transcript" class="mtg-panel" style="display:none;">
+      <div id="panel-transcript" class="mtg-panel" data-tab="transcript" style="display:none;">
         <div class="mtg-meta"><span class="mtg-meta-item">📅 July 14, 2026</span><span class="mtg-meta-item">🤖 AI-generated · verify with recording</span><a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank" class="mtg-meta-item mtg-video-link">▶ Watch recording</a></div>
         <div class="transcript-body">
           <div class="transcript-block"><span class="ts-time">[0:00:33]</span><span class="ts-speaker">DEPUTY MAYOR CARPENTER:</span><span class="ts-text">Calling to order this Village of Pelham Board of Trustees regular meeting. It is Tuesday, July 14th, right at eight o'clock PM.</span></div>
@@ -1621,6 +1622,89 @@
         </div>
         <p style="margin-top:16px;font-size:12px;color:var(--slate);font-style:italic;">Auto-generated by OpenAI Whisper. Speaker labels approximate. Verify against <a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank">official recording</a>.</p>
       </div>
+      </div>
+
+      <div class="mtg-set" data-meeting="town-council-aug2026" style="display:none;">
+      <div class="summary-disclaimer">
+        <span class="summary-disclaimer-icon">⚠️</span>
+        <div><strong>AI-generated — not official records.</strong> Always verify against the <a href="https://www.youtube.com/watch?v=Emg_Cr5kIfw" target="_blank">official recording</a> and the <a href="https://townofpelhamny.gov/" target="_blank">Town's posted minutes</a>.</div>
+      </div>
+      <div id="panel-town-exec" class="mtg-panel" data-tab="exec">
+        <div class="mtg-meta">
+          <span class="mtg-meta-item">📅 August 3, 2026</span>
+          <span class="mtg-meta-item">⏱ 30 min</span>
+          <span class="mtg-meta-item">👥 Supervisor Mohan (chair) · Town Council</span>
+          <a href="https://www.youtube.com/watch?v=Emg_Cr5kIfw" target="_blank" class="mtg-meta-item mtg-video-link">▶ Watch recording</a>
+        </div>
+        <div class="exec-summary">
+          <p>The Town Council held its regular monthly meeting on August 3, 2026, chaired by Town Supervisor Theresa Mohan. The session was largely routine — departmental updates, two housekeeping resolutions, and an acknowledgment of a longtime community volunteer. All formal votes passed unanimously.</p>
+          <p>Accessibility at Town Hall was the through-line. One resident pressed the board on acoustics and the absence of an elevator; the board confirmed an acoustical engineer will be engaged and said an elevator is <strong>"not off the table"</strong> but that the originally proposed location would have cost <strong>over $600,000</strong>. The working plan is to move all public-facing services to the first floor instead — a shift already underway, with the Town Clerk's office relocated and a phone installed at the entrance so residents who cannot climb stairs can call for assistance.</p>
+        </div>
+        <div class="exec-votes">
+          <div class="exec-votes-label">Key Votes — All approved unanimously</div>
+          <div class="vote-row"><span class="vote-result pass">✓ PASSED</span><span class="vote-desc">Resolution 1 — Personnel Handbook amendment: restores 2 personal days, reverts to 12-day sick leave with no carryover</span></div>
+          <div class="vote-row"><span class="vote-result pass">✓ PASSED</span><span class="vote-desc">Resolution 2 — Financial software upgrade: ~$4,000 one-time, annual cost rises ~$3,000 → ~$7,000</span></div>
+          <div class="vote-row"><span class="vote-result pass">✓ PASSED</span><span class="vote-desc">Approval of July 13, 2026 minutes, as amended to clarify the Booktemberfest date (October 3, 5–8pm)</span></div>
+          <div class="vote-row"><span class="vote-result pass">✓ PASSED</span><span class="vote-desc">Adjournment to executive session</span></div>
+        </div>
+        <div class="exec-votes" style="margin-top:24px;">
+          <div class="exec-votes-label">Action Items</div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;">
+              <thead><tr style="background:var(--navy);color:var(--white);">
+                <th style="padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;">Owner</th>
+                <th style="padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;">Task</th>
+                <th style="padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;">Deadline</th>
+              </tr></thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;font-weight:600;color:var(--navy);">Council / Facilities</td><td style="padding:8px 12px;color:var(--slate);">Engage acoustical engineer for the Town Hall meeting room; acoustic panels, acoustical back wall, sound-deadening flooring</td><td style="padding:8px 12px;color:var(--slate);">Not stated</td></tr>
+                <tr style="border-bottom:1px solid var(--border);background:#f9fafb;"><td style="padding:8px 12px;font-weight:600;color:var(--navy);">Council / Facilities</td><td style="padding:8px 12px;color:var(--slate);">Finalize first-floor plan relocating all public-facing services; determine second-floor use</td><td style="padding:8px 12px;color:var(--slate);">Not stated</td></tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;font-weight:600;color:var(--navy);">EMS</td><td style="padding:8px 12px;color:var(--slate);">Take delivery of the new ambulance</td><td style="padding:8px 12px;color:var(--slate);">End of August 2026</td></tr>
+                <tr style="border-bottom:1px solid var(--border);background:#f9fafb;"><td style="padding:8px 12px;font-weight:600;color:var(--navy);">Town Clerk</td><td style="padding:8px 12px;color:var(--slate);">Review Iron Mountain storage contents; identify boxes eligible for destruction and the most cost-effective disposal method</td><td style="padding:8px 12px;color:var(--slate);">Not stated</td></tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;font-weight:600;color:var(--navy);">Website / Staff</td><td style="padding:8px 12px;color:var(--slate);">Complete website overhaul without disrupting Recreation fall sign-ups; improve the Recreation landing page</td><td style="padding:8px 12px;color:var(--slate);">Before fall sign-up</td></tr>
+                <tr style="border-bottom:1px solid var(--border);background:#f9fafb;"><td style="padding:8px 12px;font-weight:600;color:var(--navy);">Recreation Dept.</td><td style="padding:8px 12px;color:var(--slate);">Open after-school registration; email notice and backpack flyers</td><td style="padding:8px 12px;color:var(--slate);">End of Aug / first week of school</td></tr>
+                <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;font-weight:600;color:var(--navy);">Councilwoman Burke</td><td style="padding:8px 12px;color:var(--slate);">Attend follow-up meeting with the Mount Vernon Commissioner re: Glover; evaluate $30,000 EV charger grant if parking spaces are added</td><td style="padding:8px 12px;color:var(--slate);">Not stated</td></tr>
+                <tr><td style="padding:8px 12px;font-weight:600;color:var(--navy);background:#f9fafb;">Facilities / Architects</td><td style="padding:8px 12px;color:var(--slate);background:#f9fafb;">Select and purchase 8 hallway lights for Town Hall (~$1,800 including bulbs)</td><td style="padding:8px 12px;color:var(--slate);background:#f9fafb;">Not stated</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="panel-town-detailed" class="mtg-panel" data-tab="detailed" style="display:none;">
+        <div class="mtg-meta"><span class="mtg-meta-item">📅 August 3, 2026</span><a href="https://www.youtube.com/watch?v=Emg_Cr5kIfw" target="_blank" class="mtg-meta-item mtg-video-link">▶ Watch recording</a></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:00–0:00</span><span class="detail-section-title">Call to Order & Roll Call</span></div><p class="detail-body">Opened with the Pledge of Allegiance. Roll call recorded Supervisor Theresa Mohan (chair), Maura Curtin, Kristen Burke and Kara McLoughlin. Councilman Michael Jenks delivered the library report later in the meeting.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:00–0:06</span><span class="detail-section-title">Public Comment — Acoustics & ADA Access</span></div><p class="detail-body"><strong>Resident Edward Filby, Chester Park:</strong> Commended the board for commissioning the facilities study, then urged that an acoustical engineer be engaged for the meeting room. Separately raised the absence of an elevator, citing ADA compliance and mobility needs of both staff and the public, and warned the board it must either commit to never using the second floor or find a way to make it reachable.</p><p class="detail-body"><strong>Board response:</strong> An acoustical engineer will be brought in; the plan includes acoustic boards between the panels, an acoustical back wall and sound-deadening flooring. On the elevator — "not off the table," but the originally proposed location would have cost over $600,000. The preliminary plan is to relocate all public-facing services to the first floor; second-floor use remains undetermined.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:06–0:09</span><span class="detail-section-title">EMS Report</span></div><p class="detail-body"><strong>July 2026:</strong> 96 total calls — 46 in the Town/Village of Pelham, 39 in Pelham Manor. Average response time 5.4 min; on-scene 16.7 min; transport 12.9 min. Mutual aid: 11 responses out, 9 received.<br><br><strong>Finances:</strong> Revenues outpacing expenditures; ambulance revenue at 65% of annual budget as of August; fuel expenses up 40% since March. New ambulance expected end of August.<br><br><strong>NY State EMS sustainability law:</strong> Took effect December 2025, refined by implementing legislation March 2026. Recognizes EMS as an essential public service and requires every county to produce a long-term EMS sustainability plan with municipalities, providers and hospitals. Westchester County will lead that effort — a shift from municipality-by-municipality planning to a countywide model, and one the board expects to bring additional funding to Pelham's program.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:09–0:10</span><span class="detail-section-title">Website Update</span></div><p class="detail-body">The town website overhaul is underway with no firm timeline ("soon-ish"). Action item flagged: do not interrupt Recreation Department fall sign-ups during the transition, and improve the Recreation landing page, which is currently hard to find from the town site.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:10–0:11</span><span class="detail-section-title">Court & Glover Update — Councilwoman Burke</span></div><p class="detail-body">New court clerk <strong>Bruno Barbosa</strong> started August 3, covering both vehicle &amp; traffic and criminal dockets alongside existing clerks. No court sessions that week, allowing a phased start.<br><br><strong>Glover:</strong> Another meeting was convened with local municipalities and the school; the town is still waiting on a meeting with the Commissioner from Mount Vernon.<br><br><strong>Parking:</strong> The facilities study covered the parking area. A <strong>$30,000 EV charger grant</strong> remains available if spaces are added, though previously identified electrical capacity constraints still apply.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:11–0:16</span><span class="detail-section-title">Library Report — Councilman Jenks</span></div><p class="detail-body"><strong>Incidents:</strong> EMS responded to a medical emergency at the library in July with a positive outcome; the library thanked Pelham Manor PD and Pelham EMS. Heavy July rain brought water into the basement near IT equipment — no damage, but a close call. The library served as a cooling center during early-July power outages.<br><br><strong>July engagement:</strong> 5,207 door count, 69 programs, 1,412 attendees.<br><br><strong>Summer Reading:</strong> 260 children signed up, 37,101 minutes read collectively; 35 ice cream certificates, 41 pizza, 57 cookie. An app goal-reset issue has been fixed; the program is open to adults too.<br><br><strong>Puzzle race:</strong> The first-ever event sold out. Plans call for 2–4 per year.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:16–0:20</span><span class="detail-section-title">Recreation, Concerts & Senior Programs</span></div><p class="detail-body"><strong>Camps:</strong> Final week of summer camp, at record attendance despite 90°+ heat, thunderstorms, hail, flooding and poor air quality.<br><br><strong>Upcoming:</strong> Soccer and tennis clinics the weeks of August 10, 17, 24 and 31 (sign-up on the website). Cheerleading and football registration open. After-school registration opens end of August.<br><br><strong>Summer concerts:</strong> Aug 3 — 8th Avenue Live; Aug 10 — The Truth (and They Don't Bend It); Aug 17 — The Book Ends; Aug 24 — Philip James Orchestra; Aug 31 — Jackie DiMaggio. Sponsors thanked: Rockwells, Meridian and the Gallo Family Trust.<br><br><strong>Seniors at Doty:</strong> Exercise Tue/Thu 10–11am; yoga Fri 10–11am; Glover Field Walking Wednesdays 10–11am (weather permitting); arts &amp; crafts first Thursday 1–3pm; mahjong lessons (55+) Wed 12:30–1:30pm; card playing Mon 2–3:30pm and Wed/Fri 12–3pm; bingo 2–3pm. Next field trip: Mohegan Sun.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:20–0:23</span><span class="detail-section-title">Supervisor's Report</span></div><p class="detail-body">PelhamTogether intern <strong>Kate McGovern</strong> was welcomed to the meeting.<br><br><strong>Town Clerk relocation:</strong> The Town Clerk's office has moved to the first floor of Town Hall, and a phone has been installed at the entrance so visitors can call for assistance rather than climbing two flights of stairs — a change under discussion since January. Supervisor Mohan noted residents previously had to climb two flights to collect a handicap permit, "insurmountable in some cases," and thanked the Deputy Town Clerk for agreeing to relocate.<br><br><strong>Hallway lighting:</strong> Eight new hallway lights are needed, ~$1,800 total including bulbs, selected with the architects and chosen to suit anticipated future building changes.<br><br><strong>Iron Mountain:</strong> The Town Clerk and Deputy Town Clerk are reviewing stored records, have identified boxes eligible for destruction, and are pricing the most cost-effective disposal method.</p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:23–0:25</span><span class="detail-section-title">Resolution 1 — Personnel Handbook</span></div><p class="detail-body">The handbook rewritten in April 2026 carried two errors this resolution corrects. <strong>Personal leave:</strong> the new handbook never specified a number of days; the prior handbook gave 2, and that entitlement is restored. <strong>Sick leave:</strong> the new 8-day-with-carryover policy was unpopular with staff, so the town reverts to the prior 12 days with no carryover. Supervisor Mohan described the omission as "an oversight on my part."<br><br><strong>Result: approved unanimously.</strong></p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:25–0:28</span><span class="detail-section-title">Resolution 2 — Financial Software Upgrade</span></div><p class="detail-body">Quotes from alternative vendors ran $20,000–$30,000 and were judged exorbitant. The town instead negotiated added modules and cloud hosting with its current provider. The upgrade brings a budgeting module, cash reconciliation, cleaner financial reporting, monthly budget reporting to departments, better mid-year tracking, and remote access that no longer requires being physically in Town Hall.<br><br><strong>Cost:</strong> ~$4,000 one-time this year; ongoing annual cost rises from ~$3,000 to ~$7,000.<br><br><strong>Result: approved unanimously.</strong></p></div>
+        <div class="detail-section"><div class="detail-section-header"><span class="detail-timestamp">0:28–0:30</span><span class="detail-section-title">Minutes, Acknowledgment & Executive Session</span></div><p class="detail-body"><strong>Minutes:</strong> July 13, 2026 minutes approved as amended, clarifying the Booktemberfest ticket sale date versus the event itself — confirmed as <strong>October 3, 5–8pm</strong>.<br><br><strong>Acknowledgment:</strong> The council marked the passing of <strong>William Clements</strong>, who served on the Town's Assessment Board of Review for over 20 years, extending condolences to his children David and Sarah and his three grandchildren.<br><br><strong>Adjournment:</strong> The board adjourned to executive session for personnel matters. The recording ends shortly after.</p></div>
+      </div>
+      <div id="panel-town-transcript" class="mtg-panel" data-tab="transcript" style="display:none;">
+        <div class="mtg-meta"><span class="mtg-meta-item">📅 August 3, 2026</span><span class="mtg-meta-item">🤖 AI-generated · verify with recording</span><a href="https://www.youtube.com/watch?v=Emg_Cr5kIfw" target="_blank" class="mtg-meta-item mtg-video-link">▶ Watch recording</a></div>
+        <div class="transcript-body">
+          <div class="transcript-block"><span class="ts-time">[0:01:17]</span><span class="ts-speaker">RESIDENT (EDWARD FILBY, CHESTER PARK):</span><span class="ts-text">My name is Edward Filby and I live in Chester Park. I wanted to commend the supervisor and the council board for commissioning the study of the facilities that the town owns. I think it's very important, it's been overdue.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:02:04]</span><span class="ts-speaker">RESIDENT FILBY:</span><span class="ts-text">I didn't see anything that addressed the acoustical problems in this room. There was a lot of attention paid to this room, but I urge the council to consider an acoustical engineer.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:02:27]</span><span class="ts-speaker">SUPERVISOR MOHAN:</span><span class="ts-text">We will be bringing in an acoustical engineer, but I do want to note that the plan we will be coming up with will be putting acoustic boards in between the panels that you won't see. And to the extent that we do the renovation, the back wall will be an acoustical wall. We're also looking at sound-deadening floor.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:04:17]</span><span class="ts-speaker">SUPERVISOR MOHAN:</span><span class="ts-text">The elevator is not off the table. The question is where to put it. Where it was originally thought to be put, on the side of the building, would have incurred — I think the architect said over $600,000. The question is whether that's the priority, because what our plan would be, and it's still a preliminary plan, is to move all of the services to the first floor. So it would be accessible.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:06:20]</span><span class="ts-speaker">COUNCIL MEMBER (EMS REPORT):</span><span class="ts-text">Pelham EMS responded to 96 calls in July — 46 calls in the town and village of Pelham and 39 calls in the village of Pelham Manor. Average response time 5.4 minutes, on-scene time 16.7 minutes and average transport time 12.9 minutes.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:07:40]</span><span class="ts-speaker">COUNCIL MEMBER (EMS REPORT):</span><span class="ts-text">The law recognizes EMS as an essential public service and requires every county to develop a comprehensive long-term EMS sustainability plan in partnership with municipalities, EMS providers, hospitals and other stakeholders. I hope that results in more funding for a program like ours, which is one of the models in the county and the state.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:10:00]</span><span class="ts-speaker">COUNCILWOMAN BURKE:</span><span class="ts-text">We have our new court clerk who started today. His name is Bruno Barbosa, and he's going to be covering both the vehicle and traffic and the criminal court dockets. I think there's no court sessions this week, so it's a good week to sort of phase into it.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:14:24]</span><span class="ts-speaker">COUNCILMAN JENKS:</span><span class="ts-text">As of today, 260 children have signed up for the program. Collectively, they've read 37,101 minutes. 35 children have earned certificates for ice cream, 41 have earned gift certificates for pizza and 57 have earned a cookie.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:21:29]</span><span class="ts-speaker">SUPERVISOR MOHAN:</span><span class="ts-text">Our Town Clerk's office is now moving to the first floor of Town Hall. And we've also installed a phone, so somebody coming into the building just picks up the phone and somebody can come down and help them, so they no longer have to walk up the two flights of stairs. It seems small, but when you had to walk up two flights of stairs to get your handicap permit, it was insurmountable in some cases.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:25:54]</span><span class="ts-speaker">SUPERVISOR MOHAN:</span><span class="ts-text">We reached out to our current financial software provider, and they actually have modules and also can host our financial software. So we can all access it without having to be in Town Hall. The one-time cost this year will be in the $4,000 range. It will increase our ongoing cost from $3,000 to about $7,000 a year, but I think it's well worth it.</span></div>
+          <div class="transcript-block"><span class="ts-time">[0:29:09]</span><span class="ts-speaker">SUPERVISOR MOHAN:</span><span class="ts-text">Before we go to executive session, we would like to acknowledge the passing of William Clements. He served on our Assessment Board of Review for over 20 years, and our condolences go out to his children, David and Sarah, and his three grandchildren.</span></div>
+          <div class="transcript-block ts-ellipsis"><span style="color:#888;font-style:italic;font-size:13px;">· · · full transcript generated from August 3, 2026 recording via Whisper AI · verify at official recording · · ·</span></div>
+        </div>
+        <p style="margin-top:16px;font-size:12px;color:var(--slate);font-style:italic;">Auto-generated by OpenAI Whisper. Speaker labels approximate and proper names corrected against the verified Town roster. Verify against the <a href="https://www.youtube.com/watch?v=Emg_Cr5kIfw" target="_blank">official recording</a>.</p>
+      </div>
+      </div>
+
+      <div id="mtg-placeholder" style="display:none;"></div>
     </div>
   </div>
 </section>
@@ -2353,26 +2437,34 @@
     if (wrap && !wrap.contains(e.target)) closeDropdown();
   });
 
-  const meetings = {'pelham-board-jul2026':{title:'Village of Pelham · Board of Trustees · July 14, 2026'},'coming-soon-1':{title:'Town of Pelham · coming soon'},'coming-soon-2':{title:'Village of Pelham Manor · coming soon'},'coming-soon-3':{title:'Board of Education · coming soon'}};
-  // Snapshot the real July 14 summary markup at load so we can restore it
-  // in place instead of reloading the page (which would wipe the chat history).
-  const mtgContentDefaultHTML = (document.getElementById('mtg-content') || {}).innerHTML || '';
+  const meetings = {'pelham-board-jul2026':{title:'Village of Pelham · Board of Trustees · July 14, 2026'},'town-council-aug2026':{title:'Town of Pelham · Town Council · August 3, 2026'},'coming-soon-2':{title:'Village of Pelham Manor · coming soon'},'coming-soon-3':{title:'Board of Education · coming soon'}};
+  // Every processed meeting ships its own .mtg-set of three panels, so switching
+  // meetings is a show/hide rather than an innerHTML swap — the panels stay in
+  // the DOM and the Ask Pelham chat history survives either way.
+  let currentMeeting = 'pelham-board-jul2026';
+  function showMeetingTab(tab){
+    const set = document.querySelector('.mtg-set[data-meeting="'+currentMeeting+'"]');
+    if(!set) return;
+    set.querySelectorAll('.mtg-panel').forEach(p=>{p.style.display = p.dataset.tab===tab ? 'block' : 'none';});
+  }
   function selectMeeting(btn,id){
     switchTab(btn,'.mtg-selector','active-mtg');
-    const content = document.getElementById('mtg-content');
-    if(id!=='pelham-board-jul2026'){
-      content.innerHTML='<div style="padding:40px;text-align:center;color:var(--slate);font-size:14px;">📋 Summaries for <strong>'+meetings[id].title+'</strong> will appear here once processed.</div>';
-    }else{
-      // Restore the July 14 panels and reset to the Executive Summary tab —
-      // no location.reload(), so the Ask Pelham chat history survives.
-      content.innerHTML=mtgContentDefaultHTML;
+    currentMeeting = id;
+    const placeholder = document.getElementById('mtg-placeholder');
+    document.querySelectorAll('.mtg-set').forEach(s=>{s.style.display = s.dataset.meeting===id ? 'block' : 'none';});
+    if(document.querySelector('.mtg-set[data-meeting="'+id+'"]')){
+      placeholder.style.display='none';
+      // Reset to the Executive Summary tab whenever the meeting changes.
       document.querySelectorAll('.detail-tab').forEach((b,i)=>b.classList.toggle('active-tab', i===0));
+      showMeetingTab('exec');
+    }else{
+      placeholder.innerHTML='<div style="padding:40px;text-align:center;color:var(--slate);font-size:14px;">📋 Summaries for <strong>'+meetings[id].title+'</strong> will appear here once processed.</div>';
+      placeholder.style.display='block';
     }
   }
   function selectTab(btn,panel){
     switchTab(btn,'.detail-tab','active-tab');
-    document.querySelectorAll('.mtg-panel').forEach(p=>p.style.display='none');
-    document.getElementById('panel-'+panel).style.display='block';
+    showMeetingTab(panel);
   }
 
   function submitError() {
