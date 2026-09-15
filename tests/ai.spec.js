@@ -88,3 +88,28 @@ test('receiver of taxes — reported vacant, with Paolericio acting', async ({ r
     ).toMatch(/resign|stepped down|former|no longer/i);
   }
 });
+
+// Village/Town attribution guard. The Amtrak Forest Road project was raised at
+// the VILLAGE of Pelham Board of Trustees on August 17 2026, but arrived here
+// in a batch of Town Council facts and was very nearly filed under the Town
+// (corrected in 540122e). Pelham has a Village board, a Manor board and a Town
+// board with genuinely different remits, so sending a resident to the wrong one
+// is a real failure — this pins the attribution in SYSTEM_PROMPT.
+test('Amtrak on Forest Road — a Village matter, not attributed to the Town', async ({ request }) => {
+  const answer = await ask(request, 'who is handling the Amtrak construction concerns on Forest Road?');
+
+  expect(
+    answer,
+    'expected the Village named as the responsible body, got: ' + answer.slice(0, 300),
+  ).toMatch(/Village/i);
+
+  // Deliberately not `not.toContain('Town Council')`: a good answer may name the
+  // Town precisely to rule it out ("a Village matter, not a Town Council one").
+  // What must never happen is the Town being described as handling the project.
+  expect(
+    answer,
+    'attributed the Forest Road project to the Town — it is a Village of Pelham matter',
+  ).not.toMatch(
+    /(Town Council|Town of Pelham|Town Board)\s+(is|are|was|were|has|have|will)?\s*(currently\s+)?(handling|addressing|leading|overseeing|managing|responsible for|in charge of)/i,
+  );
+});
