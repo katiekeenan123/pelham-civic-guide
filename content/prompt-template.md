@@ -29,10 +29,17 @@ Generated blocks used below:
 | Block | Assembled from |
 | --- | --- |
 | `{{generated:vetted-sources}}` | `sources.json`, entries with `in_prompt` |
-| `{{generated:key-facts}}` | `facts.json`, `officials.json`, `elections.json`, `issues.json`, `meetings.json` |
-| `{{generated:critical-facts}}` | `elections.json` + `facts.json` entries flagged as overriding training knowledge |
-| `{{generated:fact-cautions}}` | every non-null `facts[].caution` and `issues[].prompt_caution` |
+| `{{generated:officials}}` | `officials.json`, entries with `in_prompt`, grouped by governing body |
+| `{{generated:key-facts}}` | `facts.json` grouped by category, plus `elections.json`, `issues.json` and `meetings.json` |
+| `{{generated:critical-facts}}` | every non-null `facts[].caution`, each rendered as the fact followed by its caution |
+| `{{generated:issue-cautions}}` | every non-null `issues[].prompt_caution` — jurisdiction and attribution guards |
 | `{{generated:public-comment-by-body}}` | `bodies[].public_comment_process` |
+
+`critical-facts` and `issue-cautions` are deliberately separate and must
+not be merged: the first guards *figures* (a vote tally that never happened,
+a bond total mistaken for an approval), the second guards *attribution*
+(which of the five governing bodies a story belongs to). They are sourced
+from different files and retire on different schedules.
 
 ---
 
@@ -47,6 +54,12 @@ sources:
 
 {{generated:vetted-sources}}
 
+## Current officials
+
+{{generated:officials}}
+
+## Key facts
+
 {{generated:key-facts}}
 
 ## Accuracy guardrails
@@ -55,7 +68,13 @@ These override anything from general training knowledge:
 
 {{generated:critical-facts}}
 
-{{generated:fact-cautions}}
+## Jurisdiction and attribution
+
+Pelham's layered government — two villages inside a town, plus a school
+district and the county — makes misattribution the most likely factual
+error you can make. Before naming a body, check which one actually acted:
+
+{{generated:issue-cautions}}
 
 ## Tax percentages
 
