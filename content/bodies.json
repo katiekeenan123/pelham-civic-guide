@@ -3,6 +3,76 @@
 
   "bodies": [
     {
+      "id": "village-of-pelham",
+      "name": "Village of Pelham",
+      "type": "village",
+      "label": "Village Government",
+      "accent": "none",
+      "description": "The primary local government for residents of \"Pelham Heights\" and former North Pelham. The Board of Trustees sets policy, manages the budget, and runs most everyday services — police, fire, garbage, water, and roads.",
+      "budget": {
+        "label": "FY2026–27 Budget",
+        "fact_ref": "village-budget-fy2627",
+        "note": "up {{fact:village-budget-increase-fy2627}}"
+      },
+      "detail_rows": [
+        { "key": "Governing Body", "value": "Mayor + 6 Trustees" },
+        { "key": "Meetings", "value": "2nd & 4th Tuesday, monthly" },
+        { "key": "Meeting Location", "value": "200 Fifth Ave, 1st floor" }
+      ],
+      "meeting_schedule": {
+        "cadence": "2nd & 4th Tuesday, monthly",
+        "cadence_detail": "2nd & 4th Tuesday of each month",
+        "location_name": "Village Hall",
+        "address": "200 Fifth Ave, 1st floor Meeting Room",
+        "participation": "Sign up for public comment at the meeting; agendas posted online"
+      },
+      "public_comment_process": "Residents typically sign in at the door before the meeting starts.",
+      "offices_address": "200 Fifth Ave",
+      "website": "https://www.pelhamny.gov",
+      "phone": null,
+      "source_links": [
+        { "label": "Board of Trustees", "url": "https://www.pelhamny.gov/194/Mayor-Village-Board-of-Trustees" },
+        { "label": "Adopted Budgets", "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets" },
+        { "label": "Meeting Agendas", "url": "https://www.pelhamny.gov/AgendaCenter" },
+        { "label": "News & Notices", "url": "https://www.pelhamny.gov/m/newsflash" }
+      ]
+    },
+    {
+      "id": "village-of-pelham-manor",
+      "name": "Village of Pelham Manor",
+      "type": "village",
+      "label": "Village Government",
+      "accent": "gold",
+      "description": "The second of Pelham's two villages, covering the Manor neighborhood. Has its own elected Mayor and Board of Trustees, runs its own police and fire departments, and manages village-level services independently.",
+      "budget": {
+        "label": "FY2026–27 Budget",
+        "fact_ref": "manor-budget-fy2627",
+        "note": "{{fact:manor-budget-operating-fy2627}} operating + {{fact:manor-budget-capital-fy2627}} capital"
+      },
+      "detail_rows": [
+        { "key": "Governing Body", "value": "Mayor + Board of Trustees" },
+        { "key": "Area", "value": "1.2 square miles" },
+        { "key": "Village Hall", "value": "4 Penfield Place" }
+      ],
+      "meeting_schedule": {
+        "cadence": "Monthly Mondays",
+        "cadence_detail": "Monthly (typically 2nd Monday at 8:15 pm)",
+        "location_name": "Village Hall",
+        "address": "4 Penfield Place",
+        "participation": "Public comment period at each meeting"
+      },
+      "public_comment_process": "Public comment is often called from the floor — residents simply stand or raise their hand when the chair invites public comment.",
+      "offices_address": "4 Penfield Place",
+      "website": "https://www.pelhammanor.gov",
+      "phone": null,
+      "source_links": [
+        { "label": "Board of Trustees", "url": "https://www.pelhammanor.gov/199/Board-of-Trustees" },
+        { "label": "Budgets & Financials", "url": "https://www.pelhammanor.gov/209/Budgets-Financial-Statements" },
+        { "label": "Meeting Agendas", "url": "https://www.pelhammanor.gov/AgendaCenter" },
+        { "label": "News & Notices", "url": "https://www.pelhammanor.gov/m/newsflash" }
+      ]
+    },
+    {
       "id": "town-of-pelham",
       "name": "Town of Pelham",
       "type": "town",
@@ -16,9 +86,9 @@
       },
       "detail_rows": [
         { "key": "Governing Body", "value": "Supervisor + 4 Councilors" },
-        { "key": "Key Services",   "value": "Courts, Assessor, Recreation" },
-        { "key": "Town Hall",      "value": "34 Fifth Ave" },
-        { "key": "Founded",        "value": "Est. 1654 . Incorporated 1788" }
+        { "key": "Key Services", "value": "Courts, Assessor, Recreation" },
+        { "key": "Town Hall", "value": "34 Fifth Ave" },
+        { "key": "Founded", "value": "Est. {{fact:founding-year}} · Incorporated 1788" }
       ],
       "meeting_schedule": {
         "cadence": "Monthly",
@@ -27,14 +97,73 @@
         "address": "20 Fifth Ave",
         "participation": "Public hearing notices posted; residents may comment during hearings"
       },
+      "public_comment_process": "Public comment is often called from the floor — residents simply stand or raise their hand when the chair invites public comment.",
       "offices_address": "34 Fifth Ave",
       "website": "https://townofpelhamny.gov",
-      "phone": "914-738-1642",
+      "phone": "{{fact:town-receiver-phone}}",
       "source_links": [
-        { "label": "Town Officials",    "url": "https://townofpelhamny.gov/town-officials/" },
+        { "label": "Town Officials", "url": "https://townofpelhamny.gov/town-officials/" },
         { "label": "Budgets & Reports", "url": "https://townofpelhamny.gov/budgets-and-reports/" },
-        { "label": "Pay / View Taxes",  "url": "https://townofpelhamny.gov/receiver-of-taxes/" },
-        { "label": "News & Notices",    "url": "https://townofpelhamny.gov/news-and-notices/" }
+        { "label": "Pay / View Taxes", "url": "https://townofpelhamny.gov/receiver-of-taxes/" },
+        { "label": "News & Notices", "url": "https://townofpelhamny.gov/news-and-notices/" }
+      ]
+    },
+    {
+      "id": "pelham-schools",
+      "name": "Pelham Union Free School District",
+      "type": "school",
+      "label": "School District",
+      "accent": "green",
+      "description": "An elected Board of Education governs K–12 education across four elementary schools, one middle school, and Pelham Memorial High School. The school district has its own budget voted on separately by residents each May.",
+      "budget": {
+        "label": "FY2026–27 Budget",
+        "fact_ref": "school-budget-fy2627",
+        "note": "voter-approved; levy up {{fact:school-levy-increase-fy2627}}"
+      },
+      "detail_rows": [
+        { "key": "Governing Body", "value": "9-member Board of Education" },
+        { "key": "Schools", "value": "4 Elementary, 1 Middle, 1 HS" },
+        { "key": "Budget Vote", "value": "Every May (public vote)" }
+      ],
+      "meeting_schedule": {
+        "cadence": "Monthly",
+        "cadence_detail": "Monthly + special budget sessions (Jan–May)",
+        "location_name": "District Offices",
+        "address": "District offices / Pelham Middle School",
+        "participation": "Public comment period; annual budget vote each May"
+      },
+      "public_comment_process": "A floor-based process similar to the Town Board — residents stand or raise their hand when the chair invites public comment.",
+      "offices_address": "District offices",
+      "website": "https://www.pelhamschools.org",
+      "phone": null,
+      "source_links": [
+        { "label": "Budget & Financials", "url": "https://www.pelhamschools.org/district/about/financials" },
+        { "label": "Board of Education", "url": "https://www.pelhamschools.org/district/board-of-education" },
+        { "label": "District News", "url": "https://www.pelhamschools.org/district/news" }
+      ]
+    },
+    {
+      "id": "westchester-county",
+      "name": "Westchester County",
+      "type": "county",
+      "label": "County Government",
+      "accent": "none",
+      "description": "County government provides regional services including the county police, health department, parks, sewer districts, and social services. Westchester is also the entity that establishes equalization rates used in property tax assessments.",
+      "budget": null,
+      "detail_rows": [
+        { "key": "Governing Body", "value": "County Executive + Legislature" },
+        { "key": "County Budget", "value": "See westchestercountyny.gov" },
+        { "key": "Pelham's District", "value": "14th Legislative District" },
+        { "key": "Key Services", "value": "Health, Parks, Sewer, Courts" }
+      ],
+      "meeting_schedule": null,
+      "public_comment_process": null,
+      "offices_address": null,
+      "website": "https://www.westchestercountyny.gov",
+      "phone": null,
+      "source_links": [
+        { "label": "County Budget", "url": "https://www.westchestercountyny.gov/government/departments/budget" },
+        { "label": "Legislature", "url": "https://www.westchestercountyny.gov/government/legislature" }
       ]
     }
   ]

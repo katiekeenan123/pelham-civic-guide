@@ -4,13 +4,23 @@
   "election_date": "2026-11-03",
   "polling_hours": "6am - 9pm",
 
-  "editorial_note": "Candidate profiles are drawn from Pelham Examiner reporting and candidate statements. This site does not endorse any candidate. Register to vote at <a href=\"https://www.elections.ny.gov\" target=\"_blank\">elections.ny.gov</a> - registration deadline is typically 25 days before the election.",
+  "editorial_note": "<strong>Editorial note:</strong> Candidate profiles are drawn from Pelham Examiner reporting and candidate statements. This site does not endorse any candidate. All facts sourced from <a href=\"https://pelhamexaminer.com\" target=\"_blank\">pelhamexaminer.com</a>. Register to vote at <a href=\"https://www.elections.ny.gov\" target=\"_blank\">elections.ny.gov</a> — registration deadline is typically {{fact:voter-registration-deadline}} the election.",
 
   "voter_info": [
     {
+      "label": "Election Date",
+      "value": "{{fact:election-date-2026}}",
+      "note": "Verify exact date at Westchester County Board of Elections"
+    },
+    {
+      "label": "Register to Vote",
+      "value": "{{fact:voter-registration-deadline}}",
+      "note": "<a href=\"https://www.elections.ny.gov\" target=\"_blank\">elections.ny.gov</a> or Westchester County Board of Elections 914-995-5700"
+    },
+    {
       "label": "Where to Vote",
       "value": "{{fact:polling-hours}}",
-      "note": "Village of Pelham: Daronco Town House, 20 Fifth Ave . Pelham Manor: Our Lady of Perpetual Help, 575 Fowler Ave"
+      "note": "Village of Pelham: Daronco Town House, 20 Fifth Ave · Pelham Manor: Our Lady of Perpetual Help, 575 Fowler Ave"
     }
   ],
 
@@ -23,10 +33,30 @@
       "term_length": "2-year terms",
       "badge": "First contested race since 2019",
       "note": null,
-      "context": "Hanan Eldahry, who has served since 2018, is not seeking reelection. The central issue in this race is fiscal management - the village passed a {{fact:village-budget-fy2627}} budget with a {{fact:village-budget-increase-fy2627}} increase, overriding the state tax cap for the first time. Three seats are up; top three vote-getters win.",
+      "context": "<strong>Context:</strong> Hanan Eldahry, who has served since 2018, is not seeking reelection. The central issue in this race is fiscal management — the village passed a {{fact:village-budget-fy2627}} budget with a {{fact:village-budget-increase-fy2627}} increase, overriding the state tax cap for the first time. Three seats are up; top three vote-getters win.",
       "shared_platforms": {
-        "neighborhood-party-2026": "In their joint platform statement, Long, Speros and Anzilotti describe the Village's current path as 'unsustainable,' citing debt growth from {{fact:village-debt-2021}} in 2021 to {{fact:village-debt-2026}} now, undisciplined spending, and lack of transparency on the Picture House RFQ. They pledge to: serve without pay, vote not to exceed the tax cap, create an infrastructure plan, and bring openness to Village decisions."
+        "neighborhood-party-2026": "In their joint platform statement, Long, Speros and Anzilotti describe the Village's current path as 'unsustainable,' citing debt growth from {{fact:village-debt-2021}} in 2021 to almost $18M now, undisciplined spending (including a $3.655M Municipal Center authorization with $800K for furniture), and lack of transparency on the Picture House RFQ. They pledge to: serve without pay, vote not to exceed the tax cap, create an infrastructure plan, and bring openness to Village decisions."
       }
+    },
+    {
+      "id": "pelham-manor-trustees",
+      "body": "village-of-pelham-manor",
+      "title": "Board of Trustees",
+      "seats": 2,
+      "term_length": "2-year terms",
+      "badge": "Contested",
+      "note": null,
+      "context": "<strong>Context:</strong> Maurice Owen-Michaane is stepping down after three two-year terms. The 2025 Manor election was historically close — Lapey won the mayoral race by 20 votes, Case won by 2 after a recount. Kurtz returns for a rematch. Top two vote-getters win."
+    },
+    {
+      "id": "town-supervisor-and-clerk",
+      "body": "town-of-pelham",
+      "title": "Town Supervisor & Town Clerk",
+      "seats": 2,
+      "term_length": "2-year terms",
+      "badge": "Re-run required by new state law",
+      "note": "A new state law shifts odd-year municipal elections to even years. As a result, Supervisor Mohan and Clerk Miller — both elected in November 2025 — must run again in 2026 to secure full two-year terms.",
+      "context": "<strong>Context:</strong> Mohan defeated Republican Dan McLaughlin 2,115 to 1,456 in 2025. Miller defeated Borsella 2,108 to 1,457. Both races were decided by similar margins. Town Council seats (Burke, McLoughlin, Jenks, Curtin — 4-year terms) are not up in 2026."
     }
   ],
 
@@ -39,11 +69,195 @@
       "party": "Democratic Party",
       "party_style": "dem",
       "incumbent": true,
-      "meta": "Incumbent . First elected 2020 . Running for third term",
-      "summary": "Now in his third term, Solomon emphasizes a collaborative approach: \"I've made it a point to sit down directly with neighbors, local groups and business owners, understand what they need from their village government, and follow through.\" Key achievements: championed 25 mph speed limit village-wide, supported hiring of a Traffic Safety Officer, worked on sewer infrastructure. Has served as liaison for pedestrian safety, DPW, and downtown business.",
+      "meta": "Incumbent · First elected 2020 · Running for third term",
+      "summary": "Now in his third term, Solomon emphasizes a collaborative approach: \"I've made it a point to sit down directly with neighbors, local groups and business owners, understand what they need from their village government, and follow through.\" Key achievements: championed 25 mph speed limit village-wide, supported hiring of a Traffic Safety Officer, worked on sewer infrastructure (over two miles of pipes repaired). Has served as liaison for pedestrian safety, DPW, and downtown business.",
       "platform_ref": null,
       "source_url": "https://pelhamexaminer.com/84500/latest-news/kristen-burke-russell-solomon-and-krystal-howell-make-the-case-for-why-theyre-running-in-novembers-village-of-pelham-election/",
       "source_label": "Examiner September 4, 2026"
+    },
+    {
+      "id": "krystal-howell",
+      "race_id": "village-of-pelham-trustees",
+      "office": null,
+      "name": "Krystal Howell",
+      "party": "Democratic Party",
+      "party_style": "dem",
+      "incumbent": true,
+      "meta": "Incumbent · First elected 2024",
+      "summary": "Finishing her first term as trustee, Howell is seeking re-election citing unfinished work ahead. \"I am seeking re-election because there is still important work ahead — strengthening infrastructure, making serious headway on storm resiliency, improving public and pedestrian safety, supporting local businesses, enhancing village-wide communication, and ensuring that every resident feels seen, heard, and valued.\" During her term she supported hiring a Traffic Safety Officer, advocated at county and state levels, and worked with neighboring municipalities on quality-of-life issues. She leads with three core principles: respect, empathy and action.",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84500/latest-news/kristen-burke-russell-solomon-and-krystal-howell-make-the-case-for-why-theyre-running-in-novembers-village-of-pelham-election/",
+      "source_label": "Examiner September 4, 2026"
+    },
+    {
+      "id": "kristen-burke",
+      "race_id": "village-of-pelham-trustees",
+      "office": null,
+      "name": "Kristen Burke",
+      "party": "Democratic Party",
+      "party_style": "dem",
+      "incumbent": false,
+      "meta": "Town Council Member stepping up · General Counsel, Mercy University",
+      "summary": "Currently serving on the Town of Pelham Town Council (four-year term through 2027) — if elected to the Village board, she will step down. An attorney, Burke serves as General Counsel at Mercy University. Her rationale for running: \"One of the reasons I am running for Village Trustee is that currently, while there are three attorneys serving on the Town Board, along with a Town attorney, there are none on the Village board.\" Her campaign priorities: flood mitigation, rising costs, downtown improvement, pedestrian safety, and sustainability. Motto: \"Inserviendo Consummere\" — consumed in service.",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84500/latest-news/kristen-burke-russell-solomon-and-krystal-howell-make-the-case-for-why-theyre-running-in-novembers-village-of-pelham-election/",
+      "source_label": "Examiner September 4, 2026"
+    },
+    {
+      "id": "arthur-long",
+      "race_id": "village-of-pelham-trustees",
+      "office": null,
+      "name": "Arthur Long",
+      "party": "Neighborhood Party · Republican",
+      "party_style": "nbhd",
+      "incumbent": false,
+      "meta": "Challenger · Ran in 2019",
+      "summary": "Attorney at Latham & Watkins. Ran for the board in 2019. Says the village is at a \"tipping point\" — the current board's \"unanimous actions have dangerously stretched the Village's finances.\" Primary concern: fiscal management and debt levels.",
+      "platform_ref": "neighborhood-party-2026",
+      "source_url": "https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/",
+      "source_label": "NP platform statement — September 14, 2026"
+    },
+    {
+      "id": "rhett-speros",
+      "race_id": "village-of-pelham-trustees",
+      "office": null,
+      "name": "Rhett Speros",
+      "party": "Neighborhood Party · Republican",
+      "party_style": "nbhd",
+      "incumbent": false,
+      "meta": "Challenger · Pelham resident since 2007",
+      "summary": "Has two children in Pelham high schools. Focused on affordability: \"Our village should be a place where residents can afford to stay.\" Concerned about budget management and the rise in property taxes under current leadership.",
+      "platform_ref": "neighborhood-party-2026",
+      "source_url": "https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/",
+      "source_label": "NP platform statement — September 14, 2026"
+    },
+    {
+      "id": "paul-anzilotti",
+      "race_id": "village-of-pelham-trustees",
+      "office": null,
+      "name": "Paul Anzilotti",
+      "party": "Neighborhood Party · Republican",
+      "party_style": "nbhd",
+      "incumbent": false,
+      "meta": "Challenger · Pelham resident 50+ years",
+      "summary": "Longtime Pelham resident, most recently in the Village for the past 12 years. Says he has \"18 million reasons\" for running — each dollar of outstanding village debt. Warns the village deficit is \"on a trajectory that is unsustainable without continuous substantial tax increases.\"",
+      "platform_ref": "neighborhood-party-2026",
+      "source_url": "https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/",
+      "source_label": "NP platform statement — September 14, 2026"
+    },
+
+    {
+      "id": "breda-bennett",
+      "race_id": "pelham-manor-trustees",
+      "office": null,
+      "name": "Breda Bennett",
+      "party": "Neighborhood Party · Republican",
+      "party_style": "nbhd",
+      "incumbent": true,
+      "meta": "Incumbent Deputy Mayor · Serving since 2018",
+      "summary": "Current Deputy Mayor and Police Commissioner. A veteran of the Manor board, Bennett has served since 2018. Running with Liberatore on the Neighborhood Party line, also filed on the Republican line.",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
+      "source_label": "Examiner announcement"
+    },
+    {
+      "id": "joe-liberatore",
+      "race_id": "pelham-manor-trustees",
+      "office": null,
+      "name": "Joe Liberatore",
+      "party": "Neighborhood Party · Republican",
+      "party_style": "nbhd",
+      "incumbent": false,
+      "meta": "Challenger · Manor ZBA member",
+      "summary": "Member of the Village of Pelham Manor Zoning Board of Appeals. First run for elective office. Running alongside Bennett on the Neighborhood Party and Republican lines.",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
+      "source_label": "Examiner announcement"
+    },
+    {
+      "id": "ryan-kurtz",
+      "race_id": "pelham-manor-trustees",
+      "office": null,
+      "name": "Ryan Kurtz",
+      "party": "Democratic Party",
+      "party_style": "dem",
+      "incumbent": false,
+      "meta": "Challenger · Ran in 2025 (lost by 2 votes)",
+      "summary": "Lost to incumbent Tim Case by just 2 votes after a manual recount in the November 2025 election — one of the closest races in Manor history. Running again in 2026 alongside Dlutkowski.",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
+      "source_label": "Examiner coverage"
+    },
+    {
+      "id": "chris-dlutkowski",
+      "race_id": "pelham-manor-trustees",
+      "office": null,
+      "name": "Chris Dlutkowski",
+      "party": "Democratic Party",
+      "party_style": "dem",
+      "incumbent": false,
+      "meta": "Challenger · First run for office",
+      "summary": "Running alongside Kurtz on the Democratic line. Announced his candidacy in June 2026.",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
+      "source_label": "Examiner coverage"
+    },
+
+    {
+      "id": "theresa-mohan",
+      "race_id": "town-supervisor-and-clerk",
+      "office": "Town Supervisor",
+      "name": "Theresa Mohan",
+      "party": "Democratic Party",
+      "party_style": "dem",
+      "incumbent": true,
+      "meta": "Incumbent Town Supervisor · First woman elected to the role · Attorney",
+      "summary": "Elected Town Supervisor in November 2025, making her the first woman to hold the position. Attorney by training; served as General Counsel and Head of Human Resources for organizations of over 15,000 people; currently teaches leadership and ethics at Fordham Law School. Former Village of Pelham trustee (third term). Campaign theme: \"Pelham deserves leaders who won't just maintain what we have, but who will plan boldly for what comes next.\" During her village tenure, helped secure multiple grants expanding sustainability goals without raising taxes. Running for re-election after less than a year in office due to a New York State law change that requires her to return to the ballot. During her first nine months she has focused on financial systems modernization, facilities planning, and improving resident access to Town government.",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84767/showcase/town-supervisor-theresa-mohan-and-town-clerk-eileen-miller-announce-campaigns-for-re-election-in-november/",
+      "source_label": "Re-election announcement — September 21, 2026"
+    },
+    {
+      "id": "eileen-miller",
+      "race_id": "town-supervisor-and-clerk",
+      "office": "Town Clerk",
+      "name": "Eileen Miller",
+      "party": "Democratic Party",
+      "party_style": "dem",
+      "incumbent": true,
+      "meta": "Incumbent Town Clerk · First elected 2025",
+      "summary": "Elected Town Clerk in November 2025. Campaign theme: \"My experiences will strengthen and enhance communication with town officials.\" Running for re-election after less than a year in office due to a New York State law change. Has focused her first term on financial systems and improving resident access to Town government.",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84767/showcase/town-supervisor-theresa-mohan-and-town-clerk-eileen-miller-announce-campaigns-for-re-election-in-november/",
+      "source_label": "Re-election announcement — September 21, 2026"
+    },
+    {
+      "id": "scott-wolfgang",
+      "race_id": "town-supervisor-and-clerk",
+      "office": "Town Supervisor",
+      "name": "Scott Wolfgang",
+      "party": "Neighborhood Party",
+      "party_style": "nbhd",
+      "incumbent": false,
+      "meta": "Challenger · Running for Supervisor · Neighborhood Party",
+      "summary": "Launched his joint campaign with Borsella in August 2026 on a platform of fiscal restraint: \"We have significant tax and debt growth across most of our other local municipalities and it's imperative that the Town not become yet another financial burden to our taxpayers.\" Their joint statement: \"Pelham's future deserves thoughtful planning. Growth should be balanced with preserving the character, walkability, and small-town charm that make our community so special. Progress should always reflect the voices and values of the people who call Pelham home.\"",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84359/latest-news/fall-campaign-season-arrives-early-as-wolfgang-and-borsella-take-on-mohan-and-miller-town-councils-burke-to-run-for-village-trustee/",
+      "source_label": "Examiner launch story"
+    },
+    {
+      "id": "maureen-borsella",
+      "race_id": "town-supervisor-and-clerk",
+      "office": "Town Clerk",
+      "name": "Maureen Borsella",
+      "party": "Neighborhood Party",
+      "party_style": "nbhd",
+      "incumbent": false,
+      "meta": "Challenger · Ran for Clerk in 2025 (lost)",
+      "summary": "Lost the 2025 Town Clerk race to Miller 2,108 to 1,457. Running again in 2026. Campaign theme: \"The town clerk's position is not just administrative. It is relational. It's about being a trusted, familiar face who helps neighbors.\"",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84359/latest-news/fall-campaign-season-arrives-early-as-wolfgang-and-borsella-take-on-mohan-and-miller-town-councils-burke-to-run-for-village-trustee/",
+      "source_label": "Examiner coverage"
     }
   ]
 }
