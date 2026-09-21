@@ -367,12 +367,29 @@ function generateElections(data, r) {
   return out.join('\n');
 }
 
+// Only the most recent meeting per governing body gets a selector. Older
+// meetings stay in the DOM — their panels are still generated — but are
+// unreachable from this tab; they become reachable when the archive page
+// lands. Derived from the data rather than flagged per meeting, so adding a
+// newer meeting for a body retires the previous one automatically.
+function latestPerBody(published) {
+  const latest = new Map();
+  for (const m of published) {
+    const cur = latest.get(m.governing_body);
+    if (!cur || m.date > cur.date) latest.set(m.governing_body, m);
+  }
+  const ids = new Set([...latest.values()].map((m) => m.id));
+  return published.filter((m) => ids.has(m.id));
+}
+
 function generateMeetings(data, r) {
   const published = data.meetings.meetings.filter((m) => m.status === 'published');
+  const visible = latestPerBody(published);
+  const firstVisible = visible[0];
   const out = [];
   out.push(`    <p class="section-intro">${r(data.meetings.section_intro, 'meetings.json')}</p>`);
   out.push('    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;">');
-  published.forEach((m, i) => {
+  visible.forEach((m, i) => {
     const cls = i === 0 ? 'mtg-selector active-mtg' : 'mtg-selector';
     out.push(`      <button class="${cls}" data-meeting="${esc(m.id)}"><span class="mtg-sel-body">${m.selector.body}</span><span class="mtg-sel-date">${m.selector.detail}</span></button>`);
   });
@@ -390,8 +407,10 @@ function generateMeetings(data, r) {
     ['transcript', 'transcript_file'],
   ];
 
-  published.forEach((m, i) => {
-    const hide = i === 0 ? '' : ' style="display:none;"';
+  published.forEach((m) => {
+    // Shown on load only if it is the first selectable meeting; every other
+    // set — including those with no selector — starts hidden.
+    const hide = m.id === firstVisible.id ? '' : ' style="display:none;"';
     out.push(`      <div class="mtg-set" data-meeting="${esc(m.id)}"${hide}>`);
 
     // Disclaimer. A leading "the " in minutes_label sits outside the anchor,
@@ -592,11 +611,24 @@ function phase5(html, data) {
 
   const selectors = (html.match(/class="mtg-selector/g) || []).length;
   const sets = (html.match(/class="mtg-set"/g) || []).length;
-  const published = data.meetings.meetings.filter((m) => m.status === 'published').length;
-  if (selectors !== published) fail('index.html', `${selectors} selectors but ${published} published meetings`);
-  if (sets !== published) fail('index.html', `${sets} panel sets but ${published} published meetings`);
+  const published = data.meetings.meetings.filter((m) => m.status === 'published');
+  const expectedSelectors = latestPerBody(published).length;
+  // One selector per governing body (its most recent meeting); one panel set
+  // per published meeting, including the older ones with no selector.
+  if (selectors !== expectedSelectors) {
+    fail('index.html', `${selectors} selectors but ${expectedSelectors} bodies with a published meeting`);
+  }
+  if (sets !== published.length) {
+    fail('index.html', `${sets} panel sets but ${published.length} published meetings`);
+  }
+  // Every selector must resolve to a set, or a reader gets the placeholder.
+  for (const m of latestPerBody(published)) {
+    if (!html.includes(`class="mtg-set" data-meeting="${m.id}"`)) {
+      fail('index.html', `selector ${m.id} has no matching panel set`);
+    }
+  }
 
-  return { ids: ids.length, selectors, sets };
+  return { ids: ids.length, selectors, sets, archived: published.length - expectedSelectors };
 }
 
 // =========================================================================
@@ -659,7 +691,7 @@ function main() {
   console.log(`  officials          ${data.officials.officials.length}`);
   console.log(`  issues             ${data.issues.issues.length} (${data.issues.issues.filter((i) => i.show_on_home !== false).length} rendered)`);
   console.log(`  races / candidates ${data.elections.races.length} / ${data.elections.candidates.length}`);
-  console.log(`  meetings           ${stats.selectors} published, ${stats.sets} panel sets, ${stats.sets * 3} partials`);
+  console.log(`  meetings           ${stats.selectors} selectable, ${stats.sets} panel sets (${stats.archived} older, no selector), ${stats.sets * 3} partials`);
   console.log(`  sections generated ${sections.length}`);
   console.log(`  html ids           ${stats.ids}, no duplicates`);
   if (stripped.length) {

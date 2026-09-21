@@ -84,9 +84,9 @@ test('Explore More dropdown opens on hover and on click, with its four sub-items
 
   const items = menu.locator('a');
   await expect(items).toHaveCount(4);
-  await expect(items.nth(0)).toContainText('Meeting Summaries');
-  await expect(items.nth(1)).toContainText('Your Taxes');
-  await expect(items.nth(2)).toContainText('Current Issues');
+  await expect(items.nth(0)).toContainText('Current Issues');
+  await expect(items.nth(1)).toContainText('Meeting Summaries');
+  await expect(items.nth(2)).toContainText('Your Taxes');
   await expect(items.nth(3)).toContainText('Who Governs');
 
   // click also toggles it — independent of :hover (mouse parked in the corner)
@@ -98,6 +98,26 @@ test('Explore More dropdown opens on hover and on click, with its four sub-items
   await trigger.click();
   await page.mouse.move(0, 0);
   await expect(menu).toBeHidden();
+});
+
+// The governing-bodies hero stat is a shortcut into Who Governs. It is a real
+// <a href="#explore">, so it still navigates with JS disabled; the script
+// upgrades it to also activate the tab.
+test('hero stat "5 governing bodies" opens the Who Governs tab', async ({ page }) => {
+  const stat = page.locator('a.stat[data-panel="explore-governs"]');
+  await expect(stat).toBeVisible();
+  await expect(stat).toContainText('5');
+  await expect(stat).toHaveAttribute('href', '#explore');
+
+  // Current Issues is the default tab; Who Governs starts hidden.
+  await expect(page.locator('#explore-governs')).toBeHidden();
+
+  await stat.click();
+
+  await expect(page.locator('#explore-governs')).toBeVisible();
+  await expect(page.locator('.explore-tab[data-panel="explore-governs"]'))
+    .toHaveClass(/active-explore-tab/);
+  await expect(page.locator('#explore-issues')).toBeHidden();
 });
 
 test('Explore More tabs switch content — Your Taxes and Current Issues', async ({ page }) => {
@@ -123,7 +143,9 @@ test('Explore More tabs switch content — Your Taxes and Current Issues', async
 // keeps the tests tied to the meeting they mean rather than to that history.
 const panel = (page, meeting, tab) => page.locator(`#panel-${meeting}-${tab}`);
 const JUL = 'pelham-board-jul2026';
-const TOWN_AUG = 'town-council-aug2026';
+// The Meeting Summaries tab shows only the most recent meeting per board,
+// so the Town of Pelham meeting reachable here is September, not August.
+const TOWN_SEP = 'town-council-sep2026';
 
 test('Meeting Summaries — July 14 2026 meeting, Detailed Summary tab, Ari Schwartz', async ({ page }) => {
   // Current Issues is the default Explore tab now — switch to Meeting Summaries first.
@@ -163,11 +185,11 @@ async function openMeetings(page) {
 
 test('Meeting switcher — Town of Pelham panels render when that meeting is selected', async ({ page }) => {
   await openMeetings(page);
-  await meetingButton(page, 'town-council-aug2026').click();
+  await meetingButton(page, TOWN_SEP).click();
 
-  const exec = panel(page, TOWN_AUG, 'exec');
+  const exec = panel(page, TOWN_SEP, 'exec');
   await expect(exec).toBeVisible();
-  await expect(exec).toContainText('August 3, 2026');
+  await expect(exec).toContainText('September 14, 2026');
   // Council names are published from the verified roster, not the pipeline's
   // ASR spellings (Rohan / Berg / McLaughlin / Jennings).
   await expect(exec).toContainText('Theresa Mohan');
@@ -176,27 +198,27 @@ test('Meeting switcher — Town of Pelham panels render when that meeting is sel
 
 test('Meeting switcher — detail tabs scope to the selected meeting, not the July panels', async ({ page }) => {
   await openMeetings(page);
-  await meetingButton(page, 'town-council-aug2026').click();
+  await meetingButton(page, TOWN_SEP).click();
 
   await detailTab(page, 'Detailed Summary').click();
-  const townDetailed = panel(page, TOWN_AUG, 'detailed');
+  const townDetailed = panel(page, TOWN_SEP, 'detailed');
   await expect(townDetailed).toBeVisible();
-  await expect(townDetailed).toContainText('Bruno Barbosa');
+  await expect(townDetailed).toContainText('Greg Farrell');
   // The July set stays hidden: a tab click must not reveal the other meeting's
   // panel of the same name.
   await expect(panel(page, JUL, 'detailed')).toBeHidden();
-  await expect(panel(page, TOWN_AUG, 'exec')).toBeHidden();
+  await expect(panel(page, TOWN_SEP, 'exec')).toBeHidden();
 
   await detailTab(page, 'Full Transcript').click();
-  await expect(panel(page, TOWN_AUG, 'transcript')).toBeVisible();
+  await expect(panel(page, TOWN_SEP, 'transcript')).toBeVisible();
   await expect(panel(page, JUL, 'transcript')).toBeHidden();
 });
 
 test('Meeting switcher — returning to the July meeting resets to Executive Summary', async ({ page }) => {
   await openMeetings(page);
-  await meetingButton(page, 'town-council-aug2026').click();
+  await meetingButton(page, TOWN_SEP).click();
   await detailTab(page, 'Full Transcript').click();
-  await expect(panel(page, TOWN_AUG, 'transcript')).toBeVisible();
+  await expect(panel(page, TOWN_SEP, 'transcript')).toBeVisible();
 
   await meetingButton(page, 'pelham-board-jul2026').click();
 
@@ -204,7 +226,7 @@ test('Meeting switcher — returning to the July meeting resets to Executive Sum
   // the transcript tab the previous meeting was left on.
   await expect(panel(page, JUL, 'exec')).toBeVisible();
   await expect(panel(page, JUL, 'transcript')).toBeHidden();
-  await expect(panel(page, TOWN_AUG, 'exec')).toBeHidden();
+  await expect(panel(page, TOWN_SEP, 'exec')).toBeHidden();
   await expect(detailTab(page, 'Executive Summary')).toHaveClass(/active-tab/);
 });
 
@@ -231,6 +253,36 @@ test('Meeting switcher — every selector opens a real panel set, never the plac
     await expect(set.locator('.mtg-panel[data-tab="exec"]')).toBeVisible();
     await expect(page.locator('#mtg-placeholder')).toBeHidden();
   }
+});
+
+// The tab shows the most recent meeting per board, not every processed
+// meeting. Superseded meetings are still generated into the DOM so the future
+// archive page can reach them — they simply have no selector here.
+test('Meeting Summaries — one selector per board, each its most recent meeting', async ({ page }) => {
+  await openMeetings(page);
+
+  const ids = await page.locator('.mtg-selector').evaluateAll((els) =>
+    els.map((el) => el.dataset.meeting),
+  );
+  expect(ids).toEqual([
+    'pelham-board-jul2026',   // Village of Pelham
+    'town-council-sep2026',   // Town of Pelham — Sept supersedes Aug
+    'manor-board-aug2026',    // Village of Pelham Manor
+    'board-of-ed-aug2026',    // Board of Education — Aug supersedes June
+  ]);
+
+  for (const superseded of ['town-council-aug2026', 'board-of-ed-jun2026']) {
+    await expect(
+      page.locator(`.mtg-set[data-meeting="${superseded}"]`),
+      `${superseded} should still be in the DOM for the archive page`,
+    ).toBeAttached();
+    await expect(
+      page.locator(`.mtg-selector[data-meeting="${superseded}"]`),
+      `${superseded} should not be selectable from this tab`,
+    ).toHaveCount(0);
+  }
+
+  await expect(page.getByRole('link', { name: /View all meetings/ })).toBeVisible();
 });
 
 test('Elections section — three race blocks and every candidate named', async ({ page }) => {
@@ -300,9 +352,9 @@ test('Explore More ▾ nav link: dropdown opens on click and its items drive the
   // All four items present, in order.
   const items = menu.getByRole('link');
   await expect(items).toHaveCount(4);
-  await expect(items.nth(0)).toContainText('Meeting Summaries');
-  await expect(items.nth(1)).toContainText('Your Taxes');
-  await expect(items.nth(2)).toContainText('Current Issues');
+  await expect(items.nth(0)).toContainText('Current Issues');
+  await expect(items.nth(1)).toContainText('Meeting Summaries');
+  await expect(items.nth(2)).toContainText('Your Taxes');
   await expect(items.nth(3)).toContainText('Who Governs');
 
   // Guard the original bug: `.nav-inner { overflow-x: hidden }` made overflow-y

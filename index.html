@@ -124,6 +124,32 @@
     border-top: 1px solid rgba(255,255,255,0.08);
   }
 
+  .view-all-link {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    text-decoration: none;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 2px;
+  }
+  .view-all-link:hover { color: var(--red); border-bottom-color: var(--red); }
+
+  /* A stat that navigates. Kept as an <a href="#explore"> so it works without
+     JS and is reachable by keyboard; the script upgrades it to also switch the
+     Explore tab. Inherits .stat layout, so only the link chrome is reset. */
+  a.stat {
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+  a.stat .stat-label { border-bottom: 1px dotted rgba(200,151,58,0.5); padding-bottom: 2px; }
+  a.stat:hover .stat-num,
+  a.stat:focus-visible .stat-num { color: var(--gold); }
+  a.stat:hover .stat-label,
+  a.stat:focus-visible .stat-label { color: var(--white); border-bottom-color: var(--gold); }
+  a.stat:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; }
+
   /* ── NAV ── */
   .nav-bar {
     background: var(--white);
@@ -1230,6 +1256,34 @@
 
   /* ── Get Involved · repeated labels & chips ── */
   .involved-eyebrow { font-size: 12px; font-weight: 600; color: var(--gold-light); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+
+  /* ── ENGAGEMENT STEPS ── */
+  .ladder { margin: 0 0 40px; }
+  .ladder-intro {
+    font-size: 15px; line-height: 1.75; color: var(--slate-light);
+    max-width: 780px; margin-bottom: 24px;
+  }
+  .ladder-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .ladder-step {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-top: 3px solid var(--gold);
+    padding: 18px 16px;
+  }
+  .ladder-num {
+    flex: 0 0 auto;
+    font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700;
+    color: var(--gold); line-height: 1;
+  }
+  .ladder-step h4 {
+    font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 700;
+    color: var(--white); margin: 0 0 6px;
+  }
+  .ladder-step p { font-size: 13px; line-height: 1.65; color: var(--slate-light); margin: 0; }
+  .ladder-step a { color: var(--gold-light); }
+  @media (max-width: 900px) { .ladder-steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .ladder-steps { grid-template-columns: 1fr; } }
   .meeting-chip { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); padding: 6px 12px; font-size: 12px; color: #a0b0c8; }
 
   /* ── About · headings, body copy, editorial callout ── */
@@ -1268,10 +1322,10 @@
         <span class="stat-label">Residents in the Town of Pelham</span>
       </div>
       <hr class="stat-divider">
-      <div class="stat">
+      <a href="#explore" class="stat" data-panel="explore-governs">
         <span class="stat-num">5</span>
         <span class="stat-label">Distinct governing bodies affecting your taxes</span>
-      </div>
+      </a>
       <hr class="stat-divider">
       <div class="stat">
         <span class="stat-num">$98.3M</span>
@@ -1293,9 +1347,9 @@
     <div class="nav-dropdown-wrap">
       <a href="#explore" class="nav-dropdown-trigger">Explore More ▾</a>
       <div class="nav-dropdown">
+        <a href="#explore" data-panel="explore-issues">🔔 Current Issues</a>
         <a href="#explore" data-panel="explore-meetings">📋 Meeting Summaries</a>
         <a href="#explore" data-panel="explore-taxes">💰 Your Taxes</a>
-        <a href="#explore" data-panel="explore-issues">🔔 Current Issues</a>
         <a href="#explore" data-panel="explore-governs">🏛 Who Governs</a>
       </div>
     </div>
@@ -1518,13 +1572,37 @@
     <h2 class="section-title">Dive Deeper</h2>
     <p class="section-intro">Current issues, meeting summaries, your tax breakdown, and who governs — pick a tab to explore.</p>
     <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:0;overflow-x:auto;">
+      <button class="explore-tab active-explore-tab" data-panel="explore-issues">🔔 Current Issues</button>
       <button class="explore-tab" data-panel="explore-meetings">📋 Meeting Summaries</button>
       <button class="explore-tab" data-panel="explore-taxes">💰 Your Taxes</button>
-      <button class="explore-tab active-explore-tab" data-panel="explore-issues">🔔 Current Issues</button>
       <button class="explore-tab" data-panel="explore-governs">🏛 Who Governs</button>
     </div>
   </div>
 </section>
+<div id="explore-issues" class="explore-panel active-panel">
+<!-- CURRENT ISSUES -->
+<section id="issues" class="section">
+  <div class="content-wrap">
+    <div class="section-eyebrow">What's Happening Now</div>
+    <h2 class="section-title">Current Issues</h2>
+    <!-- BUILD:issues -->
+    <p class="section-intro">Issues actively being debated in board meetings and local coverage. Last updated September 2026.</p>
+    <div class="issues-grid">
+      <div class="issue-card fade-in"><span class="issue-tag tag-budget">Budget / Taxes</span><h3>Rising Property Taxes & Village Debt</h3><p>Village of Pelham adopted $20.5M FY2026-27 budget — 10.1% increase overriding the state tax cap. Village debt grew from $4.26M in 2021 to $17.88M by early 2026. The fiscal debate is central to November 2026 election.</p><div class="issue-status"><div class="status-dot dot-watch"></div>FY2026-27 adopted — structural debt debate ongoing</div><a href="https://pelhamexaminer.com/82552/latest-news/village-board-passes-20-5-million-budget-most-homeowners-tax-bills-will-rise-10-board-discusses-updating-bdfz-9th-avenue-parking/" target="_blank" class="issue-source-link">Pelham Examiner coverage</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-budget">Personnel</span><h3>Receiver of Taxes Vacancy — Appointment or Referendum Under Discussion</h3><p>Erica Winter, elected Town Receiver of Taxes in November 2025, stepped down after less than a year citing a new professional opportunity. Deputy Receiver Darlene Paolericio assumed her duties and continues to fulfill them. The Town Board made no appointment at its September 14, 2026 meeting and is weighing whether to appoint a replacement or hold a public referendum to make the position permanently appointed rather than elected; full discussion is scheduled for the October 2026 meeting. The Receiver of Taxes is responsible for collecting property tax payments from all Pelham residents.</p><div class="issue-status"><div class="status-dot dot-active"></div>Active — replacement under discussion — board weighing appointment vs. referendum; October meeting scheduled</div><a href="https://pelhamexaminer.com/84610/latest-news/erica-winter-steps-down-as-pelhams-receiver-of-taxes-deputy-receiver-assumes-her-duties-town-council-to-select-replacement/" target="_blank" class="issue-source-link">Pelham Examiner — September 9, 2026</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-energy">Elections</span><h3>November 2026 — First Contested Village Race Since 2019</h3><p>Three contested races: Village of Pelham trustees (Democrats vs. Neighborhood Party/Republican challengers), Village of Pelham Manor trustees (two seats), and Town Supervisor and Clerk (Mohan and Miller re-running per new state law).</p><div class="issue-status"><div class="status-dot dot-active"></div>Campaigns underway — election November 3, 2026</div><a href="#elections" class="issue-source-link">See full candidate profiles</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-infrastructure">Development</span><h3>Pelham Picture House — Future Still Uncertain</h3><p>MOU with PHP Partners terminated. Developer James Smithmeyer working directly with Picture House. No plan approved. Picture House continues to operate and ran a successful summer film series.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Smithmeyer/Picture House discussions ongoing</div><a href="https://pelhamexaminer.com" target="_blank" class="issue-source-link">Search "Picture House" at Pelham Examiner</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-education">Education</span><h3>Colonial Elementary — AC Interim Fix in Place</h3><p>After parents Ashley Mills and incoming PTA President Concetta Eudicone spoke at the June 24 Board of Ed meeting demanding action, the Colonial, Siwanoy, and Prospect Hill PTAs pledged to raise funds for window AC units. New units were installed in time for the first day of school on September 8, 2026. Full HVAC conversion for all schools is still coming Summer 2027 as part of the $56.2M capital bond approved in May 2025.</p><div class="issue-status"><div class="status-dot dot-resolved"></div>Interim fix in place — full HVAC conversion Summer 2027</div><a href="https://pelhamexaminer.com/84556/schools/first-day-of-school-brings-new-ac-window-units-to-colonial-siwanoy-and-prospect-hill-after-ptas-pledge-to-raise-funds/" target="_blank" class="issue-source-link">Pelham Examiner — September 2026</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-budget">Public Facilities</span><h3>Pelham Public Library — $15-20M Transformation Project</h3><p>What started as maintenance review in 2019 expanded to $15-20M project. Town Council said it's not a top priority (May 2026). Public debate underway via letters to the editor and trustee response in August 2026.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Town Council and library board in discussion</div><a href="https://pelhamexaminer.com/84133/letters-to-the-editor/the-pelham-public-library-has-come-up-with-a-15-20-million-transformation-project-is-that-really-a-pelham-priority/" target="_blank" class="issue-source-link">Pelham Examiner — August 2026</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-transit">Transportation</span><h3>Pelham Manor — Tractor-Trailer Ban on Boston Post Road</h3><p>Manor board voted unanimously in July 2026 to begin process of banning tractor-trailers from Route 1 (Boston Post Road). Request submitted to NYS DOT. Long process ahead.</p><div class="issue-status"><div class="status-dot dot-active"></div>Request submitted to NYS DOT</div><a href="https://pelhamexaminer.com" target="_blank" class="issue-source-link">Pelham Examiner coverage</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-infrastructure">EMS / Emergency Services</span><h3>EMS Station & Community Church — First Street</h3><p>Proposed EMS station near Post Office draws opposition over pedestrian safety and green space. Community Church of the Pelhams appeared for sale in April 2026 — raised as alternative site at Town Council meeting. No vote taken.</p><div class="issue-status"><div class="status-dot dot-watch"></div>No vote taken — Community Church site emerging as alternative</div><a href="https://pelhamexaminer.com/82282/latest-news/community-church-appears-to-be-for-sale-again-says-neighborhood-group-second-avenue-resident-raises-objections-to-new-ems-hq/" target="_blank" class="issue-source-link">Pelham Examiner — April 2026</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-energy">Energy</span><h3>Con Edison Rate Hike Request</h3><p>Con Edison has requested an 18% electric rate increase, filed with the NYS Public Service Commission and still under review. The Village of Pelham joined a municipal coalition opposing it.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Under review at the NYS Public Service Commission</div><a href="https://www3.dps.ny.gov/pscweb/WebFileRoom.nsf/Web/RateCase" target="_blank" class="issue-source-link">NY PSC rate case filings</a></div>
+      <div class="issue-card fade-in"><span class="issue-tag tag-energy">Public Safety</span><h3>Fini Park — Nightly Illegal Fireworks</h3><p>Residents reported nightly illegal fireworks from Fini Park through summer 2026, often past 11pm. At the July 14 2026 Village board meeting a resident described calling New Rochelle police up to six times a night against only 12 calls logged in their records since Memorial Day. Trustee Howell committed to increased Pelham PD patrols on the Harman/Store Avenue corridor between 8 and 11pm. Residents can send videos to <a href="mailto:krystal.howell@pelhamny.gov">krystal.howell@pelhamny.gov</a>.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Ongoing — increased PPD patrols committed</div><a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank" class="issue-source-link">Village of Pelham board meeting recording</a></div>
+    </div>
+    <!-- /BUILD:issues -->
+  </div>
+</section>
+</div>
 <div id="explore-meetings" class="explore-panel">
 <!-- MEETING SUMMARIES -->
 <section id="meeting-summaries" class="section" style="background: var(--light);">
@@ -1536,10 +1614,8 @@
     <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;">
       <button class="mtg-selector active-mtg" data-meeting="pelham-board-jul2026"><span class="mtg-sel-body">Village of Pelham</span><span class="mtg-sel-date">Board of Trustees · July 14, 2026</span></button>
       <button class="mtg-selector" data-meeting="town-council-sep2026"><span class="mtg-sel-body">Town of Pelham</span><span class="mtg-sel-date">Town Council · September 14, 2026</span></button>
-      <button class="mtg-selector" data-meeting="town-council-aug2026"><span class="mtg-sel-body">Town of Pelham</span><span class="mtg-sel-date">Town Council · August 3, 2026</span></button>
       <button class="mtg-selector" data-meeting="manor-board-aug2026"><span class="mtg-sel-body">Village of Pelham Manor</span><span class="mtg-sel-date">Board of Trustees · August 17, 2026</span></button>
       <button class="mtg-selector" data-meeting="board-of-ed-aug2026"><span class="mtg-sel-body">Board of Education</span><span class="mtg-sel-date">Business Meeting · August 26, 2026</span></button>
-      <button class="mtg-selector" data-meeting="board-of-ed-jun2026"><span class="mtg-sel-body">Board of Education</span><span class="mtg-sel-date">Business Meeting · June 24, 2026</span></button>
     </div>
     <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border);">
       <button class="detail-tab active-tab" data-tab="exec">Executive Summary</button>
@@ -2045,6 +2121,13 @@
       <div id="mtg-placeholder" style="display:none;"></div>
     </div>
     <!-- /BUILD:meetings -->
+    <!-- Only the most recent meeting per board gets a selector above. Older
+         meetings are still in the DOM and will be reachable from the archive
+         page; until that exists this points at the schedule instead. -->
+    <div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border);">
+      <a href="#meetings" class="view-all-link">View all meetings →</a>
+      <span style="display:block; margin-top:6px; font-size:12px; color:var(--slate);">Showing the most recent meeting for each board. A full archive is coming.</span>
+    </div>
   </div>
 </section>
 </div>
@@ -2072,30 +2155,6 @@
       </div>
     </div>
     <!-- /BUILD:taxes -->
-  </div>
-</section>
-</div>
-<div id="explore-issues" class="explore-panel active-panel">
-<!-- CURRENT ISSUES -->
-<section id="issues" class="section">
-  <div class="content-wrap">
-    <div class="section-eyebrow">What's Happening Now</div>
-    <h2 class="section-title">Current Issues</h2>
-    <!-- BUILD:issues -->
-    <p class="section-intro">Issues actively being debated in board meetings and local coverage. Last updated September 2026.</p>
-    <div class="issues-grid">
-      <div class="issue-card fade-in"><span class="issue-tag tag-budget">Budget / Taxes</span><h3>Rising Property Taxes & Village Debt</h3><p>Village of Pelham adopted $20.5M FY2026-27 budget — 10.1% increase overriding the state tax cap. Village debt grew from $4.26M in 2021 to $17.88M by early 2026. The fiscal debate is central to November 2026 election.</p><div class="issue-status"><div class="status-dot dot-watch"></div>FY2026-27 adopted — structural debt debate ongoing</div><a href="https://pelhamexaminer.com/82552/latest-news/village-board-passes-20-5-million-budget-most-homeowners-tax-bills-will-rise-10-board-discusses-updating-bdfz-9th-avenue-parking/" target="_blank" class="issue-source-link">Pelham Examiner coverage</a></div>
-      <div class="issue-card fade-in"><span class="issue-tag tag-budget">Personnel</span><h3>Receiver of Taxes Vacancy — Appointment or Referendum Under Discussion</h3><p>Erica Winter, elected Town Receiver of Taxes in November 2025, stepped down after less than a year citing a new professional opportunity. Deputy Receiver Darlene Paolericio assumed her duties and continues to fulfill them. The Town Board made no appointment at its September 14, 2026 meeting and is weighing whether to appoint a replacement or hold a public referendum to make the position permanently appointed rather than elected; full discussion is scheduled for the October 2026 meeting. The Receiver of Taxes is responsible for collecting property tax payments from all Pelham residents.</p><div class="issue-status"><div class="status-dot dot-active"></div>Active — replacement under discussion — board weighing appointment vs. referendum; October meeting scheduled</div><a href="https://pelhamexaminer.com/84610/latest-news/erica-winter-steps-down-as-pelhams-receiver-of-taxes-deputy-receiver-assumes-her-duties-town-council-to-select-replacement/" target="_blank" class="issue-source-link">Pelham Examiner — September 9, 2026</a></div>
-      <div class="issue-card fade-in"><span class="issue-tag tag-energy">Elections</span><h3>November 2026 — First Contested Village Race Since 2019</h3><p>Three contested races: Village of Pelham trustees (Democrats vs. Neighborhood Party/Republican challengers), Village of Pelham Manor trustees (two seats), and Town Supervisor and Clerk (Mohan and Miller re-running per new state law).</p><div class="issue-status"><div class="status-dot dot-active"></div>Campaigns underway — election November 3, 2026</div><a href="#elections" class="issue-source-link">See full candidate profiles</a></div>
-      <div class="issue-card fade-in"><span class="issue-tag tag-infrastructure">Development</span><h3>Pelham Picture House — Future Still Uncertain</h3><p>MOU with PHP Partners terminated. Developer James Smithmeyer working directly with Picture House. No plan approved. Picture House continues to operate and ran a successful summer film series.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Smithmeyer/Picture House discussions ongoing</div><a href="https://pelhamexaminer.com" target="_blank" class="issue-source-link">Search "Picture House" at Pelham Examiner</a></div>
-      <div class="issue-card fade-in"><span class="issue-tag tag-education">Education</span><h3>Colonial Elementary — AC Interim Fix in Place</h3><p>After parents Ashley Mills and incoming PTA President Concetta Eudicone spoke at the June 24 Board of Ed meeting demanding action, the Colonial, Siwanoy, and Prospect Hill PTAs pledged to raise funds for window AC units. New units were installed in time for the first day of school on September 8, 2026. Full HVAC conversion for all schools is still coming Summer 2027 as part of the $56.2M capital bond approved in May 2025.</p><div class="issue-status"><div class="status-dot dot-resolved"></div>Interim fix in place — full HVAC conversion Summer 2027</div><a href="https://pelhamexaminer.com/84556/schools/first-day-of-school-brings-new-ac-window-units-to-colonial-siwanoy-and-prospect-hill-after-ptas-pledge-to-raise-funds/" target="_blank" class="issue-source-link">Pelham Examiner — September 2026</a></div>
-      <div class="issue-card fade-in"><span class="issue-tag tag-budget">Public Facilities</span><h3>Pelham Public Library — $15-20M Transformation Project</h3><p>What started as maintenance review in 2019 expanded to $15-20M project. Town Council said it's not a top priority (May 2026). Public debate underway via letters to the editor and trustee response in August 2026.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Town Council and library board in discussion</div><a href="https://pelhamexaminer.com/84133/letters-to-the-editor/the-pelham-public-library-has-come-up-with-a-15-20-million-transformation-project-is-that-really-a-pelham-priority/" target="_blank" class="issue-source-link">Pelham Examiner — August 2026</a></div>
-      <div class="issue-card fade-in"><span class="issue-tag tag-transit">Transportation</span><h3>Pelham Manor — Tractor-Trailer Ban on Boston Post Road</h3><p>Manor board voted unanimously in July 2026 to begin process of banning tractor-trailers from Route 1 (Boston Post Road). Request submitted to NYS DOT. Long process ahead.</p><div class="issue-status"><div class="status-dot dot-active"></div>Request submitted to NYS DOT</div><a href="https://pelhamexaminer.com" target="_blank" class="issue-source-link">Pelham Examiner coverage</a></div>
-      <div class="issue-card fade-in"><span class="issue-tag tag-infrastructure">EMS / Emergency Services</span><h3>EMS Station & Community Church — First Street</h3><p>Proposed EMS station near Post Office draws opposition over pedestrian safety and green space. Community Church of the Pelhams appeared for sale in April 2026 — raised as alternative site at Town Council meeting. No vote taken.</p><div class="issue-status"><div class="status-dot dot-watch"></div>No vote taken — Community Church site emerging as alternative</div><a href="https://pelhamexaminer.com/82282/latest-news/community-church-appears-to-be-for-sale-again-says-neighborhood-group-second-avenue-resident-raises-objections-to-new-ems-hq/" target="_blank" class="issue-source-link">Pelham Examiner — April 2026</a></div>
-      <div class="issue-card fade-in"><span class="issue-tag tag-energy">Energy</span><h3>Con Edison Rate Hike Request</h3><p>Con Edison has requested an 18% electric rate increase, filed with the NYS Public Service Commission and still under review. The Village of Pelham joined a municipal coalition opposing it.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Under review at the NYS Public Service Commission</div><a href="https://www3.dps.ny.gov/pscweb/WebFileRoom.nsf/Web/RateCase" target="_blank" class="issue-source-link">NY PSC rate case filings</a></div>
-      <div class="issue-card fade-in"><span class="issue-tag tag-energy">Public Safety</span><h3>Fini Park — Nightly Illegal Fireworks</h3><p>Residents reported nightly illegal fireworks from Fini Park through summer 2026, often past 11pm. At the July 14 2026 Village board meeting a resident described calling New Rochelle police up to six times a night against only 12 calls logged in their records since Memorial Day. Trustee Howell committed to increased Pelham PD patrols on the Harman/Store Avenue corridor between 8 and 11pm. Residents can send videos to <a href="mailto:krystal.howell@pelhamny.gov">krystal.howell@pelhamny.gov</a>.</p><div class="issue-status"><div class="status-dot dot-watch"></div>Ongoing — increased PPD patrols committed</div><a href="https://pelhamny.portal.civicclerk.com/event/2524/media" target="_blank" class="issue-source-link">Village of Pelham board meeting recording</a></div>
-    </div>
-    <!-- /BUILD:issues -->
   </div>
 </section>
 </div>
@@ -2292,6 +2351,43 @@
     <div class="section-eyebrow">Take Action</div>
     <h2 class="section-title">How to Get Involved</h2>
     <p class="section-intro">Civic engagement doesn't require running for office. The most consistent voices in local government are often ordinary residents who show up. Here's where to start.</p>
+
+    <!-- Engagement steps. Framed as neighbors talking to neighbors rather than
+         an escalation ladder: step 1 is a conversation, and each later step
+         widens who hears you — not how hard you push. -->
+    <div class="ladder fade-in">
+      <div class="ladder-intro">In Pelham, the people making these decisions live on your street. Most concerns are best raised the same way you'd raise anything with a neighbor — directly. These are ways to be heard, roughly in order of how many people they reach.</div>
+      <div class="ladder-steps">
+        <div class="ladder-step">
+          <span class="ladder-num">1</span>
+          <div>
+            <h4>Start with a conversation</h4>
+            <p>Your elected officials are your neighbors. A direct email or call is often the most effective and personal way to raise a concern — and the fastest. Most issues never need to go further than this.</p>
+          </div>
+        </div>
+        <div class="ladder-step">
+          <span class="ladder-num">2</span>
+          <div>
+            <h4>Attend a public meeting</h4>
+            <p>Speak during public comment to put your concern on the record. It becomes part of the official minutes, which means it is something the board has to reckon with rather than something it can simply note.</p>
+          </div>
+        </div>
+        <div class="ladder-step">
+          <span class="ladder-num">3</span>
+          <div>
+            <h4>Write a letter to the editor</h4>
+            <p>Amplify your voice and reach other residents. The <a href="https://pelhamexaminer.com/letters" target="_blank">Pelham Examiner</a> publishes letters from residents, and officials read them.</p>
+          </div>
+        </div>
+        <div class="ladder-step">
+          <span class="ladder-num">4</span>
+          <div>
+            <h4>Organize with neighbors</h4>
+            <p>Collective voices carry more weight. Several residents raising the same specific concern — at a meeting, in letters, or in a shared email — is markedly harder to set aside than one.</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="involved-grid">
       <div class="involved-card fade-in">
@@ -2897,6 +2993,18 @@
       const tab = document.querySelector('.explore-tab[data-panel="' + link.dataset.panel + '"]');
       if (tab) tab.click();
       closeDropdown();
+    });
+  });
+
+  // Hero stats that carry data-panel behave like the dropdown items: activate
+  // the matching Explore tab, then let selectExplore do the scrolling. The
+  // href="#explore" fallback still works if this script never runs.
+  document.querySelectorAll('a.stat[data-panel]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const tab = document.querySelector('.explore-tab[data-panel="' + link.dataset.panel + '"]');
+      if (!tab) return;
+      e.preventDefault();
+      tab.click();
     });
   });
 
