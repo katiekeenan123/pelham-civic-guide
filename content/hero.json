@@ -1,0 +1,10 @@
+{
+  "$schema": "./schema/hero.schema.json",
+
+  "stats": [
+    { "id": "population",       "fact_ref": "town-population",        "label": "Residents in the Town of Pelham",                                        "link_panel": null },
+    { "id": "governing-bodies", "fact_ref": "governing-bodies-count", "label": "Distinct governing bodies affecting your taxes",                          "link_panel": "explore-governs" },
+    { "id": "school-budget",    "fact_ref": "school-budget-fy2627",   "label": "School District budget, 2026–27",                                        "link_panel": null },
+    { "id": "founded",          "fact_ref": "founding-year",          "label": "Year Thomas Pell purchased the land — oldest town in Westchester",        "link_panel": null }
+  ]
+}

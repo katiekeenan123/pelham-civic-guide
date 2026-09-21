@@ -38,7 +38,7 @@ const readJson = (f) => JSON.parse(read(f));
 // Files whose content is data. Each must have a matching schema sidecar.
 const DATA_FILES = [
   'facts', 'bodies', 'officials', 'issues', 'elections',
-  'meetings', 'sources', 'taxes', 'quick-reference',
+  'meetings', 'sources', 'taxes', 'quick-reference', 'hero',
 ];
 
 let errors = [];
@@ -565,6 +565,20 @@ function generateFooter(data, r) {
   ].join('\n');
 }
 
+function generateHeroStats(data, r) {
+  const parts = data.hero.stats.map((s) => {
+    const num = r(`{{fact:${s.fact_ref}}}`, 'hero.json');
+    const inner = `        <span class="stat-num">${num}</span>\n`
+      + `        <span class="stat-label">${s.label}</span>`;
+    // A stat with a target panel is a real link, so it still navigates with
+    // JS off; the page script upgrades it to switch the Explore tab.
+    return s.link_panel
+      ? `      <a href="#explore" class="stat" data-panel="${esc(s.link_panel)}">\n${inner}\n      </a>`
+      : `      <div class="stat">\n${inner}\n      </div>`;
+  });
+  return parts.join('\n      <hr class="stat-divider">\n');
+}
+
 function generateSourceChips(data) {
   const out = ['    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;">'];
   for (const s of data.sources.sources) out.push(`      <span class="source-chip">✓ ${s.domain}</span>`);
@@ -603,7 +617,13 @@ function splice(html, name, body, kind) {
 // =========================================================================
 function phase5(html, data) {
   const leftover = [...html.matchAll(/\{\{(fact|generated):([a-z0-9-]+)\}\}/g)].map((m) => m[0]);
-  if (leftover.length) fail('index.html', `unresolved tokens in output: ${[...new Set(leftover)].join(', ')}`);
+  if (leftover.length) {
+    fail('index.html',
+      `unresolved tokens in output: ${[...new Set(leftover)].join(', ')}. `
+      + 'Tokens only resolve inside a BUILD anchor or in content/*.json — a token '
+      + 'written into the static shell would be rewritten to a literal on the first '
+      + 'build and never update again.');
+  }
 
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
   const dupes = ids.filter((v, i) => ids.indexOf(v) !== i);
@@ -643,6 +663,7 @@ function main() {
 
   let html = read(p('index.html'));
   const sections = [
+    ['hero-stats', generateHeroStats(data, r), 'html'],
     ['elections', generateElections(data, r), 'html'],
     ['meetings', generateMeetings(data, r), 'html'],
     ['taxes', generateTaxSection(data, r), 'html'],
@@ -657,8 +678,11 @@ function main() {
   ];
   for (const [name, body, kind] of sections) html = splice(html, name, body, kind);
 
-  // Static shell may carry {{fact:}} tokens of its own (the hero stats).
-  html = r(html, 'index.html (static shell)');
+  // NOTE: there is deliberately no token pass over the static shell.
+  // index.html is both this build's input and its output, so resolving a
+  // token outside an anchor would rewrite it to a literal on the first run
+  // and silently freeze it thereafter. Tokens must live in content/*.json or
+  // inside a BUILD anchor; phase 5 fails the build if any survive.
 
   const stats = phase5(html, data);
   if (errors.length) return report();

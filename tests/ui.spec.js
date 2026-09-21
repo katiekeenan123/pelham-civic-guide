@@ -267,11 +267,11 @@ test('Meeting Summaries — one selector per board, each its most recent meeting
   expect(ids).toEqual([
     'pelham-board-jul2026',   // Village of Pelham
     'town-council-sep2026',   // Town of Pelham — Sept supersedes Aug
-    'manor-board-aug2026',    // Village of Pelham Manor
+    'manor-board-sep2026',    // Pelham Manor — Sept supersedes Aug
     'board-of-ed-aug2026',    // Board of Education — Aug supersedes June
   ]);
 
-  for (const superseded of ['town-council-aug2026', 'board-of-ed-jun2026']) {
+  for (const superseded of ['town-council-aug2026', 'manor-board-aug2026', 'board-of-ed-jun2026']) {
     await expect(
       page.locator(`.mtg-set[data-meeting="${superseded}"]`),
       `${superseded} should still be in the DOM for the archive page`,
