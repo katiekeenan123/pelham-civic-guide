@@ -1,0 +1,41 @@
+{
+  "$schema": "./schema/bodies.schema.json",
+
+  "bodies": [
+    {
+      "id": "town-of-pelham",
+      "name": "Town of Pelham",
+      "type": "town",
+      "label": "Town Government",
+      "accent": "red",
+      "description": "The Town umbrella covers both villages. Rather than duplicating services, it handles shared functions that make sense to consolidate: municipal courts, tax assessment &amp; collection, recreation programs, the public library, and ambulance service.",
+      "budget": {
+        "label": "2025 Budget",
+        "fact_ref": "town-budget-2025",
+        "note": "total appropriations"
+      },
+      "detail_rows": [
+        { "key": "Governing Body", "value": "Supervisor + 4 Councilors" },
+        { "key": "Key Services",   "value": "Courts, Assessor, Recreation" },
+        { "key": "Town Hall",      "value": "34 Fifth Ave" },
+        { "key": "Founded",        "value": "Est. 1654 . Incorporated 1788" }
+      ],
+      "meeting_schedule": {
+        "cadence": "Monthly",
+        "cadence_detail": "Monthly",
+        "location_name": "Daronco Town House",
+        "address": "20 Fifth Ave",
+        "participation": "Public hearing notices posted; residents may comment during hearings"
+      },
+      "offices_address": "34 Fifth Ave",
+      "website": "https://townofpelhamny.gov",
+      "phone": "914-738-1642",
+      "source_links": [
+        { "label": "Town Officials",    "url": "https://townofpelhamny.gov/town-officials/" },
+        { "label": "Budgets & Reports", "url": "https://townofpelhamny.gov/budgets-and-reports/" },
+        { "label": "Pay / View Taxes",  "url": "https://townofpelhamny.gov/receiver-of-taxes/" },
+        { "label": "News & Notices",    "url": "https://townofpelhamny.gov/news-and-notices/" }
+      ]
+    }
+  ]
+}

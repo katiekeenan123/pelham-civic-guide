@@ -1,0 +1,49 @@
+{
+  "$schema": "./schema/elections.schema.json",
+
+  "election_date": "2026-11-03",
+  "polling_hours": "6am - 9pm",
+
+  "editorial_note": "Candidate profiles are drawn from Pelham Examiner reporting and candidate statements. This site does not endorse any candidate. Register to vote at <a href=\"https://www.elections.ny.gov\" target=\"_blank\">elections.ny.gov</a> - registration deadline is typically 25 days before the election.",
+
+  "voter_info": [
+    {
+      "label": "Where to Vote",
+      "value": "{{fact:polling-hours}}",
+      "note": "Village of Pelham: Daronco Town House, 20 Fifth Ave . Pelham Manor: Our Lady of Perpetual Help, 575 Fowler Ave"
+    }
+  ],
+
+  "races": [
+    {
+      "id": "village-of-pelham-trustees",
+      "body": "village-of-pelham",
+      "title": "Board of Trustees",
+      "seats": 3,
+      "term_length": "2-year terms",
+      "badge": "First contested race since 2019",
+      "note": null,
+      "context": "Hanan Eldahry, who has served since 2018, is not seeking reelection. The central issue in this race is fiscal management - the village passed a {{fact:village-budget-fy2627}} budget with a {{fact:village-budget-increase-fy2627}} increase, overriding the state tax cap for the first time. Three seats are up; top three vote-getters win.",
+      "shared_platforms": {
+        "neighborhood-party-2026": "In their joint platform statement, Long, Speros and Anzilotti describe the Village's current path as 'unsustainable,' citing debt growth from {{fact:village-debt-2021}} in 2021 to {{fact:village-debt-2026}} now, undisciplined spending, and lack of transparency on the Picture House RFQ. They pledge to: serve without pay, vote not to exceed the tax cap, create an infrastructure plan, and bring openness to Village decisions."
+      }
+    }
+  ],
+
+  "candidates": [
+    {
+      "id": "russell-solomon",
+      "race_id": "village-of-pelham-trustees",
+      "office": null,
+      "name": "Russell Solomon",
+      "party": "Democratic Party",
+      "party_style": "dem",
+      "incumbent": true,
+      "meta": "Incumbent . First elected 2020 . Running for third term",
+      "summary": "Now in his third term, Solomon emphasizes a collaborative approach: \"I've made it a point to sit down directly with neighbors, local groups and business owners, understand what they need from their village government, and follow through.\" Key achievements: championed 25 mph speed limit village-wide, supported hiring of a Traffic Safety Officer, worked on sewer infrastructure. Has served as liaison for pedestrian safety, DPW, and downtown business.",
+      "platform_ref": null,
+      "source_url": "https://pelhamexaminer.com/84500/latest-news/kristen-burke-russell-solomon-and-krystal-howell-make-the-case-for-why-theyre-running-in-novembers-village-of-pelham-election/",
+      "source_label": "Examiner September 4, 2026"
+    }
+  ]
+}

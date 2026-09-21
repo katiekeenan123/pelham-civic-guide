@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pelham/facts.schema.json",
+  "title": "Key facts (single source of truth)",
+  "description": "Every figure that appears in more than one place on the site or in the AI system prompt. Nothing else may hard-code these values: content files and prose partials reference them with a {{fact:<id>}} token, which the build resolves. An unknown token is a build error. This file is the reason the refactor exists -- the September 2026 audit found the school budget, the village debt figure and the capital bond each living in 3-5 places with different values.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["facts"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Relative path to this schema file, so editors validate on save."
+    },
+    "facts": {
+      "type": "array",
+      "description": "Unordered. Facts are looked up by id, never by position.",
+      "items": { "$ref": "#/$defs/fact" }
+    }
+  },
+  "$defs": {
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "fact", "display", "as_of", "last_updated", "source"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Stable kebab-case slug. This is the token name: id 'village-budget-fy2627' is written {{fact:village-budget-fy2627}} in any text field. Never rename without updating every reference -- the build will catch it if you forget."
+        },
+        "category": {
+          "enum": ["budget", "debt", "tax", "election", "contact", "history", "demographic", "governance"],
+          "description": "Grouping only. Used to organise the generated system prompt and to let a human scan for related figures that ought to move together."
+        },
+        "fact": {
+          "type": "string",
+          "description": "Human-readable statement of WHAT this measures, independent of its value. e.g. 'PUFSD adopted budget, FY2026-27'. Shown in the generated system prompt and in review diffs."
+        },
+        "value": {
+          "type": ["number", "string", "null"],
+          "description": "Machine-readable value where one makes sense (98300000, 3.48, '2026-11-03'). Optional. Present so future arithmetic or charts never re-parse the display string. Null for facts that are purely textual."
+        },
+        "display": {
+          "type": "string",
+          "description": "The canonical rendered string -- '$98.3M'. This is what a {{fact:id}} token expands to. One string, so the hero stat, the issue card and the AI prompt cannot disagree about formatting."
+        },
+        "qualifier": {
+          "type": ["string", "null"],
+          "description": "Any caveat that must travel with the number: 'voter-approved May 2026; levy rose 3.48%, at the state cap'. Kept separate so a card can show the bare figure while the AI prompt shows the full context. May contain {{fact:id}} tokens."
+        },
+        "as_of": {
+          "type": "string",
+          "description": "When the fact was TRUE (YYYY, YYYY-MM or YYYY-MM-DD). Distinct from last_updated on purpose: the audit found three live village-debt figures ($15.1M, $17.88M, 'almost $18M') that were all defensible at different dates. Conflating the two is what let them drift."
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date",
+          "description": "When a human last verified this against the source. Drives staleness warnings in the build."
+        },
+        "supersedes": {
+          "type": ["string", "null"],
+          "description": "Id of the fact this replaces, e.g. 'school-budget-fy2526'. Makes the replacement of a stale figure explicit and reviewable rather than a silent overwrite. The superseded fact may stay in the file for historical reference."
+        },
+        "in_prompt": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether this fact is emitted into the generated ask-pelham.js system prompt. Set false for presentational figures the AI has no use for (e.g. a bar-chart width)."
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "url"],
+          "description": "Where the number came from. Required -- an unsourced fact is exactly what this file exists to eliminate.",
+          "properties": {
+            "name": { "type": "string", "description": "Publisher, e.g. 'Pelham Examiner' or 'Village of Pelham adopted budget'." },
+            "url":  { "type": "string", "format": "uri", "description": "Direct link to the document or article." },
+            "date": { "type": ["string", "null"], "description": "Publication date of the source (YYYY-MM-DD)." }
+          }
+        },
+        "used_in": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "GENERATED -- do not hand-edit. The build fills this in with every location that resolved a token for this fact, so you can see the blast radius of a change. Hand-written values are overwritten."
+        }
+      }
+    }
+  }
+}

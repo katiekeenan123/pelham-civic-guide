@@ -1,0 +1,24 @@
+{
+  "$schema": "./schema/facts.schema.json",
+
+  "facts": [
+    {
+      "id": "school-budget-fy2627",
+      "category": "budget",
+      "fact": "PUFSD adopted budget, FY2026-27",
+      "value": 98300000,
+      "display": "$98.3M",
+      "qualifier": "voter-approved May 2026; tax levy rose 3.48%, at the state cap",
+      "as_of": "2026-05",
+      "last_updated": "2026-09-21",
+      "supersedes": "school-budget-fy2526",
+      "in_prompt": true,
+      "source": {
+        "name": "Pelham Union Free School District",
+        "url": "https://www.pelhamschools.org/district/about/financials",
+        "date": "2026-05-19"
+      },
+      "used_in": []
+    }
+  ]
+}

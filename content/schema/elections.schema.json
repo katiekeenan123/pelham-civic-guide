@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pelham/elections.schema.json",
+  "title": "Elections, races and candidates",
+  "description": "The #elections section: three race blocks holding fourteen candidates at the time of the audit. Candidates are a FLAT top-level array joined to races by race_id, not nested inside races, so a person who is both a sitting official and a candidate (Kristen Burke) is described once.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["election_date", "races", "candidates"],
+  "properties": {
+    "$schema": { "type": "string", "description": "Relative path to this schema file." },
+    "election_date": { "type": "string", "description": "Election day (YYYY-MM-DD). ONE value for the whole file -- the audit found this date written out in four places. Every rendering derives from here." },
+    "polling_hours": { "type": ["string", "null"], "description": "e.g. '6am - 9pm'. Shown in the voter info row." },
+    "editorial_note": { "type": "string", "description": "The gold non-endorsement box above the races. Safe HTML subset." },
+    "voter_info": {
+      "type": "array",
+      "description": "The three boxes below the races (Election Date / Register to Vote / Where to Vote). PAGE-LEVEL, not per-race: there is one row serving all three races, and nesting it under each race would create three copies of one fact.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label", "value"],
+        "properties": {
+          "label": { "type": "string", "description": "Box heading, e.g. 'Where to Vote'." },
+          "value": { "type": "string", "description": "The large figure or phrase, e.g. '6am - 9pm'. May contain {{fact:<id>}} tokens." },
+          "note":  { "type": ["string", "null"], "description": "Small print under the value. Safe HTML subset -- these carry links and phone numbers." }
+        }
+      }
+    },
+    "races": { "type": "array", "description": "DISPLAY ORDER IS ARRAY ORDER.", "items": { "$ref": "#/$defs/race" } },
+    "candidates": { "type": "array", "description": "All candidates across all races. Rendered grouped by race_id then party_style, in array order within each group.", "items": { "$ref": "#/$defs/candidate" } }
+  },
+  "$defs": {
+    "race": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "body", "title", "seats", "term_length"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable slug, the join target for candidate.race_id." },
+        "body": { "type": "string", "description": "Foreign key to bodies.json id. Supplies the governing body name printed on the race header." },
+        "title": { "type": "string", "description": "Office(s) contested, e.g. 'Board of Trustees' or 'Town Supervisor & Town Clerk'. A race block may cover two offices -- see candidate.office." },
+        "seats": { "type": "integer", "minimum": 1, "description": "Number of seats up. Drives the 'top N vote-getters win' line." },
+        "term_length": { "type": "string", "description": "e.g. '2-year terms'. Printed in the race meta line." },
+        "badge": { "type": ["string", "null"], "description": "The pill on the right of the race header: 'First contested race since 2019', 'Re-run required by new state law'." },
+        "note": { "type": ["string", "null"], "description": "Optional explanatory box above the candidate grid. Only the Town race uses one today, for the state-law change forcing a re-run. Safe HTML subset." },
+        "context": { "type": ["string", "null"], "description": "The 'Context:' paragraph below the grid -- retirements, prior margins, how the seats are decided. Safe HTML subset plus {{fact:<id>}} tokens." },
+        "shared_platforms": {
+          "type": "object",
+          "description": "Named blocks of platform text shared by several candidates in this race, keyed by a slug that candidates reference via platform_ref. This exists because the three Neighborhood Party candidates each carried an IDENTICAL 60-word joint-platform paragraph pasted into their card -- the single largest verbatim duplication found in the audit.",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "race_id", "name", "party", "party_style", "summary", "source_url", "source_label"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable slug. Where the candidate is also a sitting official, use the same slug as their officials.json entry." },
+        "race_id": { "type": "string", "description": "Foreign key to a races[].id. Build fails on a dangling reference." },
+        "office": { "type": ["string", "null"], "description": "Which seat this person seeks, e.g. 'Town Supervisor' or 'Town Clerk'. REQUIRED in practice for the Town race, whose single block contains two different offices; null where the race has only one." },
+        "name": { "type": "string", "description": "Candidate name as reported." },
+        "party": { "type": "string", "description": "Party line as DISPLAYED, e.g. 'Neighborhood Party . Republican' or 'Neighborhood Party'. Free text: the same styling is used for both of those labels." },
+        "party_style": { "enum": ["dem", "nbhd"], "description": "Column colour only; renders as CSS class .party-label.<value>. Separate from party for the same reason issue tags split label from style." },
+        "incumbent": { "type": "boolean", "default": false, "description": "Whether they currently hold the seat. Lets the build render a consistent badge instead of relying on the meta line saying so." },
+        "meta": { "type": "string", "description": "The one-line credential strip under the name: 'Incumbent . First elected 2020 . Running for third term'." },
+        "summary": { "type": "string", "description": "Candidate's own platform summary. Safe HTML subset plus {{fact:<id>}} tokens. Do NOT paste shared platform text here -- use platform_ref." },
+        "platform_ref": { "type": ["string", "null"], "description": "Key into the race's shared_platforms. When set, that text is appended to summary at build time, so a joint platform is stored once and edited once." },
+        "source_url": { "type": "string", "description": "Link to the reporting this profile is drawn from." },
+        "source_label": { "type": "string", "description": "Link text, e.g. 'Examiner September 4, 2026'." }
+      }
+    }
+  }
+}

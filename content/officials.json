@@ -1,0 +1,21 @@
+{
+  "$schema": "./schema/officials.schema.json",
+
+  "verified": "2026-08-01",
+
+  "officials": [
+    {
+      "id": "theresa-mohan",
+      "governing_body": "town-of-pelham",
+      "title": "Town Supervisor",
+      "name": "Theresa Mohan",
+      "seat_type": "elected",
+      "vacant": false,
+      "elected_date": "2025-11",
+      "term_end": null,
+      "source_url": "https://townofpelhamny.gov/town-officials/",
+      "notes": "First woman elected to the role. Must stand again in November 2026 under the state law shifting odd-year municipal elections to even years.",
+      "in_prompt": true
+    }
+  ]
+}

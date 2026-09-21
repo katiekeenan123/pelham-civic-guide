@@ -1,0 +1,24 @@
+{
+  "$schema": "./schema/issues.schema.json",
+
+  "section_intro": "Issues actively being debated in board meetings and local coverage. Last updated {{fact:issues-last-updated}}.",
+
+  "issues": [
+    {
+      "id": "receiver-of-taxes-vacancy",
+      "title": "Receiver of Taxes Vacancy - Appointment or Referendum Under Discussion",
+      "status": "active",
+      "status_label": "Active - board weighing appointment vs. referendum; October meeting scheduled",
+      "tag": "Personnel",
+      "tag_style": "budget",
+      "description": "Erica Winter, elected Town Receiver of Taxes in November 2025, stepped down after less than a year. Deputy Receiver Darlene Paolericio assumed her duties and continues to fulfill them. The Town Board made no appointment at its September 14, 2026 meeting and is weighing whether to appoint a replacement or hold a public referendum to make the position permanently appointed rather than elected; full discussion is scheduled for the <strong>October 2026</strong> meeting.",
+      "governing_body": ["town-of-pelham"],
+      "source_url": "https://pelhamexaminer.com/84610/latest-news/erica-winter-steps-down-as-pelhams-receiver-of-taxes-deputy-receiver-assumes-her-duties-town-council-to-select-replacement/",
+      "source_label": "Pelham Examiner",
+      "source_date": "2026-09-09",
+      "last_updated": "2026-09-21",
+      "keywords": ["receiver of taxes", "Erica Winter", "Darlene Paolericio", "referendum", "tax collection"],
+      "show_on_home": true
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pelham/officials.schema.json",
+  "title": "Elected officials and senior staff",
+  "description": "The roster of named people. NOTE: before the refactor this existed ONLY inside the SYSTEM_PROMPT string in netlify/functions/ask-pelham.js -- the Who Governs section of the page names no one. This file is now the source for both the generated system prompt and any future roster UI. 27 entries at the time of the audit.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["verified", "officials"],
+  "properties": {
+    "$schema": { "type": "string", "description": "Relative path to this schema file." },
+    "verified": {
+      "type": "string",
+      "description": "When the WHOLE roster was last checked against official sources (YYYY-MM-DD). File-level and required, because a stale roster is this file's main failure mode -- the prompt version carried a bare '(verified August 2026)' note that nothing enforced."
+    },
+    "officials": {
+      "type": "array",
+      "description": "Grouped for display by governing_body, then in array order within each body (seniority: mayor / supervisor / president first).",
+      "items": { "$ref": "#/$defs/official" }
+    }
+  },
+  "$defs": {
+    "official": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "governing_body", "title", "seat_type", "vacant"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable slug, usually the person's name kebab-cased. For a vacant seat use the seat name, e.g. 'town-receiver-of-taxes'. Lets elections.json cross-reference a sitting official who is also a candidate (Kristen Burke is both)." },
+        "governing_body": { "type": "string", "description": "Foreign key to bodies.json id. Build fails on a dangling reference." },
+        "title": { "type": "string", "description": "Office held, e.g. 'Town Supervisor', 'Deputy Mayor & Police Commissioner'. Full formal title including any commissioner portfolio." },
+        "name": { "type": ["string", "null"], "description": "Person's name as printed on the official roster. NULL when vacant is true -- never the string 'VACANT', which is what the prompt version did and what made the seat awkward to render." },
+        "seat_type": {
+          "enum": ["elected", "appointed", "staff"],
+          "description": "Replaces the ambiguous 'elected' field. 'staff' covers non-elected officers who still belong on the roster (Superintendent Champ, Village Clerk Rugova, Village Manager Luft); 'appointed' covers board-appointed seats such as a deputy receiver."
+        },
+        "vacant": { "type": "boolean", "default": false, "description": "True when the seat exists but is unfilled. The Receiver of Taxes seat has been vacant since September 2026; notes should say who is covering the duties." },
+        "elected_date": { "type": ["string", "null"], "description": "When they took the seat (YYYY-MM). Null for staff." },
+        "term_end": { "type": ["string", "null"], "description": "When the current term expires (YYYY-MM). All seven Board of Education members have explicit terms; most village and town seats can leave this null and rely on elections.json." },
+        "source_url": { "type": "string", "description": "The official roster page this entry was verified against -- each governing body publishes its own." },
+        "notes": { "type": ["string", "null"], "description": "Anything the prompt or a future card should carry: 'First woman elected to the role', or for a vacancy, who is fulfilling the duties and under what authority." },
+        "in_prompt": { "type": "boolean", "default": true, "description": "Whether to emit this person into the generated system prompt. Default true; set false only for a seat the AI should not volunteer." }
+      }
+    }
+  }
+}
