@@ -1,8 +1,6 @@
 {
   "$schema": "./schema/issues.schema.json",
-
   "section_intro": "Issues actively being debated in board meetings and local coverage. Last updated {{fact:site-last-updated}}.",
-
   "issues": [
     {
       "id": "rising-property-taxes-village-debt",
@@ -11,13 +9,21 @@
       "status_label": "FY2026-27 adopted — structural debt debate ongoing",
       "tag": "Budget / Taxes",
       "tag_style": "budget",
-      "description": "Village of Pelham adopted a {{fact:village-budget-fy2627}} FY2026-27 budget — a {{fact:village-budget-increase-fy2627}} increase overriding the state tax cap. Village debt grew from {{fact:village-debt-2021}} in 2021 to {{fact:village-debt-2026}} by early 2026. The fiscal debate is central to the November 2026 election.",
-      "governing_body": ["village-of-pelham"],
+      "description": "Village of Pelham adopted {{fact:village-budget-fy2627}} FY2026-27 budget — {{fact:village-budget-increase-fy2627}} increase overriding the state tax cap. Village debt grew from {{fact:village-debt-2021}} in 2021 to {{fact:village-debt-2026}} by early 2026. The fiscal debate is central to November 2026 election.",
+      "governing_body": [
+        "village-of-pelham"
+      ],
       "source_url": "https://pelhamexaminer.com/82552/latest-news/village-board-passes-20-5-million-budget-most-homeowners-tax-bills-will-rise-10-board-discusses-updating-bdfz-9th-avenue-parking/",
-      "source_label": "Pelham Examiner",
+      "source_label": "Pelham Examiner coverage",
       "source_date": "2026-04-29",
       "last_updated": "2026-09-21",
-      "keywords": ["village budget", "tax cap override", "debt service", "property taxes", "Local Law No. 1"],
+      "keywords": [
+        "village budget",
+        "tax cap override",
+        "debt service",
+        "property taxes",
+        "Local Law No. 1"
+      ],
       "prompt_caution": null,
       "show_on_home": true
     },
@@ -25,16 +31,25 @@
       "id": "receiver-of-taxes-vacancy",
       "title": "Receiver of Taxes Vacancy — Appointment or Referendum Under Discussion",
       "status": "active",
-      "status_label": "Active — board weighing appointment vs. referendum; October meeting scheduled",
+      "status_label": "Active — replacement under discussion — board weighing appointment vs. referendum; October meeting scheduled",
       "tag": "Personnel",
       "tag_style": "budget",
-      "description": "Erica Winter, elected Town Receiver of Taxes in November 2025, stepped down after less than a year citing a new professional opportunity. Deputy Receiver Darlene Paolericio assumed her duties and continues to fulfill them. The Town Board made no appointment at its September 14, 2026 meeting and is weighing whether to appoint a replacement or hold a public referendum to make the position permanently appointed rather than elected; full discussion is scheduled for the <strong>October 2026</strong> meeting. The Receiver of Taxes is responsible for collecting property tax payments from all Pelham residents.",
-      "governing_body": ["town-of-pelham"],
+      "description": "Erica Winter, elected Town Receiver of Taxes in November 2025, stepped down after less than a year citing a new professional opportunity. Deputy Receiver Darlene Paolericio assumed her duties and continues to fulfill them. The Town Board made no appointment at its September 14, 2026 meeting and is weighing whether to appoint a replacement or hold a public referendum to make the position permanently appointed rather than elected; full discussion is scheduled for the October 2026 meeting. The Receiver of Taxes is responsible for collecting property tax payments from all Pelham residents.",
+      "governing_body": [
+        "town-of-pelham"
+      ],
       "source_url": "https://pelhamexaminer.com/84610/latest-news/erica-winter-steps-down-as-pelhams-receiver-of-taxes-deputy-receiver-assumes-her-duties-town-council-to-select-replacement/",
-      "source_label": "Pelham Examiner",
+      "source_label": "Pelham Examiner — September 9, 2026",
       "source_date": "2026-09-09",
       "last_updated": "2026-09-21",
-      "keywords": ["receiver of taxes", "Erica Winter", "Darlene Paolericio", "referendum", "tax collection", "vacancy"],
+      "keywords": [
+        "receiver of taxes",
+        "Erica Winter",
+        "Darlene Paolericio",
+        "referendum",
+        "tax collection",
+        "vacancy"
+      ],
       "prompt_caution": null,
       "show_on_home": true
     },
@@ -46,12 +61,22 @@
       "tag": "Elections",
       "tag_style": "energy",
       "description": "Three contested races: Village of Pelham trustees (Democrats vs. Neighborhood Party/Republican challengers), Village of Pelham Manor trustees (two seats), and Town Supervisor and Clerk (Mohan and Miller re-running per new state law).",
-      "governing_body": ["village-of-pelham", "village-of-pelham-manor", "town-of-pelham"],
+      "governing_body": [
+        "village-of-pelham",
+        "village-of-pelham-manor",
+        "town-of-pelham"
+      ],
       "source_url": "#elections",
       "source_label": "See full candidate profiles",
       "source_date": null,
       "last_updated": "2026-09-21",
-      "keywords": ["election", "trustees", "contested", "Neighborhood Party", "ballot"],
+      "keywords": [
+        "election",
+        "trustees",
+        "contested",
+        "Neighborhood Party",
+        "ballot"
+      ],
       "prompt_caution": null,
       "show_on_home": true
     },
@@ -63,12 +88,21 @@
       "tag": "Development",
       "tag_style": "infrastructure",
       "description": "MOU with PHP Partners terminated. Developer James Smithmeyer working directly with Picture House. No plan approved. Picture House continues to operate and ran a successful summer film series.",
-      "governing_body": ["village-of-pelham"],
+      "governing_body": [
+        "village-of-pelham"
+      ],
       "source_url": "https://pelhamexaminer.com",
       "source_label": "Search \"Picture House\" at Pelham Examiner",
       "source_date": null,
       "last_updated": "2026-09-21",
-      "keywords": ["Picture House", "PHP Partners", "Smithmeyer", "Wolfs Lane", "RFQ", "redevelopment"],
+      "keywords": [
+        "Picture House",
+        "PHP Partners",
+        "Smithmeyer",
+        "Wolfs Lane",
+        "RFQ",
+        "redevelopment"
+      ],
       "prompt_caution": null,
       "show_on_home": true
     },
@@ -80,12 +114,22 @@
       "tag": "Education",
       "tag_style": "education",
       "description": "After parents Ashley Mills and incoming PTA President Concetta Eudicone spoke at the June 24 Board of Ed meeting demanding action, the Colonial, Siwanoy, and Prospect Hill PTAs pledged to raise funds for window AC units. New units were installed in time for the first day of school on September 8, 2026. Full HVAC conversion for all schools is still coming Summer 2027 as part of the {{fact:school-bond-approved}} capital bond approved in May 2025.",
-      "governing_body": ["pelham-schools"],
+      "governing_body": [
+        "pelham-schools"
+      ],
       "source_url": "https://pelhamexaminer.com/84556/schools/first-day-of-school-brings-new-ac-window-units-to-colonial-siwanoy-and-prospect-hill-after-ptas-pledge-to-raise-funds/",
-      "source_label": "Pelham Examiner",
+      "source_label": "Pelham Examiner — September 2026",
       "source_date": "2026-09-08",
       "last_updated": "2026-09-21",
-      "keywords": ["Colonial Elementary", "air conditioning", "HVAC", "PTA", "capital bond", "Siwanoy", "Prospect Hill"],
+      "keywords": [
+        "Colonial Elementary",
+        "air conditioning",
+        "HVAC",
+        "PTA",
+        "capital bond",
+        "Siwanoy",
+        "Prospect Hill"
+      ],
       "prompt_caution": null,
       "show_on_home": true
     },
@@ -96,13 +140,21 @@
       "status_label": "Town Council and library board in discussion",
       "tag": "Public Facilities",
       "tag_style": "budget",
-      "description": "What started as a maintenance review in 2019 expanded to a {{fact:library-transformation-estimate}} project. Town Council said it's not a top priority (May 2026). Public debate underway via letters to the editor and a trustee response in August 2026. The library board is awaiting further information before deciding whether to proceed or pause.",
-      "governing_body": ["town-of-pelham"],
+      "description": "What started as maintenance review in 2019 expanded to {{fact:library-transformation-estimate}} project. Town Council said it's not a top priority (May 2026). Public debate underway via letters to the editor and trustee response in August 2026.",
+      "governing_body": [
+        "town-of-pelham"
+      ],
       "source_url": "https://pelhamexaminer.com/84133/letters-to-the-editor/the-pelham-public-library-has-come-up-with-a-15-20-million-transformation-project-is-that-really-a-pelham-priority/",
-      "source_label": "Pelham Examiner",
+      "source_label": "Pelham Examiner — August 2026",
       "source_date": "2026-08-01",
       "last_updated": "2026-09-21",
-      "keywords": ["library", "transformation project", "renovation", "library board", "Town Council priorities"],
+      "keywords": [
+        "library",
+        "transformation project",
+        "renovation",
+        "library board",
+        "Town Council priorities"
+      ],
       "prompt_caution": null,
       "show_on_home": true
     },
@@ -113,13 +165,21 @@
       "status_label": "Request submitted to NYS DOT",
       "tag": "Transportation",
       "tag_style": "transit",
-      "description": "Manor board voted unanimously in July 2026 to begin the process of banning tractor-trailers from Route 1 (Boston Post Road). Request submitted to NYS DOT. Long process ahead.",
-      "governing_body": ["village-of-pelham-manor"],
+      "description": "Manor board voted unanimously in July 2026 to begin process of banning tractor-trailers from Route 1 (Boston Post Road). Request submitted to NYS DOT. Long process ahead.",
+      "governing_body": [
+        "village-of-pelham-manor"
+      ],
       "source_url": "https://pelhamexaminer.com",
-      "source_label": "Pelham Examiner",
+      "source_label": "Pelham Examiner coverage",
       "source_date": null,
       "last_updated": "2026-09-21",
-      "keywords": ["tractor-trailer", "Boston Post Road", "Route 1", "NYS DOT", "truck ban"],
+      "keywords": [
+        "tractor-trailer",
+        "Boston Post Road",
+        "Route 1",
+        "NYS DOT",
+        "truck ban"
+      ],
       "prompt_caution": "This is a VILLAGE OF PELHAM MANOR matter. Do not attribute it to the Village of Pelham or the Town of Pelham.",
       "show_on_home": true
     },
@@ -130,13 +190,22 @@
       "status_label": "No vote taken — Community Church site emerging as alternative",
       "tag": "EMS / Emergency Services",
       "tag_style": "infrastructure",
-      "description": "Proposed EMS station near the Post Office draws opposition over pedestrian safety and green space. Community Church of the Pelhams appeared for sale in April 2026 — raised as an alternative site at a Town Council meeting. No vote taken.",
-      "governing_body": ["town-of-pelham", "village-of-pelham"],
+      "description": "Proposed EMS station near Post Office draws opposition over pedestrian safety and green space. Community Church of the Pelhams appeared for sale in April 2026 — raised as alternative site at Town Council meeting. No vote taken.",
+      "governing_body": [
+        "town-of-pelham",
+        "village-of-pelham"
+      ],
       "source_url": "https://pelhamexaminer.com/82282/latest-news/community-church-appears-to-be-for-sale-again-says-neighborhood-group-second-avenue-resident-raises-objections-to-new-ems-hq/",
-      "source_label": "Pelham Examiner",
+      "source_label": "Pelham Examiner — April 2026",
       "source_date": "2026-04-01",
       "last_updated": "2026-09-21",
-      "keywords": ["EMS station", "First Street", "Community Church", "pedestrian safety", "ambulance"],
+      "keywords": [
+        "EMS station",
+        "First Street",
+        "Community Church",
+        "pedestrian safety",
+        "ambulance"
+      ],
       "prompt_caution": null,
       "show_on_home": true
     },
@@ -147,13 +216,21 @@
       "status_label": "Under review at the NYS Public Service Commission",
       "tag": "Energy",
       "tag_style": "energy",
-      "description": "Con Edison has requested a {{fact:con-ed-rate-hike-request}} electric rate increase, filed with the NYS Public Service Commission and still under review. The Village of Pelham joined a municipal coalition opposing it.",
-      "governing_body": ["village-of-pelham"],
+      "description": "Con Edison has requested an {{fact:con-ed-rate-hike-request}} electric rate increase, filed with the NYS Public Service Commission and still under review. The Village of Pelham joined a municipal coalition opposing it.",
+      "governing_body": [
+        "village-of-pelham"
+      ],
       "source_url": "https://www3.dps.ny.gov/pscweb/WebFileRoom.nsf/Web/RateCase",
       "source_label": "NY PSC rate case filings",
       "source_date": null,
       "last_updated": "2026-09-21",
-      "keywords": ["Con Edison", "rate hike", "Public Service Commission", "utility", "electric rates"],
+      "keywords": [
+        "Con Edison",
+        "rate hike",
+        "Public Service Commission",
+        "utility",
+        "electric rates"
+      ],
       "prompt_caution": null,
       "show_on_home": true
     },
@@ -165,12 +242,22 @@
       "tag": "Public Safety",
       "tag_style": "energy",
       "description": "Residents reported nightly illegal fireworks from Fini Park through summer 2026, often past 11pm. At the July 14 2026 Village board meeting a resident described calling New Rochelle police up to six times a night against only 12 calls logged in their records since Memorial Day. Trustee Howell committed to increased Pelham PD patrols on the Harman/Store Avenue corridor between 8 and 11pm. Residents can send videos to <a href=\"mailto:krystal.howell@pelhamny.gov\">krystal.howell@pelhamny.gov</a>.",
-      "governing_body": ["village-of-pelham"],
+      "governing_body": [
+        "village-of-pelham"
+      ],
       "source_url": "https://pelhamny.portal.civicclerk.com/event/2524/media",
       "source_label": "Village of Pelham board meeting recording",
       "source_date": "2026-07-14",
       "last_updated": "2026-09-21",
-      "keywords": ["fireworks", "Fini Park", "Harman Avenue", "Store Avenue", "noise", "police patrols", "New Rochelle"],
+      "keywords": [
+        "fireworks",
+        "Fini Park",
+        "Harman Avenue",
+        "Store Avenue",
+        "noise",
+        "police patrols",
+        "New Rochelle"
+      ],
       "prompt_caution": null,
       "show_on_home": true
     },
@@ -182,12 +269,22 @@
       "tag": "Infrastructure",
       "tag_style": "infrastructure",
       "description": "Raised in public comment at the August 17 2026 Pelham Manor board meeting by resident and volunteer firefighter Josh Casper: flyers were delivered to only some affected households, some phases will run 24/7 with track shutdowns, and Amtrak's representative gave no clear noise threshold or reporting mechanism. Litter from past crews and a rail gate left open were also raised. The corridor project is expected to span three years. Village Manager Luft is to stay in contact with Amtrak's project liaison, and the board directed increased police patrol sweeps plus deployment of the village's mobile spotlight along the corridor.",
-      "governing_body": ["village-of-pelham-manor"],
+      "governing_body": [
+        "village-of-pelham-manor"
+      ],
       "source_url": "https://vimeo.com/1219072948",
       "source_label": "Pelham Manor board meeting recording",
       "source_date": "2026-08-17",
       "last_updated": "2026-09-21",
-      "keywords": ["Amtrak", "Forest Road", "rail corridor", "track shutdown", "Josh Casper", "noise", "mobile spotlight"],
+      "keywords": [
+        "Amtrak",
+        "Forest Road",
+        "rail corridor",
+        "track shutdown",
+        "Josh Casper",
+        "noise",
+        "mobile spotlight"
+      ],
       "prompt_caution": "This is a VILLAGE OF PELHAM MANOR matter — NOT the Village of Pelham and NOT the Town of Pelham. Village Manager Luft and Pelham PD were actioned at the August 17 2026 Manor Board meeting. Do not attribute this to the Town Council or Village of Pelham board.",
       "show_on_home": false
     }

@@ -96,7 +96,7 @@
         },
         "source_label": {
           "type": "string",
-          "description": "Link text WITHOUT a date, e.g. 'Pelham Examiner'. The date comes from source_date so every card renders it the same way -- today they are inconsistently formatted inline."
+          "description": "The COMPLETE link text as rendered, e.g. 'Pelham Examiner coverage' or 'Pelham Examiner — September 9, 2026'. Phrasing varies per card by design and the build does not assemble it from source_date; that field is metadata for staleness review, not a display component."
         },
         "source_date": {
           "type": [

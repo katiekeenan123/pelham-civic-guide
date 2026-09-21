@@ -5,50 +5,153 @@
   "description": "Metadata for the six processed meetings in #meeting-summaries. The PROSE lives in separate HTML partials referenced by the *_file fields, not in this JSON: the September 14 detailed summary alone is roughly 4,000 words of nested markup, which as a JSON string would be one unreadable escaped line. Within a single meeting the date and recording URL currently appear five times (disclaimer, three panel headers, transcript footer); here they appear once.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["meetings"],
+  "required": [
+    "meetings"
+  ],
   "properties": {
-    "$schema": { "type": "string", "description": "Relative path to this schema file." },
-    "section_intro": { "type": "string", "description": "Lead paragraph above the meeting selector buttons." },
+    "$schema": {
+      "type": "string",
+      "description": "Relative path to this schema file."
+    },
+    "section_intro": {
+      "type": "string",
+      "description": "Lead paragraph above the meeting selector buttons."
+    },
     "meetings": {
       "type": "array",
       "description": "SELECTOR ORDER IS ARRAY ORDER. Worth stating because the pre-refactor page had the buttons in one order and the panel markup in another; generating both from this array makes them agree by construction.",
-      "items": { "$ref": "#/$defs/meeting" }
+      "items": {
+        "$ref": "#/$defs/meeting"
+      }
     }
   },
   "$defs": {
     "meeting": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "governing_body", "selector", "date", "recording_url", "status"],
+      "required": [
+        "id",
+        "governing_body",
+        "selector",
+        "date",
+        "recording_url",
+        "status"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable slug, e.g. 'town-council-sep2026'. Becomes the data-meeting attribute on both the selector button and its panel set; the UI test asserts those two always match." },
-        "governing_body": { "type": "string", "description": "Foreign key to bodies.json id. Build fails on a dangling reference." },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Stable slug, e.g. 'town-council-sep2026'. Becomes the data-meeting attribute on both the selector button and its panel set; the UI test asserts those two always match."
+        },
+        "governing_body": {
+          "type": "string",
+          "description": "Foreign key to bodies.json id. Build fails on a dangling reference."
+        },
         "selector": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["body", "detail"],
+          "required": [
+            "body",
+            "detail"
+          ],
           "description": "The two lines printed on the selector button. An object because the button renders them as separate styled spans, not one string.",
           "properties": {
-            "body":   { "type": "string", "description": "Top line, e.g. 'Town of Pelham'." },
-            "detail": { "type": "string", "description": "Bottom line, e.g. 'Town Council . September 14, 2026'." }
+            "body": {
+              "type": "string",
+              "description": "Top line, e.g. 'Town of Pelham'."
+            },
+            "detail": {
+              "type": "string",
+              "description": "Bottom line, e.g. 'Town Council . September 14, 2026'."
+            }
           }
         },
-        "title": { "type": "string", "description": "Single-line full title used by the JavaScript placeholder fallback and by the AI prompt. Derivable from selector + date; store it only if you want to override the derived form." },
-        "date": { "type": "string", "description": "Meeting date, ISO YYYY-MM-DD. Every displayed date string is formatted from this -- it is currently written out by hand in five places per meeting." },
-        "duration_min": { "type": ["integer", "null"], "description": "Recording length in minutes, shown in the exec panel header." },
-        "chair": { "type": ["string", "null"], "description": "Attendance line: 'Supervisor Mohan (chair) . Town Council', or noting who was absent. NOTE: cross-check this against the summary body -- the audit found a July meeting whose header implied one absence while the detailed summary named two, which contradicted the recorded 6-0 vote." },
-        "icon": { "type": ["string", "null"], "description": "Emoji shown beside the body name in the panel header." },
-        "recording_url": { "type": "string", "description": "Official recording. Hosts differ per body (CivicClerk, YouTube, Vimeo, Swagit) so this cannot be templated from the body." },
-        "minutes_url": { "type": ["string", "null"], "description": "Official posted minutes or agenda centre for this body." },
-        "disclaimer_extra": { "type": ["string", "null"], "description": "Meeting-specific addition to the standard 'AI-generated - not official records' banner. The September 14 Town Council entry uses this for its poor-audio caveat. The standard sentence itself is a build template, not repeated here." },
-        "transcript_footer": { "type": ["string", "null"], "description": "The italic note under the transcript. Genuinely varies -- three different versions exist, covering Whisper attribution, name correction against a verified roster, and passages left out rather than guessed at." },
+        "title": {
+          "type": "string",
+          "description": "Single-line full title used by the JavaScript placeholder fallback and by the AI prompt. Derivable from selector + date; store it only if you want to override the derived form."
+        },
+        "date": {
+          "type": "string",
+          "description": "Meeting date, ISO YYYY-MM-DD. Every displayed date string is formatted from this -- it is currently written out by hand in five places per meeting."
+        },
+        "duration_min": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Recording length in minutes, shown in the exec panel header."
+        },
+        "chair": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Attendance line: 'Supervisor Mohan (chair) . Town Council', or noting who was absent. NOTE: cross-check this against the summary body -- the audit found a July meeting whose header implied one absence while the detailed summary named two, which contradicted the recorded 6-0 vote."
+        },
+        "icon": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Emoji shown beside the body name in the panel header."
+        },
+        "recording_url": {
+          "type": "string",
+          "description": "Official recording. Hosts differ per body (CivicClerk, YouTube, Vimeo, Swagit) so this cannot be templated from the body."
+        },
+        "minutes_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Official posted minutes or agenda centre for this body."
+        },
+        "disclaimer_extra": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Meeting-specific addition to the standard 'AI-generated - not official records' banner. The September 14 Town Council entry uses this for its poor-audio caveat. The standard sentence itself is a build template, not repeated here."
+        },
+        "transcript_footer": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The italic note under the transcript. Genuinely varies -- three different versions exist, covering Whisper attribution, name correction against a verified roster, and passages left out rather than guessed at."
+        },
         "status": {
-          "enum": ["published", "processing"],
+          "enum": [
+            "published",
+            "processing"
+          ],
           "description": "'published' emits a full panel set; 'processing' emits the placeholder. CAUTION: tests/ui.spec.js asserts that EVERY selector opens a real panel set and never the placeholder, so adding a 'processing' meeting fails the suite unless the build omits its selector or that test is relaxed. Decide before using this value."
         },
-        "exec_summary_file":     { "type": ["string", "null"], "description": "Path to the Executive Summary partial (headline paragraphs, key votes, action items table)." },
-        "detailed_summary_file": { "type": ["string", "null"], "description": "Path to the Detailed Summary partial (timestamped sections)." },
-        "transcript_file":       { "type": ["string", "null"], "description": "Path to the transcript partial (timestamped speaker blocks). All three are null while status is 'processing'." }
+        "exec_summary_file": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Path to the Executive Summary partial (headline paragraphs, key votes, action items table)."
+        },
+        "detailed_summary_file": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Path to the Detailed Summary partial (timestamped sections)."
+        },
+        "transcript_file": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Path to the transcript partial (timestamped speaker blocks). All three are null while status is 'processing'."
+        },
+        "minutes_label": {
+          "type": "string",
+          "description": "Link text for the posted-minutes link in the AI-generated disclaimer. Wording differs per body on the page today: 'posted minutes', \"the Town's posted minutes\", \"the district's posted minutes\", \"the Village's posted minutes\". A leading 'the ' is rendered outside the anchor, matching the existing markup."
+        }
       }
     }
   }

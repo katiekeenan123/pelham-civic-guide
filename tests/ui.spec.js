@@ -117,6 +117,14 @@ test('Explore More tabs switch content — Your Taxes and Current Issues', async
   await expect(taxes).toBeHidden();
 });
 
+// Panel ids are generated as panel-<meeting-id>-<tab> by scripts/build.js.
+// Before the build script they were hand-written and inconsistent (panel-exec,
+// panel-town-sep-exec, panel-boeaug-exec); addressing them through this helper
+// keeps the tests tied to the meeting they mean rather than to that history.
+const panel = (page, meeting, tab) => page.locator(`#panel-${meeting}-${tab}`);
+const JUL = 'pelham-board-jul2026';
+const TOWN_AUG = 'town-council-aug2026';
+
 test('Meeting Summaries — July 14 2026 meeting, Detailed Summary tab, Ari Schwartz', async ({ page }) => {
   // Current Issues is the default Explore tab now — switch to Meeting Summaries first.
   await page.getByRole('button', { name: 'Meeting Summaries' }).click();
@@ -129,7 +137,7 @@ test('Meeting Summaries — July 14 2026 meeting, Detailed Summary tab, Ari Schw
 
   await page.getByRole('button', { name: 'Detailed Summary' }).click();
 
-  const detailed = page.locator('#panel-detailed');
+  const detailed = panel(page, JUL, 'detailed');
   await expect(detailed).toBeVisible();
   await expect(detailed.getByText('Ari Schwartz', { exact: false }).first()).toBeVisible();
 });
@@ -157,7 +165,7 @@ test('Meeting switcher — Town of Pelham panels render when that meeting is sel
   await openMeetings(page);
   await meetingButton(page, 'town-council-aug2026').click();
 
-  const exec = page.locator('#panel-town-exec');
+  const exec = panel(page, TOWN_AUG, 'exec');
   await expect(exec).toBeVisible();
   await expect(exec).toContainText('August 3, 2026');
   // Council names are published from the verified roster, not the pipeline's
@@ -171,32 +179,32 @@ test('Meeting switcher — detail tabs scope to the selected meeting, not the Ju
   await meetingButton(page, 'town-council-aug2026').click();
 
   await detailTab(page, 'Detailed Summary').click();
-  const townDetailed = page.locator('#panel-town-detailed');
+  const townDetailed = panel(page, TOWN_AUG, 'detailed');
   await expect(townDetailed).toBeVisible();
   await expect(townDetailed).toContainText('Bruno Barbosa');
   // The July set stays hidden: a tab click must not reveal the other meeting's
   // panel of the same name.
-  await expect(page.locator('#panel-detailed')).toBeHidden();
-  await expect(page.locator('#panel-town-exec')).toBeHidden();
+  await expect(panel(page, JUL, 'detailed')).toBeHidden();
+  await expect(panel(page, TOWN_AUG, 'exec')).toBeHidden();
 
   await detailTab(page, 'Full Transcript').click();
-  await expect(page.locator('#panel-town-transcript')).toBeVisible();
-  await expect(page.locator('#panel-transcript')).toBeHidden();
+  await expect(panel(page, TOWN_AUG, 'transcript')).toBeVisible();
+  await expect(panel(page, JUL, 'transcript')).toBeHidden();
 });
 
 test('Meeting switcher — returning to the July meeting resets to Executive Summary', async ({ page }) => {
   await openMeetings(page);
   await meetingButton(page, 'town-council-aug2026').click();
   await detailTab(page, 'Full Transcript').click();
-  await expect(page.locator('#panel-town-transcript')).toBeVisible();
+  await expect(panel(page, TOWN_AUG, 'transcript')).toBeVisible();
 
   await meetingButton(page, 'pelham-board-jul2026').click();
 
   // Back on the July meeting, and reset to the first tab rather than holding
   // the transcript tab the previous meeting was left on.
-  await expect(page.locator('#panel-exec')).toBeVisible();
-  await expect(page.locator('#panel-transcript')).toBeHidden();
-  await expect(page.locator('#panel-town-exec')).toBeHidden();
+  await expect(panel(page, JUL, 'exec')).toBeVisible();
+  await expect(panel(page, JUL, 'transcript')).toBeHidden();
+  await expect(panel(page, TOWN_AUG, 'exec')).toBeHidden();
   await expect(detailTab(page, 'Executive Summary')).toHaveClass(/active-tab/);
 });
 

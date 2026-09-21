@@ -146,6 +146,13 @@
             "type": "string"
           },
           "description": "GENERATED -- do not hand-edit. The build fills this in with every location that resolved a token for this fact, so you can see the blast radius of a change. Hand-written values are overwritten."
+        },
+        "display_short": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Compact rendering for space-constrained UI, reached with {{fact:<id>.short}}. Falls back to `display`. Exists because the same fact is legitimately written two ways on the page: the voter-info box shows 'Nov 3, 2026' where prose says 'November 3, 2026', and the tax bar shows '~25%' where prose says 'approximately 25%'. Without this the compact forms would have to be hard-coded, which is the duplication this file exists to remove."
         }
       }
     }

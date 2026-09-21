@@ -4,8 +4,10 @@
   "private": true,
   "description": "Playwright end-to-end tests for the Pelham Civic Guide (https://pelhamengagementproject.netlify.app/)",
   "scripts": {
+    "build": "node scripts/build.js",
+    "build:check": "node scripts/build.js --check",
     "test": "playwright test --config=tests/playwright.config.js",
-    "test:local": "playwright test --config=tests/playwright.config.local.js",
+    "test:local": "npm run build && playwright test --config=tests/playwright.config.local.js",
     "test:ui": "playwright test --config=tests/playwright.config.js ui.spec.js",
     "test:ai": "playwright test --config=tests/playwright.config.js ai.spec.js",
     "test:headed": "playwright test --config=tests/playwright.config.js --headed",
@@ -15,6 +17,8 @@
     "@supabase/supabase-js": "^2.112.4"
   },
   "devDependencies": {
-    "@playwright/test": "^1.62.1"
+    "@playwright/test": "^1.62.1",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
   }
 }

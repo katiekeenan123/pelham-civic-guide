@@ -1,13 +1,14 @@
 {
   "$schema": "./schema/meetings.schema.json",
-
   "section_intro": "Every public meeting is recorded. We process them automatically to generate three layers of detail. Select a meeting and a level of detail.",
-
   "meetings": [
     {
       "id": "pelham-board-jul2026",
       "governing_body": "village-of-pelham",
-      "selector": { "body": "Village of Pelham", "detail": "Board of Trustees · July 14, 2026" },
+      "selector": {
+        "body": "Village of Pelham",
+        "detail": "Board of Trustees · July 14, 2026"
+      },
       "title": "Village of Pelham · Board of Trustees · July 14, 2026",
       "date": "2026-07-14",
       "duration_min": 46,
@@ -20,12 +21,16 @@
       "status": "published",
       "exec_summary_file": "content/meetings/pelham-board-jul2026.exec.html",
       "detailed_summary_file": "content/meetings/pelham-board-jul2026.detailed.html",
-      "transcript_file": "content/meetings/pelham-board-jul2026.transcript.html"
+      "transcript_file": "content/meetings/pelham-board-jul2026.transcript.html",
+      "minutes_label": "posted minutes"
     },
     {
       "id": "town-council-sep2026",
       "governing_body": "town-of-pelham",
-      "selector": { "body": "Town of Pelham", "detail": "Town Council · September 14, 2026" },
+      "selector": {
+        "body": "Town of Pelham",
+        "detail": "Town Council · September 14, 2026"
+      },
       "title": "Town of Pelham · Town Council · September 14, 2026",
       "date": "2026-09-14",
       "duration_min": 82,
@@ -38,12 +43,16 @@
       "status": "published",
       "exec_summary_file": "content/meetings/town-council-sep2026.exec.html",
       "detailed_summary_file": "content/meetings/town-council-sep2026.detailed.html",
-      "transcript_file": "content/meetings/town-council-sep2026.transcript.html"
+      "transcript_file": "content/meetings/town-council-sep2026.transcript.html",
+      "minutes_label": "the Town's posted minutes"
     },
     {
       "id": "town-council-aug2026",
       "governing_body": "town-of-pelham",
-      "selector": { "body": "Town of Pelham", "detail": "Town Council · August 3, 2026" },
+      "selector": {
+        "body": "Town of Pelham",
+        "detail": "Town Council · August 3, 2026"
+      },
       "title": "Town of Pelham · Town Council · August 3, 2026",
       "date": "2026-08-03",
       "duration_min": 30,
@@ -56,12 +65,16 @@
       "status": "published",
       "exec_summary_file": "content/meetings/town-council-aug2026.exec.html",
       "detailed_summary_file": "content/meetings/town-council-aug2026.detailed.html",
-      "transcript_file": "content/meetings/town-council-aug2026.transcript.html"
+      "transcript_file": "content/meetings/town-council-aug2026.transcript.html",
+      "minutes_label": "the Town's posted minutes"
     },
     {
       "id": "manor-board-aug2026",
       "governing_body": "village-of-pelham-manor",
-      "selector": { "body": "Village of Pelham Manor", "detail": "Board of Trustees · August 17, 2026" },
+      "selector": {
+        "body": "Village of Pelham Manor",
+        "detail": "Board of Trustees · August 17, 2026"
+      },
       "title": "Village of Pelham Manor · Board of Trustees · August 17, 2026",
       "date": "2026-08-17",
       "duration_min": 37,
@@ -74,12 +87,16 @@
       "status": "published",
       "exec_summary_file": "content/meetings/manor-board-aug2026.exec.html",
       "detailed_summary_file": "content/meetings/manor-board-aug2026.detailed.html",
-      "transcript_file": "content/meetings/manor-board-aug2026.transcript.html"
+      "transcript_file": "content/meetings/manor-board-aug2026.transcript.html",
+      "minutes_label": "the Village's posted minutes"
     },
     {
       "id": "board-of-ed-aug2026",
       "governing_body": "pelham-schools",
-      "selector": { "body": "Board of Education", "detail": "Business Meeting · August 26, 2026" },
+      "selector": {
+        "body": "Board of Education",
+        "detail": "Business Meeting · August 26, 2026"
+      },
       "title": "Board of Education · Business Meeting · August 26, 2026",
       "date": "2026-08-26",
       "duration_min": 73,
@@ -92,12 +109,16 @@
       "status": "published",
       "exec_summary_file": "content/meetings/board-of-ed-aug2026.exec.html",
       "detailed_summary_file": "content/meetings/board-of-ed-aug2026.detailed.html",
-      "transcript_file": "content/meetings/board-of-ed-aug2026.transcript.html"
+      "transcript_file": "content/meetings/board-of-ed-aug2026.transcript.html",
+      "minutes_label": "the district's posted minutes"
     },
     {
       "id": "board-of-ed-jun2026",
       "governing_body": "pelham-schools",
-      "selector": { "body": "Board of Education", "detail": "Business Meeting · June 24, 2026" },
+      "selector": {
+        "body": "Board of Education",
+        "detail": "Business Meeting · June 24, 2026"
+      },
       "title": "Board of Education · Business Meeting · June 24, 2026",
       "date": "2026-06-24",
       "duration_min": 84,
@@ -110,7 +131,8 @@
       "status": "published",
       "exec_summary_file": "content/meetings/board-of-ed-jun2026.exec.html",
       "detailed_summary_file": "content/meetings/board-of-ed-jun2026.detailed.html",
-      "transcript_file": "content/meetings/board-of-ed-jun2026.transcript.html"
+      "transcript_file": "content/meetings/board-of-ed-jun2026.transcript.html",
+      "minutes_label": "the district's posted minutes"
     }
   ]
 }

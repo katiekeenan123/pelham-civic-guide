@@ -1,6 +1,5 @@
 {
   "$schema": "./schema/facts.schema.json",
-
   "facts": [
     {
       "id": "school-budget-fy2627",
@@ -15,7 +14,11 @@
       "supersedes": "school-budget-fy2526",
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Pelham Union Free School District", "url": "https://www.pelhamschools.org/district/about/financials", "date": "2026-05-19" },
+      "source": {
+        "name": "Pelham Union Free School District",
+        "url": "https://www.pelhamschools.org/district/about/financials",
+        "date": "2026-05-19"
+      },
       "used_in": []
     },
     {
@@ -31,7 +34,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Pelham Union Free School District", "url": "https://www.pelhamschools.org/district/about/financials", "date": "2025-05-20" },
+      "source": {
+        "name": "Pelham Union Free School District",
+        "url": "https://www.pelhamschools.org/district/about/financials",
+        "date": "2025-05-20"
+      },
       "used_in": []
     },
     {
@@ -47,7 +54,11 @@
       "supersedes": null,
       "caution": "3.48% is the LEVY increase, not the budget-to-budget change. Do not describe it as the budget increase.",
       "in_prompt": true,
-      "source": { "name": "Pelham Union Free School District", "url": "https://www.pelhamschools.org/district/about/financials", "date": "2026-05-19" },
+      "source": {
+        "name": "Pelham Union Free School District",
+        "url": "https://www.pelhamschools.org/district/about/financials",
+        "date": "2026-05-19"
+      },
       "used_in": []
     },
     {
@@ -63,7 +74,11 @@
       "supersedes": null,
       "caution": "$143.6M is the total PROPOSED, not the approved amount. Props 1 and 2 passed ($56.2M); Props 3 and 4 failed. Never describe $143.6M as approved, or as 'the bond' without qualification.",
       "in_prompt": true,
-      "source": { "name": "Pelham Union Free School District", "url": "https://www.pelhamschools.org/district/about/financials", "date": "2025-05-20" },
+      "source": {
+        "name": "Pelham Union Free School District",
+        "url": "https://www.pelhamschools.org/district/about/financials",
+        "date": "2025-05-20"
+      },
       "used_in": []
     },
     {
@@ -79,7 +94,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Pelham Union Free School District", "url": "https://www.pelhamschools.org/district/about/financials", "date": "2025-05-20" },
+      "source": {
+        "name": "Pelham Union Free School District",
+        "url": "https://www.pelhamschools.org/district/about/financials",
+        "date": "2025-05-20"
+      },
       "used_in": []
     },
     {
@@ -95,7 +114,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Village of Pelham adopted budgets", "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets", "date": "2026-04-28" },
+      "source": {
+        "name": "Village of Pelham adopted budgets",
+        "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets",
+        "date": "2026-04-28"
+      },
       "used_in": []
     },
     {
@@ -111,7 +134,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Pelham Examiner", "url": "https://pelhamexaminer.com/82552/latest-news/village-board-passes-20-5-million-budget-most-homeowners-tax-bills-will-rise-10-board-discusses-updating-bdfz-9th-avenue-parking/", "date": "2026-04-29" },
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com/82552/latest-news/village-board-passes-20-5-million-budget-most-homeowners-tax-bills-will-rise-10-board-discusses-updating-bdfz-9th-avenue-parking/",
+        "date": "2026-04-29"
+      },
       "used_in": []
     },
     {
@@ -127,7 +154,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Village of Pelham adopted budgets", "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets", "date": "2026-01-13" },
+      "source": {
+        "name": "Village of Pelham adopted budgets",
+        "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets",
+        "date": "2026-01-13"
+      },
       "used_in": []
     },
     {
@@ -143,7 +174,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Village of Pelham Manor budgets and financial statements", "url": "https://www.pelhammanor.gov/209/Budgets-Financial-Statements", "date": "2026-03-24" },
+      "source": {
+        "name": "Village of Pelham Manor budgets and financial statements",
+        "url": "https://www.pelhammanor.gov/209/Budgets-Financial-Statements",
+        "date": "2026-03-24"
+      },
       "used_in": []
     },
     {
@@ -159,7 +194,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Village of Pelham Manor budgets and financial statements", "url": "https://www.pelhammanor.gov/209/Budgets-Financial-Statements", "date": "2026-03-24" },
+      "source": {
+        "name": "Village of Pelham Manor budgets and financial statements",
+        "url": "https://www.pelhammanor.gov/209/Budgets-Financial-Statements",
+        "date": "2026-03-24"
+      },
       "used_in": []
     },
     {
@@ -175,7 +214,11 @@
       "supersedes": null,
       "caution": "This figure is derived, not read from the adopted budget. Do not present it as an audited number; if a resident needs the exact capital appropriation, point them to pelhammanor.gov.",
       "in_prompt": true,
-      "source": { "name": "Village of Pelham Manor budgets and financial statements", "url": "https://www.pelhammanor.gov/209/Budgets-Financial-Statements", "date": "2026-03-24" },
+      "source": {
+        "name": "Village of Pelham Manor budgets and financial statements",
+        "url": "https://www.pelhammanor.gov/209/Budgets-Financial-Statements",
+        "date": "2026-03-24"
+      },
       "used_in": []
     },
     {
@@ -191,7 +234,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Pelham Examiner", "url": "https://pelhamexaminer.com", "date": "2026-04-01" },
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com",
+        "date": "2026-04-01"
+      },
       "used_in": []
     },
     {
@@ -207,7 +254,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Town of Pelham budgets and reports", "url": "https://townofpelhamny.gov/budgets-and-reports/", "date": null },
+      "source": {
+        "name": "Town of Pelham budgets and reports",
+        "url": "https://townofpelhamny.gov/budgets-and-reports/",
+        "date": null
+      },
       "used_in": []
     },
     {
@@ -223,10 +274,13 @@
       "supersedes": null,
       "caution": "This is a proposal, not an approved appropriation. Do not describe the project as funded or approved.",
       "in_prompt": true,
-      "source": { "name": "Pelham Examiner", "url": "https://pelhamexaminer.com/84133/letters-to-the-editor/the-pelham-public-library-has-come-up-with-a-15-20-million-transformation-project-is-that-really-a-pelham-priority/", "date": "2026-08-01" },
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com/84133/letters-to-the-editor/the-pelham-public-library-has-come-up-with-a-15-20-million-transformation-project-is-that-really-a-pelham-priority/",
+        "date": "2026-08-01"
+      },
       "used_in": []
     },
-
     {
       "id": "village-debt-2021",
       "category": "debt",
@@ -240,7 +294,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Village of Pelham financial statements", "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets", "date": null },
+      "source": {
+        "name": "Village of Pelham financial statements",
+        "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets",
+        "date": null
+      },
       "used_in": []
     },
     {
@@ -256,7 +314,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Village of Pelham financial statements", "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets", "date": "2025-05-31" },
+      "source": {
+        "name": "Village of Pelham financial statements",
+        "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets",
+        "date": "2025-05-31"
+      },
       "used_in": []
     },
     {
@@ -272,7 +334,11 @@
       "supersedes": null,
       "caution": "Three dated debt figures exist ($4.26M in 2021, $15.1M in May 2025, $17.88M in February 2026) and all are correct as at their own date. Always state the date alongside the figure.",
       "in_prompt": true,
-      "source": { "name": "Pelham Examiner", "url": "https://pelhamexaminer.com", "date": "2026-03-01" },
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com",
+        "date": "2026-03-01"
+      },
       "used_in": []
     },
     {
@@ -288,10 +354,13 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Village of Pelham adopted budgets", "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets", "date": "2026-04-28" },
+      "source": {
+        "name": "Village of Pelham adopted budgets",
+        "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets",
+        "date": "2026-04-28"
+      },
       "used_in": []
     },
-
     {
       "id": "village-share-of-tax-bill",
       "category": "tax",
@@ -305,8 +374,13 @@
       "supersedes": null,
       "caution": "Do not state a specific school district or county percentage — no verified source publishes one. Say the school district is the largest share of the bill, significantly more than the village portion, and refer residents to the Town Receiver of Taxes for their own breakdown.",
       "in_prompt": true,
-      "source": { "name": "Pelham Examiner", "url": "https://pelhamexaminer.com", "date": "2026-05-01" },
-      "used_in": []
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com",
+        "date": "2026-05-01"
+      },
+      "used_in": [],
+      "display_short": "~25%"
     },
     {
       "id": "village-median-tax-fy2627",
@@ -321,7 +395,11 @@
       "supersedes": null,
       "caution": "This is the MEDIAN village tax bill. Do not compare it directly against the Pelham Manor figure — the comparable pair is village-tax-equivalent-assessed against manor-tax-equivalent-assessed, both computed on the same $1,045,204 assessed value.",
       "in_prompt": true,
-      "source": { "name": "Pelham Examiner", "url": "https://pelhamexaminer.com", "date": "2026-04-29" },
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com",
+        "date": "2026-04-29"
+      },
       "used_in": []
     },
     {
@@ -337,7 +415,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Pelham Examiner", "url": "https://pelhamexaminer.com", "date": "2026-04-29" },
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com",
+        "date": "2026-04-29"
+      },
       "used_in": []
     },
     {
@@ -353,7 +435,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Pelham Examiner, letter to the editor", "url": "https://pelhamexaminer.com", "date": "2026-01-01" },
+      "source": {
+        "name": "Pelham Examiner, letter to the editor",
+        "url": "https://pelhamexaminer.com",
+        "date": "2026-01-01"
+      },
       "used_in": []
     },
     {
@@ -369,7 +455,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Pelham Examiner, letter to the editor", "url": "https://pelhamexaminer.com", "date": "2026-01-01" },
+      "source": {
+        "name": "Pelham Examiner, letter to the editor",
+        "url": "https://pelhamexaminer.com",
+        "date": "2026-01-01"
+      },
       "used_in": []
     },
     {
@@ -385,10 +475,13 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Village of Pelham adopted budgets", "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets", "date": null },
+      "source": {
+        "name": "Village of Pelham adopted budgets",
+        "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets",
+        "date": null
+      },
       "used_in": []
     },
-
     {
       "id": "election-date-2026",
       "category": "election",
@@ -402,15 +495,20 @@
       "supersedes": null,
       "caution": "NEVER say Pelham village elections are held in March — that has not been true since 2020. Village of Pelham, Village of Pelham Manor and Town of Pelham elections are all held in NOVEMBER. The Board of Education election is held in MAY. Pelham Manor moved from March to November after a 2024 voter referendum, first applying in 2025.",
       "in_prompt": true,
-      "source": { "name": "Westchester County Board of Elections", "url": "https://www.elections.ny.gov", "date": null },
-      "used_in": []
+      "source": {
+        "name": "Westchester County Board of Elections",
+        "url": "https://www.elections.ny.gov",
+        "date": null
+      },
+      "used_in": [],
+      "display_short": "Nov 3, 2026"
     },
     {
       "id": "polling-hours",
       "category": "election",
       "fact": "Polling hours on general election day",
       "value": null,
-      "display": "6am - 9pm",
+      "display": "6am – 9pm",
       "qualifier": "verify the exact hours with the Westchester County Board of Elections",
       "confidence": "verified",
       "as_of": "2026",
@@ -418,7 +516,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Westchester County Board of Elections", "url": "https://www.elections.ny.gov", "date": null },
+      "source": {
+        "name": "Westchester County Board of Elections",
+        "url": "https://www.elections.ny.gov",
+        "date": null
+      },
       "used_in": []
     },
     {
@@ -434,7 +536,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "New York State Board of Elections", "url": "https://www.elections.ny.gov", "date": null },
+      "source": {
+        "name": "New York State Board of Elections",
+        "url": "https://www.elections.ny.gov",
+        "date": null
+      },
       "used_in": []
     },
     {
@@ -450,10 +556,13 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Pelham Union Free School District", "url": "https://www.pelhamschools.org/district/about/financials", "date": null },
+      "source": {
+        "name": "Pelham Union Free School District",
+        "url": "https://www.pelhamschools.org/district/about/financials",
+        "date": null
+      },
       "used_in": []
     },
-
     {
       "id": "village-budget-adoption-vote",
       "category": "governance",
@@ -467,7 +576,11 @@
       "supersedes": null,
       "caution": "There was NO 5-2 vote at any point in this process. Do not state otherwise. The tax cap override was a separate vote at an earlier meeting (January 13 2026), not part of the April 28 budget adoption.",
       "in_prompt": true,
-      "source": { "name": "Village of Pelham official minutes", "url": "https://www.pelhamny.gov/AgendaCenter", "date": "2026-04-28" },
+      "source": {
+        "name": "Village of Pelham official minutes",
+        "url": "https://www.pelhamny.gov/AgendaCenter",
+        "date": "2026-04-28"
+      },
       "used_in": []
     },
     {
@@ -483,7 +596,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Village of Pelham official minutes", "url": "https://www.pelhamny.gov/AgendaCenter", "date": "2026-01-13" },
+      "source": {
+        "name": "Village of Pelham official minutes",
+        "url": "https://www.pelhamny.gov/AgendaCenter",
+        "date": "2026-01-13"
+      },
       "used_in": []
     },
     {
@@ -499,7 +616,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Pelham Examiner", "url": "https://pelhamexaminer.com", "date": "2026-04-01" },
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com",
+        "date": "2026-04-01"
+      },
       "used_in": []
     },
     {
@@ -515,10 +636,13 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Town of Pelham", "url": "https://townofpelhamny.gov", "date": null },
+      "source": {
+        "name": "Town of Pelham",
+        "url": "https://townofpelhamny.gov",
+        "date": null
+      },
       "used_in": []
     },
-
     {
       "id": "town-receiver-phone",
       "category": "contact",
@@ -532,7 +656,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Town of Pelham", "url": "https://townofpelhamny.gov/receiver-of-taxes/", "date": null },
+      "source": {
+        "name": "Town of Pelham",
+        "url": "https://townofpelhamny.gov/receiver-of-taxes/",
+        "date": null
+      },
       "used_in": []
     },
     {
@@ -548,10 +676,13 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Town of Pelham", "url": "https://townofpelhamny.gov", "date": null },
+      "source": {
+        "name": "Town of Pelham",
+        "url": "https://townofpelhamny.gov",
+        "date": null
+      },
       "used_in": []
     },
-
     {
       "id": "founding-year",
       "category": "history",
@@ -565,7 +696,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Town of Pelham", "url": "https://townofpelhamny.gov/about-us/", "date": null },
+      "source": {
+        "name": "Town of Pelham",
+        "url": "https://townofpelhamny.gov/about-us/",
+        "date": null
+      },
       "used_in": []
     },
     {
@@ -581,10 +716,13 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Town of Pelham", "url": "https://townofpelhamny.gov/about-us/", "date": null },
+      "source": {
+        "name": "Town of Pelham",
+        "url": "https://townofpelhamny.gov/about-us/",
+        "date": null
+      },
       "used_in": []
     },
-
     {
       "id": "town-population",
       "category": "demographic",
@@ -598,10 +736,13 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
-      "source": { "name": "Town of Pelham", "url": "https://townofpelhamny.gov/about-us/", "date": null },
+      "source": {
+        "name": "Town of Pelham",
+        "url": "https://townofpelhamny.gov/about-us/",
+        "date": null
+      },
       "used_in": []
     },
-
     {
       "id": "site-last-updated",
       "category": "governance",
@@ -615,7 +756,11 @@
       "supersedes": null,
       "caution": null,
       "in_prompt": false,
-      "source": { "name": "The Pelham Engagement Project", "url": "https://pelhamengagementproject.netlify.app", "date": "2026-09-21" },
+      "source": {
+        "name": "The Pelham Engagement Project",
+        "url": "https://pelhamengagementproject.netlify.app",
+        "date": "2026-09-21"
+      },
       "used_in": []
     },
     {
@@ -631,7 +776,11 @@
       "supersedes": null,
       "caution": "This is a request under review, not an approved rate. Do not describe the increase as granted.",
       "in_prompt": true,
-      "source": { "name": "NY Public Service Commission rate case filings", "url": "https://www3.dps.ny.gov/pscweb/WebFileRoom.nsf/Web/RateCase", "date": null },
+      "source": {
+        "name": "NY Public Service Commission rate case filings",
+        "url": "https://www3.dps.ny.gov/pscweb/WebFileRoom.nsf/Web/RateCase",
+        "date": null
+      },
       "used_in": []
     },
     {
@@ -647,7 +796,11 @@
       "supersedes": null,
       "caution": "Not stated in any processed meeting record. Attribute this as reported rather than as record, and point the resident to pelhamschools.org to confirm.",
       "in_prompt": true,
-      "source": { "name": "Pelham Union Free School District", "url": "https://www.pelhamschools.org", "date": null },
+      "source": {
+        "name": "Pelham Union Free School District",
+        "url": "https://www.pelhamschools.org",
+        "date": null
+      },
       "used_in": []
     }
   ]

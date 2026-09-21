@@ -19,6 +19,44 @@
       "items": {
         "$ref": "#/$defs/body"
       }
+    },
+    "extra_schedule_rows": {
+      "type": "array",
+      "description": "Rows in the Meeting Schedule table that are NOT a governing body. Today this is the annual School District Budget Vote, which is an event rather than a board and so has no entry in `bodies`. Rendered after the body rows.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "schedule",
+          "location",
+          "participation"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "description": "Stable slug."
+          },
+          "name": {
+            "type": "string",
+            "description": "Row label, e.g. 'School District Budget Vote'."
+          },
+          "schedule": {
+            "type": "string",
+            "description": "When it happens."
+          },
+          "location": {
+            "type": "string",
+            "description": "Where, including hours if relevant."
+          },
+          "participation": {
+            "type": "string",
+            "description": "How a resident takes part."
+          }
+        }
+      }
     }
   },
   "$defs": {
@@ -158,6 +196,13 @@
                 "null"
               ],
               "description": "How a resident actually speaks at this body's meeting. Varies by board and the prompt explicitly forbids describing a universal sign-up process."
+            },
+            "address_display": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Fuller address string for the Meeting Schedule table, e.g. '20 Fifth Ave (Daronco Town House)'. Falls back to `address` when null. Separate from `address` because the chips need the bare street address while the table carries the venue qualifier."
             }
           }
         },
@@ -207,6 +252,24 @@
               }
             }
           }
+        },
+        "board_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The governing board's formal name as printed in the Meeting Schedule table, e.g. 'Village of Pelham Board of Trustees'. Distinct from `name` (the body) and `short_name` (the chip label): all three appear on the page today with different wording. Null for a body with no local board."
+        },
+        "short_name": {
+          "type": "string",
+          "description": "Compact label for space-constrained UI, e.g. 'Pelham Manor', 'Town Board', 'Board of Education'. Used by the Get Involved meeting chips, where the full name would overflow the chip."
+        },
+        "icon": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Emoji shown before short_name in the meeting chips."
         }
       }
     }

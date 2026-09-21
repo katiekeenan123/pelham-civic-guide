@@ -1,21 +1,18 @@
 {
   "$schema": "./schema/elections.schema.json",
-
   "election_date": "2026-11-03",
   "polling_hours": "6am - 9pm",
-
-  "editorial_note": "<strong>Editorial note:</strong> Candidate profiles are drawn from Pelham Examiner reporting and candidate statements. This site does not endorse any candidate. All facts sourced from <a href=\"https://pelhamexaminer.com\" target=\"_blank\">pelhamexaminer.com</a>. Register to vote at <a href=\"https://www.elections.ny.gov\" target=\"_blank\">elections.ny.gov</a> — registration deadline is typically {{fact:voter-registration-deadline}} the election.",
-
+  "editorial_note": "<strong style=\"color: var(--gold-light);\">Editorial note:</strong> Candidate profiles are drawn from Pelham Examiner reporting and candidate statements. This site does not endorse any candidate. All facts sourced from <a href=\"https://pelhamexaminer.com\" target=\"_blank\" style=\"color: var(--gold-light);\">pelhamexaminer.com</a>. Register to vote at <a href=\"https://www.elections.ny.gov\" target=\"_blank\" style=\"color: var(--gold-light);\">elections.ny.gov</a> — registration deadline is typically {{fact:voter-registration-deadline}} the election.",
   "voter_info": [
     {
       "label": "Election Date",
-      "value": "{{fact:election-date-2026}}",
+      "value": "{{fact:election-date-2026.short}}",
       "note": "Verify exact date at Westchester County Board of Elections"
     },
     {
       "label": "Register to Vote",
       "value": "{{fact:voter-registration-deadline}}",
-      "note": "<a href=\"https://www.elections.ny.gov\" target=\"_blank\">elections.ny.gov</a> or Westchester County Board of Elections 914-995-5700"
+      "note": "<a href=\"https://www.elections.ny.gov\" target=\"_blank\" style=\"color: var(--gold-light);\">elections.ny.gov</a> or Westchester County Board of Elections 914-995-5700"
     },
     {
       "label": "Where to Vote",
@@ -23,7 +20,6 @@
       "note": "Village of Pelham: Daronco Town House, 20 Fifth Ave · Pelham Manor: Our Lady of Perpetual Help, 575 Fowler Ave"
     }
   ],
-
   "races": [
     {
       "id": "village-of-pelham-trustees",
@@ -35,7 +31,7 @@
       "note": null,
       "context": "<strong>Context:</strong> Hanan Eldahry, who has served since 2018, is not seeking reelection. The central issue in this race is fiscal management — the village passed a {{fact:village-budget-fy2627}} budget with a {{fact:village-budget-increase-fy2627}} increase, overriding the state tax cap for the first time. Three seats are up; top three vote-getters win.",
       "shared_platforms": {
-        "neighborhood-party-2026": "In their joint platform statement, Long, Speros and Anzilotti describe the Village's current path as 'unsustainable,' citing debt growth from {{fact:village-debt-2021}} in 2021 to almost $18M now, undisciplined spending (including a $3.655M Municipal Center authorization with $800K for furniture), and lack of transparency on the Picture House RFQ. They pledge to: serve without pay, vote not to exceed the tax cap, create an infrastructure plan, and bring openness to Village decisions."
+        "neighborhood-party-2026": "In their joint platform statement, Long, Speros and Anzilotti describe the Village's current path as 'unsustainable,' citing debt growth from $4.3M in 2021 to almost $18M now, undisciplined spending (including a $3.655M Municipal Center authorization with $800K for furniture), and lack of transparency on the Picture House RFQ. They pledge to: serve without pay, vote not to exceed the tax cap, create an infrastructure plan, and bring openness to Village decisions."
       }
     },
     {
@@ -56,10 +52,10 @@
       "term_length": "2-year terms",
       "badge": "Re-run required by new state law",
       "note": "A new state law shifts odd-year municipal elections to even years. As a result, Supervisor Mohan and Clerk Miller — both elected in November 2025 — must run again in 2026 to secure full two-year terms.",
-      "context": "<strong>Context:</strong> Mohan defeated Republican Dan McLaughlin 2,115 to 1,456 in 2025. Miller defeated Borsella 2,108 to 1,457. Both races were decided by similar margins. Town Council seats (Burke, McLoughlin, Jenks, Curtin — 4-year terms) are not up in 2026."
+      "context": "<strong>Context:</strong> Mohan defeated Republican Dan McLaughlin 2,115 to 1,456 in 2025. Miller defeated Borsella 2,108 to 1,457. Both races were decided by similar margins. Town Council seats (Burke, McLoughlin, Jenks, Curtin — 4-year terms) are not up in 2026.",
+      "show_seats": false
     }
   ],
-
   "candidates": [
     {
       "id": "russell-solomon",
@@ -145,7 +141,6 @@
       "source_url": "https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/",
       "source_label": "NP platform statement — September 14, 2026"
     },
-
     {
       "id": "breda-bennett",
       "race_id": "pelham-manor-trustees",
@@ -202,7 +197,6 @@
       "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
       "source_label": "Examiner coverage"
     },
-
     {
       "id": "theresa-mohan",
       "race_id": "town-supervisor-and-clerk",
