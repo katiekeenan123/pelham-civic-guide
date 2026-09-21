@@ -1,0 +1,85 @@
+{
+  "$schema": "./schema/taxes.schema.json",
+
+  "section_intro": "Village taxes represent {{fact:village-share-of-tax-bill}} of your total property tax bill (per Mayor Mullen, Pelham Examiner May 2026). The school district is the largest share.",
+
+  "bars": [
+    {
+      "id": "school-district",
+      "label": "School District (PUFSD)",
+      "icon": "🏫",
+      "percent_text": "largest share*",
+      "bar_width": 60,
+      "fill_style": "school",
+      "governing_body": "pelham-schools"
+    },
+    {
+      "id": "village",
+      "label": "Village (Pelham or Manor)",
+      "icon": "🏘️",
+      "percent_text": "~25% ✓",
+      "bar_width": 25,
+      "fill_style": "village",
+      "governing_body": null
+    },
+    {
+      "id": "county",
+      "label": "Westchester County",
+      "icon": "🏛️",
+      "percent_text": "est. — verify*",
+      "bar_width": 12,
+      "fill_style": "county",
+      "governing_body": "westchester-county"
+    },
+    {
+      "id": "town",
+      "label": "Town of Pelham",
+      "icon": "🏡",
+      "percent_text": "~3–5%",
+      "bar_width": 4,
+      "fill_style": "town",
+      "governing_body": "town-of-pelham"
+    }
+  ],
+
+  "note": "<strong>Note:</strong> Village {{fact:village-share-of-tax-bill}} confirmed (Mayor Mullen/Examiner). School district is the largest share — no published %. County % unverified. On an equivalent assessed value of $1,045,204, a Village of Pelham homeowner pays {{fact:village-tax-equivalent-assessed}} against {{fact:manor-tax-equivalent-assessed}} in Pelham Manor; the median Village of Pelham bill for FY2026-27 is {{fact:village-median-tax-fy2627}}. Call Town Receiver of Taxes ({{fact:town-receiver-phone}}) for your specific breakdown.",
+
+  "explainers": [
+    {
+      "id": "school-district",
+      "title": "School District",
+      "icon": "🏫",
+      "description": "FY2026-27 PUFSD budget: {{fact:school-budget-fy2627}}, voter-approved May 2026. Tax levy rose {{fact:school-levy-increase-fy2627}} — at state cap. Voters approved Props 1 &amp; 2 of the {{fact:school-bond-total}} capital bond in May 2025.",
+      "accent": "none",
+      "link": { "label": "School budget documents", "url": "https://www.pelhamschools.org/district/about/financials" },
+      "governing_body": "pelham-schools"
+    },
+    {
+      "id": "westchester-county",
+      "title": "Westchester County",
+      "icon": "🏛️",
+      "description": "County funds regional services — health, parks, social services. Your 14th District legislator advocates for Pelham's share.",
+      "accent": "gold",
+      "link": { "label": "County budget", "url": "https://www.westchestercountyny.gov/government/departments/budget" },
+      "governing_body": "westchester-county"
+    },
+    {
+      "id": "village-services",
+      "title": "Village Services",
+      "icon": "🏘️",
+      "description": "Village taxes fund police, fire, garbage, roads, water, and building dept. Village of Pelham passed a {{fact:village-budget-fy2627}} budget ({{fact:village-budget-increase-fy2627}} increase) for FY2026-27, overriding the state tax cap.",
+      "accent": "red",
+      "link": { "label": "Village adopted budgets", "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets" },
+      "governing_body": "village-of-pelham"
+    },
+    {
+      "id": "town-of-pelham",
+      "title": "Town of Pelham",
+      "icon": "🏡",
+      "description": "Smallest share — covers courts, assessor, recreation, library, and ambulance service shared between both villages.",
+      "accent": "green",
+      "link": { "label": "Town budgets &amp; reports", "url": "https://townofpelhamny.gov/budgets-and-reports/" },
+      "governing_body": "town-of-pelham"
+    }
+  ]
+}

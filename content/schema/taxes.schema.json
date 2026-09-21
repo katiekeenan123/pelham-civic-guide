@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pelham/taxes.schema.json",
+  "title": "Your Taxes panel",
+  "description": "The #your-taxes section: a stacked bar visual showing how a property tax bill divides between governing bodies, and four explainer blocks describing what each body's share funds. Created because generateTaxSection had no data source — the bar widths, percentage labels and explainer copy existed only as markup and appeared in no JSON file. Prose fields accept the safe HTML subset and {{fact:<id>}} tokens.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bars", "explainers"],
+  "properties": {
+    "$schema": { "type": "string", "description": "Relative path to this schema file." },
+    "section_intro": { "type": "string", "description": "Lead paragraph above the visual." },
+    "note": { "type": "string", "description": "The caveat block under the bars. Carries the sourcing state of each share — which percentages are confirmed, which are not — and the Receiver of Taxes phone number for an individual breakdown." },
+    "bars": {
+      "type": "array",
+      "minItems": 1,
+      "description": "DISPLAY ORDER IS ARRAY ORDER, largest share first.",
+      "items": { "$ref": "#/$defs/bar" }
+    },
+    "explainers": {
+      "type": "array",
+      "minItems": 1,
+      "description": "DISPLAY ORDER IS ARRAY ORDER. Deliberately a different order from `bars` — the pre-refactor page listed the bars as school/village/county/town but the explainers as school/county/village/town. Kept as two independent arrays rather than forced into one order.",
+      "items": { "$ref": "#/$defs/explainer" }
+    }
+  },
+  "$defs": {
+    "bar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "percent_text", "bar_width", "fill_style"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable slug for the row." },
+        "label": { "type": "string", "description": "Row name as printed, without the icon." },
+        "icon": { "type": ["string", "null"], "description": "Emoji rendered before the label." },
+        "percent_text": {
+          "type": "string",
+          "description": "The text printed at the right of the row — NOT a number, because three of the four shares are not published figures. Real values include 'largest share*', 'est. — verify*' and '~3–5%'. Keep the hedging: only the village share has a source."
+        },
+        "bar_width": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "PRESENTATION ONLY — the CSS width percentage of the filled bar. This is NOT data and must never be read back as a tax percentage. The four current widths (60/25/12/4) sum to 101 and only the village figure corresponds to a sourced number; the others are illustrative proportions chosen to look right. If a genuine published breakdown ever exists, add it as facts and render percent_text from those, but keep this field separate."
+        },
+        "fill_style": {
+          "enum": ["school", "village", "county", "town"],
+          "description": "Bar colour; renders as CSS class .bar-<value>. Must match an existing rule in the stylesheet."
+        },
+        "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id. Null for a row covering more than one body, e.g. 'Village (Pelham or Manor)'." }
+      }
+    },
+    "explainer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "description", "accent"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable slug for the block." },
+        "title": { "type": "string", "description": "Block heading, without the icon." },
+        "icon": { "type": ["string", "null"], "description": "Emoji rendered before the title." },
+        "description": { "type": "string", "description": "What this body's share of the bill actually funds. Safe HTML subset plus {{fact:<id>}} tokens — write {{fact:village-budget-fy2627}}, never a literal dollar figure." },
+        "accent": {
+          "enum": ["none", "gold", "red", "green"],
+          "description": "Block accent colour; renders as CSS class .<value> on .tax-explainer-block ('none' emits no extra class). Presentation only, and deliberately not aligned to the bar colours — the pre-refactor page used a different colour per block than per bar."
+        },
+        "link": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["label", "url"],
+          "description": "The source link at the foot of the block.",
+          "properties": {
+            "label": { "type": "string", "description": "Link text, e.g. 'School budget documents'." },
+            "url": { "type": "string", "description": "Destination." }
+          }
+        },
+        "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id." }
+      }
+    }
+  }
+}
