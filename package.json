@@ -5,6 +5,7 @@
   "description": "Playwright end-to-end tests for the Pelham Civic Guide (https://pelhamengagementproject.netlify.app/)",
   "scripts": {
     "test": "playwright test --config=tests/playwright.config.js",
+    "test:local": "playwright test --config=tests/playwright.config.local.js",
     "test:ui": "playwright test --config=tests/playwright.config.js ui.spec.js",
     "test:ai": "playwright test --config=tests/playwright.config.js ai.spec.js",
     "test:headed": "playwright test --config=tests/playwright.config.js --headed",
