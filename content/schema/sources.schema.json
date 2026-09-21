@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pelham/sources.schema.json",
+  "title": "Vetted sources",
+  "description": "The canonical list of sources this project draws on. Generates FOUR renderings that were previously maintained by hand and had already drifted apart: the source chips above Ask Pelham, the 'Our Sources' list in About, the footer source line (which omitted Westchester County), and the vetted-source list at the top of the AI system prompt. This list is load-bearing for the assistant -- it defines what the model is permitted to draw on -- so adding an entry widens the AI's allowed sources and is not a cosmetic change.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sources"],
+  "properties": {
+    "$schema": { "type": "string", "description": "Relative path to this schema file." },
+    "sources": {
+      "type": "array",
+      "description": "DISPLAY ORDER IS ARRAY ORDER, for the chips, the About list and the footer alike.",
+      "items": { "$ref": "#/$defs/source" }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "domain", "url", "description", "civic_source"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable kebab-case slug." },
+        "name": { "type": "string", "description": "Display name, e.g. 'Village of Pelham Manor' or 'Pelham Examiner'." },
+        "domain": { "type": "string", "description": "Bare domain as printed on the chips and in the prompt, e.g. 'pelhammanor.gov'. No scheme, no trailing slash." },
+        "url": { "type": "string", "description": "Full URL used for links. Kept separate from domain because the chips print the bare domain while the links need the scheme and any www prefix." },
+        "description": { "type": "string", "description": "The parenthetical shown after the domain in the system prompt and after the arrow in the About list, e.g. 'Village of Pelham official site'." },
+        "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id where this source IS a governing body's official site. Null for news sources. Lets the build cross-check that every governing body's website appears here." },
+        "civic_source": {
+          "type": "boolean",
+          "description": "True for a civic or news source that is NOT a government body's own site -- the Pelham Examiner is the only one today. Flagged because the assistant must treat it differently: the Examiner honesty rule in prompt-template.md forbids implying the model has searched its archive, and RAG hits against it are attributed rather than stated as record."
+        },
+        "in_prompt": { "type": "boolean", "default": true, "description": "Whether this source appears in the generated system prompt's vetted-source list. Default true. Setting false keeps a source on the page without widening what the AI may draw on." }
+      }
+    }
+  }
+}

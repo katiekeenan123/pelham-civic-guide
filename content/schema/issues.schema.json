@@ -5,9 +5,14 @@
   "description": "The cards rendered into the #issues section (Explore More -> Current Issues). Nine at the time of the audit. Text fields accept a safe HTML subset (<strong>, <em>, <a>, <br>) and {{fact:<id>}} tokens; anything else is escaped and unknown tags fail the build.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["issues"],
+  "required": [
+    "issues"
+  ],
   "properties": {
-    "$schema": { "type": "string", "description": "Relative path to this schema file, so editors validate on save." },
+    "$schema": {
+      "type": "string",
+      "description": "Relative path to this schema file, so editors validate on save."
+    },
     "section_intro": {
       "type": "string",
       "description": "Lead paragraph above the grid. Should carry a {{fact:issues-last-updated}} token rather than a literal month -- the audit found this saying 'September 2026' while the footer said 'June 2026'."
@@ -15,23 +20,44 @@
     "issues": {
       "type": "array",
       "description": "DISPLAY ORDER IS ARRAY ORDER. There is deliberately no 'order' field: a second source of ordering is a second thing to keep in sync.",
-      "items": { "$ref": "#/$defs/issue" }
+      "items": {
+        "$ref": "#/$defs/issue"
+      }
     }
   },
   "$defs": {
     "issue": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "title", "status", "status_label", "tag", "tag_style", "description", "governing_body", "source_url", "source_label", "last_updated"],
+      "required": [
+        "id",
+        "title",
+        "status",
+        "status_label",
+        "tag",
+        "tag_style",
+        "description",
+        "governing_body",
+        "source_url",
+        "source_label",
+        "last_updated"
+      ],
       "properties": {
         "id": {
           "type": "string",
           "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
           "description": "Stable kebab-case slug. Becomes the card's DOM id and anchor target, and is the key the RAG pipeline tags Examiner articles against. Never renumber or reword -- inbound links and article tags break."
         },
-        "title": { "type": "string", "description": "Card headline (h3). Plain text, no markup." },
+        "title": {
+          "type": "string",
+          "description": "Card headline (h3). Plain text, no markup."
+        },
         "status": {
-          "enum": ["active", "watch", "resolved"],
+          "enum": [
+            "active",
+            "watch",
+            "resolved"
+          ],
           "description": "Drives the coloured dot: renders as CSS class .dot-<value>. Only these three exist in the stylesheet. Adding a fourth (e.g. 'urgent') requires adding matching CSS first, or the dot renders unstyled."
         },
         "status_label": {
@@ -43,7 +69,13 @@
           "description": "The words printed on the chip: 'Budget / Taxes', 'Personnel', 'Elections'. Deliberately NOT the same as tag_style -- the audit found tag-budget carrying three different labels and tag-energy carrying two."
         },
         "tag_style": {
-          "enum": ["budget", "energy", "infrastructure", "education", "transit"],
+          "enum": [
+            "budget",
+            "energy",
+            "infrastructure",
+            "education",
+            "transit"
+          ],
           "description": "Chip colour only: renders as CSS class .tag-<value>. Many labels share one style; that is intended. Must match an existing .tag-<value> rule."
         },
         "description": {
@@ -53,17 +85,43 @@
         "governing_body": {
           "type": "array",
           "minItems": 1,
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Foreign keys to bodies.json ids. An ARRAY because issues span bodies: the EMS station is Town + Village, the Con Ed rate case is Village + County. Build fails on an id with no matching body."
         },
-        "source_url":   { "type": "string", "description": "Primary source link. May be an on-page anchor such as '#elections'." },
-        "source_label": { "type": "string", "description": "Link text WITHOUT a date, e.g. 'Pelham Examiner'. The date comes from source_date so every card renders it the same way -- today they are inconsistently formatted inline." },
-        "source_date":  { "type": ["string", "null"], "description": "Publication date of the source (YYYY-MM-DD). Null for undated links like a search page." },
-        "last_updated": { "type": "string", "description": "When a human last reviewed this card against its source (YYYY-MM-DD). Surfaced by the build as a staleness warning." },
+        "source_url": {
+          "type": "string",
+          "description": "Primary source link. May be an on-page anchor such as '#elections'."
+        },
+        "source_label": {
+          "type": "string",
+          "description": "Link text WITHOUT a date, e.g. 'Pelham Examiner'. The date comes from source_date so every card renders it the same way -- today they are inconsistently formatted inline."
+        },
+        "source_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Publication date of the source (YYYY-MM-DD). Null for undated links like a search page."
+        },
+        "last_updated": {
+          "type": "string",
+          "description": "When a human last reviewed this card against its source (YYYY-MM-DD). Surfaced by the build as a staleness warning."
+        },
         "keywords": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Retrieval hints for the Ask Pelham RAG step -- names, places and phrases a resident might type that do not appear verbatim in the title. Not rendered."
+        },
+        "prompt_caution": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A jurisdiction or attribution warning emitted whenever the generated prompt discusses this issue, e.g. 'This is a PELHAM MANOR matter -- NOT the Village of Pelham and NOT the Town of Pelham.' Pelham's layered government makes misattribution the most likely factual error the assistant can make, and tests/ai.spec.js already asserts the Amtrak/Forest Road case specifically. Attached to the issue rather than the prompt template so it is retired together with the issue."
         },
         "show_on_home": {
           "type": "boolean",

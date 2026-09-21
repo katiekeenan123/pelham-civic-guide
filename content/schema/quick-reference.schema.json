@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pelham/quick-reference.schema.json",
+  "title": "Who to call for what",
+  "description": "The routing card that sits as the sixth tile in the Who Governs grid. Split out of bodies.json because it is not a governing body -- it has no budget, website, officials or meetings, and every one of those fields would be null. Seven entries, extracted from the 'Who to call for what?' card in index.html. Prose fields accept {{fact:<id>}} tokens.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entries"],
+  "properties": {
+    "$schema": { "type": "string", "description": "Relative path to this schema file." },
+    "label": { "type": "string", "description": "Card eyebrow, e.g. 'Quick Reference'." },
+    "title": { "type": "string", "description": "Card heading, e.g. 'Who to call for what?'." },
+    "entries": {
+      "type": "array",
+      "description": "DISPLAY ORDER IS ARRAY ORDER.",
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "question", "route_to", "governing_body"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable kebab-case slug for the situation being routed, e.g. 'pothole'." },
+        "question": { "type": "string", "description": "The resident's situation as printed in bold, e.g. 'Pothole on your street?'. Phrased as the reader's own question, not as a department name." },
+        "route_to": { "type": "string", "description": "The destination as displayed after the arrow, e.g. 'Village DPW'. Short label, not a sentence." },
+        "governing_body": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Foreign keys to bodies.json ids. An ARRAY because several routes are genuinely ambiguous in the current copy: Pelham has TWO villages with separate DPW and police departments, so 'Village DPW' resolves to either depending on where the reader lives. Listing both is honest; the build can render 'your village's DPW' when more than one body is present."
+        },
+        "phone": { "type": ["string", "null"], "description": "Direct phone number where one is published. Use a {{fact:<id>}} token rather than a literal, so the number stays in step with the same number quoted in Your Taxes and in the AI prompt." },
+        "url": { "type": ["string", "null"], "description": "Deep link to the relevant page, where one exists. Null when the current card offers no link." },
+        "note": { "type": ["string", "null"], "description": "Short clarifier shown in parentheses, e.g. '(Town-run)' for the library, which residents often assume is a village service." }
+      }
+    }
+  }
+}

@@ -5,7 +5,9 @@
   "description": "Every figure that appears in more than one place on the site or in the AI system prompt. Nothing else may hard-code these values: content files and prose partials reference them with a {{fact:<id>}} token, which the build resolves. An unknown token is a build error. This file is the reason the refactor exists -- the September 2026 audit found the school budget, the village debt figure and the capital bond each living in 3-5 places with different values.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["facts"],
+  "required": [
+    "facts"
+  ],
   "properties": {
     "$schema": {
       "type": "string",
@@ -14,14 +16,24 @@
     "facts": {
       "type": "array",
       "description": "Unordered. Facts are looked up by id, never by position.",
-      "items": { "$ref": "#/$defs/fact" }
+      "items": {
+        "$ref": "#/$defs/fact"
+      }
     }
   },
   "$defs": {
     "fact": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "category", "fact", "display", "as_of", "last_updated", "source"],
+      "required": [
+        "id",
+        "category",
+        "fact",
+        "display",
+        "as_of",
+        "last_updated",
+        "source"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -29,7 +41,16 @@
           "description": "Stable kebab-case slug. This is the token name: id 'village-budget-fy2627' is written {{fact:village-budget-fy2627}} in any text field. Never rename without updating every reference -- the build will catch it if you forget."
         },
         "category": {
-          "enum": ["budget", "debt", "tax", "election", "contact", "history", "demographic", "governance"],
+          "enum": [
+            "budget",
+            "debt",
+            "tax",
+            "election",
+            "contact",
+            "history",
+            "demographic",
+            "governance"
+          ],
           "description": "Grouping only. Used to organise the generated system prompt and to let a human scan for related figures that ought to move together."
         },
         "fact": {
@@ -37,7 +58,11 @@
           "description": "Human-readable statement of WHAT this measures, independent of its value. e.g. 'PUFSD adopted budget, FY2026-27'. Shown in the generated system prompt and in review diffs."
         },
         "value": {
-          "type": ["number", "string", "null"],
+          "type": [
+            "number",
+            "string",
+            "null"
+          ],
           "description": "Machine-readable value where one makes sense (98300000, 3.48, '2026-11-03'). Optional. Present so future arithmetic or charts never re-parse the display string. Null for facts that are purely textual."
         },
         "display": {
@@ -45,8 +70,20 @@
           "description": "The canonical rendered string -- '$98.3M'. This is what a {{fact:id}} token expands to. One string, so the hero stat, the issue card and the AI prompt cannot disagree about formatting."
         },
         "qualifier": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Any caveat that must travel with the number: 'voter-approved May 2026; levy rose 3.48%, at the state cap'. Kept separate so a card can show the bare figure while the AI prompt shows the full context. May contain {{fact:id}} tokens."
+        },
+        "confidence": {
+          "enum": [
+            "verified",
+            "reported",
+            "estimated"
+          ],
+          "default": "verified",
+          "description": "How firmly this figure is established, which controls the hedging language the generated prompt wraps it in. 'verified' = confirmed in an official document or adopted budget, state it plainly. 'reported' = covered by a vetted source but not confirmed in a primary record, so the prompt must attribute it and point the resident to the official source (the Pelham Middle School principal transition is the live example -- it appears in no processed meeting record). 'estimated' = a derived or approximate figure, must be presented as an estimate and never as a published percentage."
         },
         "as_of": {
           "type": "string",
@@ -58,8 +95,18 @@
           "description": "When a human last verified this against the source. Drives staleness warnings in the build."
         },
         "supersedes": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Id of the fact this replaces, e.g. 'school-budget-fy2526'. Makes the replacement of a stale figure explicit and reviewable rather than a silent overwrite. The superseded fact may stay in the file for historical reference."
+        },
+        "caution": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "A negative instruction emitted immediately after this fact in the generated prompt, e.g. 'Do not state that a 5-2 vote occurred at any point in this process.' Exists so that guardrails correcting a known model error stay ATTACHED to the fact they guard: written into the hand-authored template instead, they outlive the figure they refer to and nobody remembers why they are there. When the fact is superseded or deleted, its caution goes with it."
         },
         "in_prompt": {
           "type": "boolean",
@@ -69,17 +116,35 @@
         "source": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["name", "url"],
+          "required": [
+            "name",
+            "url"
+          ],
           "description": "Where the number came from. Required -- an unsourced fact is exactly what this file exists to eliminate.",
           "properties": {
-            "name": { "type": "string", "description": "Publisher, e.g. 'Pelham Examiner' or 'Village of Pelham adopted budget'." },
-            "url":  { "type": "string", "format": "uri", "description": "Direct link to the document or article." },
-            "date": { "type": ["string", "null"], "description": "Publication date of the source (YYYY-MM-DD)." }
+            "name": {
+              "type": "string",
+              "description": "Publisher, e.g. 'Pelham Examiner' or 'Village of Pelham adopted budget'."
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "Direct link to the document or article."
+            },
+            "date": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Publication date of the source (YYYY-MM-DD)."
+            }
           }
         },
         "used_in": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "GENERATED -- do not hand-edit. The build fills this in with every location that resolved a token for this fact, so you can see the blast radius of a change. Hand-written values are overwritten."
         }
       }

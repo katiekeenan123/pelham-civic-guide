@@ -1,0 +1,66 @@
+{
+  "$schema": "./schema/sources.schema.json",
+
+  "sources": [
+    {
+      "id": "pelhamny-gov",
+      "name": "Village of Pelham",
+      "domain": "pelhamny.gov",
+      "url": "https://www.pelhamny.gov",
+      "description": "Village of Pelham official site",
+      "governing_body": "village-of-pelham",
+      "civic_source": false,
+      "in_prompt": true
+    },
+    {
+      "id": "pelhammanor-gov",
+      "name": "Village of Pelham Manor",
+      "domain": "pelhammanor.gov",
+      "url": "https://www.pelhammanor.gov",
+      "description": "Village of Pelham Manor official site",
+      "governing_body": "village-of-pelham-manor",
+      "civic_source": false,
+      "in_prompt": true
+    },
+    {
+      "id": "townofpelhamny-gov",
+      "name": "Town of Pelham",
+      "domain": "townofpelhamny.gov",
+      "url": "https://townofpelhamny.gov",
+      "description": "Town of Pelham official site",
+      "governing_body": "town-of-pelham",
+      "civic_source": false,
+      "in_prompt": true
+    },
+    {
+      "id": "pelhamschools-org",
+      "name": "Pelham Union Free School District",
+      "domain": "pelhamschools.org",
+      "url": "https://www.pelhamschools.org",
+      "description": "Pelham Union Free School District",
+      "governing_body": "pelham-schools",
+      "civic_source": false,
+      "in_prompt": true
+    },
+    {
+      "id": "pelhamexaminer-com",
+      "name": "Pelham Examiner",
+      "domain": "pelhamexaminer.com",
+      "url": "https://pelhamexaminer.com",
+      "description": "local newspaper",
+      "governing_body": null,
+      "civic_source": true,
+      "in_prompt": true
+    },
+    {
+      "id": "westchestercountyny-gov",
+      "name": "Westchester County",
+      "domain": "westchestercountyny.gov",
+      "url": "https://www.westchestercountyny.gov",
+      "description": "Westchester County",
+      "governing_body": "westchester-county",
+      "civic_source": false,
+      "in_prompt": true
+    }
+  ]
+}

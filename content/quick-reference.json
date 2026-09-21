@@ -1,0 +1,72 @@
+{
+  "$schema": "./schema/quick-reference.schema.json",
+
+  "label": "Quick Reference",
+  "title": "Who to call for what?",
+
+  "entries": [
+    {
+      "id": "pothole",
+      "question": "Pothole on your street?",
+      "route_to": "Village DPW",
+      "governing_body": ["village-of-pelham", "village-of-pelham-manor"],
+      "phone": null,
+      "url": null,
+      "note": "Each village runs its own Department of Public Works"
+    },
+    {
+      "id": "noise-complaint",
+      "question": "Noise complaint?",
+      "route_to": "Village Police",
+      "governing_body": ["village-of-pelham", "village-of-pelham-manor"],
+      "phone": null,
+      "url": null,
+      "note": "Each village runs its own police department"
+    },
+    {
+      "id": "tax-bill",
+      "question": "Tax bill question?",
+      "route_to": "Town Receiver of Taxes",
+      "governing_body": ["town-of-pelham"],
+      "phone": "{{fact:town-receiver-phone}}",
+      "url": "https://townofpelhamny.gov/receiver-of-taxes/",
+      "note": "Seat vacant since September 2026; the Deputy Receiver is fulfilling all duties"
+    },
+    {
+      "id": "school-issue",
+      "question": "School issue?",
+      "route_to": "Board of Education",
+      "governing_body": ["pelham-schools"],
+      "phone": null,
+      "url": "https://www.pelhamschools.org/district/board-of-education",
+      "note": null
+    },
+    {
+      "id": "parks-and-rec",
+      "question": "Parks & rec programs?",
+      "route_to": "Town Recreation Dept",
+      "governing_body": ["town-of-pelham"],
+      "phone": null,
+      "url": null,
+      "note": null
+    },
+    {
+      "id": "assessment-dispute",
+      "question": "Property assessment dispute?",
+      "route_to": "Town Assessor",
+      "governing_body": ["town-of-pelham"],
+      "phone": "{{fact:town-assessor-phone}}",
+      "url": null,
+      "note": "Grievances are heard by the Board of Assessment Review"
+    },
+    {
+      "id": "library",
+      "question": "Library hours?",
+      "route_to": "Pelham Public Library",
+      "governing_body": ["town-of-pelham"],
+      "phone": null,
+      "url": "https://www.pelhamlibrary.org",
+      "note": "Town-run, and an independent corporate entity with its own board and audit"
+    }
+  ]
+}

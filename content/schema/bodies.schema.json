@@ -5,36 +5,97 @@
   "description": "The five governing bodies that appear as cards in #who-governs AND as rows in the #meetings quick-reference table AND as chips in Get Involved AND in the AI system prompt. Those four renderings are generated from this one file -- before the refactor each meeting schedule was written out four times, which is how the Town Board's meeting venue came to point at the Town Hall office address instead of Daronco Town House. NOTE: the sixth card in the section ('Who to call for what?') is a routing list, not a governing body; it belongs in its own file.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["bodies"],
+  "required": [
+    "bodies"
+  ],
   "properties": {
-    "$schema": { "type": "string", "description": "Relative path to this schema file." },
+    "$schema": {
+      "type": "string",
+      "description": "Relative path to this schema file."
+    },
     "bodies": {
       "type": "array",
       "description": "DISPLAY ORDER IS ARRAY ORDER, for both the card grid and the meetings table.",
-      "items": { "$ref": "#/$defs/body" }
+      "items": {
+        "$ref": "#/$defs/body"
+      }
     }
   },
   "$defs": {
     "body": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "name", "type", "label", "description", "website"],
+      "required": [
+        "id",
+        "name",
+        "type",
+        "label",
+        "description",
+        "website"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable slug. The join target for issues.governing_body, officials.governing_body, meetings.governing_body and elections races. Renaming one breaks every reference, and the build will say so." },
-        "name": { "type": "string", "description": "Full formal name, e.g. 'Village of Pelham Manor'." },
-        "type": { "enum": ["village", "town", "school", "county"], "description": "What kind of government this is. Drives grouping and lets the AI reason about jurisdiction -- the prompt already has to warn that Forest Road is a Manor matter, not a Village or Town one." },
-        "label": { "type": "string", "description": "Card eyebrow above the heading: 'Village Government', 'School District', 'County Government'." },
-        "accent": { "enum": ["none", "gold", "red", "green"], "description": "Card top-border colour; renders as the CSS class .<value>-top ('none' emits no class). Presentation only." },
-        "description": { "type": "string", "description": "The card paragraph explaining what this body actually does. Safe HTML subset plus {{fact:<id>}} tokens." },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Stable slug. The join target for issues.governing_body, officials.governing_body, meetings.governing_body and elections races. Renaming one breaks every reference, and the build will say so."
+        },
+        "name": {
+          "type": "string",
+          "description": "Full formal name, e.g. 'Village of Pelham Manor'."
+        },
+        "type": {
+          "enum": [
+            "village",
+            "town",
+            "school",
+            "county"
+          ],
+          "description": "What kind of government this is. Drives grouping and lets the AI reason about jurisdiction -- the prompt already has to warn that Forest Road is a Manor matter, not a Village or Town one."
+        },
+        "label": {
+          "type": "string",
+          "description": "Card eyebrow above the heading: 'Village Government', 'School District', 'County Government'."
+        },
+        "accent": {
+          "enum": [
+            "none",
+            "gold",
+            "red",
+            "green"
+          ],
+          "description": "Card top-border colour; renders as the CSS class .<value>-top ('none' emits no class). Presentation only."
+        },
+        "description": {
+          "type": "string",
+          "description": "The card paragraph explaining what this body actually does. Safe HTML subset plus {{fact:<id>}} tokens."
+        },
         "budget": {
-          "type": ["object", "null"],
+          "type": [
+            "object",
+            "null"
+          ],
           "additionalProperties": false,
-          "required": ["label", "fact_ref"],
+          "required": [
+            "label",
+            "fact_ref"
+          ],
           "description": "Budget detail row. An OBJECT rather than a string because the cards legitimately show different fiscal years -- the Town card shows a 2025 figure while the villages show FY2026-27 -- and flattening that to one string is how the school district card sat a year stale.",
           "properties": {
-            "label": { "type": "string", "description": "Row key as displayed, e.g. 'FY2026-27 Budget' or '2025 Budget'." },
-            "fact_ref": { "type": "string", "description": "Id in facts.json holding the figure. The card renders that fact's display value, so the card and the AI prompt cannot diverge." },
-            "note": { "type": ["string", "null"], "description": "Short parenthetical shown after the value, e.g. 'voter-approved' or 'levy up 3.48%'." }
+            "label": {
+              "type": "string",
+              "description": "Row key as displayed, e.g. 'FY2026-27 Budget' or '2025 Budget'."
+            },
+            "fact_ref": {
+              "type": "string",
+              "description": "Id in facts.json holding the figure. The card renders that fact's display value, so the card and the AI prompt cannot diverge."
+            },
+            "note": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Short parenthetical shown after the value, e.g. 'voter-approved' or 'levy up 3.48%'."
+            }
           }
         },
         "detail_rows": {
@@ -43,39 +104,107 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["key", "value"],
+            "required": [
+              "key",
+              "value"
+            ],
             "properties": {
-              "key":   { "type": "string", "description": "Row label, e.g. 'Governing Body'." },
-              "value": { "type": "string", "description": "Row value. May contain {{fact:<id>}} tokens." }
+              "key": {
+                "type": "string",
+                "description": "Row label, e.g. 'Governing Body'."
+              },
+              "value": {
+                "type": "string",
+                "description": "Row value. May contain {{fact:<id>}} tokens."
+              }
             }
           }
         },
         "meeting_schedule": {
-          "type": ["object", "null"],
+          "type": [
+            "object",
+            "null"
+          ],
           "additionalProperties": false,
-          "required": ["cadence", "location_name", "address"],
+          "required": [
+            "cadence",
+            "location_name",
+            "address"
+          ],
           "description": "THE single source for this body's public meetings. Feeds the Who Governs card, the meetings table, the 'Where to Show Up' chips and the system prompt. Null for a body with no local public meeting (the county).",
           "properties": {
-            "cadence":       { "type": "string", "description": "Short form for chips and cards: '2nd & 4th Tuesday, monthly'." },
-            "cadence_detail":{ "type": ["string", "null"], "description": "Longer form for the meetings table, including a time where known: 'Monthly (typically 2nd Monday at 8:15 pm)'. Falls back to cadence when null." },
-            "location_name": { "type": "string", "description": "Venue name, e.g. 'Daronco Town House'. Kept separate from the address so the two can never be mismatched again." },
-            "address":       { "type": "string", "description": "Street address of the MEETING VENUE -- not the offices. For the Town this is 20 Fifth Ave (Daronco Town House), which is a different building from Town Hall." },
-            "participation": { "type": ["string", "null"], "description": "How a resident actually speaks at this body's meeting. Varies by board and the prompt explicitly forbids describing a universal sign-up process." }
+            "cadence": {
+              "type": "string",
+              "description": "Short form for chips and cards: '2nd & 4th Tuesday, monthly'."
+            },
+            "cadence_detail": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Longer form for the meetings table, including a time where known: 'Monthly (typically 2nd Monday at 8:15 pm)'. Falls back to cadence when null."
+            },
+            "location_name": {
+              "type": "string",
+              "description": "Venue name, e.g. 'Daronco Town House'. Kept separate from the address so the two can never be mismatched again."
+            },
+            "address": {
+              "type": "string",
+              "description": "Street address of the MEETING VENUE -- not the offices. For the Town this is 20 Fifth Ave (Daronco Town House), which is a different building from Town Hall."
+            },
+            "participation": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "How a resident actually speaks at this body's meeting. Varies by board and the prompt explicitly forbids describing a universal sign-up process."
+            }
           }
         },
-        "offices_address": { "type": ["string", "null"], "description": "Where the body's OFFICES are, when that differs from the meeting venue. The Town of Pelham is the live example: offices at 34 Fifth Ave, meetings at 20 Fifth Ave. Modelled separately because conflating them is a bug that already shipped once." },
-        "website": { "type": "string", "description": "Primary official site, used for the card's main link." },
-        "phone":   { "type": ["string", "null"], "description": "Main public phone number, e.g. the Town Receiver of Taxes line. Referenced from facts.json where the same number appears in prose." },
+        "public_comment_process": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "How public comment actually works at THIS body's meetings, e.g. 'residents typically sign in at the door before the meeting starts' or 'public comment is called from the floor -- stand or raise your hand when the chair invites it'. Assembled into the generated prompt's per-board block. The surrounding rules (never describe a universal sign-up process; always tell residents to arrive 10-15 minutes early and ask the clerk) stay hand-authored in prompt-template.md, because they are behaviour rather than data. Distinct from meeting_schedule.participation, which is the shorter phrasing rendered in the meetings table on the page."
+        },
+        "offices_address": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Where the body's OFFICES are, when that differs from the meeting venue. The Town of Pelham is the live example: offices at 34 Fifth Ave, meetings at 20 Fifth Ave. Modelled separately because conflating them is a bug that already shipped once."
+        },
+        "website": {
+          "type": "string",
+          "description": "Primary official site, used for the card's main link."
+        },
+        "phone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Main public phone number, e.g. the Town Receiver of Taxes line. Referenced from facts.json where the same number appears in prose."
+        },
         "source_links": {
           "type": "array",
           "description": "The small link row at the foot of the card (budgets, agendas, rosters, news).",
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["label", "url"],
+            "required": [
+              "label",
+              "url"
+            ],
             "properties": {
-              "label": { "type": "string", "description": "Link text, e.g. 'Adopted Budgets'." },
-              "url":   { "type": "string", "description": "Destination." }
+              "label": {
+                "type": "string",
+                "description": "Link text, e.g. 'Adopted Budgets'."
+              },
+              "url": {
+                "type": "string",
+                "description": "Destination."
+              }
             }
           }
         }
