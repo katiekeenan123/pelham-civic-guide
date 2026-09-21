@@ -44,6 +44,9 @@ const DATA_FILES = [
 let errors = [];
 const fail = (where, msg) => errors.push(`${where}: ${msg}`);
 
+// Maintainer comments removed from partials on the way into index.html.
+const stripped = [];
+
 // ── html helpers ───────────────────────────────────────────────────────────
 // Content fields carry a deliberate safe subset of HTML (<strong>, <em>, <a>,
 // <br>), so prose is emitted raw. Only values that should never contain markup
@@ -54,6 +57,25 @@ const esc = (s) =>
 
 const indent = (block, pad) =>
   block.split('\n').map((l) => (l.trim() ? pad + l : l)).join('\n');
+
+// Maintainer comments in the meeting partials are notes to whoever edits the
+// file, not content for readers, so they are dropped on the way into
+// index.html. The partial keeps them — it is the source of truth, and an
+// unresolved REVIEW flag should stay visible to anyone opening that file.
+//
+// Matched on the comment's first word rather than a literal "<!-- REVIEW:"
+// prefix: the flags in the July partials open with a newline and read
+// "REVIEW FLAG - ...", so a strict prefix match would silently strip nothing.
+// Leading whitespace and the colon are both optional.
+const MAINTAINER_COMMENT = /<!--\s*(REVIEW|NOTE|BUILD)\b[\s\S]*?-->\n?/gi;
+
+function stripMaintainerComments(text, file, stats) {
+  return text.replace(MAINTAINER_COMMENT, (m) => {
+    const kind = /<!--\s*([A-Z]+)/i.exec(m)[1].toUpperCase();
+    stats.push({ file, kind });
+    return '';
+  });
+}
 
 // =========================================================================
 // PHASE 1 — load and validate
@@ -388,9 +410,10 @@ function generateMeetings(data, r) {
       const hidePanel = tab === 'exec' ? '' : ' style="display:none;"';
       out.push(`      <div id="panel-${esc(m.id)}-${tab}" class="mtg-panel" data-tab="${tab}"${hidePanel}>`);
       let partial = read(p(m[key]));
+      partial = stripMaintainerComments(partial, m[key], stripped);
       // Partials were extracted as panel inner HTML and end with the closing
       // tag's indentation; restore that exactly rather than re-indenting.
-      partial = partial.replace(/\n$/, '');
+      partial = partial.replace(/^\n+/, '').replace(/\n$/, '');
       out.push(partial);
       out.push('      </div>');
     }
@@ -639,6 +662,13 @@ function main() {
   console.log(`  meetings           ${stats.selectors} published, ${stats.sets} panel sets, ${stats.sets * 3} partials`);
   console.log(`  sections generated ${sections.length}`);
   console.log(`  html ids           ${stats.ids}, no duplicates`);
+  if (stripped.length) {
+    const kinds = [...new Set(stripped.map((s) => s.kind))].join(', ');
+    console.log(`  partial comments   ${stripped.length} stripped (${kinds}) — kept in the partials`);
+  }
+  for (const s of stripped.filter((x) => x.kind === 'BUILD')) {
+    console.log(`  ⚠ ${s.file} contained a BUILD comment; stripped, but that would have broken the splice`);
+  }
   console.log(`  system prompt      ${promptText.length.toLocaleString()} chars → netlify/functions/system-prompt.js`);
   console.log(`  output             ${changed.length ? changed.join(', ') : 'unchanged (idempotent)'}`);
   console.log('');
