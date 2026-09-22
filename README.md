@@ -117,8 +117,16 @@ table.
 > `KNOWN_ISSUES` is now generated from `issues.json`, but the canonical strings
 > themselves are still duplicated across the two repos.
 
-**Supabase** holds four tables: `articles` (the pipeline's output), plus
-`feedback`, `corrections` and `civic_engagement` written by the page.
+**Supabase** holds five tables: `articles` and `meetings` (the pipeline's
+output), plus `feedback`, `corrections` and `civic_engagement` written by the
+page.
+
+`meetings` (593+ rows) tracks detection and draft status for all four boards —
+what the pipeline has found and how far through processing it is. It is **not**
+what the site reads. `content/meetings.json` and the HTML partials in
+`content/meetings/` are the source of truth for what is actually published;
+a row in the `meetings` table means the pipeline saw a meeting, not that it
+appears on the site.
 
 **Railway** hosts the scheduled pipeline run.
 <!-- TODO(maintainers): confirm which services run on Railway and on what
