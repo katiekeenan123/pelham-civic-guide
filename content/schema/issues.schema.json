@@ -23,6 +23,23 @@
       "items": {
         "$ref": "#/$defs/issue"
       }
+    },
+    "rag_only_issues": {
+      "type": "object",
+      "description": "Canonical matched_issue values that have no issue card on the page but are still tagged on stored articles, so they must survive into KNOWN_ISSUES. 'debt' and 'rising taxes' split one card two ways; 'stormwater' and 'Siwanoy expansion' have no card at all.",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "rag_order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Emission order for the generated KNOWN_ISSUES map. This is load-bearing, not cosmetic: matchIssue scores by the LONGEST matching keyword and breaks ties by iteration order, and many keywords across different issues are the same length ('colonial' and 'flooding' are both 8). Reordering can therefore change which issue a question routes to. Pinned to the order the map was written in by hand so the switch to generation changed no routing. The build fails if this list does not exactly cover the generated keys."
     }
   },
   "$defs": {
@@ -127,6 +144,20 @@
           "type": "boolean",
           "default": true,
           "description": "False hides the card from the grid while keeping it in the file (resolved issues worth retaining for the AI and for history). Hidden issues still feed the system prompt."
+        },
+        "rag_issue": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The CANONICAL issue name as stored in the Supabase articles.matched_issue column, e.g. 'Picture House'. This is not a label and must not be tidied: check_examiner.py in the companion repo writes these exact strings, so renaming one silently stops matching every article already stored under the old spelling. Null when no article has ever been tagged with this issue — inventing a key would only produce a filter that matches nothing."
+        },
+        "rag_keywords": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Lowercase keywords that route a reader's question to this issue, emitted into KNOWN_ISSUES. Deliberately separate from `keywords`: that field is editorial description, while these are tuned against the longest-match-wins algorithm in matchIssue, so generic words are excluded on purpose — 'redevelopment' here would pull EMS-station questions onto the Picture House."
         }
       }
     }

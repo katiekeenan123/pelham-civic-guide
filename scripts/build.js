@@ -577,6 +577,65 @@ function generateFooter(data, r) {
   ].join('\n');
 }
 
+// KNOWN_ISSUES for the RAG step in ask-pelham.js.
+//
+// The KEYS are canonical values stored in Supabase articles.matched_issue by
+// check_examiner.py in the companion repo, so they are taken verbatim from
+// issues[].rag_issue and must never be derived from the issue id — renaming
+// one stops matching every article already tagged with the old spelling, and
+// nothing in the test suite would notice.
+//
+// Only the keyword lists are generated. Cards whose rag_issue is null are
+// skipped: no stored article is tagged with them, so a key would match
+// nothing. rag_only_issues carries the canonical issues that have no card.
+function generateKnownIssues(data) {
+  const entries = [];
+  for (const i of data.issues.issues) {
+    if (!i.rag_issue) continue;
+    entries.push([i.rag_issue, i.rag_keywords || []]);
+  }
+  for (const [key, kws] of Object.entries(data.issues.rag_only_issues || {})) {
+    entries.push([key, kws]);
+  }
+
+  const seen = new Set();
+  for (const [key] of entries) {
+    if (seen.has(key)) fail('issues.json', `duplicate rag_issue key "${key}"`);
+    seen.add(key);
+  }
+
+  // Emission order is load-bearing: matchIssue breaks longest-match ties by
+  // iteration order, and many keywords across issues are the same length
+  // ("colonial" and "flooding" are both 8). rag_order pins it so generating
+  // the map cannot silently re-route a question.
+  const order = data.issues.rag_order || [];
+  const missing = [...seen].filter((k) => !order.includes(k));
+  const extra = order.filter((k) => !seen.has(k));
+  if (missing.length) fail('issues.json', `rag_order is missing: ${missing.join(', ')}`);
+  if (extra.length) fail('issues.json', `rag_order names unknown issues: ${extra.join(', ')}`);
+  entries.sort((a, b) => order.indexOf(a[0]) - order.indexOf(b[0]));
+  // A keyword on two issues makes routing depend on object order.
+  const owner = new Map();
+  for (const [key, kws] of entries) {
+    for (const k of kws) {
+      if (owner.has(k)) {
+        fail('issues.json', `keyword "${k}" is claimed by both "${owner.get(k)}" and "${key}" — longest-match routing would depend on key order`);
+      }
+      owner.set(k, key);
+      if (k !== k.toLowerCase()) fail('issues.json', `rag keyword "${k}" must be lowercase`);
+    }
+  }
+
+  // Bare identifier keys where JS allows it, quoted otherwise — matching how
+  // the map was written by hand.
+  const q = (v) => `'${v.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+  const lines = entries.map(([key, kws]) => {
+    const k = /^[a-z][a-zA-Z0-9]*$/.test(key) ? key : q(key);
+    return `  ${k}: [${kws.map(q).join(', ')}],`;
+  });
+  return ['const KNOWN_ISSUES = {', ...lines, '};'].join('\n');
+}
+
 function generateHeroStats(data, r) {
   const parts = data.hero.stats.map((s) => {
     const num = r(`{{fact:${s.fact_ref}}}`, 'hero.json');
@@ -660,7 +719,9 @@ function phase5(html, data) {
     }
   }
 
-  return { ids: ids.length, selectors, sets, archived: published.length - expectedSelectors };
+  return { ids: ids.length, selectors, sets, archived: published.length - expectedSelectors,
+           ragKeys: data.issues.issues.filter((i) => i.rag_issue).length
+                    + Object.keys(data.issues.rag_only_issues || {}).length };
 }
 
 // =========================================================================
@@ -697,10 +758,17 @@ function main() {
   // inside a BUILD anchor; phase 5 fails the build if any survive.
 
   const stats = phase5(html, data);
+
+  // ask-pelham.js is part-generated too: its KNOWN_ISSUES map comes from
+  // issues.json, everything else in the file is hand-written.
+  let fn = read(p('netlify', 'functions', 'ask-pelham.js'));
+  fn = splice(fn, 'known-issues', generateKnownIssues(data), 'js');
+
   if (errors.length) return report();
 
   const targets = [
     [p('index.html'), html],
+    [p('netlify', 'functions', 'ask-pelham.js'), fn],
     [p('netlify', 'functions', 'system-prompt.js'), promptModule],
   ];
 
@@ -738,6 +806,7 @@ function main() {
     console.log(`  ⚠ ${s.file} contained a BUILD comment; stripped, but that would have broken the splice`);
   }
   console.log(`  system prompt      ${promptText.length.toLocaleString()} chars → netlify/functions/system-prompt.js`);
+  console.log(`  KNOWN_ISSUES       ${stats.ragKeys} canonical keys → netlify/functions/ask-pelham.js`);
   console.log(`  output             ${changed.length ? changed.join(', ') : 'unchanged (idempotent)'}`);
   console.log('');
 }

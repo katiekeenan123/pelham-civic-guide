@@ -249,22 +249,21 @@ async function recordSubmission(body) {
 // The keyword lists over-match on purpose; the longest keyword that hits wins
 // (see matchIssue), which is what keeps "who is the receiver of taxes" on the
 // "Receiver of Taxes transition" issue instead of the broader "rising taxes".
+/* BUILD:known-issues */
 const KNOWN_ISSUES = {
-  'Picture House': ['picture house'],
-  'Colonial Elementary AC': ['colonial', 'air conditioning', 'air-conditioning', 'hvac'],
-  'EMS station': ['ems', 'ambulance', 'emergency medical', 'paramedic'],
-  'library transformation': [
-    'library', 'library board', 'library renovation',
-    'transformation project', 'shakane',
-  ],
-  'tractor-trailer ban': ['tractor-trailer', 'tractor trailer', 'truck ban', 'trucks', 'trucking'],
-  'Con Edison rate': ['con edison', 'coned', 'con ed', 'utility rate'],
-  'rising taxes': ['tax levy', 'taxes', 'tax rate', 'assessment'],
-  debt: ['debt', 'bond', 'borrowing', 'capital plan'],
+  'Picture House': ['picture house', 'php partners', 'smithmeyer', 'wolfs lane'],
+  'Colonial Elementary AC': ['colonial', 'colonial elementary', 'air conditioning', 'air-conditioning', 'hvac', 'prospect hill'],
+  'EMS station': ['ems', 'ems station', 'ambulance', 'emergency medical', 'paramedic', 'first street', 'community church'],
+  'library transformation': ['library', 'library board', 'library renovation', 'transformation project', 'shakane'],
+  'tractor-trailer ban': ['tractor-trailer', 'tractor trailer', 'truck ban', 'trucks', 'trucking', 'boston post road', 'nys dot'],
+  'Con Edison rate': ['con edison', 'coned', 'con ed', 'utility rate', 'rate hike', 'public service commission', 'electric rates'],
+  'rising taxes': ['tax levy', 'taxes', 'tax rate', 'assessment', 'property taxes', 'tax cap override', 'village budget'],
+  debt: ['debt', 'bond', 'borrowing', 'capital plan', 'debt service'],
   stormwater: ['stormwater', 'storm water', 'flooding', 'flood', 'sewer', 'drainage'],
   'Siwanoy expansion': ['siwanoy'],
-  'Receiver of Taxes transition': ['receiver of taxes', 'erica winter', 'deputy receiver'],
+  'Receiver of Taxes transition': ['receiver of taxes', 'erica winter', 'deputy receiver', 'darlene paolericio', 'tax collection', 'referendum'],
 };
+/* /BUILD:known-issues */
 
 // Canonical candidate surnames, as stored in articles.matched_candidate.
 const KNOWN_CANDIDATES = [

@@ -25,7 +25,17 @@
         "Local Law No. 1"
       ],
       "prompt_caution": null,
-      "show_on_home": true
+      "show_on_home": true,
+      "rag_issue": "rising taxes",
+      "rag_keywords": [
+        "tax levy",
+        "taxes",
+        "tax rate",
+        "assessment",
+        "property taxes",
+        "tax cap override",
+        "village budget"
+      ]
     },
     {
       "id": "receiver-of-taxes-vacancy",
@@ -51,7 +61,16 @@
         "vacancy"
       ],
       "prompt_caution": null,
-      "show_on_home": true
+      "show_on_home": true,
+      "rag_issue": "Receiver of Taxes transition",
+      "rag_keywords": [
+        "receiver of taxes",
+        "erica winter",
+        "deputy receiver",
+        "darlene paolericio",
+        "tax collection",
+        "referendum"
+      ]
     },
     {
       "id": "november-2026-elections",
@@ -78,7 +97,8 @@
         "ballot"
       ],
       "prompt_caution": null,
-      "show_on_home": true
+      "show_on_home": true,
+      "rag_issue": null
     },
     {
       "id": "picture-house",
@@ -104,7 +124,14 @@
         "redevelopment"
       ],
       "prompt_caution": null,
-      "show_on_home": true
+      "show_on_home": true,
+      "rag_issue": "Picture House",
+      "rag_keywords": [
+        "picture house",
+        "php partners",
+        "smithmeyer",
+        "wolfs lane"
+      ]
     },
     {
       "id": "colonial-elementary-ac",
@@ -131,7 +158,16 @@
         "Prospect Hill"
       ],
       "prompt_caution": null,
-      "show_on_home": true
+      "show_on_home": true,
+      "rag_issue": "Colonial Elementary AC",
+      "rag_keywords": [
+        "colonial",
+        "colonial elementary",
+        "air conditioning",
+        "air-conditioning",
+        "hvac",
+        "prospect hill"
+      ]
     },
     {
       "id": "public-library-transformation",
@@ -156,7 +192,15 @@
         "Town Council priorities"
       ],
       "prompt_caution": null,
-      "show_on_home": true
+      "show_on_home": true,
+      "rag_issue": "library transformation",
+      "rag_keywords": [
+        "library",
+        "library board",
+        "library renovation",
+        "transformation project",
+        "shakane"
+      ]
     },
     {
       "id": "manor-tractor-trailer-ban",
@@ -181,7 +225,17 @@
         "truck ban"
       ],
       "prompt_caution": "This is a VILLAGE OF PELHAM MANOR matter. Do not attribute it to the Village of Pelham or the Town of Pelham.",
-      "show_on_home": true
+      "show_on_home": true,
+      "rag_issue": "tractor-trailer ban",
+      "rag_keywords": [
+        "tractor-trailer",
+        "tractor trailer",
+        "truck ban",
+        "trucks",
+        "trucking",
+        "boston post road",
+        "nys dot"
+      ]
     },
     {
       "id": "ems-station-first-street",
@@ -207,7 +261,17 @@
         "ambulance"
       ],
       "prompt_caution": null,
-      "show_on_home": true
+      "show_on_home": true,
+      "rag_issue": "EMS station",
+      "rag_keywords": [
+        "ems",
+        "ems station",
+        "ambulance",
+        "emergency medical",
+        "paramedic",
+        "first street",
+        "community church"
+      ]
     },
     {
       "id": "con-edison-rate-hike",
@@ -232,7 +296,17 @@
         "electric rates"
       ],
       "prompt_caution": null,
-      "show_on_home": true
+      "show_on_home": true,
+      "rag_issue": "Con Edison rate",
+      "rag_keywords": [
+        "con edison",
+        "coned",
+        "con ed",
+        "utility rate",
+        "rate hike",
+        "public service commission",
+        "electric rates"
+      ]
     },
     {
       "id": "fini-park-fireworks",
@@ -259,7 +333,8 @@
         "New Rochelle"
       ],
       "prompt_caution": null,
-      "show_on_home": true
+      "show_on_home": true,
+      "rag_issue": null
     },
     {
       "id": "amtrak-forest-road",
@@ -286,7 +361,41 @@
         "mobile spotlight"
       ],
       "prompt_caution": "This is a VILLAGE OF PELHAM MANOR matter — NOT the Village of Pelham and NOT the Town of Pelham. Village Manager Luft and Pelham PD were actioned at the August 17 2026 Manor Board meeting. Do not attribute this to the Town Council or Village of Pelham board.",
-      "show_on_home": false
+      "show_on_home": false,
+      "rag_issue": null
     }
+  ],
+  "rag_only_issues": {
+    "debt": [
+      "debt",
+      "bond",
+      "borrowing",
+      "capital plan",
+      "debt service"
+    ],
+    "stormwater": [
+      "stormwater",
+      "storm water",
+      "flooding",
+      "flood",
+      "sewer",
+      "drainage"
+    ],
+    "Siwanoy expansion": [
+      "siwanoy"
+    ]
+  },
+  "rag_order": [
+    "Picture House",
+    "Colonial Elementary AC",
+    "EMS station",
+    "library transformation",
+    "tractor-trailer ban",
+    "Con Edison rate",
+    "rising taxes",
+    "debt",
+    "stormwater",
+    "Siwanoy expansion",
+    "Receiver of Taxes transition"
   ]
 }
