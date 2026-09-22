@@ -1,0 +1,19 @@
+{
+  "$schema": "./schema/pages.schema.json",
+
+  "drawer_note": "Meeting summaries are AI-generated from public recordings. Always verify against the official record.",
+
+  "pages": [
+    { "id": "home",         "label": "Home",         "url": "/",             "file": "index.html",        "icon": "🏠", "group": "primary", "badge": null },
+    { "id": "issues",       "label": "Issues",       "url": "/issues",       "file": "issues.html",       "icon": "🔔", "group": "primary", "badge": null },
+    { "id": "elections",    "label": "Elections",    "url": "/elections",    "file": "elections.html",    "icon": "🗳", "group": "primary",
+      "badge": { "label": "Nov 3", "until": "2026-11-03" } },
+    { "id": "meetings",     "label": "Meetings",     "url": "/meetings",     "file": "meetings.html",     "icon": "📋", "group": "primary", "badge": null },
+    { "id": "get-involved", "label": "Get Involved", "url": "/get-involved", "file": "get-involved.html", "icon": "🤝", "group": "primary", "badge": null },
+
+    { "id": "taxes",        "label": "Taxes",        "url": "/taxes",        "file": "taxes.html",        "icon": "💰", "group": "more", "badge": null },
+    { "id": "gov-101",      "label": "Gov 101",      "url": "/gov-101",      "file": "gov-101.html",      "icon": "🏛", "group": "more", "badge": null },
+    { "id": "ask-ai",       "label": "Ask AI",       "url": "/ask",          "file": "ask.html",          "icon": "✦",  "group": "more", "badge": null },
+    { "id": "about",        "label": "About",        "url": "/about",        "file": "about.html",        "icon": "ℹ️", "group": "more", "badge": null }
+  ]
+}

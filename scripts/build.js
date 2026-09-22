@@ -38,7 +38,7 @@ const readJson = (f) => JSON.parse(read(f));
 // Files whose content is data. Each must have a matching schema sidecar.
 const DATA_FILES = [
   'facts', 'bodies', 'officials', 'issues', 'elections',
-  'meetings', 'sources', 'taxes', 'quick-reference', 'hero',
+  'meetings', 'sources', 'taxes', 'quick-reference', 'hero', 'pages',
 ];
 
 let errors = [];
@@ -318,6 +318,108 @@ function writePromptModule(text) {
     + '// bundler follows require() but does not include arbitrary sibling files.\n'
     + `module.exports = ${JSON.stringify(text)};\n`;
   return body;
+}
+
+// =========================================================================
+// SHARED NAVIGATION
+// =========================================================================
+//
+// One nav, rendered per page with the current item marked. Every page pulls
+// from content/pages.json, so the desktop bar, the More menu and the mobile
+// drawer cannot list different things — the failure mode this exists to
+// prevent is a tenth page that appears in one of the three and not the others.
+//
+// generateNav(activePage, data) -> HTML string
+//   activePage is a pages.json id ('home', 'elections', …) or null for a page
+//   that is not in the nav. An unknown id is a build error rather than a nav
+//   with nothing highlighted.
+
+// A badge disappears on its own date. Emitting it conditionally at build time
+// alone is not enough — the site is only rebuilt when content changes, so a
+// "Nov 3" badge would sit there into December if nobody touched the content.
+// It is rendered with the date attached and app.js removes it once the date
+// passes, so the page self-corrects without a rebuild.
+function navBadge(badge) {
+  if (!badge) return '';
+  return ` <span class="nav-badge" data-hide-after="${esc(badge.until)}">${esc(badge.label)}</span>`;
+}
+
+function generateNav(activePage, data) {
+  const pages = data.pages.pages;
+
+  if (activePage !== null && !pages.some((x) => x.id === activePage)) {
+    fail('pages.json', `generateNav called with unknown page "${activePage}"`);
+  }
+
+  // The badge date is duplicated from elections.json by necessity — the nav
+  // needs it without loading the whole elections file at runtime — so the
+  // build checks the two agree rather than trusting them to.
+  for (const pg of pages) {
+    if (pg.badge && pg.badge.until !== data.elections.election_date) {
+      fail('pages.json', `${pg.id} badge.until (${pg.badge.until}) does not match elections.election_date (${data.elections.election_date})`);
+    }
+  }
+
+  const link = (pg, cls) => {
+    const active = pg.id === activePage;
+    const classes = [cls, active ? 'is-active' : ''].filter(Boolean).join(' ');
+    const current = active ? ' aria-current="page"' : '';
+    return `<a href="${esc(pg.url)}" class="${classes}"${current}>${esc(pg.label)}${navBadge(pg.badge)}</a>`;
+  };
+
+  const primary = pages.filter((x) => x.group === 'primary');
+  const more = pages.filter((x) => x.group === 'more');
+  const moreActive = more.some((x) => x.id === activePage);
+
+  const out = [];
+  out.push('<a class="skip-link" href="#main">Skip to content</a>');
+  out.push('<nav class="nav-bar" aria-label="Primary">');
+  out.push('  <div class="nav-inner">');
+
+  // Hamburger first in source order so it is the first thing a keyboard or
+  // screen-reader user reaches on small screens, where it is the only way in.
+  out.push('    <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">');
+  out.push('      <span></span><span></span><span></span>');
+  out.push('    </button>');
+
+  out.push('    <a href="/" class="nav-brand">Pelham Engagement Project</a>');
+
+  out.push('    <div class="nav-links">');
+  for (const pg of primary) out.push(`      ${link(pg, 'nav-link')}`);
+  out.push('      <div class="nav-more-wrap">');
+  out.push(`        <button class="nav-link nav-more-trigger${moreActive ? ' is-active' : ''}" id="nav-more" aria-expanded="false" aria-haspopup="true" aria-controls="nav-more-menu">More <span aria-hidden="true">▾</span></button>`);
+  out.push('        <div class="nav-more-menu" id="nav-more-menu" role="menu">');
+  for (const pg of more) {
+    const active = pg.id === activePage;
+    out.push(`          <a href="${esc(pg.url)}" role="menuitem" class="${active ? 'is-active' : ''}"${active ? ' aria-current="page"' : ''}><span class="nav-ico" aria-hidden="true">${pg.icon}</span>${esc(pg.label)}</a>`);
+  }
+  out.push('        </div>');
+  out.push('      </div>');
+  out.push('    </div>');
+  out.push('  </div>');
+  out.push('</nav>');
+
+  // Mobile drawer. Lists every page, not just the primary five — on a phone
+  // this replaces both the bar and the More menu, so hiding four pages behind
+  // a second interaction would be the wrong trade.
+  out.push('<div class="nav-scrim" id="nav-scrim" hidden></div>');
+  out.push('<aside class="nav-drawer" id="nav-drawer" hidden aria-label="Site menu">');
+  out.push('  <div class="nav-drawer-head">');
+  out.push('    <span class="nav-drawer-title">Pelham Engagement Project</span>');
+  out.push('    <button class="nav-drawer-close" id="nav-drawer-close" aria-label="Close menu">×</button>');
+  out.push('  </div>');
+  out.push('  <ul class="nav-drawer-list">');
+  for (const pg of pages) {
+    const active = pg.id === activePage;
+    out.push(`    <li><a href="${esc(pg.url)}" class="${active ? 'is-active' : ''}"${active ? ' aria-current="page"' : ''}><span class="nav-ico" aria-hidden="true">${pg.icon}</span><span class="nav-drawer-label">${esc(pg.label)}</span>${navBadge(pg.badge)}</a></li>`);
+  }
+  out.push('  </ul>');
+  if (data.pages.drawer_note) {
+    out.push(`  <p class="nav-drawer-note">${esc(data.pages.drawer_note)}</p>`);
+  }
+  out.push('</aside>');
+
+  return out.join(NL);
 }
 
 // =========================================================================
@@ -797,7 +899,6 @@ function main() {
     ['meeting-schedule', generateMeetingSchedule(data, r), 'html'],
     ['about-sources', generateAboutSources(data), 'html'],
     ['footer', generateFooter(data, r), 'html'],
-    ['meetings-js', generateMeetingsJs(data), 'js'],
   ];
   for (const [name, body, kind] of sections) html = splice(html, name, body, kind);
 
@@ -809,6 +910,11 @@ function main() {
 
   const stats = phase5(html, data);
 
+  // app.js carries the generated meetings map. It moved out of index.html
+  // when the script block was extracted for the multi-page shell.
+  let app = read(p('app.js'));
+  app = splice(app, 'meetings-js', generateMeetingsJs(data), 'js');
+
   // ask-pelham.js is part-generated too: its KNOWN_ISSUES map comes from
   // issues.json, everything else in the file is hand-written.
   let fn = read(p('netlify', 'functions', 'ask-pelham.js'));
@@ -818,6 +924,7 @@ function main() {
 
   const targets = [
     [p('index.html'), html],
+    [p('app.js'), app],
     [p('netlify', 'functions', 'ask-pelham.js'), fn],
     [p('netlify', 'functions', 'system-prompt.js'), promptModule],
   ];
@@ -868,4 +975,6 @@ function report() {
   process.exit(1);
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = { generateNav, generateFooter, phase1, makeResolver };

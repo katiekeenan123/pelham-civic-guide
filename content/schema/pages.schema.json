@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pelham/pages.schema.json",
+  "title": "Site pages and navigation",
+  "description": "The nine pages of the multi-page site, and the order they appear in the nav. Kept as data rather than hardcoded in the nav generator so adding a page is a content edit, and so the desktop nav, the More menu and the mobile drawer can never list different things.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pages"],
+  "properties": {
+    "$schema": { "type": "string", "description": "Relative path to this schema file." },
+    "drawer_note": { "type": "string", "description": "Disclaimer shown at the foot of the mobile drawer." },
+    "pages": {
+      "type": "array",
+      "description": "NAV ORDER IS ARRAY ORDER, within each group.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "label", "url", "file", "icon", "group"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "Stable key. This is what generateNav(activePage) is passed, and what marks the current item." },
+          "label": { "type": "string", "description": "Nav text. Kept short — the desktop bar holds five of these plus a menu." },
+          "url": { "type": "string", "description": "Href used in links. Extensionless, so Netlify serves issues.html at /issues; see the redirect note in netlify.toml." },
+          "file": { "type": "string", "description": "Output filename written to the publish root." },
+          "icon": { "type": "string", "description": "Emoji shown in the mobile drawer, and in the More menu. The desktop bar stays text-only." },
+          "group": { "enum": ["primary", "more"], "description": "'primary' sits directly in the desktop bar; 'more' sits behind the More menu. The mobile drawer ignores this and lists everything." },
+          "badge": {
+            "type": ["object", "null"],
+            "additionalProperties": false,
+            "required": ["label", "until"],
+            "description": "Time-limited flag beside the label, e.g. the election date.",
+            "properties": {
+              "label": { "type": "string", "description": "Short text, e.g. 'Nov 3'." },
+              "until": { "type": "string", "description": "ISO date after which the badge stops showing. The build fails if this disagrees with elections.election_date, so the two cannot drift." }
+            }
+          }
+        }
+      }
+    }
+  }
+}
