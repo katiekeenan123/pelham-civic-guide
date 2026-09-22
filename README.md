@@ -117,6 +117,12 @@ table.
 > `KNOWN_ISSUES` is now generated from `issues.json`, but the canonical strings
 > themselves are still duplicated across the two repos.
 
+> ⚠️ **Submission tables need INSERT granted to `anon`.** All three write
+> paths fail with `permission denied for table …` until `supabase/grants.sql`
+> has been run. Reads work regardless, so the chat looks healthy while every
+> correction and 👍/👎 is discarded. The forms report the failure to the
+> reader, but nothing is stored.
+
 **Supabase** holds five tables: `articles` and `meetings` (the pipeline's
 output), plus `feedback`, `corrections` and `civic_engagement` written by the
 page.
