@@ -135,5 +135,22 @@
       }
     ],
     "note": "There is no verified estimate of the county tax on a Pelham bill, so this page does not give one. Your own bill lists every line: check it, or call the Town Receiver of Taxes on {{fact:town-receiver-phone}} for your breakdown."
+  },
+  "learn_more": {
+    "title": "Learn more",
+    "links": [
+      {
+        "id": "assessor-explains",
+        "label": "How Pelham property taxes work — Town Assessor Joe Battaglia explains",
+        "url": "https://pelhamexaminer.com/45038/showcase/an-assessment-property-tax-myths-and-misunderstandings/",
+        "note": "Pelham Examiner · assessment myths and misunderstandings"
+      },
+      {
+        "id": "county-rates",
+        "label": "Official Westchester County tax rates (PDFs)",
+        "url": "https://www.westchestercountyny.gov/property-tax-rates",
+        "note": "Westchester County · the authoritative rate tables"
+      }
+    ]
   }
 }

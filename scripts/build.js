@@ -859,6 +859,21 @@ function generateTaxSection(data, r) {
     if (c.note) out.push(`      <p class="tax-compare-note">${r(c.note, 'taxes.json')}</p>`);
     out.push('    </div>');
   }
+
+  // Outbound reading, last on the page: a reader who wants the primary
+  // source should not have to hunt for it beneath this site's summary.
+  if (t.learn_more) {
+    out.push('    <div class="learn-more fade-in">');
+    out.push(`      <h3 class="learn-more-title">${t.learn_more.title || 'Learn more'}</h3>`);
+    out.push('      <ul class="learn-more-list">');
+    for (const l of t.learn_more.links) {
+      const note = l.note ? `<span class="learn-more-note">${r(l.note, 'taxes.json')}</span>` : '';
+      out.push(`        <li><a href="${esc(l.url)}" target="_blank" rel="noopener">${r(l.label, 'taxes.json')} →</a>${note}</li>`);
+    }
+    out.push('      </ul>');
+    out.push('    </div>');
+  }
+
   return out.join('\n');
 }
 

@@ -5,33 +5,84 @@
   "description": "The /taxes page: a like-for-like Village of Pelham vs Pelham Manor comparison, a bar visual of how a property tax bill divides between governing bodies, a labelled list for the shares with no source (county, town), and explainer blocks describing what each body's share funds. Created because generateTaxSection had no data source — the bar widths, percentage labels and explainer copy existed only as markup and appeared in no JSON file. Prose fields accept the safe HTML subset and {{fact:<id>}} tokens.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["bars", "explainers"],
+  "required": [
+    "bars",
+    "explainers"
+  ],
   "properties": {
-    "$schema": { "type": "string", "description": "Relative path to this schema file." },
-    "section_intro": { "type": "string", "description": "Lead paragraph above the visual." },
-    "note": { "type": "string", "description": "The caveat block under the bars. Carries the sourcing state of each share — which percentages are confirmed, which are not." },
+    "$schema": {
+      "type": "string",
+      "description": "Relative path to this schema file."
+    },
+    "section_intro": {
+      "type": "string",
+      "description": "Lead paragraph above the visual."
+    },
+    "note": {
+      "type": "string",
+      "description": "The caveat block under the bars. Carries the sourcing state of each share — which percentages are confirmed, which are not."
+    },
     "comparison": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["title", "entries"],
+      "required": [
+        "title",
+        "entries"
+      ],
       "description": "Side-by-side village comparison at the top of the page. Each amount is rendered from its fact, and the bar lengths are computed from the facts' numeric values — so unlike bars[].bar_width they ARE proportional to the data.",
       "properties": {
-        "title": { "type": "string", "description": "Heading, e.g. 'Village of Pelham vs Village of Pelham Manor'." },
-        "subtitle": { "type": "string", "description": "The basis of the comparison — the shared assessed value. A comparison without it is not like-for-like." },
-        "note": { "type": "string", "description": "Caveat and source under the comparison." },
+        "title": {
+          "type": "string",
+          "description": "Heading, e.g. 'Village of Pelham vs Village of Pelham Manor'."
+        },
+        "subtitle": {
+          "type": "string",
+          "description": "The basis of the comparison — the shared assessed value. A comparison without it is not like-for-like."
+        },
+        "note": {
+          "type": "string",
+          "description": "Caveat and source under the comparison."
+        },
         "entries": {
           "type": "array",
           "minItems": 2,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "label", "fact_ref", "fill_style"],
+            "required": [
+              "id",
+              "label",
+              "fact_ref",
+              "fill_style"
+            ],
             "properties": {
-              "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
-              "label": { "type": "string" },
-              "fact_ref": { "type": "string", "description": "facts.json id. Its numeric `value` sizes the bar and its `display` is printed. Build fails on an unknown id or a non-numeric value." },
-              "fill_style": { "enum": ["school", "village", "manor", "county", "town"] },
-              "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id." }
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "label": {
+                "type": "string"
+              },
+              "fact_ref": {
+                "type": "string",
+                "description": "facts.json id. Its numeric `value` sizes the bar and its `display` is printed. Build fails on an unknown id or a non-numeric value."
+              },
+              "fill_style": {
+                "enum": [
+                  "school",
+                  "village",
+                  "manor",
+                  "county",
+                  "town"
+                ]
+              },
+              "governing_body": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Foreign key to bodies.json id."
+              }
             }
           }
         }
@@ -40,24 +91,54 @@
     "unverified": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["items"],
+      "required": [
+        "items"
+      ],
       "description": "Shares with no published source, listed rather than drawn as bars so no bar width can be mistaken for a figure.",
       "properties": {
-        "title": { "type": "string" },
-        "note": { "type": "string", "description": "Where a resident gets a real number instead — their own bill and the Receiver of Taxes." },
+        "title": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string",
+          "description": "Where a resident gets a real number instead — their own bill and the Receiver of Taxes."
+        },
         "items": {
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "label", "text"],
+            "required": [
+              "id",
+              "label",
+              "text"
+            ],
             "properties": {
-              "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
-              "label": { "type": "string" },
-              "icon": { "type": ["string", "null"] },
-              "text": { "type": "string", "description": "What is and is not known about this share." },
-              "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id." }
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "label": {
+                "type": "string"
+              },
+              "icon": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "text": {
+                "type": "string",
+                "description": "What is and is not known about this share."
+              },
+              "governing_body": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Foreign key to bodies.json id."
+              }
             }
           }
         }
@@ -67,24 +148,95 @@
       "type": "array",
       "minItems": 1,
       "description": "DISPLAY ORDER IS ARRAY ORDER, largest share first.",
-      "items": { "$ref": "#/$defs/bar" }
+      "items": {
+        "$ref": "#/$defs/bar"
+      }
     },
     "explainers": {
       "type": "array",
       "minItems": 1,
       "description": "DISPLAY ORDER IS ARRAY ORDER. Deliberately a different order from `bars` — the pre-refactor page listed the bars as school/village/county/town but the explainers as school/county/village/town. Kept as two independent arrays rather than forced into one order.",
-      "items": { "$ref": "#/$defs/explainer" }
+      "items": {
+        "$ref": "#/$defs/explainer"
+      }
+    },
+    "learn_more": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "links"
+      ],
+      "description": "Outbound reading at the foot of the page, for readers who want the primary source rather than this site's summary of it. Rendered last.",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Section heading, e.g. 'Learn more'."
+        },
+        "links": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "label",
+              "url"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "label": {
+                "type": "string",
+                "description": "Link text. Say what the reader gets, not just the publisher."
+              },
+              "url": {
+                "type": "string",
+                "description": "Destination. External, so it opens in a new tab."
+              },
+              "note": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Short line under the link naming the source."
+              }
+            }
+          }
+        }
+      }
     }
   },
   "$defs": {
     "bar": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "label", "percent_text", "bar_width", "fill_style"],
+      "required": [
+        "id",
+        "label",
+        "percent_text",
+        "bar_width",
+        "fill_style"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable slug for the row." },
-        "label": { "type": "string", "description": "Row name as printed, without the icon." },
-        "icon": { "type": ["string", "null"], "description": "Emoji rendered before the label." },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Stable slug for the row."
+        },
+        "label": {
+          "type": "string",
+          "description": "Row name as printed, without the icon."
+        },
+        "icon": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Emoji rendered before the label."
+        },
         "percent_text": {
           "type": "string",
           "description": "The text printed at the right of the row — NOT a number, because most shares are not published figures. Real values include 'largest share*', '~25% ✓' and 'share not published'. Keep the hedging: only the Village of Pelham share has a source."
@@ -94,42 +246,101 @@
           "description": "Optional second line under the row name — the body's dollar figure where there is one. Safe HTML subset plus {{fact:<id>}} tokens."
         },
         "bar_width": {
-          "type": ["integer", "null"],
+          "type": [
+            "integer",
+            "null"
+          ],
           "minimum": 0,
           "maximum": 100,
           "description": "PRESENTATION ONLY — the CSS width percentage of the filled bar. This is NOT data and must never be read back as a tax percentage. Only the Village of Pelham width (25) corresponds to a sourced number; the school width is an illustrative proportion. Null draws an empty track, for a body whose share has no published figure: the row stays in the list without a fill that would read as a number. County and town moved out of the bars into `unverified` for the same reason. If a genuine published breakdown ever exists, add it as facts and render percent_text from those, but keep this field separate."
         },
         "fill_style": {
-          "enum": ["school", "village", "manor", "county", "town"],
+          "enum": [
+            "school",
+            "village",
+            "manor",
+            "county",
+            "town"
+          ],
           "description": "Bar colour; renders as CSS class .bar-<value>. Must match an existing rule in the stylesheet."
         },
-        "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id. Null for a row covering more than one body." }
+        "governing_body": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Foreign key to bodies.json id. Null for a row covering more than one body."
+        }
       }
     },
     "explainer": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "title", "description", "accent"],
+      "required": [
+        "id",
+        "title",
+        "description",
+        "accent"
+      ],
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable slug for the block." },
-        "title": { "type": "string", "description": "Block heading, without the icon." },
-        "icon": { "type": ["string", "null"], "description": "Emoji rendered before the title." },
-        "description": { "type": "string", "description": "What this body's share of the bill actually funds. Safe HTML subset plus {{fact:<id>}} tokens — write {{fact:village-budget-fy2627}}, never a literal dollar figure." },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "Stable slug for the block."
+        },
+        "title": {
+          "type": "string",
+          "description": "Block heading, without the icon."
+        },
+        "icon": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Emoji rendered before the title."
+        },
+        "description": {
+          "type": "string",
+          "description": "What this body's share of the bill actually funds. Safe HTML subset plus {{fact:<id>}} tokens — write {{fact:village-budget-fy2627}}, never a literal dollar figure."
+        },
         "accent": {
-          "enum": ["none", "gold", "red", "green"],
+          "enum": [
+            "none",
+            "gold",
+            "red",
+            "green"
+          ],
           "description": "Block accent colour; renders as CSS class .<value> on .tax-explainer-block ('none' emits no extra class). Presentation only, and deliberately not aligned to the bar colours — the pre-refactor page used a different colour per block than per bar."
         },
         "link": {
-          "type": ["object", "null"],
+          "type": [
+            "object",
+            "null"
+          ],
           "additionalProperties": false,
-          "required": ["label", "url"],
+          "required": [
+            "label",
+            "url"
+          ],
           "description": "The source link at the foot of the block.",
           "properties": {
-            "label": { "type": "string", "description": "Link text, e.g. 'School budget documents'." },
-            "url": { "type": "string", "description": "Destination." }
+            "label": {
+              "type": "string",
+              "description": "Link text, e.g. 'School budget documents'."
+            },
+            "url": {
+              "type": "string",
+              "description": "Destination."
+            }
           }
         },
-        "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id." }
+        "governing_body": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Foreign key to bodies.json id."
+        }
       }
     }
   }

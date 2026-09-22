@@ -1863,3 +1863,37 @@
    holding the governing body name in the race header. */
 .race-panel[hidden] { display: none; }
 @media (prefers-reduced-motion: reduce) { .race-toggle { transition: none; } }
+
+/* ── Learn more: outbound reading at the foot of a page ── */
+.learn-more {
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.learn-more-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin: 0 0 14px;
+}
+.learn-more-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.learn-more-list a {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 1px;
+}
+.learn-more-list a:hover { color: var(--red); border-bottom-color: var(--red); }
+.learn-more-note {
+  display: block;
+  margin-top: 3px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--slate);
+}

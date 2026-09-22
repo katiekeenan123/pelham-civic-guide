@@ -336,6 +336,29 @@ test('taxes — village comparison, split village rows, county and town listed n
   expect(breakdownFirst, 'the comparison should sit below the breakdown').toBe(true);
 });
 
+
+test('taxes — Learn more sits last and points at the primary sources', async ({ page }) => {
+  await page.goto('/taxes');
+  const box = page.locator('.learn-more');
+  await expect(box).toBeVisible();
+
+  const links = box.locator('a');
+  await expect(links).toHaveCount(2);
+  await expect(links.nth(0)).toContainText('Joe Battaglia');
+  await expect(links.nth(1)).toContainText('Westchester County tax rates');
+  // External, so they should not swallow the reader's place on the page.
+  for (const i of [0, 1]) await expect(links.nth(i)).toHaveAttribute('target', '_blank');
+
+  // Last thing in the section, below the explainers and the comparison.
+  const lmY = (await box.boundingBox()).y;
+  for (const sel of ['.tax-explainer-block', '.tax-compare']) {
+    const other = page.locator(sel).last();
+    if (await other.count()) {
+      expect(lmY, `Learn more should sit below ${sel}`).toBeGreaterThan((await other.boundingBox()).y);
+    }
+  }
+});
+
 test('gov-101 — the five governing bodies plus the quick-reference card', async ({ page }) => {
   await page.goto('/gov-101');
   await expect(page.locator('.gov-card')).toHaveCount(6);
