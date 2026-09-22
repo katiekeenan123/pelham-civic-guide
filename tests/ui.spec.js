@@ -310,7 +310,9 @@ test('taxes — sourced shares for every body, then the village comparison', asy
   // Like-for-like: both villages on the same assessed value, side by side.
   const compare = page.locator('.tax-compare');
   await expect(compare).toContainText('$1,045,204');
-  await expect(compare.locator('[data-body="village-of-pelham"] .tax-compare-amount')).toHaveText('~$6,807');
+  await expect(compare.locator('[data-body="village-of-pelham"] .tax-compare-amount')).toHaveText('~$6,493');
+  await expect(compare.locator('.tax-compare-note')).toContainText('7.6% higher than Manor');
+  await expect(compare).not.toContainText('12.8%');
   await expect(compare.locator('[data-body="village-of-pelham-manor"] .tax-compare-amount')).toHaveText('~$6,035');
 
   // One row per body, shares derived from the county's published rates.
