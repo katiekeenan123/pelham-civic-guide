@@ -2,14 +2,67 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "pelham/taxes.schema.json",
   "title": "Your Taxes panel",
-  "description": "The #your-taxes section: a stacked bar visual showing how a property tax bill divides between governing bodies, and four explainer blocks describing what each body's share funds. Created because generateTaxSection had no data source — the bar widths, percentage labels and explainer copy existed only as markup and appeared in no JSON file. Prose fields accept the safe HTML subset and {{fact:<id>}} tokens.",
+  "description": "The /taxes page: a like-for-like Village of Pelham vs Pelham Manor comparison, a bar visual of how a property tax bill divides between governing bodies, a labelled list for the shares with no source (county, town), and explainer blocks describing what each body's share funds. Created because generateTaxSection had no data source — the bar widths, percentage labels and explainer copy existed only as markup and appeared in no JSON file. Prose fields accept the safe HTML subset and {{fact:<id>}} tokens.",
   "type": "object",
   "additionalProperties": false,
   "required": ["bars", "explainers"],
   "properties": {
     "$schema": { "type": "string", "description": "Relative path to this schema file." },
     "section_intro": { "type": "string", "description": "Lead paragraph above the visual." },
-    "note": { "type": "string", "description": "The caveat block under the bars. Carries the sourcing state of each share — which percentages are confirmed, which are not — and the Receiver of Taxes phone number for an individual breakdown." },
+    "note": { "type": "string", "description": "The caveat block under the bars. Carries the sourcing state of each share — which percentages are confirmed, which are not." },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "entries"],
+      "description": "Side-by-side village comparison at the top of the page. Each amount is rendered from its fact, and the bar lengths are computed from the facts' numeric values — so unlike bars[].bar_width they ARE proportional to the data.",
+      "properties": {
+        "title": { "type": "string", "description": "Heading, e.g. 'Village of Pelham vs Village of Pelham Manor'." },
+        "subtitle": { "type": "string", "description": "The basis of the comparison — the shared assessed value. A comparison without it is not like-for-like." },
+        "note": { "type": "string", "description": "Caveat and source under the comparison." },
+        "entries": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label", "fact_ref", "fill_style"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+              "label": { "type": "string" },
+              "fact_ref": { "type": "string", "description": "facts.json id. Its numeric `value` sizes the bar and its `display` is printed. Build fails on an unknown id or a non-numeric value." },
+              "fill_style": { "enum": ["school", "village", "manor", "county", "town"] },
+              "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id." }
+            }
+          }
+        }
+      }
+    },
+    "unverified": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "description": "Shares with no published source, listed rather than drawn as bars so no bar width can be mistaken for a figure.",
+      "properties": {
+        "title": { "type": "string" },
+        "note": { "type": "string", "description": "Where a resident gets a real number instead — their own bill and the Receiver of Taxes." },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "label", "text"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+              "label": { "type": "string" },
+              "icon": { "type": ["string", "null"] },
+              "text": { "type": "string", "description": "What is and is not known about this share." },
+              "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id." }
+            }
+          }
+        }
+      }
+    },
     "bars": {
       "type": "array",
       "minItems": 1,
@@ -34,19 +87,23 @@
         "icon": { "type": ["string", "null"], "description": "Emoji rendered before the label." },
         "percent_text": {
           "type": "string",
-          "description": "The text printed at the right of the row — NOT a number, because three of the four shares are not published figures. Real values include 'largest share*', 'est. — verify*' and '~3–5%'. Keep the hedging: only the village share has a source."
+          "description": "The text printed at the right of the row — NOT a number, because most shares are not published figures. Real values include 'largest share*', '~25% ✓' and 'share not published'. Keep the hedging: only the Village of Pelham share has a source."
+        },
+        "detail": {
+          "type": "string",
+          "description": "Optional second line under the row name — the body's dollar figure where there is one. Safe HTML subset plus {{fact:<id>}} tokens."
         },
         "bar_width": {
-          "type": "integer",
+          "type": ["integer", "null"],
           "minimum": 0,
           "maximum": 100,
-          "description": "PRESENTATION ONLY — the CSS width percentage of the filled bar. This is NOT data and must never be read back as a tax percentage. The four current widths (60/25/12/4) sum to 101 and only the village figure corresponds to a sourced number; the others are illustrative proportions chosen to look right. If a genuine published breakdown ever exists, add it as facts and render percent_text from those, but keep this field separate."
+          "description": "PRESENTATION ONLY — the CSS width percentage of the filled bar. This is NOT data and must never be read back as a tax percentage. Only the Village of Pelham width (25) corresponds to a sourced number; the school width is an illustrative proportion. Null draws an empty track, for a body whose share has no published figure: the row stays in the list without a fill that would read as a number. County and town moved out of the bars into `unverified` for the same reason. If a genuine published breakdown ever exists, add it as facts and render percent_text from those, but keep this field separate."
         },
         "fill_style": {
-          "enum": ["school", "village", "county", "town"],
+          "enum": ["school", "village", "manor", "county", "town"],
           "description": "Bar colour; renders as CSS class .bar-<value>. Must match an existing rule in the stylesheet."
         },
-        "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id. Null for a row covering more than one body, e.g. 'Village (Pelham or Manor)'." }
+        "governing_body": { "type": ["string", "null"], "description": "Foreign key to bodies.json id. Null for a row covering more than one body." }
       }
     },
     "explainer": {

@@ -300,10 +300,29 @@ test('elections — three race blocks and every candidate named', async ({ page 
   }
 });
 
-test('taxes — the breakdown renders', async ({ page }) => {
+test('taxes — village comparison, split village rows, county and town listed not drawn', async ({ page }) => {
   await page.goto('/taxes');
   await expect(page.getByRole('heading', { name: /Where Do Your Property Taxes Go/i })).toBeVisible();
-  await expect(page.locator('.tax-bar-row')).toHaveCount(4);
+
+  // Like-for-like: both villages on the same assessed value, side by side.
+  const compare = page.locator('.tax-compare');
+  await expect(compare).toContainText('$1,045,204');
+  await expect(compare.locator('[data-body="village-of-pelham"] .tax-compare-amount')).toHaveText('~$6,807');
+  await expect(compare.locator('[data-body="village-of-pelham-manor"] .tax-compare-amount')).toHaveText('~$6,035');
+
+  // One row per village, never a combined "Village (Pelham or Manor)" row.
+  const rows = page.locator('.tax-bar-row');
+  await expect(rows).toHaveCount(3);
+  await expect(rows.nth(1)).toContainText('Village of Pelham');
+  await expect(rows.nth(2)).toContainText('Village of Pelham Manor');
+  await expect(page.locator('.tax-bar-name', { hasText: /Pelham or Manor/ })).toHaveCount(0);
+
+  // County and town have no sourced share, so no bar may imply one.
+  const unverified = page.locator('.tax-unverified-list li');
+  await expect(unverified).toHaveCount(2);
+  await expect(unverified.locator('.tax-unverified-tag')).toHaveText(['unverified', 'unverified']);
+  await expect(page.locator('.bar-county, .bar-town')).toHaveCount(0);
+  await expect(page.locator('.tax-unverified-note')).toContainText('no verified estimate of the county tax');
 });
 
 test('gov-101 — the five governing bodies plus the quick-reference card', async ({ page }) => {
@@ -313,65 +332,129 @@ test('gov-101 — the five governing bodies plus the quick-reference card', asyn
   await expect(page.locator('main')).toContainText('Who to call for what?');
 });
 
-test('get-involved — the four engagement steps and the meeting chips', async ({ page }) => {
+test('get-involved — three parts: raise a concern, vote, run for office', async ({ page }) => {
   await page.goto('/get-involved');
-  await expect(page.locator('.ladder-step')).toHaveCount(4);
-  await expect(page.locator('.ladder-step').first()).toContainText('Start with a conversation');
-  await expect(page.locator('.meeting-chip')).toHaveCount(4);
+  const parts = page.locator('.involved-part');
+  await expect(parts).toHaveCount(3);
+  await expect(parts.nth(0)).toHaveAttribute('id', 'raise-a-concern');
+  await expect(parts.nth(1)).toHaveAttribute('id', 'vote');
+  await expect(parts.nth(2)).toHaveAttribute('id', 'run-for-office');
+
+  // 1 — the four-step ladder, the public comment guide and where to show up.
+  const concern = parts.nth(0);
+  await expect(concern.locator('.ladder-step')).toHaveCount(4);
+  await expect(concern.locator('.ladder-step').first()).toContainText('Start with a conversation');
+  await expect(concern).toContainText('Simple Comment Template');
+  await expect(concern.locator('.meeting-chip')).toHaveCount(4);
+
+  // 2 — the date, generated from facts.json, and a way to register.
+  const vote = parts.nth(1);
+  await expect(vote.locator('.vote-fact-value').first()).toHaveText('November 3, 2026');
+  await expect(vote.locator('a[href*="elections.ny.gov"]').first()).toBeVisible();
+
+  // 3 — every elected body, from the roster.
+  const run = parts.nth(2);
+  await expect(run.locator('.office-list li')).toHaveCount(4);
+  await expect(run).toContainText('Board of Education');
+
+  await page.click('.involved-jump a[href="#vote"]');
+  await expect(page).toHaveURL(/#vote$/);
 });
 
-/* ── Meetings page: the full archive ───────────────────────────────────── */
+/* ── Meetings page: board, then meeting ────────────────────────────────── */
 
-const meetingButton = (page, id) => page.locator(`.mtg-selector[data-meeting="${id}"]`);
-const detailTab = (page, label) => page.locator('.detail-tab', { hasText: label });
-const panel = (page, meeting, tab) => page.locator(`#panel-${meeting}-${tab}`);
+const bodyTab = (page, body) => page.locator(`.mtg-body-tab[data-body="${body}"]`);
+const summary = (page, id) => page.locator(`.mtg-set[data-meeting="${id}"]`);
+const fold = (set, key) => set.locator(`details.mtg-fold[data-section="${key}"]`);
 
 const VILLAGE_SEP = 'pelham-board-sep2026';
+const VILLAGE_JUL = 'pelham-board-jul2026';
 const TOWN_AUG = 'town-council-aug2026';
 
-test('meetings — every processed meeting is selectable, including superseded ones', async ({ page }) => {
+test('meetings — four board tabs, each opening on its latest meeting with earlier ones as dates', async ({ page }) => {
   await page.goto('/meetings');
-  const ids = await page.locator('.mtg-selector').evaluateAll((els) => els.map((e) => e.dataset.meeting));
-  // The homepage shows the latest per board; this page is the archive, so the
-  // older meetings that have no home-page card must be reachable here.
-  expect(ids).toContain('pelham-board-jul2026');
-  expect(ids).toContain(TOWN_AUG);
-  expect(ids).toContain('board-of-ed-jun2026');
-  expect(ids.length).toBeGreaterThanOrEqual(8);
+  await expect(page.locator('.mtg-body-tab')).toHaveCount(4);
+  await expect(bodyTab(page, 'village-of-pelham')).toHaveAttribute('aria-selected', 'true');
+  await expect(summary(page, VILLAGE_SEP)).toBeVisible();
+  await expect(summary(page, VILLAGE_JUL)).toBeHidden();
 
-  for (const id of ids) {
-    await meetingButton(page, id).click();
-    const set = page.locator(`.mtg-set[data-meeting="${id}"]`);
-    await expect(set, `no panel set for "${id}"`).toBeVisible();
-    await expect(set.locator('.mtg-panel[data-tab="exec"]')).toBeVisible();
-    await expect(page.locator('#mtg-placeholder')).toBeHidden();
+  // Every published meeting is reachable: the latest per board by its tab,
+  // the rest from that board's date list.
+  let reached = 0;
+  for (const body of ['village-of-pelham', 'village-of-pelham-manor', 'town-of-pelham', 'pelham-schools']) {
+    await bodyTab(page, body).click();
+    const panel = page.locator(`.mtg-body-panel[data-body="${body}"]`);
+    await expect(panel).toBeVisible();
+    await expect(panel.locator('.mtg-set:visible')).toHaveCount(1);
+    reached++;
+    const ids = await panel.locator('.mtg-date-list li:not([hidden]) .mtg-date-link')
+      .evaluateAll((els) => els.map((e) => e.dataset.meeting));
+    for (const id of ids) {
+      await panel.locator(`.mtg-date-link[data-meeting="${id}"]`).click();
+      await expect(summary(page, id)).toBeVisible();
+      await expect(panel.locator('.mtg-set:visible')).toHaveCount(1);
+      reached++;
+    }
   }
+  expect(reached).toBeGreaterThanOrEqual(8);
 });
 
-test('meetings — detail tabs scope to the selected meeting', async ({ page }) => {
+test('meetings — summary sections: exec and residents open, the rest folded', async ({ page }) => {
   await page.goto('/meetings');
-  await meetingButton(page, TOWN_AUG).click();
+  await bodyTab(page, 'town-of-pelham').click();
+  await page.locator(`.mtg-date-link[data-meeting="${TOWN_AUG}"]`).click();
+  const set = summary(page, TOWN_AUG);
 
-  await detailTab(page, 'Detailed Summary').click();
-  await expect(panel(page, TOWN_AUG, 'detailed')).toBeVisible();
-  await expect(panel(page, TOWN_AUG, 'detailed')).toContainText('Bruno Barbosa');
-  // A tab click must not reveal another meeting's panel of the same name.
-  await expect(panel(page, VILLAGE_SEP, 'detailed')).toBeHidden();
+  await expect(set.locator('[data-section="exec"] .exec-summary')).toBeVisible();
+  const residents = set.locator('[data-section="residents"]');
+  await expect(residents).toBeVisible();
+  await expect(residents).toContainText('Edward Filby');
 
-  await detailTab(page, 'Full Transcript').click();
-  await expect(panel(page, TOWN_AUG, 'transcript')).toBeVisible();
+  for (const key of ['votes', 'actions', 'detailed', 'transcript']) {
+    await expect(fold(set, key), `${key} should start collapsed`).not.toHaveAttribute('open', '');
+  }
+  await expect(set.locator('.vote-row').first()).toBeHidden();
+  await fold(set, 'votes').locator('summary').click();
+  await expect(set.locator('.vote-row').first()).toBeVisible();
+
+  await fold(set, 'detailed').locator('summary').click();
+  await expect(fold(set, 'detailed')).toContainText('Bruno Barbosa');
+  // Opening one meeting's section must not open another meeting's.
+  await expect(fold(summary(page, VILLAGE_SEP), 'detailed')).not.toHaveAttribute('open', '');
 });
 
-test('meetings — switching back resets to the Executive Summary tab', async ({ page }) => {
-  await page.goto('/meetings');
-  await meetingButton(page, TOWN_AUG).click();
-  await detailTab(page, 'Full Transcript').click();
-  await expect(panel(page, TOWN_AUG, 'transcript')).toBeVisible();
+test('meetings — a hash deep-links to a meeting, and long transcripts load in pages', async ({ page }) => {
+  // The home digest links /meetings#<id>; that must open the right board.
+  await page.goto('/meetings#' + VILLAGE_JUL);
+  await expect(bodyTab(page, 'village-of-pelham')).toHaveAttribute('aria-selected', 'true');
+  await expect(summary(page, VILLAGE_JUL)).toBeVisible();
+  await expect(summary(page, VILLAGE_SEP)).toBeHidden();
+  // The date list now offers the latest meeting to go back to.
+  await expect(page.locator(`.mtg-date-link[data-meeting="${VILLAGE_SEP}"]`)).toBeVisible();
 
-  await meetingButton(page, VILLAGE_SEP).click();
-  await expect(panel(page, VILLAGE_SEP, 'exec')).toBeVisible();
-  await expect(panel(page, VILLAGE_SEP, 'transcript')).toBeHidden();
-  await expect(detailTab(page, 'Executive Summary')).toHaveClass(/active-tab/);
+  // No real transcript is long enough to page yet, so serve the page with
+  // one padded to 130 lines and check "Load more" steps through it.
+  await page.route('**/meetings', async (route) => {
+    const res = await route.fetch();
+    const html = (await res.text()).replace(
+      /(<div class="transcript-body">\s*)(<div class="transcript-block">[\s\S]*?<\/div>)/,
+      (m, open, line) => open + line.repeat(130),
+    );
+    await route.fulfill({ response: res, body: html });
+  });
+  await page.goto('/meetings');
+  const set = page.locator('.mtg-set').first();
+  const body = set.locator('.transcript-body');
+  await fold(set, 'transcript').locator('summary').click();
+  const shown = () => body.locator('.transcript-block:not(.ts-ellipsis):visible').count();
+  expect(await shown()).toBe(50);
+  const more = set.locator('.transcript-more');
+  await expect(more).toContainText('Load more');
+  await more.click();
+  expect(await shown()).toBe(100);
+  await more.click();
+  await expect(more).toHaveCount(0);
+  expect(await shown()).toBeGreaterThan(130);
 });
 
 test('meetings — the schedule table lists every board', async ({ page }) => {
@@ -433,11 +516,13 @@ test('escapes XSS in chat bubbles', async ({ page }) => {
 
 test('answer feedback — a failed vote is not shown as recorded, and can be retried', async ({ page }) => {
   let feedbackStatus = 500;
+  let sent = null;
   // The chat call and the feedback call hit the same endpoint; tell them apart
   // by payload so the answer always arrives and only the vote fails.
   await page.route('**/api/ask', (route) => {
     const body = route.request().postDataJSON() || {};
     if (body.type === 'feedback') {
+      sent = body;
       return route.fulfill({ status: feedbackStatus, contentType: 'application/json', body: '{}' });
     }
     return route.fulfill({
@@ -470,15 +555,23 @@ test('answer feedback — a failed vote is not shown as recorded, and can be ret
   await expect(note).not.toHaveClass(/is-error/);
   await expect(thumbsUp).toHaveClass(/selected-up/);
   await expect(thumbsUp).toBeDisabled();
+
+  // The payload must carry exactly the feedback table's columns — vote,
+  // question, answer_snippet — which ask-pelham.js inserts as-is.
+  expect(Object.keys(sent).sort()).toEqual(['answer_snippet', 'question', 'type', 'vote']);
+  expect(sent).toMatchObject({ type: 'feedback', vote: 'up', question: 'What is the village budget?' });
+  expect(sent.answer_snippet).toContain('Test answer.');
 });
 
 /* ── About page forms ──────────────────────────────────────────────────── */
 
 test('error correction form — reports failure on a rejected write, success on a stored one', async ({ page }) => {
   let status = 500;
-  await page.route('**/api/ask', (route) =>
-    route.fulfill({ status, contentType: 'application/json', body: '{}' }),
-  );
+  let sent = null;
+  await page.route('**/api/ask', (route) => {
+    sent = route.request().postDataJSON();
+    return route.fulfill({ status, contentType: 'application/json', body: '{}' });
+  });
 
   await page.goto('/about');
   await page.selectOption('#error-section', 'Who Governs');
@@ -497,6 +590,19 @@ test('error correction form — reports failure on a rejected write, success on 
   await page.click('.btn-submit-correction');
   await expect(confirm).toContainText('Correction received');
   await expect(confirm).not.toHaveClass(/is-error/);
+
+  // Payload matches the corrections table: section, description, source and
+  // the optional contact, empty here because the reader left it blank.
+  expect(sent).toEqual({
+    type: 'correction',
+    section: 'Who Governs',
+    description: 'Test: the trustee list is missing a name.',
+    source: 'https://www.pelhamny.gov',
+    contact: '',
+  });
+  await page.fill('#error-contact', 'reader@example.com');
+  await page.click('.btn-submit-correction');
+  await expect.poll(() => sent.contact).toBe('reader@example.com');
 });
 
 test('civic engagement form — reports failure on a rejected write, success on a stored one', async ({ page }) => {

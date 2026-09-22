@@ -29,6 +29,9 @@ create policy "anon can insert feedback"
   with check (true);
 
 -- ── corrections: "report a factual error" form ─────────────────────────────
+-- `contact` is the form's optional reply email. Added directly in Supabase
+-- when the field went on the form; `if not exists` makes rerunning harmless.
+alter table public.corrections add column if not exists contact text;
 alter table public.corrections enable row level security;
 grant insert on table public.corrections to anon;
 

@@ -74,7 +74,7 @@ exports.handler = async (event) => {
   // Supabase write paths — handled before the chat validation below so they
   // never touch Anthropic:
   //   { type: "feedback",         vote, question, answer_snippet }
-  //   { type: "correction",       section, description, source }
+  //   { type: "correction",       section, description, source, contact }
   //   { type: "civic_engagement", actions, governing_body, story }
   if (body && (body.type === 'feedback' || body.type === 'correction' || body.type === 'civic_engagement')) {
     return recordSubmission(body);
@@ -206,6 +206,8 @@ async function recordSubmission(body) {
       section: clip(body.section),
       description: clip(body.description),
       source: clip(body.source),
+      // Optional email for a reply; null when the reader leaves it blank.
+      contact: clip(body.contact),
     };
   } else if (body.type === 'civic_engagement') {
     table = 'civic_engagement';

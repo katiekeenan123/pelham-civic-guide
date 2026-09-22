@@ -1,6 +1,6 @@
 {
   "$schema": "./schema/meetings.schema.json",
-  "section_intro": "Every public meeting is recorded. We process them automatically to generate three layers of detail. Select a meeting and a level of detail.",
+  "section_intro": "Every public meeting is recorded. We process them automatically into a summary for each meeting. Choose a board to see its latest meeting; earlier meetings are listed below it.",
   "meetings": [
     {
       "id": "pelham-board-sep2026",

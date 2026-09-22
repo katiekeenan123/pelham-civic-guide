@@ -118,6 +118,8 @@ function phase1() {
   data.sources.sources.forEach((s) => checkBody('sources', s.id, s.governing_body));
   data.taxes.bars.forEach((b) => checkBody('taxes', b.id, b.governing_body));
   data.taxes.explainers.forEach((e) => checkBody('taxes', e.id, e.governing_body));
+  ((data.taxes.comparison || {}).entries || []).forEach((e) => checkBody('taxes', e.id, e.governing_body));
+  ((data.taxes.unverified || {}).items || []).forEach((i) => checkBody('taxes', i.id, i.governing_body));
 
   data.bodies.bodies.forEach((b) => {
     if (b.budget && !factIds.has(b.budget.fact_ref)) {
@@ -526,11 +528,9 @@ function generateElections(data, r) {
   return out.join('\n');
 }
 
-// Only the most recent meeting per governing body gets a selector. Older
-// meetings stay in the DOM — their panels are still generated — but are
-// unreachable from this tab; they become reachable when the archive page
-// lands. Derived from the data rather than flagged per meeting, so adding a
-// newer meeting for a body retires the previous one automatically.
+// The most recent meeting per governing body — the one the home digest shows
+// a card for. Derived from the dates rather than flagged per meeting, so
+// adding a newer meeting for a body retires the previous card automatically.
 function latestPerBody(published) {
   const latest = new Map();
   for (const m of published) {
@@ -541,89 +541,184 @@ function latestPerBody(published) {
   return published.filter((m) => ids.has(m.id));
 }
 
-function generateMeetings(data, r, opts = {}) {
-  const published = data.meetings.meetings.filter((m) => m.status === 'published');
-  // The Meetings page is the archive: every processed meeting is selectable
-  // there. Elsewhere only the most recent per board gets a button.
-  const visible = opts.all ? published : latestPerBody(published);
-  const firstVisible = visible[0];
-  const out = [];
-  out.push(`    <p class="section-intro">${r(data.meetings.section_intro, 'meetings.json')}</p>`);
-  out.push('    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:32px;">');
-  visible.forEach((m, i) => {
-    const cls = i === 0 ? 'mtg-selector active-mtg' : 'mtg-selector';
-    out.push(`      <button class="${cls}" data-meeting="${esc(m.id)}"><span class="mtg-sel-body">${m.selector.body}</span><span class="mtg-sel-date">${m.selector.detail}</span></button>`);
-  });
-  out.push('    </div>');
-  out.push('    <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border);">');
-  out.push('      <button class="detail-tab active-tab" data-tab="exec">Executive Summary</button>');
-  out.push('      <button class="detail-tab" data-tab="detailed">Detailed Summary</button>');
-  out.push('      <button class="detail-tab detail-tab-transcript" data-tab="transcript">Full Transcript (raw) ↓</button>');
-  out.push('    </div>');
-  out.push('    <div id="mtg-content">');
+const longDate = (iso) => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US',
+  { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 
-  const TABS = [
-    ['exec', 'exec_summary_file'],
-    ['detailed', 'detailed_summary_file'],
-    ['transcript', 'transcript_file'],
-  ];
+// ── Meeting partial parsing ────────────────────────────────────────────────
+// The partials were written as the inner HTML of three tabs. The Meetings
+// page now shows one summary per meeting with named sections, so the build
+// cuts each partial at the block boundaries it already has rather than asking
+// every partial to be rewritten. The cuts are on markup the partials all share
+// (.mtg-meta, .exec-summary, .exec-votes, .detail-section, .transcript-body),
+// and anything the parser cannot place is a build error naming the file —
+// a section silently dropping out of a summary is the failure to prevent.
 
-  published.forEach((m) => {
-    // Shown on load only if it is the first selectable meeting; every other
-    // set — including those with no selector — starts hidden.
-    const hide = m.id === firstVisible.id ? '' : ' style="display:none;"';
-    out.push(`      <div class="mtg-set" data-meeting="${esc(m.id)}"${hide}>`);
+// Split `html` into the pieces that start at each occurrence of `marker`.
+// Returns [before-first, piece, piece, …].
+function splitAt(html, marker) {
+  const parts = [];
+  let from = 0;
+  let at = html.indexOf(marker);
+  while (at !== -1) {
+    parts.push(html.slice(from, at));
+    from = at;
+    at = html.indexOf(marker, at + marker.length);
+  }
+  parts.push(html.slice(from));
+  return parts;
+}
 
-    // Disclaimer. A leading "the " in minutes_label sits outside the anchor,
-    // matching the pre-refactor markup.
-    const lbl = m.minutes_label || 'posted minutes';
-    const linked = lbl.startsWith('the ')
-      ? `the <a href="${esc(m.minutes_url)}" target="_blank">${lbl.slice(4)}</a>`
-      : `<a href="${esc(m.minutes_url)}" target="_blank">${lbl}</a>`;
-    const extra = m.disclaimer_extra ? ` ${r(m.disclaimer_extra, 'meetings.json')}` : '';
-    out.push('      <div class="summary-disclaimer">');
-    out.push('        <span class="summary-disclaimer-icon">⚠️</span>');
-    out.push(`        <div><strong>AI-generated — not official records.</strong>${extra} Always verify against the <a href="${esc(m.recording_url)}" target="_blank">official recording</a> and ${linked}.</div>`);
-    out.push('      </div>');
+function readPartial(file) {
+  return stripMaintainerComments(read(p(file)), file, stripped).trim();
+}
 
-    for (const [tab, key] of TABS) {
-      const hidePanel = tab === 'exec' ? '' : ' style="display:none;"';
-      out.push(`      <div id="panel-${esc(m.id)}-${tab}" class="mtg-panel" data-tab="${tab}"${hidePanel}>`);
-      let partial = read(p(m[key]));
-      partial = stripMaintainerComments(partial, m[key], stripped);
-      // Partials were extracted as panel inner HTML and end with the closing
-      // tag's indentation; restore that exactly rather than re-indenting.
-      partial = partial.replace(/^\n+/, '').replace(/\n$/, '');
-      out.push(partial);
-      out.push('      </div>');
+function parseExec(m) {
+  const file = m.exec_summary_file;
+  const html = readPartial(file);
+  const [head, ...blocks] = splitAt(html, '<div class="exec-votes"');
+  const at = head.indexOf('<div class="exec-summary">');
+  if (at === -1) fail(file, 'no .exec-summary block');
+
+  const out = { meta: head.slice(0, at).trim(), summary: head.slice(at).trim(), votes: null, actions: null };
+  for (const block of blocks) {
+    const label = /<div class="exec-votes-label">([\s\S]*?)<\/div>/.exec(block);
+    if (!label) { fail(file, '.exec-votes block has no .exec-votes-label'); continue; }
+    // The label becomes the <summary> line, so it is removed from the body.
+    const body = block.replace(label[0], '').trim();
+    const text = label[1].trim();
+    if (/^Key Votes/i.test(text)) {
+      // "Key Votes — All approved unanimously": the qualifier after the dash
+      // is worth keeping on the folded line; it answers "was anything close?"
+      out.votes = { note: text.replace(/^Key Votes\s*(—|-|–)?\s*/i, ''), body };
+    } else if (/^Action Items/i.test(text)) {
+      out.actions = { note: text.replace(/^Action Items\s*(—|-|–)?\s*/i, ''), body };
+    } else {
+      fail(file, `unrecognised .exec-votes-label "${text}" — expected Key Votes or Action Items`);
     }
-    out.push('      </div>');
-    out.push('');
-  });
+  }
+  if (!out.votes) fail(file, 'no Key Votes block');
+  if (!out.actions) fail(file, 'no Action Items block');
+  return out;
+}
 
-  out.push('      <div id="mtg-placeholder" style="display:none;"></div>');
-  out.push('    </div>');
+function parseDetailed(m) {
+  const file = m.detailed_summary_file;
+  const [, ...sections] = splitAt(readPartial(file), '<div class="detail-section">');
+  if (!sections.length) fail(file, 'no .detail-section blocks');
+  return sections.map((s) => {
+    const title = /<span class="detail-section-title">([\s\S]*?)<\/span>/.exec(s);
+    return { title: title ? title[1] : '', html: s.trim() };
+  });
+}
+
+function parseTranscript(m) {
+  const file = m.transcript_file;
+  const html = readPartial(file);
+  const at = html.indexOf('<div class="transcript-body">');
+  if (at === -1) fail(file, 'no .transcript-body block');
+  // The leading .mtg-meta repeats the summary's own header, so it is dropped.
+  return html.slice(at);
+}
+
+// Residents who showed up = the public comment sections of the detailed
+// summary. Derived rather than hand-listed, so a new meeting gets the section
+// for free; a meeting with none says so rather than rendering an empty box.
+const isPublicComment = (s) => /public comment/i.test(s.title);
+
+function generateMeetingSet(m, r, shown) {
+  const exec = parseExec(m);
+  const detailed = parseDetailed(m);
+  const residents = detailed.filter(isPublicComment);
+  const transcript = parseTranscript(m);
+
+  const out = [];
+  out.push(`      <article class="mtg-set" data-meeting="${esc(m.id)}"${shown ? '' : ' hidden'}>`);
+  out.push(`        <h3 class="mtg-set-title">${m.selector.detail}</h3>`);
+
+  // Disclaimer. A leading "the " in minutes_label sits outside the anchor.
+  const lbl = m.minutes_label || 'posted minutes';
+  const linked = lbl.startsWith('the ')
+    ? `the <a href="${esc(m.minutes_url)}" target="_blank">${lbl.slice(4)}</a>`
+    : `<a href="${esc(m.minutes_url)}" target="_blank">${lbl}</a>`;
+  const extra = m.disclaimer_extra ? ` ${r(m.disclaimer_extra, 'meetings.json')}` : '';
+  out.push('        <div class="summary-disclaimer">');
+  out.push('          <span class="summary-disclaimer-icon">⚠️</span>');
+  out.push(`          <div><strong>AI-generated — not official records.</strong>${extra} Always verify against the <a href="${esc(m.recording_url)}" target="_blank">official recording</a> and ${linked}.</div>`);
+  out.push('        </div>');
+  out.push(`        ${exec.meta}`);
+
+  // Always open: what happened, and who from the public was there.
+  out.push('        <section class="mtg-sec" data-section="exec">');
+  out.push('          <h4 class="mtg-sec-title">Executive summary</h4>');
+  out.push(`          ${exec.summary}`);
+  out.push('        </section>');
+  out.push('        <section class="mtg-sec" data-section="residents">');
+  out.push('          <h4 class="mtg-sec-title">Residents who showed up</h4>');
+  if (residents.length) {
+    for (const s of residents) out.push(`          ${s.html}`);
+  } else {
+    out.push(`          <p class="mtg-sec-empty">This summary records no public comment from residents. The <a href="${esc(m.recording_url)}" target="_blank">recording</a> is the complete record.</p>`);
+  }
+  out.push('        </section>');
+
+  // Collapsed by default: the detail a reader opens on purpose.
+  const fold = (key, title, note, body) => {
+    out.push(`        <details class="mtg-fold" data-section="${key}">`);
+    out.push(`          <summary><span class="mtg-fold-title">${title}</span>${note ? `<span class="mtg-fold-note">${note}</span>` : ''}</summary>`);
+    out.push(`          <div class="mtg-fold-body">${body}</div>`);
+    out.push('        </details>');
+  };
+  fold('votes', 'Key votes', exec.votes && exec.votes.note, exec.votes ? exec.votes.body : '');
+  fold('actions', 'Action items', exec.actions && exec.actions.note, exec.actions ? exec.actions.body : '');
+  fold('detailed', 'Detailed summary', `${detailed.length} sections, with timestamps`, detailed.map((s) => s.html).join('\n'));
+  // "Load more" is added by app.js once the transcript runs past a page; the
+  // whole transcript is in the markup so it still reads without JS.
+  fold('transcript', 'Full transcript (raw)', 'AI transcription', transcript);
+
+  out.push('      </article>');
   return out.join('\n');
 }
 
-function generateMeetingsJs(data) {
+// Meetings page, two levels: a tab per governing body, then within a body its
+// most recent meeting expanded and every earlier one as a plain date list.
+// "Most recent" is derived from the dates, so adding a meeting to
+// meetings.json moves the previous one into the list with no other edit.
+function generateMeetings(data, r) {
   const published = data.meetings.meetings.filter((m) => m.status === 'published');
-  const obj = published
-    .map((m) => `'${m.id}':{title:'${m.title.replace(/'/g, "\\'")}'}`)
-    .join(',');
-  // currentMeeting must be the first SELECTABLE meeting, not simply the first
-  // published one. It was previously a hand-written literal and silently went
-  // stale the moment a newer meeting archived the one it named: the page then
-  // loaded showing the new meeting's panel while every tab click operated on
-  // the archived set, so switching tabs blanked the section.
-  const first = latestPerBody(published)[0];
-  return [
-    `  const meetings = {${obj}};`,
-    '  // Every processed meeting ships its own .mtg-set of three panels, so switching',
-    '  // meetings is a show/hide rather than an innerHTML swap — the panels stay in',
-    '  // the DOM and the Ask Pelham chat history survives either way.',
-    `  let currentMeeting = '${first.id}';`,
-  ].join('\n');
+  // Bodies in bodies.json order, only those with something to show.
+  const bodies = data.bodies.bodies.filter((b) => published.some((m) => m.governing_body === b.id));
+
+  const out = [];
+  out.push(`    <p class="section-intro">${r(data.meetings.section_intro, 'meetings.json')}</p>`);
+  out.push('    <div class="mtg-body-tabs" role="tablist" aria-label="Governing body">');
+  bodies.forEach((b, i) => {
+    const latest = published.filter((m) => m.governing_body === b.id).sort((a, c) => c.date.localeCompare(a.date))[0];
+    out.push(`      <button class="mtg-body-tab${i === 0 ? ' is-active' : ''}" role="tab" id="mtg-tab-${esc(b.id)}" data-body="${esc(b.id)}" aria-controls="mtg-body-${esc(b.id)}" aria-selected="${i === 0}"${i === 0 ? '' : ' tabindex="-1"'}><span class="mtg-body-name">${b.name}</span><span class="mtg-body-latest">Latest: ${longDate(latest.date)}</span></button>`);
+  });
+  out.push('    </div>');
+
+  bodies.forEach((b, i) => {
+    const mine = published.filter((m) => m.governing_body === b.id).sort((a, c) => c.date.localeCompare(a.date));
+    out.push(`    <div class="mtg-body-panel" role="tabpanel" id="mtg-body-${esc(b.id)}" data-body="${esc(b.id)}" aria-labelledby="mtg-tab-${esc(b.id)}"${i === 0 ? '' : ' hidden'}>`);
+    mine.forEach((m, j) => out.push(generateMeetingSet(m, r, j === 0)));
+
+    if (mine.length > 1) {
+      // Lists every meeting; app.js hides the entry for the one on screen, so
+      // on load this reads as the earlier meetings and, once one is opened,
+      // the latest is there to go back to.
+      out.push('      <nav class="mtg-older" aria-label="Earlier meetings">');
+      out.push('        <div class="mtg-older-label">Earlier meetings</div>');
+      out.push('        <ul class="mtg-date-list">');
+      mine.forEach((m, j) => {
+        out.push(`          <li${j === 0 ? ' hidden' : ''}><a class="mtg-date-link" href="#${esc(m.id)}" data-meeting="${esc(m.id)}">${longDate(m.date)}</a> <span class="mtg-date-detail">${m.selector.detail.split(' · ')[0]}${j === 0 ? ' · latest' : ''}</span></li>`);
+      });
+      out.push('        </ul>');
+      out.push('      </nav>');
+    }
+    out.push('    </div>');
+    out.push('');
+  });
+  return out.join('\n').trimEnd();
 }
 
 function generateGovernanceCards(data, r) {
@@ -698,12 +793,60 @@ function generateMeetingSchedule(data, r) {
 function generateTaxSection(data, r) {
   const t = data.taxes;
   const out = [`    <p class="section-intro">${r(t.section_intro, 'taxes.json')}</p>`];
+
+  // Like-for-like village comparison. Bar lengths come from the facts'
+  // numeric values, so this is the one visual on the page that is to scale.
+  if (t.comparison) {
+    const c = t.comparison;
+    const rows = c.entries.map((e) => {
+      const f = r.byId.get(e.fact_ref);
+      if (!f) { fail('taxes.json', `comparison.${e.id}.fact_ref → unknown fact "${e.fact_ref}"`); return null; }
+      if (typeof f.value !== 'number') { fail('taxes.json', `comparison.${e.id}: fact "${e.fact_ref}" has no numeric value to size a bar`); return null; }
+      return { e, value: f.value, amount: r(`{{fact:${e.fact_ref}}}`, 'taxes.json') };
+    }).filter(Boolean);
+    const max = Math.max(...rows.map((x) => x.value));
+    out.push('    <div class="tax-compare fade-in">');
+    out.push(`      <h3 class="tax-compare-title">${c.title}</h3>`);
+    if (c.subtitle) out.push(`      <div class="tax-compare-sub">${r(c.subtitle, 'taxes.json')}</div>`);
+    out.push('      <div class="tax-compare-grid">');
+    for (const { e, value, amount } of rows) {
+      const width = Math.round((value / max) * 1000) / 10;
+      out.push(`        <div class="tax-compare-card" data-body="${esc(e.governing_body || e.id)}"><div class="tax-compare-label">${e.label}</div><div class="tax-compare-amount">${amount}</div><div class="tax-bar-track"><div class="tax-bar-fill bar-${e.fill_style}" style="width:${width}%"></div></div></div>`);
+    }
+    out.push('      </div>');
+    if (c.note) out.push(`      <p class="tax-compare-note">${r(c.note, 'taxes.json')}</p>`);
+    out.push('    </div>');
+  }
+
   out.push('    <div class="tax-layout">');
   out.push('      <div class="tax-visual">');
   for (const b of t.bars) {
     const name = `${b.icon ? b.icon + ' ' : ''}${b.label}`;
-    out.push(`        <div class="tax-bar-row fade-in"><div class="tax-bar-header"><span class="tax-bar-name">${name}</span><span class="tax-bar-pct">${b.percent_text}</span></div><div class="tax-bar-track"><div class="tax-bar-fill bar-${b.fill_style}" style="width:${b.bar_width}%"></div></div></div>`);
+    const detail = b.detail ? `<div class="tax-bar-detail">${r(b.detail, 'taxes.json')}</div>` : '';
+    // A null width is a body with no published share: an empty track, so the
+    // row is there but nothing about it reads as a proportion.
+    const track = b.bar_width === null
+      ? '<div class="tax-bar-track is-unknown"></div>'
+      : `<div class="tax-bar-track"><div class="tax-bar-fill bar-${b.fill_style}" style="width:${b.bar_width}%"></div></div>`;
+    out.push(`        <div class="tax-bar-row fade-in"><div class="tax-bar-header"><span class="tax-bar-name">${name}</span><span class="tax-bar-pct">${b.percent_text}</span></div>${detail}${track}</div>`);
   }
+
+  // Shares with no source are a list, not bars, so no width can be read as a
+  // figure.
+  if (t.unverified) {
+    const u = t.unverified;
+    out.push('        <div class="tax-unverified fade-in">');
+    if (u.title) out.push(`          <div class="tax-unverified-title">${u.title}</div>`);
+    out.push('          <ul class="tax-unverified-list">');
+    for (const i of u.items) {
+      const name = `${i.icon ? i.icon + ' ' : ''}${i.label}`;
+      out.push(`            <li><span class="tax-unverified-name">${name}</span> <span class="tax-unverified-tag">unverified</span><span class="tax-unverified-text">${r(i.text, 'taxes.json')}</span></li>`);
+    }
+    out.push('          </ul>');
+    if (u.note) out.push(`          <p class="tax-unverified-note">${r(u.note, 'taxes.json')}</p>`);
+    out.push('        </div>');
+  }
+
   out.push(`        <div class="tax-note fade-in">${r(t.note, 'taxes.json')}</div>`);
   out.push('      </div>');
   out.push('      <div class="tax-explainer">');
@@ -727,6 +870,48 @@ function generateGetInvolved(data) {
       const icon = b.icon ? `${b.icon} ` : '';
       return `            <span class="meeting-chip">${icon}${b.short_name} — ${ms.cadence} · ${ms.address}</span>`;
     }).join('\n');
+}
+
+// Get Involved · "Vote in every election". The dates come from facts.json
+// like everywhere else, so the page cannot disagree with the Elections page.
+function generateInvolvedVote(data, r) {
+  const at = 'get-involved';
+  const box = (label, value, note) => [
+    '        <div class="vote-fact">',
+    `          <div class="vote-fact-label">${label}</div>`,
+    `          <div class="vote-fact-value">${value}</div>`,
+    note ? `          <div class="vote-fact-note">${note}</div>` : '',
+    '        </div>',
+  ].filter(Boolean).join(NL);
+  return [
+    '      <div class="vote-facts">',
+    box('Next election', r('{{fact:election-date-2026}}', at),
+      'Village of Pelham, Village of Pelham Manor and Town of Pelham races are all on this ballot.'),
+    box('Register', r('{{fact:voter-registration-deadline}}', at),
+      '<a href="https://www.elections.ny.gov" target="_blank">elections.ny.gov</a> or the Westchester County Board of Elections, 914-995-5700.'),
+    box('Polls open', r('{{fact:polling-hours}}', at),
+      `School budget and Board of Education vote: ${r('{{fact:school-budget-vote-schedule}}', at)}.`),
+    '      </div>',
+  ].join(NL);
+}
+
+// Get Involved · "Run for office": every elected seat in Pelham, from the
+// roster. Staff and appointed posts are left out — nobody runs for those.
+function generateElectedOffices(data) {
+  const out = ['      <ul class="office-list">'];
+  for (const b of data.bodies.bodies) {
+    const seats = data.officials.officials.filter((o) => o.governing_body === b.id && o.seat_type === 'elected');
+    if (!seats.length) continue;
+    const titles = [];
+    for (const o of seats) {
+      const t = titles.find((x) => x.title === o.title);
+      if (t) t.n++; else titles.push({ title: o.title, n: 1 });
+    }
+    const list = titles.map((t) => (t.n > 1 ? `${t.n} × ${t.title}` : t.title)).join(' · ');
+    out.push(`        <li><span class="office-body">${b.name}</span><span class="office-count">${seats.length} elected seat${seats.length === 1 ? '' : 's'}</span><span class="office-titles">${list}</span></li>`);
+  }
+  out.push('      </ul>');
+  return out.join(NL);
 }
 
 function generateFooter(data, r) {
@@ -905,11 +1090,13 @@ function pageBlocks(data, r) {
     'meeting-previews': () => generateMeetingPreviews(data, r),
     issues: () => generateIssueCards(data, r),
     elections: () => generateElections(data, r),
-    meetings: () => generateMeetings(data, r, { all: true }),
+    meetings: () => generateMeetings(data, r),
     taxes: () => generateTaxSection(data, r),
     governance: () => generateGovernanceCards(data, r),
     'source-chips': () => generateSourceChips(data),
     'get-involved': () => generateGetInvolved(data),
+    'involved-vote': () => generateInvolvedVote(data, r),
+    'elected-offices': () => generateElectedOffices(data),
     'meeting-schedule': () => generateMeetingSchedule(data, r),
     'about-sources': () => generateAboutSources(data),
   };
@@ -1019,23 +1206,21 @@ function phase5(html, data, pageId = 'home') {
                       + Object.keys(data.issues.rag_only_issues || {}).length };
   }
 
-  const selectors = (html.match(/class="mtg-selector/g) || []).length;
+  const selectors = (html.match(/class="mtg-body-tab[ "]/g) || []).length;
   const sets = (html.match(/class="mtg-set"/g) || []).length;
   const published = data.meetings.meetings.filter((m) => m.status === 'published');
-  // The Meetings page is the archive, so every published meeting is selectable.
-  const expectedSelectors = published.length;
-  // One selector per governing body (its most recent meeting); one panel set
-  // per published meeting, including the older ones with no selector.
+  // One tab per governing body with a published meeting; one summary per
+  // published meeting, the latest of each body open and the rest in its list.
+  const expectedSelectors = new Set(published.map((m) => m.governing_body)).size;
   if (selectors !== expectedSelectors) {
-    fail('index.html', `${selectors} selectors but ${expectedSelectors} bodies with a published meeting`);
+    fail('meetings page', `${selectors} body tabs but ${expectedSelectors} bodies with a published meeting`);
   }
   if (sets !== published.length) {
-    fail('index.html', `${sets} panel sets but ${published.length} published meetings`);
+    fail('meetings page', `${sets} meeting summaries but ${published.length} published meetings`);
   }
-  // Every selector must resolve to a set, or a reader gets the placeholder.
   for (const m of published) {
     if (!html.includes(`class="mtg-set" data-meeting="${m.id}"`)) {
-      fail('index.html', `selector ${m.id} has no matching panel set`);
+      fail('meetings page', `${m.id} has no summary`);
     }
   }
 
@@ -1067,11 +1252,6 @@ function main() {
     else stats.ids += st.ids;
   }
 
-  // app.js carries the generated meetings map. It moved out of index.html
-  // when the script block was extracted for the multi-page shell.
-  let app = read(p('app.js'));
-  app = splice(app, 'meetings-js', generateMeetingsJs(data), 'js');
-
   // ask-pelham.js is part-generated too: its KNOWN_ISSUES map comes from
   // issues.json, everything else in the file is hand-written.
   let fn = read(p('netlify', 'functions', 'ask-pelham.js'));
@@ -1081,7 +1261,6 @@ function main() {
 
   const targets = [
     ...pages.map(([file, pageHtml]) => [file, pageHtml]),
-    [p('app.js'), app],
     [p('netlify', 'functions', 'ask-pelham.js'), fn],
     [p('netlify', 'functions', 'system-prompt.js'), promptModule],
   ];
@@ -1109,7 +1288,7 @@ function main() {
   console.log(`  officials          ${data.officials.officials.length}`);
   console.log(`  issues             ${data.issues.issues.length} (${data.issues.issues.filter((i) => i.show_on_home !== false).length} rendered)`);
   console.log(`  races / candidates ${data.elections.races.length} / ${data.elections.candidates.length}`);
-  console.log(`  meetings           ${stats.selectors} selectable, ${stats.sets} panel sets (${stats.archived} older, no selector), ${stats.sets * 3} partials`);
+  console.log(`  meetings           ${stats.selectors} body tabs, ${stats.sets} summaries (${stats.archived} in earlier-meeting lists), ${stats.sets * 3} partials`);
   console.log(`  pages generated    ${pages.length} (${pages.map(([, , pg]) => pg.id).join(', ')})`);
   console.log(`  html ids           ${stats.ids}, no duplicates`);
   if (stripped.length) {
