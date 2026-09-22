@@ -766,20 +766,20 @@
     {
       "id": "con-ed-rate-hike-request",
       "category": "tax",
-      "fact": "Con Edison requested electric rate increase",
-      "value": 18,
-      "display": "18%",
-      "qualifier": "filed 2025 with the NYS Public Service Commission and still under review; the Village of Pelham joined a municipal coalition opposing it",
+      "fact": "Con Edison rate case — increase after settlement",
+      "value": 2.8,
+      "display": "2.8%",
+      "qualifier": "of the total customer bill, down from the 13.4% electric increase originally proposed; gas cut to about 2%. Settlement reached with a 40-municipality Westchester consortium including the Pelhams, and not yet final — the PSC holds an evidentiary hearing before deciding.",
       "confidence": "reported",
-      "as_of": "2025",
+      "as_of": "2025-11-13",
       "last_updated": "2026-09-21",
       "supersedes": null,
-      "caution": "This is a request under review, not an approved rate. Do not describe the increase as granted.",
+      "caution": "Do not describe Con Edison as still seeking the original increase. A settlement has reduced it; what remains open is PSC approval, not the size of the request.",
       "in_prompt": true,
       "source": {
-        "name": "NY Public Service Commission rate case filings",
-        "url": "https://www3.dps.ny.gov/pscweb/WebFileRoom.nsf/Web/RateCase",
-        "date": null
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com/79929/latest-news/coned-to-slash-rate-hikes-following-deal-with-westchester-county-towns-and-villages-including-the-pelhams/",
+        "date": "2025-11-13"
       },
       "used_in": []
     },

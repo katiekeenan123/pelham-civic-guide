@@ -35,7 +35,8 @@
         "property taxes",
         "tax cap override",
         "village budget"
-      ]
+      ],
+      "link_to": "/taxes"
     },
     {
       "id": "receiver-of-taxes-vacancy",
@@ -70,7 +71,8 @@
         "darlene paolericio",
         "tax collection",
         "referendum"
-      ]
+      ],
+      "link_to": "/taxes"
     },
     {
       "id": "november-2026-elections",
@@ -85,7 +87,7 @@
         "village-of-pelham-manor",
         "town-of-pelham"
       ],
-      "source_url": "#elections",
+      "source_url": "/elections",
       "source_label": "See full candidate profiles",
       "source_date": null,
       "last_updated": "2026-09-21",
@@ -98,7 +100,8 @@
       ],
       "prompt_caution": null,
       "show_on_home": true,
-      "rag_issue": null
+      "rag_issue": null,
+      "link_to": "/elections"
     },
     {
       "id": "picture-house",
@@ -111,9 +114,9 @@
       "governing_body": [
         "village-of-pelham"
       ],
-      "source_url": "https://pelhamexaminer.com",
-      "source_label": "Search \"Picture House\" at Pelham Examiner",
-      "source_date": null,
+      "source_url": "https://pelhamexaminer.com/81915/latest-news/village-trustees-terminate-mou-with-normoyles-php-partners-and-correct-blight-study-mullen-swears-in-ken-shirreffs-to-planning-board/",
+      "source_label": "Pelham Examiner",
+      "source_date": "2026-03-11",
       "last_updated": "2026-09-21",
       "keywords": [
         "Picture House",
@@ -131,7 +134,8 @@
         "php partners",
         "smithmeyer",
         "wolfs lane"
-      ]
+      ],
+      "link_to": null
     },
     {
       "id": "colonial-elementary-ac",
@@ -167,7 +171,8 @@
         "air-conditioning",
         "hvac",
         "prospect hill"
-      ]
+      ],
+      "link_to": null
     },
     {
       "id": "public-library-transformation",
@@ -200,7 +205,8 @@
         "library renovation",
         "transformation project",
         "shakane"
-      ]
+      ],
+      "link_to": "/taxes"
     },
     {
       "id": "manor-tractor-trailer-ban",
@@ -235,7 +241,8 @@
         "trucking",
         "boston post road",
         "nys dot"
-      ]
+      ],
+      "link_to": null
     },
     {
       "id": "ems-station-first-street",
@@ -271,22 +278,23 @@
         "paramedic",
         "first street",
         "community church"
-      ]
+      ],
+      "link_to": null
     },
     {
       "id": "con-edison-rate-hike",
-      "title": "Con Edison Rate Hike Request",
+      "title": "Con Edison Rate Case — Settlement Cuts the Increase",
       "status": "watch",
-      "status_label": "Under review at the NYS Public Service Commission",
+      "status_label": "Settlement reached — awaiting Public Service Commission approval",
       "tag": "Energy",
       "tag_style": "energy",
-      "description": "Con Edison has requested an {{fact:con-ed-rate-hike-request}} electric rate increase, filed with the NYS Public Service Commission and still under review. The Village of Pelham joined a municipal coalition opposing it.",
+      "description": "Con Edison filed for a large rate increase and the Village of Pelham joined a consortium of 40 Westchester municipalities opposing it. A settlement has since cut the electric increase to about <strong>2.8% of the total customer bill</strong>, down from the 13.4% originally proposed, and the gas increase to about 2%. The agreement is not final: the Public Service Commission holds an evidentiary hearing before issuing a decision.",
       "governing_body": [
         "village-of-pelham"
       ],
-      "source_url": "https://www3.dps.ny.gov/pscweb/WebFileRoom.nsf/Web/RateCase",
-      "source_label": "NY PSC rate case filings",
-      "source_date": null,
+      "source_url": "https://pelhamexaminer.com/79929/latest-news/coned-to-slash-rate-hikes-following-deal-with-westchester-county-towns-and-villages-including-the-pelhams/",
+      "source_label": "Pelham Examiner",
+      "source_date": "2025-11-13",
       "last_updated": "2026-09-21",
       "keywords": [
         "Con Edison",
@@ -306,7 +314,8 @@
         "rate hike",
         "public service commission",
         "electric rates"
-      ]
+      ],
+      "link_to": null
     },
     {
       "id": "fini-park-fireworks",
@@ -334,7 +343,8 @@
       ],
       "prompt_caution": null,
       "show_on_home": true,
-      "rag_issue": null
+      "rag_issue": null,
+      "link_to": null
     },
     {
       "id": "amtrak-forest-road",
@@ -362,7 +372,8 @@
       ],
       "prompt_caution": "This is a VILLAGE OF PELHAM MANOR matter — NOT the Village of Pelham and NOT the Town of Pelham. Village Manager Luft and Pelham PD were actioned at the August 17 2026 Manor Board meeting. Do not attribute this to the Town Council or Village of Pelham board.",
       "show_on_home": false,
-      "rag_issue": null
+      "rag_issue": null,
+      "link_to": null
     }
   ],
   "rag_only_issues": {

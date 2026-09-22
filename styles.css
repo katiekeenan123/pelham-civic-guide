@@ -1347,7 +1347,7 @@
   font-family: 'Playfair Display', serif;
   font-size: 15px;
   font-weight: 700;
-  color: var(--white);
+  color: var(--navy);
   text-decoration: none;
   white-space: nowrap;
   margin-right: 8px;
@@ -1372,10 +1372,30 @@
 /* ── More menu ── */
 .nav-more-wrap { position: relative; }
 .nav-more-trigger {
+  display: block;
+  padding: 16px 20px;
+  line-height: inherit;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--slate);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
   background: none;
   border: none;
+  border-bottom: 3px solid transparent;
   cursor: pointer;
-  font: inherit;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-more-trigger:hover { color: var(--navy); border-bottom-color: var(--gold); }
+
+/* The current page. aria-current and .is-active were emitted from the start,
+   but nothing rendered them, so the nav looked the same on every page. */
+.nav-inner a.is-active,
+.nav-more-trigger.is-active {
+  color: var(--navy);
+  font-weight: 700;
+  border-bottom-color: var(--gold);
 }
 .nav-more-menu {
   display: none;
@@ -1414,7 +1434,7 @@
   height: 34px;
   padding: 0;
   background: none;
-  border: 1px solid rgba(255,255,255,0.18);
+  border: 1px solid var(--border);
   border-radius: 3px;
   cursor: pointer;
 }
@@ -1423,7 +1443,7 @@
   height: 2px;
   width: 17px;
   margin: 0 auto;
-  background: var(--white);
+  background: var(--navy);
   transition: transform 0.2s, opacity 0.2s;
 }
 .nav-burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
@@ -1629,3 +1649,58 @@
 @media (max-width: 600px) {
   .digest-head { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
+
+/* ── Context strip: sideways routes out of a page ── */
+.context-strip {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 10px 0 16px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.context-strip-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+.context-strip a {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: none;
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 1px;
+}
+.context-strip a:hover { color: var(--red); border-bottom-color: var(--red); }
+
+/* Home digest shows three issues in one row rather than a wrapping grid. */
+.issues-grid-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 900px) { .issues-grid-3 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 620px) { .issues-grid-3 { grid-template-columns: 1fr; } }
+
+/* ── Collapsible race sections ── */
+.race-toggle {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 3px;
+  color: var(--white);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.18s;
+}
+.race-toggle:hover { border-color: var(--gold); color: var(--gold-light); }
+.race-toggle[aria-expanded="false"] { transform: rotate(-90deg); }
+/* Named race-panel, not race-body: .race-body is already the span
+   holding the governing body name in the race header. */
+.race-panel[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .race-toggle { transition: none; } }

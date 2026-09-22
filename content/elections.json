@@ -17,7 +17,7 @@
     {
       "label": "Where to Vote",
       "value": "{{fact:polling-hours}}",
-      "note": "Village of Pelham: Daronco Town House, 20 Fifth Ave · Pelham Manor: Our Lady of Perpetual Help, 575 Fowler Ave"
+      "note": "Village of Pelham — Daronco Town House, 20 Fifth Ave<br>Village of Pelham Manor — Our Lady of Perpetual Help, 575 Fowler Ave"
     }
   ],
   "races": [
@@ -180,8 +180,8 @@
       "meta": "Challenger · Ran in 2025 (lost by 2 votes)",
       "summary": "Lost to incumbent Tim Case by just 2 votes after a manual recount in the November 2025 election — one of the closest races in Manor history. Running again in 2026 alongside Dlutkowski.",
       "platform_ref": null,
-      "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
-      "source_label": "Examiner coverage"
+      "source_url": "https://pelhamexaminer.com/83541/announcing/pelham-democrats-announce-candidates-for-manor-board-of-trustees-chris-dlutkowski-and-ryan-kurtz/",
+      "source_label": "Democratic announcement"
     },
     {
       "id": "chris-dlutkowski",
@@ -194,8 +194,8 @@
       "meta": "Challenger · First run for office",
       "summary": "Running alongside Kurtz on the Democratic line. Announced his candidacy in June 2026.",
       "platform_ref": null,
-      "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
-      "source_label": "Examiner coverage"
+      "source_url": "https://pelhamexaminer.com/83541/announcing/pelham-democrats-announce-candidates-for-manor-board-of-trustees-chris-dlutkowski-and-ryan-kurtz/",
+      "source_label": "Democratic announcement"
     },
     {
       "id": "theresa-mohan",

@@ -158,6 +158,13 @@
             "type": "string"
           },
           "description": "Lowercase keywords that route a reader's question to this issue, emitted into KNOWN_ISSUES. Deliberately separate from `keywords`: that field is editorial description, while these are tuned against the longest-match-wins algorithm in matchIssue, so generic words are excluded on purpose — 'redevelopment' here would pull EMS-station questions onto the Picture House."
+        },
+        "link_to": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Where the homepage preview's 'Read more' sends the reader. Some issues are better served by a topic page than by their own card — a tax or budget issue lands on /taxes, an election issue on /elections. Null routes to the issue's anchor on /issues, which is the right default for anything without a natural home."
         }
       }
     }

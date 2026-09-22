@@ -387,7 +387,7 @@ function generateNav(activePage, data) {
   out.push('    <div class="nav-links">');
   for (const pg of primary) out.push(`      ${link(pg, 'nav-link')}`);
   out.push('      <div class="nav-more-wrap">');
-  out.push(`        <button class="nav-link nav-more-trigger${moreActive ? ' is-active' : ''}" id="nav-more" aria-expanded="false" aria-haspopup="true" aria-controls="nav-more-menu">More <span aria-hidden="true">▾</span></button>`);
+  out.push(`        <button class="nav-link nav-more-trigger${moreActive ? ' is-active' : ''}" id="nav-more" aria-expanded="false" aria-haspopup="true" aria-controls="nav-more-menu">Learn More <span aria-hidden="true">▾</span></button>`);
   out.push('        <div class="nav-more-menu" id="nav-more-menu" role="menu">');
   for (const pg of more) {
     const active = pg.id === activePage;
@@ -458,8 +458,20 @@ function generateElections(data, r) {
     out.push(`          <span class="race-type">${race.title}${seats} · ${race.term_length}</span>`);
     out.push('        </div>');
     if (race.badge) out.push(`        <span class="race-badge contested">${race.badge}</span>`);
+    // Collapsing a race is a button, not a <details>, so the existing header
+    // layout survives; app.js toggles it and it stays open without JS.
+    out.push(`        <button class="race-toggle" aria-expanded="true" aria-controls="race-panel-${esc(race.id)}" aria-label="Collapse ${esc(race.title)}"><span aria-hidden="true">▾</span></button>`);
     out.push('      </div>');
+    out.push(`      <div class="race-panel" id="race-panel-${esc(race.id)}">`);
     out.push('');
+    // Context sits directly under the header rather than below the cards —
+    // it frames the race, so a reader needs it before the candidates.
+    if (race.context) {
+      out.push('      <div class="race-context">');
+      out.push(`        ${r(race.context, 'elections.json')}`);
+      out.push('      </div>');
+      out.push('');
+    }
     if (race.note) {
       out.push('      <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 14px 18px; margin-bottom: 20px; font-size: 13px; color: var(--slate-light); line-height: 1.6;">');
       out.push(`        ${r(race.note, 'elections.json')}`);
@@ -497,12 +509,7 @@ function generateElections(data, r) {
       out.push('');
     }
     out.push('      </div>');
-    out.push('');
-    if (race.context) {
-      out.push('      <div class="race-context">');
-      out.push(`        ${r(race.context, 'elections.json')}`);
-      out.push('      </div>');
-    }
+    out.push('      </div>');
     out.push('    </div>');
     out.push('');
   }
@@ -825,7 +832,7 @@ function generateAboutSources(data) {
 // home grid, capped at four — a digest that shows everything is not a digest.
 const ISSUE_URGENCY = { active: 0, watch: 1, resolved: 2 };
 
-function generateIssuePreviews(data, r, limit = 4) {
+function generateIssuePreviews(data, r, limit = 3) {
   const picked = data.issues.issues
     .filter((i) => i.show_on_home !== false)
     .slice()
@@ -834,12 +841,15 @@ function generateIssuePreviews(data, r, limit = 4) {
     .slice(0, limit);
 
   const cards = picked.map((i) => {
-    const link = `<a href="/issues#${esc(i.id)}" class="issue-source-link">Read more →</a>`;
+    // Some issues read better on a topic page than on their own card: a
+    // budget issue belongs on /taxes, an election issue on /elections.
+    const href = i.link_to || `/issues#${esc(i.id)}`;
+    const link = `<a href="${esc(href)}" class="issue-source-link">Read more →</a>`;
     return `      <div class="issue-card fade-in"><span class="issue-tag tag-${i.tag_style}">${i.tag}</span>`
       + `<h3>${r(i.title, 'issues.json')}</h3>`
       + `<div class="issue-status"><div class="status-dot dot-${i.status}"></div>${r(i.status_label, 'issues.json')}</div>${link}</div>`;
   });
-  return ['    <div class="issues-grid">', ...cards, '    </div>'].join(NL);
+  return ['    <div class="issues-grid issues-grid-3">', ...cards, '    </div>'].join(NL);
 }
 
 // One card per board, the same meetings the Meetings page opens on.

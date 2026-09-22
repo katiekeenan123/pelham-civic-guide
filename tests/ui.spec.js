@@ -147,7 +147,7 @@ test('home — digest shows at most four issues and links to the full list', asy
   const cards = page.locator('#home-issues .issue-card');
   const n = await cards.count();
   expect(n).toBeGreaterThan(0);
-  expect(n, 'the digest should be a preview, not the whole list').toBeLessThanOrEqual(4);
+  expect(n, 'the digest shows three in one row').toBe(3);
 
   // Most urgent first: an active issue must not sit below a resolved one.
   const statuses = await cards.locator('.status-dot').evaluateAll((els) =>
@@ -186,6 +186,100 @@ test('home — Get Involved teaser links to the full page', async ({ page }) => 
   await page.goto('/');
   await page.click('#home-involved .digest-more');
   await expect(page).toHaveURL(/\/get-involved$/);
+});
+
+
+test('nav — the active item is visibly marked, not just semantically', async ({ page }) => {
+  await page.goto('/elections');
+  const active = page.locator('nav.nav-bar .nav-link.is-active');
+  await expect(active).toHaveText(/Elections/);
+  // aria-current was emitted from the start but nothing rendered it, so the
+  // bar looked identical on every page. Guard the styling, not just the class.
+  await expect(active).toHaveCSS('font-weight', '700');
+  const plain = page.locator('nav.nav-bar .nav-link', { hasText: 'Issues' });
+  await expect(plain).not.toHaveCSS('font-weight', '700');
+});
+
+test('nav — Learn More trigger lines up with the other items', async ({ page }) => {
+  await page.goto('/');
+  const trigger = page.locator('#nav-more');
+  await expect(trigger).toHaveText(/Learn More/);
+  // It is a <button> among <a>s; if it misses the shared rules it sits at a
+  // different height, which is what "visually consistent" means here.
+  const a = await page.locator('nav.nav-bar .nav-link[href="/issues"]').boundingBox();
+  const b = await trigger.boundingBox();
+  expect(Math.abs(a.height - b.height), 'trigger height should match the links').toBeLessThan(2);
+  expect(Math.abs(a.y - b.y), 'trigger should sit on the same baseline').toBeLessThan(2);
+});
+
+test('home — issue previews route by topic where one is set', async ({ page }) => {
+  await page.goto('/');
+  const hrefs = await page.locator('#home-issues .issue-card .issue-source-link')
+    .evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+  // Every route resolves somewhere real: a topic page, or the issue's anchor.
+  for (const h of hrefs) expect(h).toMatch(/^\/(taxes|elections|issues#[a-z0-9-]+)$/);
+});
+
+test('issues — context strip sits at the top and links out', async ({ page }) => {
+  await page.goto('/issues');
+  const strip = page.locator('.context-strip');
+  await expect(strip).toBeVisible();
+  for (const href of ['/taxes', '/gov-101', '/ask']) {
+    await expect(strip.locator(`a[href="${href}"]`)).toBeVisible();
+  }
+  // Above the first issue card.
+  const stripBox = await strip.boundingBox();
+  const cardBox = await page.locator('.issue-card').first().boundingBox();
+  expect(stripBox.y).toBeLessThan(cardBox.y);
+});
+
+test('elections — each race collapses and expands', async ({ page }) => {
+  await page.goto('/elections');
+  const toggles = page.locator('.race-toggle');
+  await expect(toggles).toHaveCount(3);
+
+  const first = toggles.first();
+  const body = page.locator('.race-panel').first();
+  // Expanded by default, so the content is there without JS.
+  await expect(first).toHaveAttribute('aria-expanded', 'true');
+  await expect(body).toBeVisible();
+
+  await first.click();
+  await expect(first).toHaveAttribute('aria-expanded', 'false');
+  await expect(body).toBeHidden();
+
+  await first.click();
+  await expect(body).toBeVisible();
+});
+
+test('elections — race context sits under the header, above the candidates', async ({ page }) => {
+  await page.goto('/elections');
+  const block = page.locator('.race-block').first();
+  const ctx = await block.locator('.race-context').boundingBox();
+  const cards = await block.locator('.candidate-card').first().boundingBox();
+  expect(ctx.y, 'context should frame the race before the candidates').toBeLessThan(cards.y);
+});
+
+test('elections — voter info names both villages in full', async ({ page }) => {
+  await page.goto('/elections');
+  const note = page.locator('.voter-info-box', { hasText: 'Where to Vote' }).locator('.voter-info-note');
+  await expect(note).toContainText('Village of Pelham —');
+  await expect(note).toContainText('Village of Pelham Manor —');
+  await expect(note, 'the separator bullet was dropped for two lines').not.toContainText('·');
+});
+
+test('no page links to a URL that does not exist', async ({ page, request }) => {
+  const seen = new Set();
+  for (const pg of PAGES) {
+    await page.goto(pg.url);
+    const hrefs = await page.locator('a[href^="/"]').evaluateAll((els) =>
+      els.map((e) => e.getAttribute('href')));
+    hrefs.forEach((h) => seen.add(h.split('#')[0]));
+  }
+  for (const href of [...seen].filter(Boolean)) {
+    const res = await request.get(href);
+    expect(res.status(), `${href} is linked but does not resolve`).toBeLessThan(400);
+  }
 });
 
 /* ── Content pages ─────────────────────────────────────────────────────── */

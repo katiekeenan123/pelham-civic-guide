@@ -519,3 +519,20 @@
     });
   }
 })();
+
+// ── Collapsible race sections (Elections page) ─────────────────────────────
+// Rendered expanded so the content is there without JS; this only adds the
+// ability to fold a race away once the reader has read it.
+(function initRaceToggles() {
+  Array.prototype.forEach.call(document.querySelectorAll('.race-toggle'), function (btn) {
+    var body = document.getElementById(btn.getAttribute('aria-controls'));
+    if (!body) return;
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      btn.setAttribute('aria-label', (open ? 'Expand ' : 'Collapse ')
+        + (btn.getAttribute('aria-label') || '').replace(/^(Collapse|Expand) /, ''));
+      body.hidden = open;
+    });
+  });
+})();
