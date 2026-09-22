@@ -30,7 +30,10 @@ Generated blocks used below:
 | --- | --- |
 | `{{generated:vetted-sources}}` | `sources.json`, entries with `in_prompt` |
 | `{{generated:officials}}` | `officials.json`, entries with `in_prompt`, grouped by governing body |
-| `{{generated:key-facts}}` | `facts.json` grouped by category, plus `elections.json`, `issues.json` and `meetings.json` |
+| `{{generated:key-facts}}` | `facts.json`, grouped by category |
+| `{{generated:current-issues}}` | `issues.json` — every card, with status and source |
+| `{{generated:elections}}` | `elections.json` — races, candidates and platforms |
+| `{{generated:processed-meetings}}` | `meetings.json` — which meetings have published summaries |
 | `{{generated:critical-facts}}` | every non-null `facts[].caution`, each rendered as the fact followed by its caution |
 | `{{generated:issue-cautions}}` | every non-null `issues[].prompt_caution` — jurisdiction and attribution guards |
 | `{{generated:public-comment-by-body}}` | `bodies[].public_comment_process` |
@@ -61,6 +64,18 @@ sources:
 ## Key facts
 
 {{generated:key-facts}}
+
+## Current issues
+
+{{generated:current-issues}}
+
+## Elections
+
+{{generated:elections}}
+
+## Meetings with published summaries
+
+{{generated:processed-meetings}}
 
 ## Accuracy guardrails
 

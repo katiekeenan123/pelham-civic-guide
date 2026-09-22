@@ -177,6 +177,17 @@ function makeResolver(facts) {
   return resolve;
 }
 
+
+const NL = '\n';
+
+// Prompt blocks are plain text; content fields carry a little inline HTML.
+const plain = (t) => String(t)
+  .replace(/<br\s*\/?>/gi, ' ')
+  .replace(/<[^>]+>/g, '')
+  .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+  .replace(/\s+/g, ' ')
+  .trim();
+
 // =========================================================================
 // PHASE 2 — system prompt
 // =========================================================================
@@ -190,6 +201,45 @@ function buildPrompt(data, r) {
   t = rule === -1 ? t : t.slice(rule + 5).trimStart();
 
   const blocks = {
+    'current-issues': () => {
+      const out = ['The issues the site is actively tracking. Each is sourced; cite the source when you use one.'];
+      for (const i of data.issues.issues) {
+        out.push(`- ${plain(r(i.title, 'issues.json'))} [${i.status}: ${plain(r(i.status_label, 'issues.json'))}]`);
+        out.push(`    ${plain(r(i.description, 'issues.json'))}`);
+        out.push(`    Source: ${i.source_label}${i.source_date ? ` (${i.source_date})` : ''} ${i.source_url}`);
+      }
+      return out.join(NL);
+    },
+
+    elections: () => {
+      const e = data.elections;
+      const out = [`Election day ${r('{{fact:election-date-2026}}', 'elections.json')}. Races and candidates:`];
+      for (const race of e.races) {
+        const body = data.bodies.bodies.find((b) => b.id === race.body);
+        const seats = race.show_seats === false ? '' : `, ${race.seats} seat(s)`;
+        out.push(`  ${body.name} — ${race.title}${seats}, ${race.term_length}${race.badge ? ` (${race.badge})` : ''}`);
+        if (race.context) out.push(`    Context: ${plain(r(race.context, 'elections.json'))}`);
+        for (const c of e.candidates.filter((x) => x.race_id === race.id)) {
+          const office = c.office ? ` for ${c.office}` : '';
+          out.push(`    - ${c.name} (${c.party})${office}${c.incumbent ? ' — INCUMBENT' : ''}: ${plain(r(c.meta, 'elections.json'))}`);
+          let sum = plain(r(c.summary, 'elections.json'));
+          if (c.platform_ref) sum += ' ' + plain(r(race.shared_platforms[c.platform_ref], 'elections.json'));
+          out.push(`        ${sum}`);
+        }
+      }
+      return out.join(NL);
+    },
+
+    'processed-meetings': () => {
+      const pub = data.meetings.meetings.filter((m) => m.status === 'published');
+      const out = ['Meetings the site has processed and published summaries for. Point residents to the site for detail, and to the recording to verify.'];
+      for (const m of pub) {
+        const body = data.bodies.bodies.find((b) => b.id === m.governing_body);
+        out.push(`- ${body.name}, ${m.date}${m.chair ? ` — ${m.chair}` : ''}. Recording: ${m.recording_url}`);
+      }
+      return out.join(NL);
+    },
+
     'vetted-sources': () =>
       data.sources.sources.filter((s) => s.in_prompt !== false)
         .map((s) => `- ${s.domain} (${s.description})`).join('\n'),

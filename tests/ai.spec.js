@@ -55,7 +55,9 @@ test('scoping — an off-topic pizza question is redirected to civic topics', as
 test('picture house — summarizes the redevelopment story', async ({ request }) => {
   const answer = await ask(request, 'what happened with the picture house?');
   expect(answer).toMatch(/picture house/i);
-  expect(answer).toMatch(/smithweyer|php/i);
+  // "Smithweyer" was the page's own misspelling, corrected to Smithmeyer in
+  // 38d8858; the assertion outlived it and could only ever pass via "php".
+  expect(answer).toMatch(/smithmeyer|php partners/i);
 });
 
 test('officials — lists the Village of Pelham trustees', async ({ request }) => {
