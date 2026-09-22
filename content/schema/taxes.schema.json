@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "pelham/taxes.schema.json",
   "title": "Your Taxes panel",
-  "description": "The /taxes page: a like-for-like Village of Pelham vs Pelham Manor comparison, a bar visual of how a property tax bill divides between governing bodies, a labelled list for the shares with no source (county, town), and explainer blocks describing what each body's share funds. Created because generateTaxSection had no data source — the bar widths, percentage labels and explainer copy existed only as markup and appeared in no JSON file. Prose fields accept the safe HTML subset and {{fact:<id>}} tokens.",
+  "description": "The /taxes page: a bar visual of how a Pelham property tax bill divides between governing bodies, derived from Westchester County's published 2025/2026 rates; explainer blocks describing what each body's share funds; a like-for-like Village of Pelham vs Pelham Manor comparison; and outbound Learn more links. Prose fields accept the safe HTML subset and {{fact:<id>}} tokens.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -20,7 +20,7 @@
     },
     "note": {
       "type": "string",
-      "description": "The caveat block under the bars. Carries the sourcing state of each share — which percentages are confirmed, which are not."
+      "description": "The sourcing note under the bars: where the percentages come from and that they are approximate."
     },
     "comparison": {
       "type": "object",
@@ -29,7 +29,7 @@
         "title",
         "entries"
       ],
-      "description": "Side-by-side village comparison at the top of the page. Each amount is rendered from its fact, and the bar lengths are computed from the facts' numeric values — so unlike bars[].bar_width they ARE proportional to the data.",
+      "description": "Side-by-side village comparison below the breakdown. Each amount is rendered from its fact, and the bar lengths are computed from the facts' numeric values.",
       "properties": {
         "title": {
           "type": "string",
@@ -75,62 +75,6 @@
                   "county",
                   "town"
                 ]
-              },
-              "governing_body": {
-                "type": [
-                  "string",
-                  "null"
-                ],
-                "description": "Foreign key to bodies.json id."
-              }
-            }
-          }
-        }
-      }
-    },
-    "unverified": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "items"
-      ],
-      "description": "Shares with no published source, listed rather than drawn as bars so no bar width can be mistaken for a figure.",
-      "properties": {
-        "title": {
-          "type": "string"
-        },
-        "note": {
-          "type": "string",
-          "description": "Where a resident gets a real number instead — their own bill and the Receiver of Taxes."
-        },
-        "items": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "id",
-              "label",
-              "text"
-            ],
-            "properties": {
-              "id": {
-                "type": "string",
-                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
-              },
-              "label": {
-                "type": "string"
-              },
-              "icon": {
-                "type": [
-                  "string",
-                  "null"
-                ]
-              },
-              "text": {
-                "type": "string",
-                "description": "What is and is not known about this share."
               },
               "governing_body": {
                 "type": [
@@ -239,11 +183,11 @@
         },
         "percent_text": {
           "type": "string",
-          "description": "The text printed at the right of the row — NOT a number, because most shares are not published figures. Real values include 'largest share*', '~25% ✓' and 'share not published'. Keep the hedging: only the Village of Pelham share has a source."
+          "description": "The text printed at the right of the row. A string, not a number: shares are derived from published rates, so they are approximate ('~68% ✓'), and the town share is an estimate ('~1-2% est.') because its rate is not separately published. Mark derived-from-published shares with ✓ and estimates with 'est.'."
         },
         "detail": {
           "type": "string",
-          "description": "Optional second line under the row name — the body's dollar figure where there is one. Safe HTML subset plus {{fact:<id>}} tokens."
+          "description": "Optional second line under the row name — the body's published rate, via a {{fact:*-tax-rate-*}} token. Safe HTML subset plus tokens."
         },
         "bar_width": {
           "type": [
@@ -252,7 +196,7 @@
           ],
           "minimum": 0,
           "maximum": 100,
-          "description": "PRESENTATION ONLY — the CSS width percentage of the filled bar. This is NOT data and must never be read back as a tax percentage. Only the Village of Pelham width (25) corresponds to a sourced number; the school width is an illustrative proportion. Null draws an empty track, for a body whose share has no published figure: the row stays in the list without a fill that would read as a number. County and town moved out of the bars into `unverified` for the same reason. If a genuine published breakdown ever exists, add it as facts and render percent_text from those, but keep this field separate."
+          "description": "CSS width percentage of the filled bar — the share rounded to a whole number (county ~3-4% draws as 4). Keep it in step with percent_text and the matching *-share-of-tax-bill fact. Null draws an empty, hatched track, for a body whose share has no figure at all."
         },
         "fill_style": {
           "enum": [

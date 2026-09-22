@@ -303,7 +303,7 @@ test('elections — three race blocks and every candidate named', async ({ page 
   }
 });
 
-test('taxes — village comparison, split village rows, county and town listed not drawn', async ({ page }) => {
+test('taxes — sourced shares for every body, then the village comparison', async ({ page }) => {
   await page.goto('/taxes');
   await expect(page.getByRole('heading', { name: /Where Do Your Property Taxes Go/i })).toBeVisible();
 
@@ -313,19 +313,20 @@ test('taxes — village comparison, split village rows, county and town listed n
   await expect(compare.locator('[data-body="village-of-pelham"] .tax-compare-amount')).toHaveText('~$6,807');
   await expect(compare.locator('[data-body="village-of-pelham-manor"] .tax-compare-amount')).toHaveText('~$6,035');
 
-  // One row per village, never a combined "Village (Pelham or Manor)" row.
+  // One row per body, shares derived from the county's published rates.
+  // Never a combined "Village (Pelham or Manor)" row.
   const rows = page.locator('.tax-bar-row');
-  await expect(rows).toHaveCount(3);
+  await expect(rows).toHaveCount(5);
+  const pct = rows.locator('.tax-bar-pct');
+  await expect(pct).toHaveText(['~68% ✓', '~27% ✓', '~26% ✓', '~3-4% ✓', '~1-2% est.']);
+  await expect(rows.nth(0)).toContainText('$15.88 per $1,000');
   await expect(rows.nth(1)).toContainText('Village of Pelham');
   await expect(rows.nth(2)).toContainText('Village of Pelham Manor');
   await expect(page.locator('.tax-bar-name', { hasText: /Pelham or Manor/ })).toHaveCount(0);
 
-  // County and town have no sourced share, so no bar may imply one.
-  const unverified = page.locator('.tax-unverified-list li');
-  await expect(unverified).toHaveCount(2);
-  await expect(unverified.locator('.tax-unverified-tag')).toHaveText(['unverified', 'unverified']);
-  await expect(page.locator('.bar-county, .bar-town')).toHaveCount(0);
-  await expect(page.locator('.tax-unverified-note')).toContainText('no verified estimate of the county tax');
+  // Real figures now, so nothing may still call itself illustrative.
+  await expect(page.locator('main')).not.toContainText(/illustrative/i);
+  await expect(page.locator('.tax-note')).toContainText('derived from 2025/2026 Westchester County published tax rates');
 
   // The overall breakdown comes first; the village comparison follows it.
   const breakdownFirst = await page.evaluate(() => {
@@ -343,11 +344,16 @@ test('taxes — Learn more sits last and points at the primary sources', async (
   await expect(box).toBeVisible();
 
   const links = box.locator('a');
-  await expect(links).toHaveCount(2);
-  await expect(links.nth(0)).toContainText('Joe Battaglia');
-  await expect(links.nth(1)).toContainText('Westchester County tax rates');
+  await expect(links).toHaveText([
+    /How Pelham property taxes work/,
+    /Westchester County official tax rates/,
+    /2025\/2026 School District Tax Rates \(PDF\)/,
+    /2025-2026 Village Tax Rates \(PDF\)/,
+    /2026 City\/Town Tax Rates \(PDF\)/,
+  ]);
+  await expect(links.nth(2)).toHaveAttribute('href', /2025-2026-school-district-tax-rates\.pdf$/);
   // External, so they should not swallow the reader's place on the page.
-  for (const i of [0, 1]) await expect(links.nth(i)).toHaveAttribute('target', '_blank');
+  for (let i = 0; i < 5; i++) await expect(links.nth(i)).toHaveAttribute('target', '_blank');
 
   // Last thing in the section, below the explainers and the comparison.
   const lmY = (await box.boundingBox()).y;

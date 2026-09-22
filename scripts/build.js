@@ -119,7 +119,6 @@ function phase1() {
   data.taxes.bars.forEach((b) => checkBody('taxes', b.id, b.governing_body));
   data.taxes.explainers.forEach((e) => checkBody('taxes', e.id, e.governing_body));
   ((data.taxes.comparison || {}).entries || []).forEach((e) => checkBody('taxes', e.id, e.governing_body));
-  ((data.taxes.unverified || {}).items || []).forEach((i) => checkBody('taxes', i.id, i.governing_body));
 
   data.bodies.bodies.forEach((b) => {
     if (b.budget && !factIds.has(b.budget.fact_ref)) {
@@ -805,22 +804,6 @@ function generateTaxSection(data, r) {
       ? '<div class="tax-bar-track is-unknown"></div>'
       : `<div class="tax-bar-track"><div class="tax-bar-fill bar-${b.fill_style}" style="width:${b.bar_width}%"></div></div>`;
     out.push(`        <div class="tax-bar-row fade-in"><div class="tax-bar-header"><span class="tax-bar-name">${name}</span><span class="tax-bar-pct">${b.percent_text}</span></div>${detail}${track}</div>`);
-  }
-
-  // Shares with no source are a list, not bars, so no width can be read as a
-  // figure.
-  if (t.unverified) {
-    const u = t.unverified;
-    out.push('        <div class="tax-unverified fade-in">');
-    if (u.title) out.push(`          <div class="tax-unverified-title">${u.title}</div>`);
-    out.push('          <ul class="tax-unverified-list">');
-    for (const i of u.items) {
-      const name = `${i.icon ? i.icon + ' ' : ''}${i.label}`;
-      out.push(`            <li><span class="tax-unverified-name">${name}</span> <span class="tax-unverified-tag">unverified</span><span class="tax-unverified-text">${r(i.text, 'taxes.json')}</span></li>`);
-    }
-    out.push('          </ul>');
-    if (u.note) out.push(`          <p class="tax-unverified-note">${r(u.note, 'taxes.json')}</p>`);
-    out.push('        </div>');
   }
 
   out.push(`        <div class="tax-note fade-in">${r(t.note, 'taxes.json')}</div>`);

@@ -515,19 +515,6 @@
   .tax-compare-note { margin-top: 18px; font-size: 13px; line-height: 1.6; color: var(--slate); }
   @media (max-width: 600px) { .tax-compare-grid { grid-template-columns: 1fr; } }
 
-  /* County and town: listed, not drawn, because neither share has a source. */
-  .tax-unverified { margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--border); }
-  .tax-unverified-title { font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--slate); margin-bottom: 10px; }
-  .tax-unverified-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-  .tax-unverified-list li { font-size: 13px; color: var(--slate); line-height: 1.5; }
-  .tax-unverified-name { font-weight: 600; color: var(--navy); }
-  .tax-unverified-tag {
-    display: inline-block; margin-left: 6px; padding: 1px 6px;
-    font-family: 'IBM Plex Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
-    background: #fef3cd; color: #7a5800;
-  }
-  .tax-unverified-text { display: block; }
-  .tax-unverified-note { margin-top: 12px; font-size: 13px; line-height: 1.6; color: var(--slate); }
 
   .tax-explainer {
     display: flex;

@@ -93,12 +93,17 @@ error you can make. Before naming a body, check which one actually acted:
 
 ## Tax percentages
 
-Do not state a specific school district or county percentage of a resident's
-tax bill — no verified source publishes one. Instead say: "the school district
-is the largest share of your bill — significantly more than the village
-portion." The village share is the only percentage with a published source.
-For an exact breakdown of any individual bill, refer residents to the Town
-Receiver of Taxes.
+The shares of a tax bill are derived from Westchester County's published
+2025/2026 tax rates for Pelham homestead properties. For a Village of Pelham
+homestead: school district {{fact:school-share-of-tax-bill}}, village
+{{fact:village-share-of-tax-bill}}, county {{fact:county-share-of-tax-bill}},
+town {{fact:town-share-of-tax-bill}} (an estimate — the town rate is not
+separately published). In Pelham Manor the village is
+{{fact:manor-share-of-tax-bill}} and the school district about 71%. Always
+say "about" or "approximately": these are not published percentages, and they
+vary by property, exemptions and special districts. For an exact breakdown of
+any individual bill, refer residents to their own bill or the Town Receiver of
+Taxes.
 
 ## Public comment process
 

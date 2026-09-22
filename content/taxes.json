@@ -1,13 +1,14 @@
 {
   "$schema": "./schema/taxes.schema.json",
-  "section_intro": "The school district is the largest share of every Pelham property tax bill. Village of Pelham taxes are {{fact:village-share-of-tax-bill}} of a resident's total bill (per Mayor Mullen, Pelham Examiner May 2026). Pelham Manor has not published an equivalent figure.",
+  "section_intro": "The school district is the largest share of a Pelham property tax bill — {{fact:school-share-of-tax-bill.short}} for a Village of Pelham homestead. The village takes {{fact:village-share-of-tax-bill.short}} ({{fact:manor-share-of-tax-bill.short}} in Pelham Manor), the county {{fact:county-share-of-tax-bill.short}} and the town {{fact:town-share-of-tax-bill.short}}.",
   "bars": [
     {
       "id": "school-district",
       "label": "School District (PUFSD)",
       "icon": "🏫",
-      "percent_text": "largest share*",
-      "bar_width": 60,
+      "percent_text": "~68% ✓",
+      "detail": "{{fact:school-tax-rate-2526}} (2025/26)",
+      "bar_width": 68,
       "fill_style": "school",
       "governing_body": "pelham-schools"
     },
@@ -15,9 +16,9 @@
       "id": "village-of-pelham",
       "label": "Village of Pelham",
       "icon": "🏘️",
-      "percent_text": "~25% ✓",
-      "detail": "{{fact:village-tax-equivalent-assessed}} on a $1,045,204 assessed value",
-      "bar_width": 25,
+      "percent_text": "~27% ✓",
+      "detail": "{{fact:village-tax-rate-2526}} (2025/26)",
+      "bar_width": 27,
       "fill_style": "village",
       "governing_body": "village-of-pelham"
     },
@@ -25,14 +26,34 @@
       "id": "village-of-pelham-manor",
       "label": "Village of Pelham Manor",
       "icon": "🏘️",
-      "percent_text": "share not published",
-      "detail": "{{fact:manor-tax-equivalent-assessed}} on a $1,045,204 assessed value",
-      "bar_width": null,
+      "percent_text": "~26% ✓",
+      "detail": "{{fact:manor-tax-rate-2526}} (2025/26) — share of a Pelham Manor bill, where the school district is about 71%",
+      "bar_width": 26,
       "fill_style": "manor",
       "governing_body": "village-of-pelham-manor"
+    },
+    {
+      "id": "westchester-county",
+      "label": "Westchester County",
+      "icon": "🏛️",
+      "percent_text": "~3-4% ✓",
+      "detail": "{{fact:county-tax-rate-2026}} general levy (2026)",
+      "bar_width": 4,
+      "fill_style": "county",
+      "governing_body": "westchester-county"
+    },
+    {
+      "id": "town-of-pelham",
+      "label": "Town of Pelham",
+      "icon": "🏡",
+      "percent_text": "~1-2% est.",
+      "detail": "Rate not separately published — the smallest share",
+      "bar_width": 2,
+      "fill_style": "town",
+      "governing_body": "town-of-pelham"
     }
   ],
-  "note": "<strong>Note:</strong> Only the Village of Pelham share ({{fact:village-share-of-tax-bill.short}}, Mayor Mullen/Examiner) has a source. The school district has no published percentage; the school bar is illustrative. The median Village of Pelham bill for FY2026-27 is {{fact:village-median-tax-fy2627}} — a median, so not comparable with the like-for-like figures below.",
+  "note": "Tax rate breakdown derived from 2025/2026 Westchester County published tax rates for Pelham homestead properties. Percentages are approximate and vary by property, exemptions, and special districts. For your own breakdown, check your bill or call the Town Receiver of Taxes on {{fact:town-receiver-phone}}.",
   "explainers": [
     {
       "id": "school-district",
@@ -116,40 +137,38 @@
     ],
     "note": "On the same assessed value the Village of Pelham bill is 12.8% higher. Village tax only — school, county and town taxes are billed on top of this. Source: Pelham Examiner, letter to the editor, January 2026."
   },
-  "unverified": {
-    "title": "County and town",
-    "items": [
-      {
-        "id": "westchester-county",
-        "label": "Westchester County",
-        "icon": "🏛️",
-        "text": "No published share of a Pelham bill",
-        "governing_body": "westchester-county"
-      },
-      {
-        "id": "town-of-pelham",
-        "label": "Town of Pelham",
-        "icon": "🏡",
-        "text": "Smallest share — often put at ~3–5%, with no published source",
-        "governing_body": "town-of-pelham"
-      }
-    ],
-    "note": "There is no verified estimate of the county tax on a Pelham bill, so this page does not give one. Your own bill lists every line: check it, or call the Town Receiver of Taxes on {{fact:town-receiver-phone}} for your breakdown."
-  },
   "learn_more": {
     "title": "Learn more",
     "links": [
       {
-        "id": "assessor-explains",
-        "label": "How Pelham property taxes work — Town Assessor Joe Battaglia explains",
+        "id": "how-taxes-work",
+        "label": "How Pelham property taxes work",
         "url": "https://pelhamexaminer.com/45038/showcase/an-assessment-property-tax-myths-and-misunderstandings/",
-        "note": "Pelham Examiner · assessment myths and misunderstandings"
+        "note": "Pelham Examiner · Town Assessor Joe Battaglia on assessment myths and misunderstandings"
       },
       {
         "id": "county-rates",
-        "label": "Official Westchester County tax rates (PDFs)",
+        "label": "Westchester County official tax rates",
         "url": "https://www.westchestercountyny.gov/property-tax-rates",
-        "note": "Westchester County · the authoritative rate tables"
+        "note": "Westchester County · every published rate table"
+      },
+      {
+        "id": "school-rates-pdf",
+        "label": "2025/2026 School District Tax Rates (PDF)",
+        "url": "https://www.westchestercountyny.gov/images/stories/tax/2025/2025-2026-school-district-tax-rates.pdf",
+        "note": "Source of the school district rate above"
+      },
+      {
+        "id": "village-rates-pdf",
+        "label": "2025-2026 Village Tax Rates (PDF)",
+        "url": "https://www.westchestercountyny.gov/images/stories/tax/2025/2025-2026-village-tax-rates.pdf",
+        "note": "Source of the Village of Pelham and Pelham Manor rates"
+      },
+      {
+        "id": "town-rates-pdf",
+        "label": "2026 City/Town Tax Rates (PDF)",
+        "url": "https://www.westchestercountyny.gov/images/stories/tax/2026/2026_City_Town_Tax_Rates.pdf",
+        "note": "Source of the county general levy rate"
       }
     ]
   }
