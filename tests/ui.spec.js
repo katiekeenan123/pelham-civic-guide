@@ -227,10 +227,13 @@ test('issues — context strip sits at the top and links out', async ({ page }) 
   for (const href of ['/taxes', '/gov-101', '/ask']) {
     await expect(strip.locator(`a[href="${href}"]`)).toBeVisible();
   }
-  // Above the first issue card.
+  // Between the page header and the cards: below the heading, above the
+  // first card. A filter bar, when one exists, goes between it and the cards.
+  const headingBox = await page.locator('h2.section-title').first().boundingBox();
   const stripBox = await strip.boundingBox();
   const cardBox = await page.locator('.issue-card').first().boundingBox();
-  expect(stripBox.y).toBeLessThan(cardBox.y);
+  expect(stripBox.y, 'strip should sit below the heading').toBeGreaterThan(headingBox.y);
+  expect(stripBox.y, 'strip should sit above the cards').toBeLessThan(cardBox.y);
 });
 
 test('elections — each race collapses and expands', async ({ page }) => {
