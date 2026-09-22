@@ -128,10 +128,12 @@ what the site reads. `content/meetings.json` and the HTML partials in
 a row in the `meetings` table means the pipeline saw a meeting, not that it
 appears on the site.
 
-**Railway** hosts the scheduled pipeline run.
-<!-- TODO(maintainers): confirm which services run on Railway and on what
-     schedule. Nothing in this repo records it, so this line is written from
-     second-hand knowledge and should be corrected or deleted. -->
+**Railway** runs five scheduled services: `check-examiner` (the article
+tagger above, nightly) and one meeting watcher per board —
+`check-meetings-village`, `check-meetings-town`, `check-meetings-boe`,
+`check-meetings-manor`. The watchers detect new recordings and write them to
+the Supabase `meetings` table; the run cadence is configured in Railway, not
+in this repo.
 
 ---
 

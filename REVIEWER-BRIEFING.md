@@ -24,8 +24,8 @@ A civic transparency site for Pelham, NY. AI-generated meeting summaries, electi
 ### Test count: 21 (was 19 at last review)
 
 ### New since last review
-- **Single source of truth refactor complete** — 9 JSON content files, 10 JSON Schema sidecars, build script generating index.html and system-prompt.js from content/
-- **Meeting summaries expanded** — 7 real meeting summaries now live (all 4 boards)
+- **Single source of truth refactor complete** — 10 JSON content files (including hero.json added with the hero-stats generator), 10 JSON Schema sidecars, build script generating index.html and system-prompt.js from content/
+- **Meeting summaries expanded** — 8 meeting summaries now live (4 selectable, 4 archived) across all 4 boards
 - **Village of Pelham watcher fixed** — was blind to all meetings since May 2026 (YouTube /streams vs /videos); now checks both tabs; 50+ backfilled
 - **Candidate profiles updated** — all 14 candidates have 2026 Examiner sources; NP joint platform; Mohan/Miller re-election context
 - **facts.json** — 40 canonical facts with cautions, confidence levels, and supersedes fields; resolves the factual conflicts found in the audit
