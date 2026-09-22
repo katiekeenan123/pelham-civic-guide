@@ -1319,6 +1319,9 @@
   .form-control { width: 100%; padding: 8px 10px; border: 1px solid var(--border); font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; background: var(--cream); }
   .fb-checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
   .form-confirm { display: none; font-size: 13px; color: var(--green); font-weight: 500; }
+  /* Same element reports failure, so a reader can never be told their
+     submission was received when the write did not land. */
+  .form-confirm.is-error { color: var(--red); }
   .about-source-link { font-size: 13px; padding: 8px 12px; }
 </style>
 </head>
@@ -3117,26 +3120,69 @@
     showMeetingTab(panel);
   }
 
-  function submitError() {
+  // Set this to publish an address in the failure messages below. Left empty
+  // deliberately — the project has no published contact address yet, and a
+  // message telling a resident to email somewhere that bounces is worse than
+  // one that just asks them to retry.
+  const CONTACT_EMAIL = '';
+
+  const contactClause = () => (CONTACT_EMAIL
+    ? ` or email us at <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>`
+    : '');
+
+  // Report the real outcome of a submission. These forms previously swallowed
+  // every failure and showed the success message regardless, so a resident
+  // reporting a factual error could be told it was received when nothing was
+  // written. A correction that silently vanishes is worse than a visible
+  // failure the reader can retry.
+  function reportSubmission(confirmEl, ok, successHtml) {
+    confirmEl.classList.toggle('is-error', !ok);
+    confirmEl.innerHTML = ok
+      ? successHtml
+      : `⚠ Something went wrong — your submission was not saved. Please try again${contactClause()}.`;
+    confirmEl.style.display = 'block';
+  }
+
+  // POST a submission and resolve true only if the server actually accepted it.
+  async function postSubmission(payload) {
+    try {
+      const res = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        console.warn('Submission rejected:', res.status);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.warn('Submission failed:', err);
+      return false;
+    }
+  }
+
+  async function submitError() {
     const section = document.getElementById('error-section').value;
     const desc = document.getElementById('error-desc').value.trim();
     if (!desc) { alert('Please describe the error.'); return; }
     const source = document.getElementById('error-source').value;
-    console.log('Error report:', { section, desc, source });
 
-    // Fire-and-forget write to the Supabase `corrections` table via the proxy.
-    // Any failure is swallowed — the confirmation below must never depend on it.
-    fetch('/api/ask', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'correction', section, description: desc, source }),
-    }).catch(() => {});
+    const btn = document.querySelector('.btn-submit-correction');
+    const confirmEl = document.getElementById('error-confirm');
+    if (btn) { btn.disabled = true; btn.textContent = 'Submitting…'; }
 
-    document.getElementById('error-form').style.opacity = '0.5';
-    document.getElementById('error-confirm').style.display = 'block';
+    const ok = await postSubmission({ type: 'correction', section, description: desc, source });
+
+    if (btn) { btn.disabled = false; btn.textContent = 'Submit correction →'; }
+    // Only grey the form out once the correction is actually stored; leaving it
+    // editable on failure is what makes "try again" possible.
+    document.getElementById('error-form').style.opacity = ok ? '0.5' : '1';
+    reportSubmission(confirmEl, ok,
+      "✓ Correction received — we'll review it shortly.");
   }
 
-  function submitFeedbackForm() {
+  async function submitFeedbackForm() {
     const story = document.getElementById('fb-story').value.trim();
     const governingBody = document.getElementById('fb-body').value;
     const actions = [
@@ -3145,17 +3191,17 @@
       ['letter', 'fb-letter'],
       ['applied', 'fb-applied'],
     ].filter(([, elId]) => document.getElementById(elId).checked).map(([name]) => name);
-    console.log('Civic feedback:', { actions, governingBody, story });
 
-    // Fire-and-forget write to the Supabase `civic_engagement` table via the
-    // proxy. Any failure is swallowed — the confirmation below never waits on it.
-    fetch('/api/ask', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'civic_engagement', actions, governing_body: governingBody, story }),
-    }).catch(() => {});
+    const btn = document.getElementById('fb-share-btn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Sharing…'; }
 
-    document.getElementById('fb-confirm').style.display = 'block';
+    const ok = await postSubmission({
+      type: 'civic_engagement', actions, governing_body: governingBody, story,
+    });
+
+    if (btn) { btn.disabled = false; btn.textContent = 'Share my experience →'; }
+    reportSubmission(document.getElementById('fb-confirm'), ok,
+      "✓ Thanks for sharing — we're tracking this engagement.");
   }
 
   // ── Event wiring ──

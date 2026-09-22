@@ -400,9 +400,17 @@ test('Explore More ▾ nav link: dropdown opens on click and its items drive the
 // The two About-section forms POST their payload to /api/ask fire-and-forget.
 // These tests care about the UI acknowledgement, not the write, so they stub
 // /api/ask — that keeps every run from inserting a junk row into Supabase.
-test('error correction form — submit shows a success message, not the old false one', async ({ page }) => {
+/* The confirmation must reflect what actually happened. Both forms used to
+ * fire-and-forget with .catch(() => {}) and show the success message
+ * regardless, so a resident reporting a factual error could be told it was
+ * received when nothing had been written. Each test drives the failure branch
+ * first, then retries into the success branch — which also covers the form
+ * staying usable after a failure. */
+
+test('error correction form — reports failure on a rejected write, success on a stored one', async ({ page }) => {
+  let status = 500;
   await page.route('**/api/ask', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }),
+    route.fulfill({ status, contentType: 'application/json', body: '{}' }),
   );
 
   await page.selectOption('#error-section', 'Who Governs');
@@ -412,17 +420,72 @@ test('error correction form — submit shows a success message, not the old fals
 
   const confirm = page.locator('#error-confirm');
   await expect(confirm).toBeVisible();
+  await expect(confirm).toContainText('was not saved');
+  await expect(confirm).toHaveClass(/is-error/);
+  // The form must stay editable so "try again" is actually possible.
+  await expect(page.locator('#error-form')).not.toHaveCSS('opacity', '0.5');
+
+  status = 200;
+  await page.click('.btn-submit-correction');
+  await expect(confirm).toContainText('Correction received');
+  await expect(confirm).not.toHaveClass(/is-error/);
   // Guard against the old always-on false success copy ever returning.
   await expect(confirm).not.toContainText("Thanks — we'll review this within a week");
 });
 
-test('civic engagement form — submit shows a success message', async ({ page }) => {
+test('civic engagement form — reports failure on a rejected write, success on a stored one', async ({ page }) => {
+  let status = 500;
   await page.route('**/api/ask', (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }),
+    route.fulfill({ status, contentType: 'application/json', body: '{}' }),
   );
 
   await page.check('#fb-attended');
   await page.click('#fb-share-btn');
 
-  await expect(page.locator('#fb-confirm')).toBeVisible();
+  const confirm = page.locator('#fb-confirm');
+  await expect(confirm).toBeVisible();
+  await expect(confirm).toContainText('was not saved');
+  await expect(confirm).toHaveClass(/is-error/);
+
+  status = 200;
+  await page.click('#fb-share-btn');
+  await expect(confirm).toContainText('Thanks for sharing');
+  await expect(confirm).not.toHaveClass(/is-error/);
+});
+
+/* Chat bubbles are built with innerHTML, so anything the reader types — or
+ * anything the model returns — reaches the DOM as markup unless it is escaped
+ * first. The assistant path matters as much as the user path: the answer text
+ * arrives from the network. */
+test('escapes XSS in chat bubbles', async ({ page }) => {
+  const PAYLOAD = '<img src=x onerror=alert(1)>';
+
+  let dialogFired = false;
+  page.on('dialog', async (d) => { dialogFired = true; await d.dismiss(); });
+
+  await page.route('**/api/ask', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ answer: `Echo: ${PAYLOAD}` }),
+  }));
+
+  await page.fill('#ai-input', PAYLOAD);
+  await page.click('#ask-btn');
+
+  const chat = page.locator('#chat-window');
+  await expect(chat.locator('.chat-bubble.assistant .bubble-text')).toBeVisible();
+
+  // The payload survives as literal text the reader can see...
+  await expect(chat.locator('.chat-bubble.user .bubble-text')).toHaveText(PAYLOAD);
+  await expect(chat.locator('.chat-bubble.assistant .bubble-text')).toContainText(PAYLOAD);
+
+  // ...and never becomes markup. Asserting on innerHTML would not work here:
+  // correct escaping leaves the literal characters "onerror" in the serialized
+  // HTML as &lt;img src=x onerror=alert(1)&gt;. What distinguishes escaped from
+  // executed is whether an element was created at all.
+  await expect(chat.locator('img')).toHaveCount(0);
+  const injected = await page.evaluate(() =>
+    document.querySelectorAll('#chat-window [onerror], #chat-window script, #chat-window img').length);
+  expect(injected, 'payload created DOM nodes instead of being escaped').toBe(0);
+  expect(dialogFired, 'an alert() fired — the payload executed').toBe(false);
 });

@@ -1,46 +1,137 @@
 # Pelham Civic Guide
 
-A single-page guide to local government in Pelham, NY — how the two villages,
-the Town, the school district, and Westchester County fit together; where
-property taxes go; current issues; and how to get involved. Includes an
-"Ask Pelham" chat box backed by Claude.
+A guide to local government in Pelham, NY — how the two villages, the Town, the
+school district and Westchester County fit together; where property taxes go;
+current issues; AI-generated summaries of every public meeting; and an "Ask
+Pelham" assistant backed by Claude.
 
-## Structure
+Live at **pelhamengagementproject.netlify.app**.
 
-| Path | Purpose |
+---
+
+## ⚠️ Never edit `index.html` by hand
+
+`index.html` is **generated**. So is the AI's system prompt, and part of
+`netlify/functions/ask-pelham.js`. Edit the JSON in `content/`, then run
+`npm run build`. A hand edit inside a `<!-- BUILD:… -->` region is silently
+overwritten on the next build, and `npm run build:check` will fail in the
+meantime.
+
+Everything *outside* those regions — page layout, CSS, the site's own
+JavaScript — is hand-written and safe to edit directly.
+
+---
+
+## Commands
+
+| Command | What it does |
 |---|---|
-| `index.html` | The entire site — markup, styles, and scripts in one file. |
-| `netlify/functions/ask-pelham.js` | Serverless proxy. The browser POSTs `{ system, messages }` to `/api/ask`; this function adds the model and the secret API key and forwards to the Anthropic API. |
-| `netlify.toml` | Static-site config + the `/api/ask` → function rewrite. |
+| `npm run build` | Regenerates `index.html`, the system prompt, and `KNOWN_ISSUES` from `content/` |
+| `npm run build:check` | Generates in memory and exits non-zero if anything differs from what's committed. **The CI guard.** |
+| `npm run test:local` | Builds, serves the working tree, runs the UI tests against it |
+| `npm test` | Runs UI **and** AI tests against the deployed Netlify site |
+| `npm run test:ai` | The AI tests only — live Anthropic calls, so slower and not free |
 
-## How the AI chat works
+Use `test:local` while working; it's the only one that tests uncommitted
+changes. `npm test` tests production.
 
-The browser never sees the API key. `askClaude()` in `index.html` calls
-`/api/ask`, which `netlify.toml` rewrites to the `ask-pelham` function. The
-function reads `ANTHROPIC_API_KEY` from the environment, calls Anthropic, and
-returns the response.
+---
 
-Model and token limit are set at the top of `netlify/functions/ask-pelham.js`
-(`MODEL`, `MAX_TOKENS`).
-
-## Deploy (Netlify)
-
-1. Connect this GitHub repo to a Netlify site (no build command; publish
-   directory `.`).
-2. In **Site configuration → Environment variables**, add:
-   - `ANTHROPIC_API_KEY` = your Anthropic API key
-3. Deploy. Test the "Ask Pelham" box on the live site.
-
-## Local development
+## Where the content lives
 
 ```
-npm install -g netlify-cli
-netlify dev
+content/
+├── facts.json          every figure that appears more than once
+├── bodies.json         the five governing bodies
+├── officials.json      who holds which seat
+├── issues.json         current-issue cards (+ AI retrieval keywords)
+├── elections.json      races and candidates
+├── meetings.json       meeting metadata
+├── taxes.json          the tax-breakdown panel
+├── sources.json        the vetted-source list
+├── quick-reference.json  "who to call for what"
+├── hero.json           the four hero statistics
+├── prompt-template.md  hand-written half of the AI system prompt
+├── meetings/           24 HTML partials — the meeting summaries themselves
+└── schema/             one JSON Schema per data file
 ```
 
-`netlify dev` serves `index.html` and runs the function locally at
-`/api/ask`. Provide the key for local runs via a `.env` file (git-ignored):
+Every data file is validated against its schema on each build, so a typo'd
+field name or a bad enum fails loudly rather than producing broken HTML.
 
-```
-ANTHROPIC_API_KEY=sk-ant-...
-```
+**`facts.json` is the important one.** Any figure used in more than one place
+lives there once and is referenced as `{{fact:village-budget-fy2627}}`. Change
+the budget in `facts.json` and the hero stat, the issue card, the tax panel,
+the Who Governs card and the AI's system prompt all update together. An unknown
+token fails the build.
+
+### Adding a meeting
+
+1. Drop the three summary files into `content/meetings/` as
+   `<id>.exec.html`, `<id>.detailed.html`, `<id>.transcript.html`
+2. Add an entry to `content/meetings.json`
+3. `npm run build`
+
+Only the most recent meeting per board gets a selector button; older ones stay
+in the page for the future archive. That's derived from the dates, so
+publishing a newer meeting retires the previous one with no extra step.
+
+---
+
+## The Ask Pelham assistant
+
+The browser POSTs to `/api/ask`, which `netlify.toml` rewrites to
+`netlify/functions/ask-pelham.js`. That function holds the API key and the
+system prompt; the browser never sees either.
+
+Before answering, it matches the question against Pelham Examiner coverage
+stored in Supabase and prepends anything relevant. Matching is an exact-string
+lookup, not a similarity search — no embeddings involved.
+
+Environment variables (Netlify → Site configuration → Environment variables):
+
+| Variable | Used for |
+|---|---|
+| `ANTHROPIC_API_KEY` | the chat itself |
+| `SUPABASE_URL` | article retrieval + form submissions |
+| `SUPABASE_ANON_KEY` | same |
+
+Without the Supabase pair the chat still works; only retrieval and the
+feedback/correction forms fail.
+
+---
+
+## Related services
+
+**The Examiner pipeline (separate repo).** `check_examiner.py` reads the
+Pelham Examiner RSS feed on a schedule, has Claude tag each article with topic
+tags, a two-sentence summary, a 1–5 relevance score, and the canonical name of
+the issue or candidate it's about, then writes rows to the Supabase `articles`
+table.
+
+> ⚠️ **Coupling to know about.** The canonical issue names in `KNOWN_ISSUES`
+> and the candidate surnames in `KNOWN_CANDIDATES` (both in
+> `ask-pelham.js`) must match `check_examiner.py` **exactly**. They're stored
+> verbatim in the database, so renaming one here silently stops matching every
+> article already saved under the old spelling — and no test would catch it.
+> `KNOWN_ISSUES` is now generated from `issues.json`, but the canonical strings
+> themselves are still duplicated across the two repos.
+
+**Supabase** holds four tables: `articles` (the pipeline's output), plus
+`feedback`, `corrections` and `civic_engagement` written by the page.
+
+**Railway** hosts the scheduled pipeline run.
+<!-- TODO(maintainers): confirm which services run on Railway and on what
+     schedule. Nothing in this repo records it, so this line is written from
+     second-hand knowledge and should be corrected or deleted. -->
+
+---
+
+## Deploy
+
+Netlify builds from `main`: no build command, publish directory `.`.
+`index.html` and the generated function files are committed, so the deploy is
+a straight static publish.
+
+Run `npm run build:check` before pushing. If it fails, someone edited
+generated output by hand — run `npm run build` and commit the result.
