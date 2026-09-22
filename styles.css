@@ -1884,3 +1884,48 @@
   font-size: 11px;
   color: var(--slate);
 }
+
+/* ── Shared "Ask Pelham AI" CTA ──────────────────────────────────────────
+   Emitted by the page shell on every content page, so it cannot drift
+   between pages or be forgotten on a new one. */
+.ask-cta {
+  background: var(--navy);
+  border-top: 3px solid var(--gold);
+}
+.ask-cta .content-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+.ask-cta-text {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  color: var(--slate-light);
+}
+.ask-cta-link {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gold-light);
+  text-decoration: none;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 2px;
+  white-space: nowrap;
+}
+.ask-cta-link:hover { color: var(--white); border-bottom-color: var(--white); }
+
+.footer-feedback { margin-top: 8px; }
+.footer-feedback a {
+  color: var(--gold-light);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(200,151,58,0.5);
+}
+.footer-feedback a:hover { color: var(--white); border-bottom-color: var(--white); }
+
+@media (max-width: 560px) {
+  .ask-cta .content-wrap { flex-direction: column; align-items: flex-start; gap: 10px; }
+}

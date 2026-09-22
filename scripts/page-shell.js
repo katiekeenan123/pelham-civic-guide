@@ -70,6 +70,18 @@ function generatePageShell(o) {
   // whole rather than patched in place.
   const footer = generateFooter(data, o.resolve || makeResolver(data.facts));
 
+  // Shared CTA, on every content page. Skipped on home, which already has the
+  // Ask box itself, and on the Ask page, where it would link to itself.
+  const NO_CTA = new Set(['home', 'ask-ai']);
+  const askCta = NO_CTA.has(activePage) ? '' : `
+<aside class="ask-cta">
+  <div class="content-wrap">
+    <span class="ask-cta-text">Have a question about Pelham government?</span>
+    <a class="ask-cta-link" href="/ask">Ask Pelham AI →</a>
+  </div>
+</aside>
+`;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,10 +104,11 @@ ${nav}
 
 <main id="main">
 ${content}
-</main>
+${askCta}</main>
 
 <footer>
   <p><strong>Pelham Civic Guide</strong> — An independent resource for Pelham, NY residents.</p>
+  <p class="footer-feedback">See something wrong or have a suggestion? <a href="/about#feedback">Share feedback →</a></p>
 ${footer}
 </footer>
 

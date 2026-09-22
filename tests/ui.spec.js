@@ -128,6 +128,43 @@ test('nav — drawer links navigate and mark the new page', async ({ page }) => 
   await expect(page.locator('#nav-drawer a[href="/elections"]')).toHaveAttribute('aria-current', 'page');
 });
 
+
+/* ── Shared page furniture ─────────────────────────────────────────────── */
+
+test('every content page carries the Ask Pelham AI CTA, and only those that should', async ({ page }) => {
+  // Home has the Ask box itself; the Ask page would be linking to itself.
+  const EXPECTED = new Set(PAGES.map((p) => p.id).filter((id) => !['home', 'ask-ai'].includes(id)));
+
+  for (const pg of PAGES) {
+    await page.goto(pg.url);
+    const cta = page.locator('.ask-cta');
+    if (EXPECTED.has(pg.id)) {
+      await expect(cta, `${pg.id} should have the CTA`).toHaveCount(1);
+      await expect(cta.locator('a[href="/ask"]')).toContainText('Ask Pelham AI');
+      // Last thing in main, above the footer.
+      const ctaY = (await cta.boundingBox()).y;
+      const footY = (await page.locator('footer').boundingBox()).y;
+      expect(ctaY, `${pg.id}: CTA should sit above the footer`).toBeLessThan(footY);
+    } else {
+      await expect(cta, `${pg.id} should not link to itself`).toHaveCount(0);
+    }
+  }
+});
+
+test('every page footer offers the feedback link, and it lands on a real target', async ({ page }) => {
+  for (const pg of PAGES) {
+    await page.goto(pg.url);
+    const link = page.locator('footer .footer-feedback a[href="/about#feedback"]');
+    await expect(link, `${pg.id} footer should offer feedback`).toHaveCount(1);
+    await expect(link).toContainText('Share feedback');
+  }
+
+  // The anchor has to exist, or the link silently lands at the top of /about.
+  await page.goto('/about#feedback');
+  await expect(page.locator('#feedback')).toBeVisible();
+  await expect(page.locator('#feedback')).toContainText('Community Feedback');
+});
+
 /* ── Home digest ───────────────────────────────────────────────────────── */
 
 test('home — hero stats, with governing bodies linking to Gov 101', async ({ page }) => {
