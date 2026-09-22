@@ -794,30 +794,6 @@ function generateTaxSection(data, r) {
   const t = data.taxes;
   const out = [`    <p class="section-intro">${r(t.section_intro, 'taxes.json')}</p>`];
 
-  // Like-for-like village comparison. Bar lengths come from the facts'
-  // numeric values, so this is the one visual on the page that is to scale.
-  if (t.comparison) {
-    const c = t.comparison;
-    const rows = c.entries.map((e) => {
-      const f = r.byId.get(e.fact_ref);
-      if (!f) { fail('taxes.json', `comparison.${e.id}.fact_ref → unknown fact "${e.fact_ref}"`); return null; }
-      if (typeof f.value !== 'number') { fail('taxes.json', `comparison.${e.id}: fact "${e.fact_ref}" has no numeric value to size a bar`); return null; }
-      return { e, value: f.value, amount: r(`{{fact:${e.fact_ref}}}`, 'taxes.json') };
-    }).filter(Boolean);
-    const max = Math.max(...rows.map((x) => x.value));
-    out.push('    <div class="tax-compare fade-in">');
-    out.push(`      <h3 class="tax-compare-title">${c.title}</h3>`);
-    if (c.subtitle) out.push(`      <div class="tax-compare-sub">${r(c.subtitle, 'taxes.json')}</div>`);
-    out.push('      <div class="tax-compare-grid">');
-    for (const { e, value, amount } of rows) {
-      const width = Math.round((value / max) * 1000) / 10;
-      out.push(`        <div class="tax-compare-card" data-body="${esc(e.governing_body || e.id)}"><div class="tax-compare-label">${e.label}</div><div class="tax-compare-amount">${amount}</div><div class="tax-bar-track"><div class="tax-bar-fill bar-${e.fill_style}" style="width:${width}%"></div></div></div>`);
-    }
-    out.push('      </div>');
-    if (c.note) out.push(`      <p class="tax-compare-note">${r(c.note, 'taxes.json')}</p>`);
-    out.push('    </div>');
-  }
-
   out.push('    <div class="tax-layout">');
   out.push('      <div class="tax-visual">');
   for (const b of t.bars) {
@@ -859,6 +835,30 @@ function generateTaxSection(data, r) {
   }
   out.push('      </div>');
   out.push('    </div>');
+
+  // Like-for-like village comparison, below the overall breakdown. Bar
+  // lengths come from the facts' numeric values, so it is to scale.
+  if (t.comparison) {
+    const c = t.comparison;
+    const rows = c.entries.map((e) => {
+      const f = r.byId.get(e.fact_ref);
+      if (!f) { fail('taxes.json', `comparison.${e.id}.fact_ref → unknown fact "${e.fact_ref}"`); return null; }
+      if (typeof f.value !== 'number') { fail('taxes.json', `comparison.${e.id}: fact "${e.fact_ref}" has no numeric value to size a bar`); return null; }
+      return { e, value: f.value, amount: r(`{{fact:${e.fact_ref}}}`, 'taxes.json') };
+    }).filter(Boolean);
+    const max = Math.max(...rows.map((x) => x.value));
+    out.push('    <div class="tax-compare fade-in">');
+    out.push(`      <h3 class="tax-compare-title">${c.title}</h3>`);
+    if (c.subtitle) out.push(`      <div class="tax-compare-sub">${r(c.subtitle, 'taxes.json')}</div>`);
+    out.push('      <div class="tax-compare-grid">');
+    for (const { e, value, amount } of rows) {
+      const width = Math.round((value / max) * 1000) / 10;
+      out.push(`        <div class="tax-compare-card" data-body="${esc(e.governing_body || e.id)}"><div class="tax-compare-label">${e.label}</div><div class="tax-compare-amount">${amount}</div><div class="tax-bar-track"><div class="tax-bar-fill bar-${e.fill_style}" style="width:${width}%"></div></div></div>`);
+    }
+    out.push('      </div>');
+    if (c.note) out.push(`      <p class="tax-compare-note">${r(c.note, 'taxes.json')}</p>`);
+    out.push('    </div>');
+  }
   return out.join('\n');
 }
 

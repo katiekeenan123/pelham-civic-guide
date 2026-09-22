@@ -505,7 +505,7 @@
     border: 1px solid var(--border);
     border-top: 4px solid var(--gold);
     padding: 24px 28px;
-    margin-bottom: 40px;
+    margin-top: 48px;
   }
   .tax-compare-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--navy); margin-bottom: 4px; }
   .tax-compare-sub { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--slate); margin-bottom: 20px; }

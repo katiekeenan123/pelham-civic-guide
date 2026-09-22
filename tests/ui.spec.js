@@ -326,6 +326,14 @@ test('taxes — village comparison, split village rows, county and town listed n
   await expect(unverified.locator('.tax-unverified-tag')).toHaveText(['unverified', 'unverified']);
   await expect(page.locator('.bar-county, .bar-town')).toHaveCount(0);
   await expect(page.locator('.tax-unverified-note')).toContainText('no verified estimate of the county tax');
+
+  // The overall breakdown comes first; the village comparison follows it.
+  const breakdownFirst = await page.evaluate(() => {
+    const bars = document.querySelector('.tax-layout');
+    const cmp = document.querySelector('.tax-compare');
+    return !!(bars.compareDocumentPosition(cmp) & Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+  expect(breakdownFirst, 'the comparison should sit below the breakdown').toBe(true);
 });
 
 test('gov-101 — the five governing bodies plus the quick-reference card', async ({ page }) => {

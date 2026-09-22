@@ -32,7 +32,7 @@
       "governing_body": "village-of-pelham-manor"
     }
   ],
-  "note": "<strong>Note:</strong> Only the Village of Pelham share ({{fact:village-share-of-tax-bill.short}}, Mayor Mullen/Examiner) has a source. The school district has no published percentage; the school bar is illustrative. The median Village of Pelham bill for FY2026-27 is {{fact:village-median-tax-fy2627}} — a median, so not comparable with the like-for-like figures above.",
+  "note": "<strong>Note:</strong> Only the Village of Pelham share ({{fact:village-share-of-tax-bill.short}}, Mayor Mullen/Examiner) has a source. The school district has no published percentage; the school bar is illustrative. The median Village of Pelham bill for FY2026-27 is {{fact:village-median-tax-fy2627}} — a median, so not comparable with the like-for-like figures below.",
   "explainers": [
     {
       "id": "school-district",
