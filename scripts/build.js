@@ -446,11 +446,23 @@ function generateMeetings(data, r) {
 }
 
 function generateMeetingsJs(data) {
-  const obj = data.meetings.meetings
-    .filter((m) => m.status === 'published')
+  const published = data.meetings.meetings.filter((m) => m.status === 'published');
+  const obj = published
     .map((m) => `'${m.id}':{title:'${m.title.replace(/'/g, "\\'")}'}`)
     .join(',');
-  return `  const meetings = {${obj}};`;
+  // currentMeeting must be the first SELECTABLE meeting, not simply the first
+  // published one. It was previously a hand-written literal and silently went
+  // stale the moment a newer meeting archived the one it named: the page then
+  // loaded showing the new meeting's panel while every tab click operated on
+  // the archived set, so switching tabs blanked the section.
+  const first = latestPerBody(published)[0];
+  return [
+    `  const meetings = {${obj}};`,
+    '  // Every processed meeting ships its own .mtg-set of three panels, so switching',
+    '  // meetings is a show/hide rather than an innerHTML swap — the panels stay in',
+    '  // the DOM and the Ask Pelham chat history survives either way.',
+    `  let currentMeeting = '${first.id}';`,
+  ].join('\n');
 }
 
 function generateGovernanceCards(data, r) {

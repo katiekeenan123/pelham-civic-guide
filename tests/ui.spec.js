@@ -142,12 +142,14 @@ test('Explore More tabs switch content — Your Taxes and Current Issues', async
 // panel-town-sep-exec, panel-boeaug-exec); addressing them through this helper
 // keeps the tests tied to the meeting they mean rather than to that history.
 const panel = (page, meeting, tab) => page.locator(`#panel-${meeting}-${tab}`);
-const JUL = 'pelham-board-jul2026';
+// The Village of Pelham meeting reachable in this tab is September 8; the
+// July 14 meeting has been superseded and is archive-only.
+const VILLAGE_SEP = 'pelham-board-sep2026';
 // The Meeting Summaries tab shows only the most recent meeting per board,
 // so the Town of Pelham meeting reachable here is September, not August.
 const TOWN_SEP = 'town-council-sep2026';
 
-test('Meeting Summaries — July 14 2026 meeting, Detailed Summary tab, Ari Schwartz', async ({ page }) => {
+test('Meeting Summaries — default meeting renders, Detailed Summary tab shows its content', async ({ page }) => {
   // Current Issues is the default Explore tab now — switch to Meeting Summaries first.
   await page.getByRole('button', { name: 'Meeting Summaries' }).click();
 
@@ -155,13 +157,13 @@ test('Meeting Summaries — July 14 2026 meeting, Detailed Summary tab, Ari Schw
   await expect(meetings).toBeVisible();
 
   // Executive Summary is the default panel; the meeting date is shown up front.
-  await expect(meetings.getByText('July 14, 2026').first()).toBeVisible();
+  await expect(meetings.getByText('September 8, 2026').first()).toBeVisible();
 
   await page.getByRole('button', { name: 'Detailed Summary' }).click();
 
-  const detailed = panel(page, JUL, 'detailed');
+  const detailed = panel(page, VILLAGE_SEP, 'detailed');
   await expect(detailed).toBeVisible();
-  await expect(detailed.getByText('Ari Schwartz', { exact: false }).first()).toBeVisible();
+  await expect(detailed.getByText('Pelhamwood', { exact: false }).first()).toBeVisible();
 });
 
 /* --- Meeting switcher ------------------------------------------------------
@@ -206,26 +208,26 @@ test('Meeting switcher — detail tabs scope to the selected meeting, not the Ju
   await expect(townDetailed).toContainText('Greg Farrell');
   // The July set stays hidden: a tab click must not reveal the other meeting's
   // panel of the same name.
-  await expect(panel(page, JUL, 'detailed')).toBeHidden();
+  await expect(panel(page, VILLAGE_SEP, 'detailed')).toBeHidden();
   await expect(panel(page, TOWN_SEP, 'exec')).toBeHidden();
 
   await detailTab(page, 'Full Transcript').click();
   await expect(panel(page, TOWN_SEP, 'transcript')).toBeVisible();
-  await expect(panel(page, JUL, 'transcript')).toBeHidden();
+  await expect(panel(page, VILLAGE_SEP, 'transcript')).toBeHidden();
 });
 
-test('Meeting switcher — returning to the July meeting resets to Executive Summary', async ({ page }) => {
+test('Meeting switcher — returning to the default meeting resets to Executive Summary', async ({ page }) => {
   await openMeetings(page);
   await meetingButton(page, TOWN_SEP).click();
   await detailTab(page, 'Full Transcript').click();
   await expect(panel(page, TOWN_SEP, 'transcript')).toBeVisible();
 
-  await meetingButton(page, 'pelham-board-jul2026').click();
+  await meetingButton(page, VILLAGE_SEP).click();
 
-  // Back on the July meeting, and reset to the first tab rather than holding
+  // Back on the Village meeting, and reset to the first tab rather than holding
   // the transcript tab the previous meeting was left on.
-  await expect(panel(page, JUL, 'exec')).toBeVisible();
-  await expect(panel(page, JUL, 'transcript')).toBeHidden();
+  await expect(panel(page, VILLAGE_SEP, 'exec')).toBeVisible();
+  await expect(panel(page, VILLAGE_SEP, 'transcript')).toBeHidden();
   await expect(panel(page, TOWN_SEP, 'exec')).toBeHidden();
   await expect(detailTab(page, 'Executive Summary')).toHaveClass(/active-tab/);
 });
@@ -265,13 +267,16 @@ test('Meeting Summaries — one selector per board, each its most recent meeting
     els.map((el) => el.dataset.meeting),
   );
   expect(ids).toEqual([
-    'pelham-board-jul2026',   // Village of Pelham
+    'pelham-board-sep2026',   // Village of Pelham — Sept supersedes July
     'town-council-sep2026',   // Town of Pelham — Sept supersedes Aug
     'manor-board-sep2026',    // Pelham Manor — Sept supersedes Aug
     'board-of-ed-aug2026',    // Board of Education — Aug supersedes June
   ]);
 
-  for (const superseded of ['town-council-aug2026', 'manor-board-aug2026', 'board-of-ed-jun2026']) {
+  for (const superseded of [
+    'pelham-board-jul2026', 'town-council-aug2026',
+    'manor-board-aug2026', 'board-of-ed-jun2026',
+  ]) {
     await expect(
       page.locator(`.mtg-set[data-meeting="${superseded}"]`),
       `${superseded} should still be in the DOM for the archive page`,
