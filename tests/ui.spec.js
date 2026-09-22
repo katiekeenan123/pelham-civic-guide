@@ -453,6 +453,46 @@ test('civic engagement form — reports failure on a rejected write, success on 
   await expect(confirm).not.toHaveClass(/is-error/);
 });
 
+test('answer feedback — a failed vote is not shown as recorded, and can be retried', async ({ page }) => {
+  let feedbackStatus = 500;
+  // The chat call and the feedback call hit the same endpoint; tell them apart
+  // by payload so the answer always arrives and only the vote fails.
+  await page.route('**/api/ask', (route) => {
+    const body = route.request().postDataJSON() || {};
+    if (body.type === 'feedback') {
+      return route.fulfill({ status: feedbackStatus, contentType: 'application/json', body: '{}' });
+    }
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ answer: 'Test answer.' }),
+    });
+  });
+
+  await page.fill('#ai-input', 'What is the village budget?');
+  await page.click('#ask-btn');
+
+  const row = page.locator('.feedback-row').first();
+  const thumbsUp = row.locator('.btn-up');
+  const note = row.locator('.feedback-thanks');
+  await expect(thumbsUp).toBeVisible();
+
+  await thumbsUp.click();
+  await expect(note).toContainText("Couldn't save");
+  await expect(note).toHaveClass(/is-error/);
+  // Not marked as cast, and clickable again — the old version disabled the
+  // buttons immediately, so a dropped vote could never be retried.
+  await expect(thumbsUp).not.toHaveClass(/selected-up/);
+  await expect(thumbsUp).toBeEnabled();
+
+  feedbackStatus = 200;
+  await thumbsUp.click();
+  await expect(note).toContainText('Thanks');
+  await expect(note).not.toHaveClass(/is-error/);
+  await expect(thumbsUp).toHaveClass(/selected-up/);
+  await expect(thumbsUp).toBeDisabled();
+});
+
 /* Chat bubbles are built with innerHTML, so anything the reader types — or
  * anything the model returns — reaches the DOM as markup unless it is escaped
  * first. The assistant path matters as much as the user path: the answer text

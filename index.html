@@ -1001,6 +1001,9 @@
     color: #3a7050;
     display: none;
   }
+  /* Same span reports a failed vote, so the reader is never thanked for
+     feedback that was not recorded. */
+  .feedback-thanks.is-error { color: #dd6677; }
 
   /* ── MEETING SUMMARY DISCLAIMER ── */
   .summary-disclaimer {
@@ -2876,27 +2879,36 @@
 
   let feedbackCount = 0;
 
-  function submitFeedback(id, type, question, answer) {
-    console.log('Feedback:', { id, type, question, answer, timestamp: new Date().toISOString() });
-
-    // Fire-and-forget write to the Supabase `feedback` table via the proxy.
-    // Any failure is swallowed — the 👍/👎 acknowledgement below must never
-    // depend on the network round-trip.
-    fetch('/api/ask', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'feedback', vote: type, question, answer_snippet: answer }),
-    }).catch(() => {});
-
+  // 👍/👎 on an answer. Like the two About forms, this used to fire and forget
+  // and thank the reader unconditionally, so a vote that never reached the
+  // database still looked recorded — and because the buttons were disabled on
+  // the spot, there was no way to retry. The vote is only marked as cast once
+  // the write is confirmed; on failure the buttons come back.
+  async function submitFeedback(id, type, question, answer) {
     const row = document.getElementById('feedback-' + id);
     if (!row) return;
-    row.querySelectorAll('.feedback-btn').forEach(b => b.disabled = true);
-    if (type === 'up') {
-      row.querySelector('.btn-up').classList.add('selected-up');
-    } else {
-      row.querySelector('.btn-down').classList.add('selected-down');
+    const buttons = row.querySelectorAll('.feedback-btn');
+    const note = row.querySelector('.feedback-thanks');
+
+    buttons.forEach((b) => { b.disabled = true; });
+    note.classList.remove('is-error');
+    note.textContent = 'Saving…';
+    note.style.display = 'inline';
+
+    const ok = await postSubmission({
+      type: 'feedback', vote: type, question, answer_snippet: answer,
+    });
+
+    if (ok) {
+      const btn = row.querySelector(type === 'up' ? '.btn-up' : '.btn-down');
+      btn.classList.add(type === 'up' ? 'selected-up' : 'selected-down');
+      note.textContent = "Thanks — we'll use this to improve.";
+      return;
     }
-    row.querySelector('.feedback-thanks').style.display = 'inline';
+
+    buttons.forEach((b) => { b.disabled = false; });
+    note.classList.add('is-error');
+    note.textContent = "Couldn't save that — try again.";
   }
 
   function copyPrompt(btn, promptText) {
@@ -3120,11 +3132,11 @@
     showMeetingTab(panel);
   }
 
-  // Set this to publish an address in the failure messages below. Left empty
-  // deliberately — the project has no published contact address yet, and a
-  // message telling a resident to email somewhere that bounces is worse than
-  // one that just asks them to retry.
-  const CONTACT_EMAIL = '';
+  // Address shown in the failure messages below. Interim: a personal mailbox
+  // until the project has its own. Published in the page source, so expect it
+  // to be scraped — worth swapping for a project address before this gets much
+  // traffic.
+  const CONTACT_EMAIL = 'katherine.e.keenan@gmail.com';
 
   const contactClause = () => (CONTACT_EMAIL
     ? ` or email us at <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>`
