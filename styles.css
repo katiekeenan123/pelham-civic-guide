@@ -1431,6 +1431,10 @@
 .nav-burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
 /* ── Drawer: slides in from the LEFT ── */
+/* `hidden` must win over the display rules below, or the drawer stays in the
+   accessibility tree and on screen while claiming to be closed. */
+.nav-drawer[hidden], .nav-scrim[hidden] { display: none; }
+
 .nav-scrim {
   position: fixed;
   inset: 0;
@@ -1526,4 +1530,102 @@
   .nav-burger { display: flex; }
   .nav-links { display: none; }
   .nav-inner { justify-content: flex-start; gap: 12px; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   HOME DIGEST
+   Blocks that only appear on the homepage: section headers with a link
+   through to the full page, the election banner, and meeting cards.
+   ══════════════════════════════════════════════════════════════════════ */
+
+.digest-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.digest-head .section-title { margin-bottom: 0; }
+
+.digest-more {
+  flex: 0 0 auto;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: none;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 2px;
+  white-space: nowrap;
+}
+.digest-more:hover { color: var(--red); border-bottom-color: var(--red); }
+.involved-section .digest-more { color: var(--gold-light); }
+.involved-section .digest-more:hover { color: var(--white); border-bottom-color: var(--white); }
+
+/* ── Election banner ── */
+.home-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px clamp(20px, 5vw, 64px);
+  background: var(--navy);
+  border-top: 3px solid var(--gold);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  text-decoration: none;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+.home-banner:hover { background: #13263f; }
+.home-banner-tag {
+  flex: 0 0 auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--navy);
+  background: var(--gold);
+  padding: 4px 8px;
+}
+.home-banner-text { flex: 1 1 320px; font-size: 14px; color: var(--slate-light); line-height: 1.5; }
+.home-banner-text strong { color: var(--white); }
+.home-banner-cta { flex: 0 0 auto; font-size: 13px; font-weight: 600; color: var(--gold-light); white-space: nowrap; }
+
+/* ── Meeting preview cards ── */
+.mtg-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+.mtg-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 18px 18px 16px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--navy);
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.mtg-card:hover { border-top-color: var(--gold); transform: translateY(-2px); }
+.mtg-card-body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.35;
+}
+.mtg-card-date { font-size: 13px; color: var(--red); font-weight: 600; }
+.mtg-card-detail { font-size: 12px; color: var(--slate); }
+.mtg-card-meta {
+  margin-top: 6px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--slate);
+}
+
+@media (max-width: 600px) {
+  .digest-head { flex-direction: column; align-items: flex-start; gap: 10px; }
 }

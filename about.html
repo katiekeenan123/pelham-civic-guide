@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About &amp; Corrections · The Pelham Engagement Project</title>
+<meta name="description" content="How this site is made, the sources it draws on, and how to report an error.">
+<link rel="canonical" href="https://pelhamengagementproject.netlify.app/about">
+<meta property="og:title" content="About &amp; Corrections · The Pelham Engagement Project">
+<meta property="og:description" content="How this site is made, the sources it draws on, and how to report an error.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Pelham Engagement Project">
+<meta property="og:url" content="https://pelhamengagementproject.netlify.app/about">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="nav-bar" aria-label="Primary">
+  <div class="nav-inner">
+    <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="/" class="nav-brand">Pelham Engagement Project</a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/issues" class="nav-link">Issues</a>
+      <a href="/elections" class="nav-link">Elections <span class="nav-badge" data-hide-after="2026-11-03">Nov 3</span></a>
+      <a href="/meetings" class="nav-link">Meetings</a>
+      <a href="/get-involved" class="nav-link">Get Involved</a>
+      <div class="nav-more-wrap">
+        <button class="nav-link nav-more-trigger is-active" id="nav-more" aria-expanded="false" aria-haspopup="true" aria-controls="nav-more-menu">More <span aria-hidden="true">▾</span></button>
+        <div class="nav-more-menu" id="nav-more-menu" role="menu">
+          <a href="/taxes" role="menuitem" class=""><span class="nav-ico" aria-hidden="true">💰</span>Taxes</a>
+          <a href="/gov-101" role="menuitem" class=""><span class="nav-ico" aria-hidden="true">🏛</span>Gov 101</a>
+          <a href="/ask" role="menuitem" class=""><span class="nav-ico" aria-hidden="true">✦</span>Ask AI</a>
+          <a href="/about" role="menuitem" class="is-active" aria-current="page"><span class="nav-ico" aria-hidden="true">ℹ️</span>About</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="nav-scrim" id="nav-scrim" hidden></div>
+<aside class="nav-drawer" id="nav-drawer" hidden aria-label="Site menu">
+  <div class="nav-drawer-head">
+    <span class="nav-drawer-title">Pelham Engagement Project</span>
+    <button class="nav-drawer-close" id="nav-drawer-close" aria-label="Close menu">×</button>
+  </div>
+  <ul class="nav-drawer-list">
+    <li><a href="/" class=""><span class="nav-ico" aria-hidden="true">🏠</span><span class="nav-drawer-label">Home</span></a></li>
+    <li><a href="/issues" class=""><span class="nav-ico" aria-hidden="true">🔔</span><span class="nav-drawer-label">Issues</span></a></li>
+    <li><a href="/elections" class=""><span class="nav-ico" aria-hidden="true">🗳</span><span class="nav-drawer-label">Elections</span> <span class="nav-badge" data-hide-after="2026-11-03">Nov 3</span></a></li>
+    <li><a href="/meetings" class=""><span class="nav-ico" aria-hidden="true">📋</span><span class="nav-drawer-label">Meetings</span></a></li>
+    <li><a href="/get-involved" class=""><span class="nav-ico" aria-hidden="true">🤝</span><span class="nav-drawer-label">Get Involved</span></a></li>
+    <li><a href="/taxes" class=""><span class="nav-ico" aria-hidden="true">💰</span><span class="nav-drawer-label">Taxes</span></a></li>
+    <li><a href="/gov-101" class=""><span class="nav-ico" aria-hidden="true">🏛</span><span class="nav-drawer-label">Gov 101</span></a></li>
+    <li><a href="/ask" class=""><span class="nav-ico" aria-hidden="true">✦</span><span class="nav-drawer-label">Ask AI</span></a></li>
+    <li><a href="/about" class="is-active" aria-current="page"><span class="nav-ico" aria-hidden="true">ℹ️</span><span class="nav-drawer-label">About</span></a></li>
+  </ul>
+  <p class="nav-drawer-note">Meeting summaries are AI-generated from public recordings. Always verify against the official record.</p>
+</aside>
+
+<main id="main">
+<section id="about" class="section" style="background: var(--light);">
+  <div class="content-wrap">
+    <div class="section-eyebrow">About This Site</div>
+    <h2 class="section-title">Editorial Philosophy & Community Feedback</h2>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-bottom: 56px;">
+
+      <!-- Mission + Editorial Philosophy -->
+      <div>
+        <h3 class="about-h3">Our Mission</h3>
+        <p class="about-body" style="margin-bottom:20px;">To increase civic awareness and engagement in local matters in Pelham, NY — by making public information accessible, understandable, and actionable for every resident.</p>
+
+        <h3 class="about-h3">How We Work</h3>
+        <p class="about-body" style="margin-bottom:12px;">Everything on this site is drawn from public record — official government websites, adopted budgets, meeting recordings, and coverage by the Pelham Examiner. We don't editorialize, take sides, or publish unverified information.</p>
+        <p class="about-body">AI-generated content — summaries, Q&A responses — is clearly labeled and linked to source documents so you can verify anything we say.</p>
+
+        <div class="editorial-callout">
+          <div style="font-weight:700; font-size:15px; margin-bottom:10px; color:var(--navy);">"My perspective isn't represented here."</div>
+          <p style="font-size:14px; line-height:1.7; color:var(--slate); margin-bottom:10px;">This site reflects what's in the public record. If your view isn't here, that's not a failure of this site — it's a signal that your voice hasn't entered the record yet.</p>
+          <p style="font-size:14px; line-height:1.7; color:var(--slate); margin-bottom:14px;">The public record is made at board meetings, in public comment, and through letters to the editor. Those are the channels that shape what officials hear and what journalists cover.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <a href="#get-involved" class="source-link" style="font-size:12px;">How to make a public comment</a>
+            <a href="https://pelhamexaminer.com/letters" target="_blank" class="source-link" style="font-size:12px;">Write a letter to the Examiner</a>
+            <a href="#meetings" class="source-link" style="font-size:12px;">Meeting schedule</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sources + Transparency -->
+      <div>
+        <h3 class="about-h3">Our Sources</h3>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:24px;">
+          <!-- BUILD:about-sources -->
+          <a href="https://www.pelhamny.gov" target="_blank" class="source-link about-source-link">↗ pelhamny.gov — Village of Pelham</a>
+          <a href="https://www.pelhammanor.gov" target="_blank" class="source-link about-source-link">↗ pelhammanor.gov — Village of Pelham Manor</a>
+          <a href="https://townofpelhamny.gov" target="_blank" class="source-link about-source-link">↗ townofpelhamny.gov — Town of Pelham</a>
+          <a href="https://www.pelhamschools.org" target="_blank" class="source-link about-source-link">↗ pelhamschools.org — School District</a>
+          <a href="https://pelhamexaminer.com" target="_blank" class="source-link about-source-link">↗ pelhamexaminer.com — Pelham Examiner</a>
+          <a href="https://www.westchestercountyny.gov" target="_blank" class="source-link about-source-link">↗ westchestercountyny.gov — Westchester County</a>
+    <!-- /BUILD:about-sources -->
+        </div>
+
+        <h3 class="about-h3">Corrections Log</h3>
+        <p style="font-size:14px; line-height:1.7; color:var(--slate); margin-bottom:14px;">We correct errors quickly and publicly. Recent corrections:</p>
+        <div id="corrections-log" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;">
+          <div style="background:var(--white); border:1px solid var(--border); padding:12px 14px; font-size:13px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--slate);">JUNE 2026 · RESOLVED</span>
+            <p style="margin-top:4px; color:var(--navy);">Westchester County tax percentage — updated to note this is a general estimate; directed readers to Town Receiver for their specific bill.</p>
+          </div>
+        </div>
+        <p style="font-size:12px; color:var(--slate); font-family:'IBM Plex Mono',monospace;">See something wrong? Use the form below.</p>
+      </div>
+    </div>
+
+    <!-- Two forms side by side -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+
+      <!-- Error Report Form -->
+      <div class="about-form-card" style="border-top: 4px solid var(--red);">
+        <div class="about-form-eyebrow">Report a Factual Error</div>
+        <h3 class="about-form-h3" style="margin-bottom:16px;">Something looks wrong?</h3>
+        <div class="form-fields" id="error-form">
+          <div>
+            <label class="form-field-label">What section is the error in?</label>
+            <select id="error-section" class="form-control">
+              <option value="">Select a section…</option>
+              <option>Who Governs</option>
+              <option>Meeting Summaries</option>
+              <option>Ask Pelham AI</option>
+              <option>Your Taxes</option>
+              <option>Current Issues</option>
+              <option>Get Involved</option>
+              <option>Meeting Schedule</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-field-label">What's incorrect?</label>
+            <textarea id="error-desc" rows="3" placeholder="Describe the error and what the correct information is…" class="form-control" style="resize:none; line-height:1.5;"></textarea>
+          </div>
+          <div>
+            <label class="form-field-label">Source (if you have one)</label>
+            <input id="error-source" type="text" placeholder="URL or document name…" class="form-control">
+          </div>
+          <button class="btn-submit-correction" style="background:var(--navy); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Submit correction →</button>
+          <div id="error-confirm" class="form-confirm">✓ Correction received — we'll review it shortly. For urgent errors, email us directly.</div>
+        </div>
+      </div>
+
+      <!-- Public Comment Feedback Form -->
+      <div class="about-form-card" style="border-top: 4px solid var(--green);">
+        <div class="about-form-eyebrow">Community Feedback</div>
+        <h3 class="about-form-h3" style="margin-bottom:6px;">Did this site help you get involved?</h3>
+        <p style="font-size:13px; color:var(--slate); margin-bottom:16px; line-height:1.6;">We'd love to know if this site helped you attend a meeting, make a public comment, or engage with local government in a new way.</p>
+        <div class="form-fields">
+          <div style="display:flex; flex-wrap:wrap; gap:10px;">
+            <label class="fb-checkbox-label"><input type="checkbox" id="fb-attended"> Attended a public meeting</label>
+            <label class="fb-checkbox-label"><input type="checkbox" id="fb-commented"> Made a public comment</label>
+            <label class="fb-checkbox-label"><input type="checkbox" id="fb-letter"> Wrote a letter to the Examiner</label>
+            <label class="fb-checkbox-label"><input type="checkbox" id="fb-applied"> Applied to a board or committee</label>
+          </div>
+          <div>
+            <label class="form-field-label">Which governing body? (optional)</label>
+            <select id="fb-body" class="form-control">
+              <option value="">Select…</option>
+              <option>Village of Pelham</option>
+              <option>Village of Pelham Manor</option>
+              <option>Town of Pelham</option>
+              <option>Board of Education</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-field-label">Want to share your experience? (optional)</label>
+            <textarea id="fb-story" rows="3" placeholder="What topic did you engage on? What was it like? Your story (anonymous) may inspire others…" class="form-control" style="resize:none; line-height:1.5;"></textarea>
+          </div>
+          <button id="fb-share-btn" style="background:var(--green); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Share my experience →</button>
+          <div id="fb-confirm" class="form-confirm">✓ Thanks for sharing — we're tracking this engagement.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p><strong>Pelham Civic Guide</strong> — An independent resource for Pelham, NY residents.</p>
+  <p style="margin-top:8px;">Sources: <a href="https://www.pelhamny.gov" target="_blank">pelhamny.gov</a> · <a href="https://www.pelhammanor.gov" target="_blank">pelhammanor.gov</a> · <a href="https://townofpelhamny.gov" target="_blank">townofpelhamny.gov</a> · <a href="https://www.pelhamschools.org" target="_blank">pelhamschools.org</a> · <a href="https://pelhamexaminer.com" target="_blank">pelhamexaminer.com</a> · <a href="https://www.westchestercountyny.gov" target="_blank">westchestercountyny.gov</a></p>
+  <p style="margin-top:8px;">This guide is for informational purposes. For official information, always check government websites directly. Last updated September 2026.</p>
+</footer>
+
+<script src="/app.js" defer></script>
+</body>
+</html>

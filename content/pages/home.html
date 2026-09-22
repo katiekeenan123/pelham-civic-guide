@@ -1,0 +1,98 @@
+<!-- Home — a digest, not the whole site. Each block is a doorway to the page
+     that holds the full content. Everything between BUILD anchors is
+     generated; the prose around them is hand-written and safe to edit. -->
+
+<section class="hero">
+  <div class="hero-stripe"></div>
+  <div class="hero-inner">
+    <div>
+      <div style="font-family:'Playfair Display',serif; font-size:clamp(14px,2vw,18px); font-weight:700; color:var(--white); letter-spacing:0.02em; margin-bottom:8px;">The Pelham Engagement Project</div>
+      <div class="hero-stamp">Westchester County · New York State · Est. 1654</div>
+      <h1>Your guide to <em>Pelham</em> civic life.</h1>
+      <p class="hero-lead">Our mission is to increase civic awareness and engagement in local matters in Pelham, NY — by making public information accessible, understandable, and actionable for every resident.</p>
+      <p class="hero-lead" style="margin-top:12px; font-size:15px;">Pelham has layered government across a Town, two Villages, a School District, and County. This guide cuts through the complexity so you can show up informed, ask better questions, and make your voice count.</p>
+    </div>
+    <div class="hero-stats">
+      <!-- BUILD:hero-stats -->
+      <!-- /BUILD:hero-stats -->
+    </div>
+  </div>
+</section>
+
+<!-- BUILD:elections-banner -->
+<!-- /BUILD:elections-banner -->
+
+<section class="section" id="home-issues">
+  <div class="content-wrap">
+    <div class="digest-head">
+      <div>
+        <div class="section-eyebrow">What's Happening Now</div>
+        <h2 class="section-title">Current Issues</h2>
+      </div>
+      <a href="/issues" class="digest-more">See all issues →</a>
+    </div>
+    <!-- BUILD:issue-previews -->
+    <!-- /BUILD:issue-previews -->
+  </div>
+</section>
+
+<section class="section" id="home-meetings" style="background: var(--light);">
+  <div class="content-wrap">
+    <div class="digest-head">
+      <div>
+        <div class="section-eyebrow">Meeting Intelligence</div>
+        <h2 class="section-title">Latest from each board</h2>
+      </div>
+      <a href="/meetings" class="digest-more">See all meetings →</a>
+    </div>
+    <p class="section-intro">Every public meeting is recorded. We process them automatically into three layers of detail — here is the most recent from each of the four boards.</p>
+    <!-- BUILD:meeting-previews -->
+    <!-- /BUILD:meeting-previews -->
+  </div>
+</section>
+
+<section class="section" id="home-ask" style="background: var(--navy);">
+  <div class="content-wrap">
+    <div class="section-eyebrow" style="color: var(--gold-light);">Research Tool</div>
+    <h2 class="section-title" style="color: var(--white);">Ask Pelham AI</h2>
+    <p class="section-intro" style="color: var(--slate-light); max-width: 620px;">
+      Have a question about local government, your tax bill, a current issue, or how to get involved? This assistant answers using only vetted Pelham sources.
+    </p>
+
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <textarea
+        id="ai-input"
+        placeholder="Ask anything about Pelham government, taxes, issues, or how to get involved…"
+        rows="2"
+        style="flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: var(--white); padding: 12px 16px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; resize: none; line-height: 1.5; outline: none;"
+      ></textarea>
+      <button id="ask-btn" class="btn-ask" style="background: var(--gold); color: var(--navy); border: none; padding: 0 24px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap;">Ask →</button>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px;" id="suggestion-chips">
+      <button class="suggestion-chip">How does the school district budget affect my property taxes?</button>
+      <button class="suggestion-chip">Why did the Village of Pelham override the tax cap?</button>
+      <button class="suggestion-chip">How do I speak at a public meeting?</button>
+    </div>
+
+    <div id="chat-window" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); min-height: 0; max-height: 460px; overflow-y: auto; padding: 24px; margin-top: 16px; display: none; flex-direction: column; gap: 16px; scroll-behavior: smooth;"></div>
+
+    <div style="margin-top: 12px; font-size: 11px; color: var(--slate-mid); font-family: 'IBM Plex Mono', monospace;">
+      ⚠ AI-generated · responses may contain errors · always verify at official sources · <a href="/ask" style="color: var(--gold-light);">more about this tool →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section involved-section" id="home-involved">
+  <div class="content-wrap">
+    <div class="digest-head">
+      <div>
+        <div class="section-eyebrow">Take Action</div>
+        <h2 class="section-title">You don't have to run for office</h2>
+      </div>
+      <a href="/get-involved" class="digest-more">Get involved →</a>
+    </div>
+    <p class="section-intro" style="max-width: 720px;">The most consistent voices in local government are ordinary residents who show up. In Pelham the people making these decisions live on your street — most concerns start with a conversation, not a campaign.</p>
+    <p class="section-intro" style="max-width: 720px; margin-top: 10px;">Email a trustee, speak for two minutes at a meeting, or write to the Examiner. We'll show you exactly how each one works.</p>
+  </div>
+</section>

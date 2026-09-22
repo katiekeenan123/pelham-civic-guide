@@ -32,8 +32,16 @@ const TYPES = {
 
 const server = http.createServer((req, res) => {
   const urlPath = decodeURIComponent(req.url.split('?')[0]);
-  const rel = urlPath === '/' ? 'index.html' : urlPath.replace(/^\/+/, '');
-  const full = path.resolve(ROOT, rel);
+  let rel = urlPath === '/' ? 'index.html' : urlPath.replace(/^\/+/, '');
+  let full = path.resolve(ROOT, rel);
+
+  // Mirror the clean-URL rewrites in netlify.toml: /issues serves issues.html.
+  // Without this the local suite would have to use .html paths that production
+  // never sees, and a broken link would only show up after deploy.
+  if (!path.extname(rel) && fs.existsSync(full + '.html')) {
+    rel += '.html';
+    full += '.html';
+  }
 
   // Never serve outside the repo, whatever the request path claims.
   if (!full.startsWith(ROOT)) {

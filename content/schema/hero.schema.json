@@ -5,21 +5,46 @@
   "description": "The four figures in the hero band. These must be generated rather than written into the static shell: index.html is both the build's input and its output, so a {{fact:}} token left in the shell resolves on the first build and is written back as a literal — working once and then silently freezing. Anything token-bearing belongs inside a BUILD anchor.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["stats"],
+  "required": [
+    "stats"
+  ],
   "properties": {
-    "$schema": { "type": "string", "description": "Relative path to this schema file." },
+    "$schema": {
+      "type": "string",
+      "description": "Relative path to this schema file."
+    },
     "stats": {
       "type": "array",
       "description": "DISPLAY ORDER IS ARRAY ORDER. Rendered with a divider between each.",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "fact_ref", "label"],
+        "required": [
+          "id",
+          "fact_ref",
+          "label"
+        ],
         "properties": {
-          "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Stable slug." },
-          "fact_ref": { "type": "string", "description": "Id in facts.json supplying the number. The stat renders that fact's display value, so the hero cannot drift from the rest of the site." },
-          "label": { "type": "string", "description": "Caption under the number." },
-          "link_panel": { "type": ["string", "null"], "description": "Explore panel id to open when the stat is clicked, e.g. 'explore-governs'. When set the stat renders as <a href=\"#explore\" data-panel=...> so it works without JS and is keyboard-reachable; when null it renders as a plain div." }
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "description": "Stable slug."
+          },
+          "fact_ref": {
+            "type": "string",
+            "description": "Id in facts.json supplying the number. The stat renders that fact's display value, so the hero cannot drift from the rest of the site."
+          },
+          "label": {
+            "type": "string",
+            "description": "Caption under the number."
+          },
+          "link_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Page to open when the stat is clicked, e.g. '/gov-101'. When set the stat renders as a plain <a>; when null it renders as a div. It used to switch an Explore tab in the single-page layout — now that each section has its own page, it is an ordinary link."
+          }
         }
       }
     }

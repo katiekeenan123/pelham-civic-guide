@@ -1,0 +1,40 @@
+<section id="meeting-summaries" class="section" style="background: var(--light);">
+  <div class="content-wrap">
+    <div class="section-eyebrow">Meeting Intelligence</div>
+    <h2 class="section-title">Meeting Summaries</h2>
+    <!-- BUILD:meetings -->
+    <!-- /BUILD:meetings -->
+    <!-- Only the most recent meeting per board gets a selector above. Older
+         meetings are still in the DOM and will be reachable from the archive
+         page; until that exists this points at the schedule instead. -->
+    <div style="margin-top:28px; padding-top:20px; border-top:1px solid var(--border);">
+      <a href="#meetings" class="view-all-link">View all meetings →</a>
+      <span style="display:block; margin-top:6px; font-size:12px; color:var(--slate);">Showing the most recent meeting for each board. A full archive is coming.</span>
+    </div>
+  </div>
+</section>
+
+<section id="meetings" class="section">
+  <div class="content-wrap">
+    <div class="section-eyebrow">Show Up</div>
+    <h2 class="section-title">Public Meeting Quick Reference</h2>
+    <p class="section-intro">All meetings listed below are open to the public. Agendas are typically posted on each body's official website 72+ hours in advance.</p>
+
+    <div class="fade-in" style="overflow-x:auto;">
+      <table class="meetings-table">
+        <thead>
+          <tr>
+            <th>Governing Body</th>
+            <th>Typical Schedule</th>
+            <th>Location</th>
+            <th>How to Participate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- BUILD:meeting-schedule -->
+    <!-- /BUILD:meeting-schedule -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

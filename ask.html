@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask Pelham AI · The Pelham Engagement Project</title>
+<meta name="description" content="An assistant that answers questions about Pelham civic life using only vetted local sources.">
+<link rel="canonical" href="https://pelhamengagementproject.netlify.app/ask">
+<meta property="og:title" content="Ask Pelham AI · The Pelham Engagement Project">
+<meta property="og:description" content="An assistant that answers questions about Pelham civic life using only vetted local sources.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Pelham Engagement Project">
+<meta property="og:url" content="https://pelhamengagementproject.netlify.app/ask">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<nav class="nav-bar" aria-label="Primary">
+  <div class="nav-inner">
+    <button class="nav-burger" id="nav-burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-drawer">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="/" class="nav-brand">Pelham Engagement Project</a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/issues" class="nav-link">Issues</a>
+      <a href="/elections" class="nav-link">Elections <span class="nav-badge" data-hide-after="2026-11-03">Nov 3</span></a>
+      <a href="/meetings" class="nav-link">Meetings</a>
+      <a href="/get-involved" class="nav-link">Get Involved</a>
+      <div class="nav-more-wrap">
+        <button class="nav-link nav-more-trigger is-active" id="nav-more" aria-expanded="false" aria-haspopup="true" aria-controls="nav-more-menu">More <span aria-hidden="true">▾</span></button>
+        <div class="nav-more-menu" id="nav-more-menu" role="menu">
+          <a href="/taxes" role="menuitem" class=""><span class="nav-ico" aria-hidden="true">💰</span>Taxes</a>
+          <a href="/gov-101" role="menuitem" class=""><span class="nav-ico" aria-hidden="true">🏛</span>Gov 101</a>
+          <a href="/ask" role="menuitem" class="is-active" aria-current="page"><span class="nav-ico" aria-hidden="true">✦</span>Ask AI</a>
+          <a href="/about" role="menuitem" class=""><span class="nav-ico" aria-hidden="true">ℹ️</span>About</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="nav-scrim" id="nav-scrim" hidden></div>
+<aside class="nav-drawer" id="nav-drawer" hidden aria-label="Site menu">
+  <div class="nav-drawer-head">
+    <span class="nav-drawer-title">Pelham Engagement Project</span>
+    <button class="nav-drawer-close" id="nav-drawer-close" aria-label="Close menu">×</button>
+  </div>
+  <ul class="nav-drawer-list">
+    <li><a href="/" class=""><span class="nav-ico" aria-hidden="true">🏠</span><span class="nav-drawer-label">Home</span></a></li>
+    <li><a href="/issues" class=""><span class="nav-ico" aria-hidden="true">🔔</span><span class="nav-drawer-label">Issues</span></a></li>
+    <li><a href="/elections" class=""><span class="nav-ico" aria-hidden="true">🗳</span><span class="nav-drawer-label">Elections</span> <span class="nav-badge" data-hide-after="2026-11-03">Nov 3</span></a></li>
+    <li><a href="/meetings" class=""><span class="nav-ico" aria-hidden="true">📋</span><span class="nav-drawer-label">Meetings</span></a></li>
+    <li><a href="/get-involved" class=""><span class="nav-ico" aria-hidden="true">🤝</span><span class="nav-drawer-label">Get Involved</span></a></li>
+    <li><a href="/taxes" class=""><span class="nav-ico" aria-hidden="true">💰</span><span class="nav-drawer-label">Taxes</span></a></li>
+    <li><a href="/gov-101" class=""><span class="nav-ico" aria-hidden="true">🏛</span><span class="nav-drawer-label">Gov 101</span></a></li>
+    <li><a href="/ask" class="is-active" aria-current="page"><span class="nav-ico" aria-hidden="true">✦</span><span class="nav-drawer-label">Ask AI</span></a></li>
+    <li><a href="/about" class=""><span class="nav-ico" aria-hidden="true">ℹ️</span><span class="nav-drawer-label">About</span></a></li>
+  </ul>
+  <p class="nav-drawer-note">Meeting summaries are AI-generated from public recordings. Always verify against the official record.</p>
+</aside>
+
+<main id="main">
+<section id="ask-pelham" class="section" style="background: var(--navy);">
+  <div class="content-wrap">
+    <div class="section-eyebrow" style="color: var(--gold-light);">Research Tool</div>
+    <h2 class="section-title" style="color: var(--white);">Ask Pelham AI</h2>
+    <p class="section-intro" style="color: var(--slate-light); max-width: 620px;">
+      Have a question about local government, your tax bill, a current issue, or how to get involved? This assistant is trained to answer using only vetted Pelham sources — official government websites, the Pelham Examiner, and school district documents.
+    </p>
+
+    <!-- BUILD:source-chips -->
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px;">
+      <span class="source-chip">✓ pelhamny.gov</span>
+      <span class="source-chip">✓ pelhammanor.gov</span>
+      <span class="source-chip">✓ townofpelhamny.gov</span>
+      <span class="source-chip">✓ pelhamschools.org</span>
+      <span class="source-chip">✓ pelhamexaminer.com</span>
+      <span class="source-chip">✓ westchestercountyny.gov</span>
+    </div>
+    <!-- /BUILD:source-chips -->
+
+    <!-- Suggested prompts -->
+    <div style="margin-bottom: 20px;">
+      <div style="font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">Try asking…</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="suggestion-chips">
+        <button class="suggestion-chip">How does the school district budget affect my property taxes?</button>
+        <button class="suggestion-chip">What did the $143.6M school bond vote decide?</button>
+        <button class="suggestion-chip">How do I dispute my property tax assessment?</button>
+        <button class="suggestion-chip">Who are the Pelham Board of Education members?</button>
+        <button class="suggestion-chip">Why did the Village of Pelham override the tax cap?</button>
+        <button class="suggestion-chip">When is the next school budget vote and how do I participate?</button>
+        <button class="suggestion-chip opinion-chip">Is the school district spending my tax dollars wisely?</button>
+        <button class="suggestion-chip opinion-chip">Should I have voted yes on the school bond?</button>
+        <button class="suggestion-chip opinion-chip">Was overriding the village tax cap the right call?</button>
+        <button class="suggestion-chip draft-chip">Help me write a public comment about the school budget</button>
+        <button class="suggestion-chip draft-chip">I want to write a letter to the Examiner about property tax increases</button>
+      </div>
+      <div style="margin-top: 8px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: var(--slate-dark); display: flex; gap: 16px; flex-wrap: wrap;">
+        <span><span style="color: var(--gold);">✦</span> gold — explore your own view in Claude.ai</span>
+        <span><span style="color: #55cccc;">✎</span> teal — draft a public comment or letter</span>
+      </div>
+    </div>
+
+    <!-- Chat window -->
+    <div id="chat-window" style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); min-height: 200px; max-height: 460px; overflow-y: auto; padding: 24px; margin-bottom: 16px; display: none; flex-direction: column; gap: 16px; scroll-behavior: smooth;">
+    </div>
+
+    <!-- Input row -->
+    <div style="display: flex; gap: 10px;">
+      <textarea
+        id="ai-input"
+        placeholder="Ask anything about Pelham government, taxes, issues, or how to get involved…"
+        rows="2"
+        style="flex: 1; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: var(--white); padding: 12px 16px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; resize: none; line-height: 1.5; outline: none;"
+        onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); askClaude();}"
+      ></textarea>
+      <button
+        id="ask-btn"
+        class="btn-ask"
+        style="background: var(--gold); color: var(--navy); border: none; padding: 0 24px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background 0.2s;"
+      >Ask →</button>
+    </div>
+    <div style="margin-top: 10px; font-size: 11px; color: var(--slate-mid); font-family: 'IBM Plex Mono', monospace;">
+      ⚠ AI-generated · responses may contain errors · always verify facts at official sources · use 👍/👎 to flag inaccurate answers
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p><strong>Pelham Civic Guide</strong> — An independent resource for Pelham, NY residents.</p>
+  <p style="margin-top:8px;">Sources: <a href="https://www.pelhamny.gov" target="_blank">pelhamny.gov</a> · <a href="https://www.pelhammanor.gov" target="_blank">pelhammanor.gov</a> · <a href="https://townofpelhamny.gov" target="_blank">townofpelhamny.gov</a> · <a href="https://www.pelhamschools.org" target="_blank">pelhamschools.org</a> · <a href="https://pelhamexaminer.com" target="_blank">pelhamexaminer.com</a> · <a href="https://www.westchestercountyny.gov" target="_blank">westchestercountyny.gov</a></p>
+  <p style="margin-top:8px;">This guide is for informational purposes. For official information, always check government websites directly. Last updated September 2026.</p>
+</footer>
+
+<script src="/app.js" defer></script>
+</body>
+</html>

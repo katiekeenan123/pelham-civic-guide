@@ -16,7 +16,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const { generateNav, generateFooter, makeResolver } = require('./build');
+// Required lazily inside generatePageShell, not at module load. build.js
+// requires this file while it is still executing, so a top-level destructure
+// here would capture its exports before they are assigned.
+const buildMod = () => require('./build');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -57,6 +60,7 @@ function generatePageShell(o) {
   } = o;
 
   const fullTitle = activePage === 'home' ? SITE_NAME : `${title} · ${SITE_NAME}`;
+  const { generateNav, generateFooter, makeResolver } = buildMod();
   const nav = generateNav(activePage, data);
 
   // The footer is a function call, not a BUILD anchor. splice() requires each

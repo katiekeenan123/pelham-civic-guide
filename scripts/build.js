@@ -534,9 +534,11 @@ function latestPerBody(published) {
   return published.filter((m) => ids.has(m.id));
 }
 
-function generateMeetings(data, r) {
+function generateMeetings(data, r, opts = {}) {
   const published = data.meetings.meetings.filter((m) => m.status === 'published');
-  const visible = latestPerBody(published);
+  // The Meetings page is the archive: every processed meeting is selectable
+  // there. Elsewhere only the most recent per board gets a button.
+  const visible = opts.all ? published : latestPerBody(published);
   const firstVisible = visible[0];
   const out = [];
   out.push(`    <p class="section-intro">${r(data.meetings.section_intro, 'meetings.json')}</p>`);
@@ -793,10 +795,10 @@ function generateHeroStats(data, r) {
     const num = r(`{{fact:${s.fact_ref}}}`, 'hero.json');
     const inner = `        <span class="stat-num">${num}</span>\n`
       + `        <span class="stat-label">${s.label}</span>`;
-    // A stat with a target panel is a real link, so it still navigates with
-    // JS off; the page script upgrades it to switch the Explore tab.
-    return s.link_panel
-      ? `      <a href="#explore" class="stat" data-panel="${esc(s.link_panel)}">\n${inner}\n      </a>`
+    // A stat with a destination is an ordinary link now. In the single-page
+    // layout it switched an Explore tab via JS; each section has its own page.
+    return s.link_url
+      ? `      <a href="${esc(s.link_url)}" class="stat">\n${inner}\n      </a>`
       : `      <div class="stat">\n${inner}\n      </div>`;
   });
   return parts.join('\n      <hr class="stat-divider">\n');
@@ -813,6 +815,155 @@ function generateAboutSources(data) {
   return data.sources.sources
     .map((s) => `          <a href="${esc(s.url)}" target="_blank" class="source-link about-source-link">↗ ${s.domain} — ${s.short_name || s.name}</a>`)
     .join('\n');
+}
+
+// ── Home digest blocks ─────────────────────────────────────────────────────
+// The homepage is a doorway, not a copy of the site. Each block shows a few
+// items and links to the page that holds all of them.
+
+// Most urgent first, then most recently updated. Only cards marked for the
+// home grid, capped at four — a digest that shows everything is not a digest.
+const ISSUE_URGENCY = { active: 0, watch: 1, resolved: 2 };
+
+function generateIssuePreviews(data, r, limit = 4) {
+  const picked = data.issues.issues
+    .filter((i) => i.show_on_home !== false)
+    .slice()
+    .sort((a, b) => (ISSUE_URGENCY[a.status] - ISSUE_URGENCY[b.status])
+      || String(b.last_updated).localeCompare(String(a.last_updated)))
+    .slice(0, limit);
+
+  const cards = picked.map((i) => {
+    const link = `<a href="/issues#${esc(i.id)}" class="issue-source-link">Read more →</a>`;
+    return `      <div class="issue-card fade-in"><span class="issue-tag tag-${i.tag_style}">${i.tag}</span>`
+      + `<h3>${r(i.title, 'issues.json')}</h3>`
+      + `<div class="issue-status"><div class="status-dot dot-${i.status}"></div>${r(i.status_label, 'issues.json')}</div>${link}</div>`;
+  });
+  return ['    <div class="issues-grid">', ...cards, '    </div>'].join(NL);
+}
+
+// One card per board, the same meetings the Meetings page opens on.
+function generateMeetingPreviews(data, r) {
+  const published = data.meetings.meetings.filter((m) => m.status === 'published');
+  const cards = latestPerBody(published).map((m) => {
+    const body = data.bodies.bodies.find((b) => b.id === m.governing_body);
+    const when = new Date(m.date + 'T12:00:00Z').toLocaleDateString('en-US',
+      { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    const mins = m.duration_min ? `<span class="mtg-card-meta">⏱ ${m.duration_min} min</span>` : '';
+    return `      <a class="mtg-card fade-in" href="/meetings#${esc(m.id)}">`
+      + `<span class="mtg-card-body">${body.name}</span>`
+      + `<span class="mtg-card-date">${when}</span>`
+      + `<span class="mtg-card-detail">${m.selector.detail.split(' · ')[0]}</span>`
+      + `${mins}</a>`;
+  });
+  return ['    <div class="mtg-card-grid">', ...cards, '    </div>'].join(NL);
+}
+
+// Slim banner, shown until election day. Like the nav badge it carries its own
+// expiry rather than being omitted at build time, so it clears itself on the
+// day even if nobody rebuilds the site.
+function generateElectionsBanner(data, r) {
+  const date = data.elections.election_date;
+  const races = data.elections.races.length;
+  const cands = data.elections.candidates.length;
+  return [
+    `<a class="home-banner" href="/elections" data-hide-after="${esc(date)}">`,
+    '  <span class="home-banner-tag">🗳 Election</span>',
+    `  <span class="home-banner-text"><strong>${r('{{fact:election-date-2026}}', 'elections.json')}</strong> — ${races} contested races, ${cands} candidates. Polls ${r('{{fact:polling-hours}}', 'elections.json')}.</span>`,
+    '  <span class="home-banner-cta">See who\'s running →</span>',
+    '</a>',
+  ].join(NL);
+}
+
+// =========================================================================
+// PAGE ASSEMBLY
+// =========================================================================
+//
+// Each page is content/pages/<id>.html — hand-written markup with BUILD
+// anchors marking where generated blocks go — wrapped in the shared shell.
+//
+// A page only receives the blocks whose anchors it actually contains, so
+// adding a block to a page is a matter of pasting the anchor pair into its
+// partial. An anchor with no matching generator is a build error, rather
+// than silently rendering an empty region.
+
+function pageBlocks(data, r) {
+  return {
+    'hero-stats': () => generateHeroStats(data, r),
+    'elections-banner': () => generateElectionsBanner(data, r),
+    'issue-previews': () => generateIssuePreviews(data, r),
+    'meeting-previews': () => generateMeetingPreviews(data, r),
+    issues: () => generateIssueCards(data, r),
+    elections: () => generateElections(data, r),
+    meetings: () => generateMeetings(data, r, { all: true }),
+    taxes: () => generateTaxSection(data, r),
+    governance: () => generateGovernanceCards(data, r),
+    'source-chips': () => generateSourceChips(data),
+    'get-involved': () => generateGetInvolved(data),
+    'meeting-schedule': () => generateMeetingSchedule(data, r),
+    'about-sources': () => generateAboutSources(data),
+  };
+}
+
+const PAGE_TITLES = {
+  home: 'Home',
+  issues: 'Current Issues',
+  elections: '2026 Elections',
+  meetings: 'Meeting Summaries',
+  'get-involved': 'How to Get Involved',
+  taxes: 'Where Your Taxes Go',
+  'gov-101': 'Who Governs Pelham',
+  'ask-ai': 'Ask Pelham AI',
+  about: 'About & Corrections',
+};
+
+const PAGE_DESCRIPTIONS = {
+  home: 'Public information about local government in Pelham, NY — meetings, elections, taxes and how to take part.',
+  issues: 'The issues currently being debated in Pelham board meetings and local coverage, each with its source.',
+  elections: 'Who is running in the November 2026 Pelham elections, what they stand for, and how to vote.',
+  meetings: 'AI-generated summaries of every processed public meeting in Pelham — executive, detailed and full transcript.',
+  'get-involved': 'How to email an official, speak at a public meeting, write to the editor, or organise with neighbours in Pelham.',
+  taxes: 'Where Pelham property taxes go — the school district, village, county and town shares.',
+  'gov-101': 'How Pelham is governed: two villages, a town, a school district and the county, and who to call for what.',
+  'ask-ai': 'An assistant that answers questions about Pelham civic life using only vetted local sources.',
+  about: 'How this site is made, the sources it draws on, and how to report an error.',
+};
+
+function buildPages(data, r) {
+  const { generatePageShell, SITE_URL } = require('./page-shell');
+  const blocks = pageBlocks(data, r);
+  const written = [];
+
+  for (const pg of data.pages.pages) {
+    const partialPath = p('content', 'pages', `${pg.id}.html`);
+    if (!fs.existsSync(partialPath)) {
+      fail('pages.json', `${pg.id} has no partial at content/pages/${pg.id}.html`);
+      continue;
+    }
+
+    let html = generatePageShell({
+      title: PAGE_TITLES[pg.id] || pg.label,
+      activePage: pg.id,
+      content: read(partialPath).replace(/\n$/, ''),
+      description: PAGE_DESCRIPTIONS[pg.id],
+      canonical: SITE_URL + pg.url,
+      data,
+      resolve: r,
+    });
+
+    // Splice only the anchors this page actually carries.
+    const wanted = [...new Set([...html.matchAll(/<!--\s*BUILD:([a-z-]+)\s*-->/g)].map((m) => m[1]))];
+    for (const name of wanted) {
+      if (!blocks[name]) {
+        fail(`content/pages/${pg.id}.html`, `anchor BUILD:${name} has no generator`);
+        continue;
+      }
+      html = splice(html, name, blocks[name](), 'html');
+    }
+
+    written.push([p(pg.file), html, pg]);
+  }
+  return written;
 }
 
 // =========================================================================
@@ -838,10 +989,10 @@ function splice(html, name, body, kind) {
 // =========================================================================
 // PHASE 5 — validate output
 // =========================================================================
-function phase5(html, data) {
+function phase5(html, data, pageId = 'home') {
   const leftover = [...html.matchAll(/\{\{(fact|generated):([a-z0-9-]+)\}\}/g)].map((m) => m[0]);
   if (leftover.length) {
-    fail('index.html',
+    fail(`${pageId} page`,
       `unresolved tokens in output: ${[...new Set(leftover)].join(', ')}. `
       + 'Tokens only resolve inside a BUILD anchor or in content/*.json — a token '
       + 'written into the static shell would be rewritten to a literal on the first '
@@ -850,12 +1001,19 @@ function phase5(html, data) {
 
   const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
   const dupes = ids.filter((v, i) => ids.indexOf(v) !== i);
-  if (dupes.length) fail('index.html', `duplicate ids: ${[...new Set(dupes)].join(', ')}`);
+  if (dupes.length) fail(`${pageId} page`, `duplicate ids: ${[...new Set(dupes)].join(', ')}`);
+
+  if (pageId !== 'meetings') {
+    return { ids: ids.length, selectors: 0, sets: 0, archived: 0,
+             ragKeys: data.issues.issues.filter((i) => i.rag_issue).length
+                      + Object.keys(data.issues.rag_only_issues || {}).length };
+  }
 
   const selectors = (html.match(/class="mtg-selector/g) || []).length;
   const sets = (html.match(/class="mtg-set"/g) || []).length;
   const published = data.meetings.meetings.filter((m) => m.status === 'published');
-  const expectedSelectors = latestPerBody(published).length;
+  // The Meetings page is the archive, so every published meeting is selectable.
+  const expectedSelectors = published.length;
   // One selector per governing body (its most recent meeting); one panel set
   // per published meeting, including the older ones with no selector.
   if (selectors !== expectedSelectors) {
@@ -865,7 +1023,7 @@ function phase5(html, data) {
     fail('index.html', `${sets} panel sets but ${published.length} published meetings`);
   }
   // Every selector must resolve to a set, or a reader gets the placeholder.
-  for (const m of latestPerBody(published)) {
+  for (const m of published) {
     if (!html.includes(`class="mtg-set" data-meeting="${m.id}"`)) {
       fail('index.html', `selector ${m.id} has no matching panel set`);
     }
@@ -886,29 +1044,18 @@ function main() {
   const promptText = buildPrompt(data, r);
   const promptModule = writePromptModule(promptText);
 
-  let html = read(p('index.html'));
-  const sections = [
-    ['hero-stats', generateHeroStats(data, r), 'html'],
-    ['elections', generateElections(data, r), 'html'],
-    ['meetings', generateMeetings(data, r), 'html'],
-    ['taxes', generateTaxSection(data, r), 'html'],
-    ['issues', generateIssueCards(data, r), 'html'],
-    ['governance', generateGovernanceCards(data, r), 'html'],
-    ['source-chips', generateSourceChips(data), 'html'],
-    ['get-involved', generateGetInvolved(data), 'html'],
-    ['meeting-schedule', generateMeetingSchedule(data, r), 'html'],
-    ['about-sources', generateAboutSources(data), 'html'],
-    ['footer', generateFooter(data, r), 'html'],
-  ];
-  for (const [name, body, kind] of sections) html = splice(html, name, body, kind);
+  // Nine pages, each a partial wrapped in the shared shell. index.html is
+  // just the 'home' page now — it stopped being both input and output when
+  // the content moved to content/pages/.
+  const pages = buildPages(data, r);
 
-  // NOTE: there is deliberately no token pass over the static shell.
-  // index.html is both this build's input and its output, so resolving a
-  // token outside an anchor would rewrite it to a literal on the first run
-  // and silently freeze it thereafter. Tokens must live in content/*.json or
-  // inside a BUILD anchor; phase 5 fails the build if any survive.
-
-  const stats = phase5(html, data);
+  // Validate every page, not just the homepage.
+  let stats = { ids: 0, selectors: 0, sets: 0, archived: 0, ragKeys: 0 };
+  for (const [file, pageHtml, pg] of pages) {
+    const st = phase5(pageHtml, data, pg.id);
+    if (pg.id === 'meetings') stats = st;
+    else stats.ids += st.ids;
+  }
 
   // app.js carries the generated meetings map. It moved out of index.html
   // when the script block was extracted for the multi-page shell.
@@ -923,7 +1070,7 @@ function main() {
   if (errors.length) return report();
 
   const targets = [
-    [p('index.html'), html],
+    ...pages.map(([file, pageHtml]) => [file, pageHtml]),
     [p('app.js'), app],
     [p('netlify', 'functions', 'ask-pelham.js'), fn],
     [p('netlify', 'functions', 'system-prompt.js'), promptModule],
@@ -953,7 +1100,7 @@ function main() {
   console.log(`  issues             ${data.issues.issues.length} (${data.issues.issues.filter((i) => i.show_on_home !== false).length} rendered)`);
   console.log(`  races / candidates ${data.elections.races.length} / ${data.elections.candidates.length}`);
   console.log(`  meetings           ${stats.selectors} selectable, ${stats.sets} panel sets (${stats.archived} older, no selector), ${stats.sets * 3} partials`);
-  console.log(`  sections generated ${sections.length}`);
+  console.log(`  pages generated    ${pages.length} (${pages.map(([, , pg]) => pg.id).join(', ')})`);
   console.log(`  html ids           ${stats.ids}, no duplicates`);
   if (stripped.length) {
     const kinds = [...new Set(stripped.map((s) => s.kind))].join(', ');
@@ -975,6 +1122,8 @@ function report() {
   process.exit(1);
 }
 
-if (require.main === module) main();
-
+// Exports must be assigned BEFORE main() runs: page-shell.js requires this
+// module from inside main(), and would otherwise see an empty exports object.
 module.exports = { generateNav, generateFooter, phase1, makeResolver };
+
+if (require.main === module) main();
