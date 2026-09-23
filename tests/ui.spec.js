@@ -434,6 +434,9 @@ test('gov-101 — the two village cards carry the same rows; the Town leads with
   const manor = await rows('Village of Pelham Manor');
   expect(pelham).toEqual(['Governing Body', 'FY2026–27 Budget', 'Area', 'Meetings', 'Village Hall']);
   expect(manor, 'Manor card rows match the Village of Pelham card').toEqual(pelham);
+  // The Village of Pelham budgets through one general fund; Manor splits ops/capital.
+  await expect(page.locator('.gov-card', { has: page.locator('h3', { hasText: /^Village of Pelham$/ }) }))
+    .toContainText('$20.5M general fund (↑10.1%) — no separate capital budget; capital items funded within the general fund');
 
   const town = page.locator('.gov-card', { has: page.locator('h3', { hasText: /^Town of Pelham$/ }) });
   await expect(town).toContainText('wasteful to duplicate');

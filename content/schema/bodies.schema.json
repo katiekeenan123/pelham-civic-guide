@@ -135,24 +135,62 @@
               "description": "Short parenthetical shown after the value, e.g. 'voter-approved' or 'levy up 3.48%'."
             },
             "breakdown": {
-              "type": [
-                "object",
-                "null"
-              ],
-              "additionalProperties": false,
-              "required": [
-                "operating_fact_ref",
-                "capital_fact_ref"
-              ],
-              "description": "Operating vs capital split, as two facts.json ids. Rendered as \"(<ops> ops + <capital> capital)\". Null when the body has not published a split — the build reports that as a gap for villages.",
-              "properties": {
-                "operating_fact_ref": {
-                  "type": "string"
+              "description": "How the budget divides. Either an operating/capital split as two facts.json ids, rendered \"(<ops> ops + <capital> capital)\"; or single_fund for a body that budgets everything through one general fund, rendered \"general fund … — <note>\". Null when neither is known — the build reports that as a gap for villages.",
+              "oneOf": [
+                {
+                  "type": "null"
                 },
-                "capital_fact_ref": {
-                  "type": "string"
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "operating_fact_ref",
+                    "capital_fact_ref"
+                  ],
+                  "properties": {
+                    "operating_fact_ref": {
+                      "type": "string"
+                    },
+                    "capital_fact_ref": {
+                      "type": "string"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "single_fund",
+                    "note",
+                    "source"
+                  ],
+                  "properties": {
+                    "single_fund": {
+                      "const": true
+                    },
+                    "note": {
+                      "type": "string",
+                      "description": "Why there is no split, e.g. \"no separate capital budget; capital items funded within the general fund\"."
+                    },
+                    "source": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "label",
+                        "url"
+                      ],
+                      "properties": {
+                        "label": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
                 }
-              }
+              ]
             }
           }
         },

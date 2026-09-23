@@ -12,7 +12,14 @@
         "label": "FY2026–27 Budget",
         "fact_ref": "village-budget-fy2627",
         "note": "(↑{{fact:village-budget-increase-fy2627}})",
-        "breakdown": null
+        "breakdown": {
+          "single_fund": true,
+          "note": "no separate capital budget; capital items funded within the general fund",
+          "source": {
+            "label": "ClearGov — Village of Pelham FY2026-27 Adopted Budget",
+            "url": "https://cleargov.com/new-york/westchester/village/pelham"
+          }
+        }
       },
       "composition": "Mayor + 6 Trustees",
       "area_sq_miles": 0.8,

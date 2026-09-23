@@ -138,7 +138,7 @@ function phase1() {
   });
   data.bodies.bodies.forEach((b) => {
     const bd = b.budget && b.budget.breakdown;
-    if (bd) for (const k of ['operating_fact_ref', 'capital_fact_ref']) {
+    if (bd && !bd.single_fund) for (const k of ['operating_fact_ref', 'capital_fact_ref']) {
       if (!factIds.has(bd[k])) fail('bodies.json', `${b.id}.budget.breakdown.${k} → unknown fact "${bd[k]}"`);
     }
   });
@@ -891,6 +891,12 @@ function generateGovernanceCards(data, r) {
     const budgetRow = () => {
       const fact = r(`{{fact:${b.budget.fact_ref}}}`, 'bodies.json');
       const bd = b.budget.breakdown;
+      if (bd && bd.single_fund) {
+        // One general fund, no separate capital budget: say so in the row
+        // rather than implying a split that does not exist.
+        const inc = b.budget.note ? ` ${r(b.budget.note, 'bodies.json')}` : '';
+        return { key: b.budget.label, value: `${fact} general fund${inc} — ${bd.note}` };
+      }
       const split = bd
         ? ` (${r(`{{fact:${bd.operating_fact_ref}}}`, 'bodies.json')} ops + ${r(`{{fact:${bd.capital_fact_ref}}}`, 'bodies.json')} capital)`
         : '';
