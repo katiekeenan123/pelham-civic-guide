@@ -75,7 +75,7 @@ exports.handler = async (event) => {
   // never touch Anthropic:
   //   { type: "feedback",         vote, question, answer_snippet }
   //   { type: "correction",       section, description, source, contact }
-  //   { type: "civic_engagement", actions, governing_body, story }
+  //   { type: "civic_engagement", feedback_type, actions, governing_body, story }
   if (body && (body.type === 'feedback' || body.type === 'correction' || body.type === 'civic_engagement')) {
     return recordSubmission(body);
   }
@@ -218,6 +218,11 @@ async function recordSubmission(body) {
       governing_body: clip(body.governing_body),
       story: clip(body.story),
     };
+    // "Missing topic or issue", "I want to help with this project", … Only
+    // sent when chosen: PostgREST rejects a column it does not know even when
+    // the value is null, so an unconditional key would fail every submission
+    // until civic_engagement.feedback_type exists (supabase/grants.sql).
+    if (clip(body.feedback_type)) row.feedback_type = clip(body.feedback_type);
   } else {
     return json(400, { error: 'Unknown submission type' });
   }

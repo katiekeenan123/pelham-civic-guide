@@ -319,11 +319,10 @@
     render();
   });
 
-  // Address shown in the failure messages below. Interim: a personal mailbox
-  // until the project has its own. Published in the page source, so expect it
-  // to be scraped — worth swapping for a project address before this gets much
-  // traffic.
-  const CONTACT_EMAIL = 'katherine.e.keenan@gmail.com';
+  // Address shown in the failure messages below. Empty until the project has
+  // its own mailbox: a personal address is not published on the site, and
+  // contactClause() drops the "or email us" sentence while this is blank.
+  const CONTACT_EMAIL = '';
 
   const contactClause = () => (CONTACT_EMAIL
     ? ` or email us at <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>`
@@ -388,6 +387,9 @@
   async function submitFeedbackForm() {
     const story = document.getElementById('fb-story').value.trim();
     const governingBody = document.getElementById('fb-body').value;
+    // What the message is about. Stored in civic_engagement.feedback_type.
+    const typeEl = document.getElementById('fb-type');
+    const feedbackType = typeEl ? typeEl.value : '';
     const actions = [
       ['attended', 'fb-attended'],
       ['commented', 'fb-commented'],
@@ -396,15 +398,15 @@
     ].filter(([, elId]) => document.getElementById(elId).checked).map(([name]) => name);
 
     const btn = document.getElementById('fb-share-btn');
-    if (btn) { btn.disabled = true; btn.textContent = 'Sharing…'; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
 
     const ok = await postSubmission({
-      type: 'civic_engagement', actions, governing_body: governingBody, story,
+      type: 'civic_engagement', feedback_type: feedbackType, actions, governing_body: governingBody, story,
     });
 
-    if (btn) { btn.disabled = false; btn.textContent = 'Share my experience →'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Send →'; }
     reportSubmission(document.getElementById('fb-confirm'), ok,
-      "✓ Thanks for sharing — we're tracking this engagement.");
+      '✓ Thanks for sharing — we read every message.');
   }
 
   // ── Event wiring ──

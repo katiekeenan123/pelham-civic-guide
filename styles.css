@@ -1454,26 +1454,24 @@
   /* ── About · headings, body copy, editorial callout ── */
   .about-h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 14px; color: var(--navy); }
   .about-body { font-size: 15px; line-height: 1.75; color: var(--slate); }
-  /* About this project: the founder's note as a card — heading and sign-off
-     on the left, the story on the right — then a rule, then the lead-in the
-     forms below answer. */
+  /* About this project: the founder's note as a single-column card, signed
+     at the foot — then a rule, then the lead-in the forms below answer. */
   .about-project {
-    display: grid; grid-template-columns: 220px 1fr; gap: 40px;
     background: var(--white); border: 1px solid var(--border); border-top: 4px solid var(--gold);
-    padding: 32px 36px;
+    padding: 32px 40px 28px;
   }
-  .about-project .about-h3 { margin-bottom: 10px; }
-  .about-project-body .about-body { margin-bottom: 14px; max-width: 70ch; }
-  .about-project-body .about-body:last-child { margin-bottom: 0; }
-  .about-signoff { font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: var(--navy); margin: 0; }
+  .about-project .about-h3 { margin-bottom: 16px; }
+  .about-project .about-body { max-width: 72ch; margin: 0 0 18px; }
+  .about-signoff {
+    font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: var(--navy);
+    margin: 22px 0 0; padding-top: 14px; border-top: 1px solid var(--border); max-width: 72ch;
+  }
   .about-divider { border: none; border-top: 1px solid var(--border); margin: 48px 0 36px; }
   .about-involve { margin-bottom: 24px; }
   .about-involve .about-h3 { margin-bottom: 10px; }
-  .about-involve .about-body { max-width: 70ch; }
-  .about-involve a { color: var(--navy); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--gold); }
-  .about-involve a:hover { color: var(--red); border-bottom-color: var(--red); }
+  .about-involve .about-body { max-width: 72ch; margin: 0; }
   @media (max-width: 768px) {
-    .about-project { grid-template-columns: 1fr; gap: 16px; padding: 24px 20px; }
+    .about-project { padding: 24px 20px 20px; }
   }
   .editorial-callout { margin-top: 24px; padding: 20px; background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--gold); }
 
@@ -1965,69 +1963,71 @@
 .gov-subintro { font-size: 15px; line-height: 1.7; color: var(--slate); max-width: 720px; margin: 0 0 24px; }
 
 /* ── Layer diagram ──
-   Tier 3 renders as two boxes side by side because the Town divides into the
-   villages rather than handing down to them — a stacked list would lose the
-   one thing a new resident is actually confused about. */
-.layer-diagram { display: flex; flex-direction: column; align-items: stretch; }
+   Reads top to bottom as a tree: County and Town centred, a fork where the
+   Town divides into the two villages side by side, then a join into the
+   school district, which spans both. Colour carries scope — navy for every
+   resident, amber for one village — and the words say it too. */
+.layer-diagram {
+  display: flex; flex-direction: column; align-items: stretch;
+  background: var(--white); border: 1px solid var(--border);
+  padding: 24px 28px 28px;
+}
+.layer-legend { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 20px; font-size: 12px; color: var(--slate); }
+.layer-key { display: inline-flex; align-items: center; gap: 8px; }
+.layer-key::before { content: ''; width: 14px; height: 14px; border-radius: 2px; }
+.layer-key.is-everyone::before { background: var(--navy); }
+.layer-key.is-partial::before  { background: var(--gold); }
+
 .layer-row { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .layer-row.is-split { grid-template-columns: 1fr 1fr; }
+.layer-row.is-narrow { width: min(100%, 620px); margin: 0 auto; }
 
-.layer {
-  border: 1px solid var(--border);
-  border-left: 5px solid var(--slate-mid);
-  background: var(--white);
-  padding: 16px 18px;
+.layer { border: 2px solid var(--navy); background: var(--white); box-shadow: 0 2px 6px rgba(26,39,68,0.08); }
+.layer.is-partial { border-color: var(--gold); }
+.layer-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px;
+  padding: 10px 16px; background: var(--navy); color: var(--white);
 }
-.layer-county, .layer-town { border-left-color: #3a6ea5; }   /* everyone */
-.layer-village           { border-left-color: var(--gold); } /* village only */
-.layer-school            { border-left-color: #6b4fa0; }     /* everyone, but its own levy */
-
-.layer-name {
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--navy);
-}
+.layer.is-partial .layer-head { background: var(--gold); color: var(--navy); }
+.layer-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; }
 .layer-scope {
-  display: inline-block;
-  margin: 6px 0 8px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: 2px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 2px;
 }
-.layer-scope.is-everyone { color: #26537f; background: rgba(58,110,165,0.12); }
-.layer-scope.is-partial  { color: #8a6516; background: rgba(200,151,58,0.16); }
-.layer-controls { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--slate); }
+.layer-scope.is-everyone { background: rgba(255,255,255,0.16); color: var(--white); }
+.layer-scope.is-partial  { background: rgba(26,39,68,0.14); color: var(--navy); }
+.layer-controls { margin: 0; padding: 12px 16px 14px; font-size: 14px; line-height: 1.6; color: var(--slate); }
 
-/* Connector between tiers; forks where the Town splits. */
-.layer-link { height: 22px; position: relative; }
+/* Connectors. The village columns sit either side of a 16px gap, so their
+   centres are at 25% - 4px and 75% + 4px. */
+.layer-link { position: relative; height: 26px; }
 .layer-link::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--border);
+  content: ''; position: absolute; left: calc(50% - 1px); top: 0; bottom: 0;
+  width: 2px; background: var(--slate-light);
 }
-.layer-link.is-fork::after {
-  content: '';
-  position: absolute;
-  left: 25%;
-  right: 25%;
-  bottom: 0;
-  height: 2px;
-  background: var(--border);
+.layer-link span { display: none; }
+.layer-link.is-fork, .layer-link.is-join { height: 36px; }
+.layer-link.is-fork::before { bottom: 50%; }
+.layer-link.is-join::before { top: 50%; }
+.layer-link.is-fork::after, .layer-link.is-join::after {
+  content: ''; position: absolute; top: calc(50% - 1px); height: 2px;
+  left: calc(25% - 4px); right: calc(25% - 4px); background: var(--slate-light);
 }
-.layer-link.is-fork { height: 26px; }
+.layer-link.is-fork span, .layer-link.is-join span {
+  display: block; position: absolute; width: 2px; background: var(--slate-light);
+}
+.layer-link.is-fork span { top: 50%; bottom: 0; }
+.layer-link.is-join span { top: 0; bottom: 50%; }
+.layer-link span:first-child { left: calc(25% - 5px); }
+.layer-link span:last-child  { left: calc(75% + 3px); }
 
 @media (max-width: 680px) {
-  /* Stack the villages, but keep the fork visible so the split still reads. */
+  .layer-diagram { padding: 16px; }
+  /* Stack the villages; the connectors collapse to a single line. */
   .layer-row.is-split { grid-template-columns: 1fr; }
-  .layer-link.is-fork::after { left: 50%; right: auto; width: 2px; height: 0; }
+  .layer-link.is-fork, .layer-link.is-join { height: 26px; }
+  .layer-link.is-fork::before, .layer-link.is-join::before { top: 0; bottom: 0; }
+  .layer-link.is-fork::after, .layer-link.is-join::after, .layer-link span { display: none !important; }
 }
 
 /* ── Officials cards ── */

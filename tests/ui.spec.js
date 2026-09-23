@@ -432,6 +432,17 @@ test('gov-101 — layer diagram shows five bodies and the village split', async 
   await expect(diagram.locator('.layer-scope.is-partial')).toHaveCount(2);
   await expect(diagram.locator('.layer-scope.is-everyone')).toHaveCount(3);
   await expect(diagram).toHaveAttribute('role', 'img');
+
+  // Drawn as a diagram: a fork out of the Town, a join into the schools, and
+  // colour by scope — amber headers for the villages, navy for the rest.
+  await expect(diagram.locator('.layer-link.is-fork')).toHaveCount(1);
+  await expect(diagram.locator('.layer-link.is-join')).toHaveCount(1);
+  const head = (sel) => diagram.locator(`${sel} .layer-head`).first()
+    .evaluate((e) => getComputedStyle(e).backgroundColor);
+  expect(await head('.layer-village')).toBe('rgb(200, 151, 58)');
+  for (const sel of ['.layer-county', '.layer-town', '.layer-school']) {
+    expect(await head(sel), `${sel} should be navy`).toBe('rgb(26, 39, 68)');
+  }
 });
 
 test('gov-101 — officials cards name officeholders and flag contested bodies', async ({ page }) => {
@@ -699,7 +710,13 @@ test('about — project story, a rule, then the lead-in to the forms', async ({ 
     .map((sel) => document.querySelector(sel).getBoundingClientRect().top));
   expect(ys, 'story → rule → lead-in → forms').toEqual([...ys].sort((a, b) => a - b));
   await expect(page.locator('.about-involve')).toContainText('Use the forms below');
-  await expect(page.locator('.about-involve a[href="mailto:katherine.e.keenan@gmail.com"]')).toBeVisible();
+
+  // Signed at the foot of the note, not under the heading.
+  const last = await story.evaluate((el) => el.lastElementChild.className);
+  expect(last).toBe('about-signoff');
+
+  // No personal address anywhere in the page, visible or in the source.
+  expect(await page.content()).not.toContain('katherine.e.keenan@gmail.com');
 });
 
 /* ── About page forms ──────────────────────────────────────────────────── */
@@ -746,11 +763,18 @@ test('error correction form — reports failure on a rejected write, success on 
 
 test('civic engagement form — reports failure on a rejected write, success on a stored one', async ({ page }) => {
   let status = 500;
-  await page.route('**/api/ask', (route) =>
-    route.fulfill({ status, contentType: 'application/json', body: '{}' }),
-  );
+  let sent = null;
+  await page.route('**/api/ask', (route) => {
+    sent = route.request().postDataJSON();
+    return route.fulfill({ status, contentType: 'application/json', body: '{}' });
+  });
 
   await page.goto('/about');
+  await expect(page.locator('#feedback')).toContainText('want to help with this project');
+  // "I want to help" is offered second, right after "Missing topic or issue".
+  const options = await page.locator('#fb-type option').allTextContents();
+  expect(options.slice(1, 3)).toEqual(['Missing topic or issue', 'I want to help with this project']);
+  await page.selectOption('#fb-type', 'I want to help with this project');
   await page.check('#fb-attended');
   await page.click('#fb-share-btn');
 
@@ -763,6 +787,11 @@ test('civic engagement form — reports failure on a rejected write, success on 
   await page.click('#fb-share-btn');
   await expect(confirm).toContainText('Thanks for sharing');
   await expect(confirm).not.toHaveClass(/is-error/);
+  expect(sent).toMatchObject({
+    type: 'civic_engagement',
+    feedback_type: 'I want to help with this project',
+    actions: ['attended'],
+  });
 });
 
 /* ── Animation ─────────────────────────────────────────────────────────── */

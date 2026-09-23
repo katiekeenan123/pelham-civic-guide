@@ -121,22 +121,18 @@
     <!-- Who built this and why. Set apart from the forms by a rule; the
          "Want to get involved?" lead-in below it is what the forms answer. -->
     <div class="about-project" id="about-project">
-      <div class="about-project-head">
-        <h3 class="about-h3">About this project</h3>
-        <p class="about-signoff">— Katie Keenan</p>
-      </div>
-      <div class="about-project-body">
-        <p class="about-body">I grew up in Pelham with a front-row seat to local government — my mom served as a trustee and then Mayor of the Village of Pelham Manor. Civic engagement was part of our family culture.</p>
-        <p class="about-body">When I moved back as an adult with my husband and kids, I kept hearing the same thing from friends: local government was hard to follow, information was scattered across different websites and meeting agendas, and it wasn't clear how a resident could actually make a difference.</p>
-        <p class="about-body">I spent 15 years at Bloomberg LP building tools that helped financial professionals make sense of complex, fast-moving information. I used that same instinct — combined with AI tools — to build this site. I'm not a reporter or editor, just a Pelham resident who wanted to make it easier for neighbors to stay informed and get involved.</p>
-      </div>
+      <h3 class="about-h3">About this project</h3>
+      <p class="about-body">I grew up in Pelham with a front-row seat to local government — my mom served as a trustee and then Mayor of the Village of Pelham Manor. Civic engagement was part of our family culture.</p>
+      <p class="about-body">When I moved back as an adult with my husband and kids, I kept hearing the same thing from friends: local government was hard to follow, information was scattered across different websites and meeting agendas, and it wasn't clear how a resident could actually make a difference.</p>
+      <p class="about-body">I spent 15 years at Bloomberg LP building tools that helped financial professionals make sense of complex, fast-moving information. I used that same instinct — combined with AI tools — to build this site. I'm not a reporter or editor, just a Pelham resident who wanted to make it easier for neighbors to stay informed and get involved.</p>
+      <p class="about-signoff">— Katie Keenan</p>
     </div>
 
     <hr class="about-divider">
 
     <div class="about-involve">
       <h3 class="about-h3">Want to get involved?</h3>
-      <p class="about-body">This project is better with your input. If you spot something wrong, have a suggestion, or want to help — whether that's verifying meeting summaries, flagging issues to track, or something else entirely — I'd love to hear from you. Use the forms below or reach out directly at <a href="mailto:katherine.e.keenan@gmail.com">katherine.e.keenan@gmail.com</a>.</p>
+      <p class="about-body">This project is better with your input. If you spot something wrong, have a suggestion, or want to help — whether that's verifying meeting summaries, flagging issues to track, or something else entirely — I'd love to hear from you. Use the forms below.</p>
     </div>
 
     <!-- Two forms side by side -->
@@ -182,17 +178,31 @@
       <!-- id is the target of the "Share feedback" link in the shared footer. -->
       <div class="about-form-card" id="feedback" style="border-top: 4px solid var(--green);">
         <div class="about-form-eyebrow">Community Feedback</div>
-        <h3 class="about-form-h3" style="margin-bottom:6px;">Did this site help you get involved?</h3>
-        <p style="font-size:13px; color:var(--slate); margin-bottom:16px; line-height:1.6;">We'd love to know if this site helped you attend a meeting, make a public comment, or engage with local government in a new way.</p>
+        <h3 class="about-form-h3" style="margin-bottom:6px;">Share an idea, or lend a hand</h3>
+        <p style="font-size:13px; color:var(--slate); margin-bottom:16px; line-height:1.6;">Whether you spotted something to improve, have a suggestion, or want to help with this project — we'd love to hear from you.</p>
         <div class="form-fields">
-          <div style="display:flex; flex-wrap:wrap; gap:10px;">
-            <label class="fb-checkbox-label"><input type="checkbox" id="fb-attended"> Attended a public meeting</label>
-            <label class="fb-checkbox-label"><input type="checkbox" id="fb-commented"> Made a public comment</label>
-            <label class="fb-checkbox-label"><input type="checkbox" id="fb-letter"> Wrote a letter to the Examiner</label>
-            <label class="fb-checkbox-label"><input type="checkbox" id="fb-applied"> Applied to a board or committee</label>
+          <div>
+            <label class="form-field-label" for="fb-type">What's on your mind?</label>
+            <select id="fb-type" class="form-control">
+              <option value="">Select…</option>
+              <option>Missing topic or issue</option>
+              <option>I want to help with this project</option>
+              <option>Something to improve</option>
+              <option>I got involved because of this site</option>
+              <option>Other</option>
+            </select>
           </div>
           <div>
-            <label class="form-field-label">Which governing body? (optional)</label>
+            <label class="form-field-label">Has this site helped you do any of these? (optional)</label>
+            <div style="display:flex; flex-wrap:wrap; gap:10px;">
+              <label class="fb-checkbox-label"><input type="checkbox" id="fb-attended"> Attended a public meeting</label>
+              <label class="fb-checkbox-label"><input type="checkbox" id="fb-commented"> Made a public comment</label>
+              <label class="fb-checkbox-label"><input type="checkbox" id="fb-letter"> Wrote a letter to the Examiner</label>
+              <label class="fb-checkbox-label"><input type="checkbox" id="fb-applied"> Applied to a board or committee</label>
+            </div>
+          </div>
+          <div>
+            <label class="form-field-label">Is it about a particular governing body? (optional)</label>
             <select id="fb-body" class="form-control">
               <option value="">Select…</option>
               <option>Village of Pelham</option>
@@ -202,11 +212,11 @@
             </select>
           </div>
           <div>
-            <label class="form-field-label">Want to share your experience? (optional)</label>
-            <textarea id="fb-story" rows="3" placeholder="What topic did you engage on? What was it like? Your story (anonymous) may inspire others…" class="form-control" style="resize:none; line-height:1.5;"></textarea>
+            <label class="form-field-label">Tell us more (optional)</label>
+            <textarea id="fb-story" rows="3" placeholder="A topic we should cover, how you'd like to help, what worked or didn't…" class="form-control" style="resize:none; line-height:1.5;"></textarea>
           </div>
-          <button id="fb-share-btn" style="background:var(--green); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Share my experience →</button>
-          <div id="fb-confirm" class="form-confirm">✓ Thanks for sharing — we're tracking this engagement.</div>
+          <button id="fb-share-btn" style="background:var(--green); color:var(--white); border:none; padding:10px 20px; font-family:'IBM Plex Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; text-align:left; transition:background 0.2s;">Send →</button>
+          <div id="fb-confirm" class="form-confirm">✓ Thanks for sharing — we read every message.</div>
         </div>
       </div>
 

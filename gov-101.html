@@ -74,41 +74,52 @@
     <p class="gov-subintro">Five bodies levy taxes or make decisions here. Two cover everyone, two cover only their own village, and the school district cuts across both.</p>
     <!-- BUILD:layer-diagram -->
     <div class="layer-diagram" role="img" aria-label="Pelham's five governing layers: Westchester County and the Town of Pelham cover every resident, the Town divides into the Village of Pelham and the Village of Pelham Manor which each cover only their own residents, and the school district covers everyone.">
-      <div class="layer-row">
-          <div class="layer layer-county">
-            <div class="layer-name">Westchester County</div>
-            <div class="layer-scope is-everyone">Every Pelham resident</div>
-            <p class="layer-controls">Health department, parks, sewer districts, social services, county police — and the equalization rates used in property assessments.</p>
+      <div class="layer-legend" aria-hidden="true"><span class="layer-key is-everyone">All Pelham residents</span><span class="layer-key is-partial">Village residents only</span></div>
+      <div class="layer-row is-narrow" data-tier="1">
+        <div class="layer layer-county is-everyone">
+          <div class="layer-head">
+            <span class="layer-name">Westchester County</span>
+            <span class="layer-scope is-everyone">Every Pelham resident</span>
           </div>
+          <p class="layer-controls">Health department, parks, sewer districts, social services, county police — and the equalization rates used in property assessments.</p>
+        </div>
       </div>
-      <div class="layer-link" aria-hidden="true"></div>
-      <div class="layer-row">
-          <div class="layer layer-town">
-            <div class="layer-name">Town of Pelham</div>
-            <div class="layer-scope is-everyone">Every Pelham resident</div>
-            <p class="layer-controls">Municipal courts, tax assessment and collection, recreation programmes, the public library, and the ambulance service shared by both villages.</p>
+      <div class="layer-link" aria-hidden="true"><span></span><span></span></div>
+      <div class="layer-row is-narrow" data-tier="2">
+        <div class="layer layer-town is-everyone">
+          <div class="layer-head">
+            <span class="layer-name">Town of Pelham</span>
+            <span class="layer-scope is-everyone">Every Pelham resident</span>
           </div>
+          <p class="layer-controls">Municipal courts, tax assessment and collection, recreation programmes, the public library, and the ambulance service shared by both villages.</p>
+        </div>
       </div>
-      <div class="layer-link is-fork" aria-hidden="true"></div>
-      <div class="layer-row is-split">
-          <div class="layer layer-village">
-            <div class="layer-name">Village of Pelham</div>
-            <div class="layer-scope is-partial">Village residents only</div>
-            <p class="layer-controls">Police, fire, refuse, water, roads and the building department — for Village of Pelham residents only.</p>
+      <div class="layer-link is-fork" aria-hidden="true"><span></span><span></span></div>
+      <div class="layer-row is-split" data-tier="3">
+        <div class="layer layer-village is-partial">
+          <div class="layer-head">
+            <span class="layer-name">Village of Pelham</span>
+            <span class="layer-scope is-partial">Village residents only</span>
           </div>
-          <div class="layer layer-village">
-            <div class="layer-name">Village of Pelham Manor</div>
-            <div class="layer-scope is-partial">Village residents only</div>
-            <p class="layer-controls">Its own police, fire and public works departments — for Pelham Manor residents only.</p>
+          <p class="layer-controls">Police, fire, refuse, water, roads and the building department — for Village of Pelham residents only.</p>
+        </div>
+        <div class="layer layer-village is-partial">
+          <div class="layer-head">
+            <span class="layer-name">Village of Pelham Manor</span>
+            <span class="layer-scope is-partial">Village residents only</span>
           </div>
+          <p class="layer-controls">Its own police, fire and public works departments — for Pelham Manor residents only.</p>
+        </div>
       </div>
-      <div class="layer-link" aria-hidden="true"></div>
-      <div class="layer-row">
-          <div class="layer layer-school">
-            <div class="layer-name">Pelham Union Free School District</div>
-            <div class="layer-scope is-everyone">Every Pelham resident</div>
-            <p class="layer-controls">K–12 education across four elementary schools, the middle school and Pelham Memorial High School.</p>
+      <div class="layer-link is-join" aria-hidden="true"><span></span><span></span></div>
+      <div class="layer-row" data-tier="4">
+        <div class="layer layer-school is-everyone">
+          <div class="layer-head">
+            <span class="layer-name">Pelham Union Free School District</span>
+            <span class="layer-scope is-everyone">Every Pelham resident</span>
           </div>
+          <p class="layer-controls">K–12 education across four elementary schools, the middle school and Pelham Memorial High School.</p>
+        </div>
       </div>
     </div>
     <!-- /BUILD:layer-diagram -->

@@ -746,29 +746,41 @@ function generateLayerDiagram(data, r) {
     tiers.get(t).push(b);
   }
 
+  // Colour is scope, not body: navy for a body every resident answers to,
+  // amber for one that covers only its own village.
   const box = (b) => {
-    const scope = LAYER_SCOPE[b.type];
-    const scopeClass = b.type === 'village' ? 'is-partial' : 'is-everyone';
+    const partial = b.type === 'village';
+    const scopeClass = partial ? 'is-partial' : 'is-everyone';
     return [
-      `          <div class="layer layer-${b.type}">`,
-      `            <div class="layer-name">${b.name}</div>`,
-      `            <div class="layer-scope ${scopeClass}">${scope}</div>`,
-      `            <p class="layer-controls">${r(b.layer_controls, 'bodies.json')}</p>`,
+      `        <div class="layer layer-${b.type} ${scopeClass}">`,
+      '          <div class="layer-head">',
+      `            <span class="layer-name">${b.name}</span>`,
+      `            <span class="layer-scope ${scopeClass}">${LAYER_SCOPE[b.type]}</span>`,
       '          </div>',
+      `          <p class="layer-controls">${r(b.layer_controls, 'bodies.json')}</p>`,
+      '        </div>',
     ].join(NL);
   };
 
   const out = [];
   out.push('    <div class="layer-diagram" role="img" aria-label="Pelham\'s five governing layers: Westchester County and the Town of Pelham cover every resident, the Town divides into the Village of Pelham and the Village of Pelham Manor which each cover only their own residents, and the school district covers everyone.">');
+  out.push('      <div class="layer-legend" aria-hidden="true"><span class="layer-key is-everyone">All Pelham residents</span><span class="layer-key is-partial">Village residents only</span></div>');
+
   const ordered = [...tiers.keys()].sort((a, b) => a - b);
   ordered.forEach((t, idx) => {
     const row = tiers.get(t);
-    if (idx > 0) {
-      // The connector into tier 3 forks, because that is where the Town
-      // divides rather than simply handing down.
-      out.push(`      <div class="layer-link${row.length > 1 ? ' is-fork' : ''}" aria-hidden="true"></div>`);
+    const prev = idx > 0 ? tiers.get(ordered[idx - 1]) : null;
+    if (prev) {
+      // One box into two forks; two into one joins; otherwise a plain line.
+      // The fork is the point of the diagram: the Town divides into the
+      // villages rather than handing down to them.
+      const kind = row.length > 1 && prev.length === 1 ? ' is-fork'
+        : prev.length > 1 && row.length === 1 ? ' is-join' : '';
+      out.push(`      <div class="layer-link${kind}" aria-hidden="true"><span></span><span></span></div>`);
     }
-    out.push(`      <div class="layer-row${row.length > 1 ? ' is-split' : ''}">`);
+    const split = row.length > 1 ? ' is-split' : '';
+    const narrow = idx < ordered.length - 1 && row.length === 1 ? ' is-narrow' : '';
+    out.push(`      <div class="layer-row${split}${narrow}" data-tier="${t}">`);
     for (const b of row) out.push(box(b));
     out.push('      </div>');
   });

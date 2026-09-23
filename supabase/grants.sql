@@ -40,7 +40,9 @@ create policy "anon can insert corrections"
   on public.corrections for insert to anon
   with check (true);
 
--- ── civic_engagement: "did this site help you take part?" form ─────────────
+-- ── civic_engagement: community feedback form ─────────────────────────────
+-- `feedback_type` is the form's "What's on your mind?" choice.
+alter table public.civic_engagement add column if not exists feedback_type text;
 alter table public.civic_engagement enable row level security;
 grant insert on table public.civic_engagement to anon;
 
