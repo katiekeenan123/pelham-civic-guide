@@ -8,6 +8,7 @@
       "label": "Village Government",
       "accent": "none",
       "description": "The local government for Pelham Heights and the former North Pelham. An elected Mayor and Board of Trustees set policy and the budget, and run day-to-day services: police, fire, public works (roads, sanitation, storm sewers) and building permits.",
+      "services": "police, fire, public works (roads, sanitation, storm sewers) and building permits",
       "budget": {
         "label": "FY2026–27 Budget",
         "fact_ref": "village-budget-fy2627",
@@ -19,6 +20,11 @@
             "label": "ClearGov — Village of Pelham FY2026-27 Adopted Budget",
             "url": "https://cleargov.com/new-york/westchester/village/pelham"
           }
+        },
+        "tax_change": {
+          "fact_ref": "village-tax-rate-increase-fy2627",
+          "measure": "homestead tax rate",
+          "cap": "over"
         }
       },
       "composition": "Mayor + 6 Trustees",
@@ -70,6 +76,7 @@
       "label": "Village Government",
       "accent": "gold",
       "description": "The local government for the Manor, Pelham's other village. An elected Mayor and Board of Trustees set policy and the budget, and run day-to-day services: police, fire, public works (roads, sanitation, storm sewers) and building permits.",
+      "services": "police, fire, public works (roads, sanitation, storm sewers) and building permits",
       "budget": {
         "label": "FY2026–27 Budget",
         "fact_ref": "manor-budget-fy2627",
@@ -77,6 +84,11 @@
         "breakdown": {
           "operating_fact_ref": "manor-budget-operating-fy2627",
           "capital_fact_ref": "manor-budget-capital-fy2627"
+        },
+        "tax_change": {
+          "fact_ref": "manor-tax-increase-fy2627",
+          "measure": "real estate tax",
+          "cap": "under"
         }
       },
       "composition": "Mayor + 4 Trustees",
@@ -127,7 +139,7 @@
       "type": "town",
       "label": "Town Government",
       "accent": "red",
-      "description": "The Town covers every Pelham resident in both villages. It runs the services that would be wasteful to duplicate in each village — above all EMS (the ambulance service, funded by Town taxes), tax assessment and collection, and the town courts — plus the public library, recreation and senior programs.",
+      "description": "The Town provides services shared by all residents: EMS, tax assessment and collection, and the town courts. The library, recreation programs, and senior services are also Town-run and available to everyone.",
       "budget": {
         "label": "2025 Budget",
         "fact_ref": "town-budget-2025",
@@ -184,7 +196,7 @@
       "board_name": "Town of Pelham Town Board",
       "short_name": "Town Board",
       "icon": "🏛",
-      "layer_controls": "Services it would be wasteful to duplicate in each village — above all EMS, tax assessment and collection, and the town courts. Also the library, recreation and senior programs."
+      "layer_controls": "Services shared by all residents: EMS, tax assessment and collection, and the town courts — plus the library, recreation programs and senior services."
     },
     {
       "id": "pelham-schools",

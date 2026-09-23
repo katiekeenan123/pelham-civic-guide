@@ -591,6 +591,26 @@
       "used_in": []
     },
     {
+      "id": "village-tax-rate-increase-fy2627",
+      "category": "tax",
+      "fact": "Village of Pelham homestead tax rate increase, FY2026-27",
+      "value": 6.18,
+      "display": "6.18%",
+      "qualifier": "homestead tax rate; the budget overrides the state tax cap",
+      "confidence": "reported",
+      "as_of": "2026-04",
+      "last_updated": "2026-09-22",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": true,
+      "source": {
+        "name": "Pelham Examiner — letter from Mayor Chance Mullen",
+        "url": "https://pelhamexaminer.com/82542/letters-to-the-editor/village-of-pelham-mayor-chance-mullen-defends-2026-27-budget-with-6-18-increase-in-property-taxes-describes-it-as-most-challenging/",
+        "date": "2026-04"
+      },
+      "used_in": []
+    },
+    {
       "id": "village-tax-equivalent-assessed",
       "category": "tax",
       "fact": "Village of Pelham tax on an assessed value of $1,045,204",

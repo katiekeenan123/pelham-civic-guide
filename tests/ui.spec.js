@@ -399,6 +399,19 @@ test('taxes — sourced shares for every body, then the village comparison', asy
 });
 
 
+test('taxes — the two village explainers share one structure and one kind of link', async ({ page }) => {
+  await page.goto('/taxes');
+  const block = (id) => page.locator(`.tax-explainer-block[data-body="${id}"]`);
+  const shape = /^Village taxes fund .+\. FY2026–27 Budget: \$[\d.]+M\. Tax change: [\d.]+% .+ increase, (over|within) the state tax cap\.$/;
+  for (const [id, short] of [['village-of-pelham', 'Village of Pelham'], ['village-of-pelham-manor', 'Pelham Manor']]) {
+    await expect(block(id).locator('.teb-desc'), id).toHaveText(shape);
+    await expect(block(id).locator('a'), id).toHaveText(`${short} budget documents`);
+  }
+  // Same services named for both villages.
+  const services = async (id) => (await block(id).locator('.teb-desc').textContent()).split('.')[0];
+  expect(await services('village-of-pelham-manor')).toBe(await services('village-of-pelham'));
+});
+
 test('taxes — Learn more sits last and points at the primary sources', async ({ page }) => {
   await page.goto('/taxes');
   const box = page.locator('.learn-more');
@@ -426,7 +439,7 @@ test('taxes — Learn more sits last and points at the primary sources', async (
   }
 });
 
-test('gov-101 — the two village cards carry the same rows; the Town leads with EMS', async ({ page }) => {
+test('gov-101 — the two village cards carry the same rows; the Town lists its shared services', async ({ page }) => {
   await page.goto('/gov-101');
   const rows = (name) => page.locator('.gov-card', { has: page.locator('h3', { hasText: new RegExp(`^${name}$`) }) })
     .locator('.detail-key').allTextContents();
@@ -439,7 +452,8 @@ test('gov-101 — the two village cards carry the same rows; the Town leads with
     .toContainText('$20.5M general fund (↑10.1%) — no separate capital budget; capital items funded within the general fund');
 
   const town = page.locator('.gov-card', { has: page.locator('h3', { hasText: /^Town of Pelham$/ }) });
-  await expect(town).toContainText('wasteful to duplicate');
+  await expect(town).toContainText('The Town provides services shared by all residents: EMS, tax assessment and collection, and the town courts.');
+  await expect(page.locator('main')).not.toContainText(/wasteful/i);
   await expect(town).toContainText('EMS, tax collection, courts');
   await expect(page.locator('#officials-village-of-pelham-manor')).toContainText('Lindsey Luft');
 });

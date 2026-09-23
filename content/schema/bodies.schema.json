@@ -107,6 +107,13 @@
           "type": "string",
           "description": "The card paragraph explaining what this body actually does. Safe HTML subset plus {{fact:<id>}} tokens."
         },
+        "services": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "What this body's taxes pay for, as a lower-case list, e.g. \"police, fire, public works … and building permits\". Villages must share the same wording where they provide the same services; the Taxes page explainer is built from it."
+        },
         "budget": {
           "type": [
             "object",
@@ -191,6 +198,35 @@
                   }
                 }
               ]
+            },
+            "tax_change": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": false,
+              "required": [
+                "fact_ref",
+                "measure",
+                "cap"
+              ],
+              "description": "This year's tax change, for the Taxes page. The measure names what rose, since the villages report different ones.",
+              "properties": {
+                "fact_ref": {
+                  "type": "string"
+                },
+                "measure": {
+                  "type": "string",
+                  "description": "e.g. \"homestead tax rate\", \"real estate tax\"."
+                },
+                "cap": {
+                  "enum": [
+                    "over",
+                    "under"
+                  ],
+                  "description": "Whether the change is over or under the state tax cap."
+                }
+              }
             }
           }
         },

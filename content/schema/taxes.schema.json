@@ -222,8 +222,6 @@
       "additionalProperties": false,
       "required": [
         "id",
-        "title",
-        "description",
         "accent"
       ],
       "properties": {
@@ -231,6 +229,10 @@
           "type": "string",
           "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
           "description": "Stable slug for the block."
+        },
+        "body_ref": {
+          "type": "string",
+          "description": "bodies.json id. When set, the title, description and link are generated from that body (services, budget, tax_change, budget source link), so the two village blocks cannot drift apart. Otherwise title and description are required."
         },
         "title": {
           "type": "string",

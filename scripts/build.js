@@ -962,6 +962,31 @@ function generateMeetingSchedule(data, r) {
   return out.join('\n');
 }
 
+// A Taxes explainer built from bodies.json, so the two village blocks share
+// one sentence structure and one kind of link:
+//   "Village taxes fund <services>. FY2026–27 budget: <total>.
+//    Tax change: <x> <measure> increase, <over|within> the state tax cap."
+// followed by "<short name> budget documents", the body's own budget page.
+function explainerFromBody(raw, data, r) {
+  const b = data.bodies.bodies.find((x) => x.id === raw.body_ref);
+  if (!b) { fail('taxes.json', `explainer ${raw.id}: unknown body_ref "${raw.body_ref}"`); return raw; }
+  const tc = b.budget && b.budget.tax_change;
+  const budgetLink = (b.source_links || []).find((l) => /budget/i.test(l.label));
+  for (const [k, v] of Object.entries({ services: b.services, budget: b.budget, 'budget.tax_change': tc, 'a budget source link': budgetLink })) {
+    if (!v) fail('bodies.json', `${b.id} has no ${k}, needed for its Taxes explainer`);
+  }
+  if (!b.budget || !tc || !budgetLink || !b.services) return raw;
+  const total = r(`{{fact:${b.budget.fact_ref}}}`, 'bodies.json');
+  const change = r(`{{fact:${tc.fact_ref}}}`, 'bodies.json');
+  const cap = tc.cap === 'over' ? 'over' : 'within';
+  return {
+    ...raw,
+    title: b.name,
+    description: `Village taxes fund ${b.services}. ${b.budget.label}: ${total}. Tax change: ${change} ${tc.measure} increase, ${cap} the state tax cap.`,
+    link: { label: `${b.short_name} budget documents`, url: budgetLink.url },
+  };
+}
+
 function generateTaxSection(data, r) {
   const t = data.taxes;
   const out = [`    <p class="section-intro">${r(t.section_intro, 'taxes.json')}</p>`];
@@ -982,12 +1007,14 @@ function generateTaxSection(data, r) {
   out.push(`        <div class="tax-note fade-in">${r(t.note, 'taxes.json')}</div>`);
   out.push('      </div>');
   out.push('      <div class="tax-explainer">');
-  for (const e of t.explainers) {
+  for (const raw of t.explainers) {
+    const e = raw.body_ref ? explainerFromBody(raw, data, r) : raw;
+    if (!e.title || !e.description) { fail('taxes.json', `explainer ${raw.id} needs body_ref, or title and description`); continue; }
     const accent = e.accent && e.accent !== 'none' ? `${e.accent} ` : '';
     const title = `${e.icon ? e.icon + ' ' : ''}${e.title}`;
     const link = e.link
       ? `<a href="${esc(e.link.url)}" target="_blank" class="issue-source-link">${e.link.label}</a>` : '';
-    out.push(`        <div class="tax-explainer-block ${accent}fade-in"><div class="teb-title">${title}</div><div class="teb-desc">${r(e.description, 'taxes.json')}</div>${link}</div>`);
+    out.push(`        <div class="tax-explainer-block ${accent}fade-in" data-body="${esc(raw.body_ref || raw.governing_body || raw.id)}"><div class="teb-title">${title}</div><div class="teb-desc">${r(e.description, 'taxes.json')}</div>${link}</div>`);
   }
   out.push('      </div>');
   out.push('    </div>');
