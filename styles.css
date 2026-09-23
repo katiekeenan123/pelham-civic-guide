@@ -1212,25 +1212,38 @@
      slots in the same order, so a reader comparing two candidates is
      comparing like with like — and a slot the public record does not fill
      reads as a gap in the record rather than as a thinner campaign. */
-  .profile-slot { margin-bottom: 10px; }
-  .profile-slot:last-child { margin-bottom: 0; }
+  /* A hairline between slots, so the six sections read as a structured
+     record rather than one run of text. Same treatment as the rule dividing
+     the party columns around them. */
+  .profile-slot {
+    padding: 9px 0;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .profile-slot:first-child { border-top: none; padding-top: 0; }
+  .profile-slot:last-child { padding-bottom: 0; }
+  /* The site's label idiom in a dark section: mono, uppercase, tracked, gold
+     — the same shape as .section-eyebrow above and .voter-info-label further
+     down this page. Previously slate-mid, which sat at roughly 2.3:1 against
+     the card and read as more body text rather than as a heading. */
   .profile-label {
-    font-size: 10px;
+    font-size: 11px;
     font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--slate-mid);
-    margin-bottom: 3px;
+    letter-spacing: 0.1em;
+    color: var(--gold-light);
+    margin-bottom: 5px;
   }
   .profile-value {
     font-size: 13px;
     color: var(--slate-light);
     line-height: 1.65;
   }
-  /* Muted and italic, deliberately: it should not read with the same weight
-     as a sourced statement. */
+  /* Italic and a shade softer than a sourced value, but still legible: the
+     "not found" line is the honest part of a thin profile, so it cannot be
+     dimmed into the background the way slate-mid did. */
   .profile-empty {
-    color: var(--slate-mid);
+    color: rgba(136,153,176,0.78);
     font-style: italic;
   }
   .profile-list {
