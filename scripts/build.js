@@ -729,7 +729,10 @@ function generateMeetings(data, r) {
 //
 // Tier, scope and colour are all derived from bodies[].type — only the
 // one-line `layer_controls` is authored.
-const LAYER_TIER = { county: 1, town: 2, village: 3, school: 4 };
+// The school district sits above the village split: it covers every
+// resident whichever village they live in, so it belongs with the layers
+// everyone shares, not below the ones that divide them.
+const LAYER_TIER = { county: 1, town: 2, school: 3, village: 4 };
 const LAYER_SCOPE = {
   county: 'Every Pelham resident',
   town: 'Every Pelham resident',
@@ -763,7 +766,7 @@ function generateLayerDiagram(data, r) {
   };
 
   const out = [];
-  out.push('    <div class="layer-diagram" role="img" aria-label="Pelham\'s five governing layers: Westchester County and the Town of Pelham cover every resident, the Town divides into the Village of Pelham and the Village of Pelham Manor which each cover only their own residents, and the school district covers everyone.">');
+  out.push('    <div class="layer-diagram" role="img" aria-label="Pelham\'s five governing layers, top to bottom: Westchester County, the Town of Pelham and the Pelham Union Free School District each cover every resident; below them the Town divides into the Village of Pelham and the Village of Pelham Manor, which each cover only their own residents.">');
   out.push('      <div class="layer-legend" aria-hidden="true"><span class="layer-key is-everyone">All Pelham residents</span><span class="layer-key is-partial">Village residents only</span></div>');
 
   const ordered = [...tiers.keys()].sort((a, b) => a - b);
@@ -779,7 +782,10 @@ function generateLayerDiagram(data, r) {
       out.push(`      <div class="layer-link${kind}" aria-hidden="true"><span></span><span></span></div>`);
     }
     const split = row.length > 1 ? ' is-split' : '';
-    const narrow = idx < ordered.length - 1 && row.length === 1 ? ' is-narrow' : '';
+    // Single boxes are centred and narrower, except the one directly above
+    // the split, which spans the full width the fork fans out from.
+    const next = tiers.get(ordered[idx + 1]);
+    const narrow = row.length === 1 && next && next.length === 1 ? ' is-narrow' : '';
     out.push(`      <div class="layer-row${split}${narrow}" data-tier="${t}">`);
     for (const b of row) out.push(box(b));
     out.push('      </div>');

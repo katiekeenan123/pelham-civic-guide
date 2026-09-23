@@ -433,10 +433,18 @@ test('gov-101 — layer diagram shows five bodies and the village split', async 
   await expect(diagram.locator('.layer-scope.is-everyone')).toHaveCount(3);
   await expect(diagram).toHaveAttribute('role', 'img');
 
-  // Drawn as a diagram: a fork out of the Town, a join into the schools, and
+  // Drawn as a diagram: a fork into the two villages, and
   // colour by scope — amber headers for the villages, navy for the rest.
   await expect(diagram.locator('.layer-link.is-fork')).toHaveCount(1);
-  await expect(diagram.locator('.layer-link.is-join')).toHaveCount(1);
+  await expect(diagram.locator('.layer-link.is-join')).toHaveCount(0);
+
+  // Order: the three bodies every resident shares, then the village split.
+  const order = await diagram.locator('.layer').evaluateAll((els) =>
+    els.map((e) => [...e.classList].find((c) => c.startsWith('layer-'))));
+  expect(order).toEqual(['layer-county', 'layer-town', 'layer-school', 'layer-village', 'layer-village']);
+  const school = await diagram.locator('.layer-school').boundingBox();
+  const village = await diagram.locator('.layer-village').first().boundingBox();
+  expect(school.y, 'school district sits above the villages').toBeLessThan(village.y);
   const head = (sel) => diagram.locator(`${sel} .layer-head`).first()
     .evaluate((e) => getComputedStyle(e).backgroundColor);
   expect(await head('.layer-village')).toBe('rgb(200, 151, 58)');
@@ -703,17 +711,21 @@ test('answer feedback — a failed vote is not shown as recorded, and can be ret
 
 /* ── About page: the project story, then the forms ─────────────────────── */
 
-test('about — project story, a rule, then the lead-in to the forms', async ({ page }) => {
+test('about — project story card, then the lead-in to the forms', async ({ page }) => {
   await page.goto('/about');
   const story = page.locator('.about-project');
   await expect(story.getByRole('heading', { name: 'About this project' })).toBeVisible();
   await expect(story).toContainText('Bloomberg LP');
   await expect(story.locator('.about-signoff')).toHaveText('— Katie Keenan');
 
-  // Order: story, divider, "Want to get involved?", then the forms it leads into.
-  const ys = await page.evaluate(() => ['.about-project', '.about-divider', '.about-involve', '#error-form']
+  // Order: story, "Want to get involved?", then the forms it leads into.
+  const ys = await page.evaluate(() => ['.about-project', '.about-involve', '#error-form']
     .map((sel) => document.querySelector(sel).getBoundingClientRect().top));
-  expect(ys, 'story → rule → lead-in → forms').toEqual([...ys].sort((a, b) => a - b));
+  expect(ys, 'story → lead-in → forms').toEqual([...ys].sort((a, b) => a - b));
+  // The card is self-contained, so the gap after it stays modest.
+  const gap = await page.evaluate(() => document.querySelector('.about-involve').getBoundingClientRect().top
+    - document.querySelector('.about-project').getBoundingClientRect().bottom);
+  expect(gap).toBeLessThanOrEqual(48);
   await expect(page.locator('.about-involve')).toContainText('Use the forms below');
 
   // Signed at the foot of the note, not under the heading.
