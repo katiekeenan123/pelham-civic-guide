@@ -685,6 +685,22 @@ test('answer feedback — a failed vote is not shown as recorded, and can be ret
   expect(sent.answer_snippet).toContain('Test answer.');
 });
 
+/* ── About page: the project story, then the forms ─────────────────────── */
+
+test('about — project story, a rule, then the lead-in to the forms', async ({ page }) => {
+  await page.goto('/about');
+  const story = page.locator('.about-project');
+  await expect(story.getByRole('heading', { name: 'About this project' })).toBeVisible();
+  await expect(story).toContainText('Bloomberg LP');
+  await expect(story.locator('.about-signoff')).toHaveText('— Katie Keenan');
+
+  // Order: story, divider, "Want to get involved?", then the forms it leads into.
+  const ys = await page.evaluate(() => ['.about-project', '.about-divider', '.about-involve', '#error-form']
+    .map((sel) => document.querySelector(sel).getBoundingClientRect().top));
+  expect(ys, 'story → rule → lead-in → forms').toEqual([...ys].sort((a, b) => a - b));
+  await expect(page.locator('.about-involve')).toContainText('Use the forms below');
+});
+
 /* ── About page forms ──────────────────────────────────────────────────── */
 
 test('error correction form — reports failure on a rejected write, success on a stored one', async ({ page }) => {
