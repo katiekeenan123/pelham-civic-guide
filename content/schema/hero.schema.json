@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "pelham/hero.schema.json",
-  "title": "Hero statistics",
+  "title": "Hero: mission text and statistics",
   "description": "The four figures in the hero band. These must be generated rather than written into the static shell: index.html is both the build's input and its output, so a {{fact:}} token left in the shell resolves on the first build and is written back as a literal — working once and then silently freezing. Anything token-bearing belongs inside a BUILD anchor.",
   "type": "object",
   "additionalProperties": false,
@@ -12,6 +12,14 @@
     "$schema": {
       "type": "string",
       "description": "Relative path to this schema file."
+    },
+    "lead": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "description": "The mission paragraphs under the hero heading, in order. The first renders at full size, the rest smaller. Safe HTML subset plus {{fact:<id>}} tokens."
     },
     "stats": {
       "type": "array",

@@ -209,6 +209,15 @@ test('home — one meeting card per board, linking to the meetings page', async 
   await expect(page).toHaveURL(/\/meetings$/);
 });
 
+test('home — hero mission text comes from hero.json, and says "site" not "guide"', async ({ page }) => {
+  await page.goto('/');
+  const lead = page.locator('.hero-lead');
+  await expect(lead).toHaveCount(2);
+  await expect(lead.first()).toHaveText(/^The Pelham Engagement Project exists to increase civic awareness/);
+  await expect(lead.nth(1)).toContainText('This site cuts through the complexity');
+  await expect(page.locator('body')).not.toContainText('This guide');
+});
+
 test('home — election banner links through and carries its expiry', async ({ page }) => {
   await page.goto('/');
   const banner = page.locator('.home-banner');
@@ -255,6 +264,19 @@ test('home — issue previews route by topic where one is set', async ({ page })
     .evaluateAll((els) => els.map((e) => e.getAttribute('href')));
   // Every route resolves somewhere real: a topic page, or the issue's anchor.
   for (const h of hrefs) expect(h).toMatch(/^\/(taxes|elections|issues#[a-z0-9-]+)$/);
+});
+
+test('issues — a /issues#<id> link scrolls to that card and highlights it', async ({ page }) => {
+  await page.goto('/');
+  const href = await page.locator('#home-issues .issue-source-link[href^="/issues#"]').first().getAttribute('href');
+  const id = href.split('#')[1];
+  await page.goto(href);
+  const card = page.locator(`.issue-card#${id}`);
+  await expect(card).toHaveCount(1);
+  await expect(card).toHaveClass(/is-target/);
+  await expect(card).toBeInViewport();
+  // The glow is brief: the class comes off when the animation ends.
+  await expect(card).not.toHaveClass(/is-target/, { timeout: 5000 });
 });
 
 test('issues — context strip sits at the top and links out', async ({ page }) => {
@@ -579,17 +601,25 @@ test('meetings — a hash deep-links to a meeting, and long transcripts load in 
   await expect(page.locator(`.mtg-date-link[data-meeting="${VILLAGE_SEP}"]`)).toBeVisible();
 
   // No real transcript is long enough to page yet, so serve the page with
-  // one padded to 130 lines and check "Load more" steps through it.
+  // EVERY transcript padded to 130 lines: each meeting must page, not just one.
   await page.route('**/meetings', async (route) => {
     const res = await route.fetch();
     const html = (await res.text()).replace(
-      /(<div class="transcript-body">\s*)(<div class="transcript-block">[\s\S]*?<\/div>)/,
+      /(<div class="transcript-body">\s*)(<div class="transcript-block">[\s\S]*?<\/div>)/g,
       (m, open, line) => open + line.repeat(130),
     );
     await route.fulfill({ response: res, body: html });
   });
   await page.goto('/meetings');
-  const set = page.locator('.mtg-set').first();
+  const sets = page.locator('.mtg-set');
+  const total = await sets.count();
+  expect(total).toBeGreaterThanOrEqual(8);
+  for (let i = 0; i < total; i++) {
+    const id = await sets.nth(i).getAttribute('data-meeting');
+    await expect(sets.nth(i).locator('.transcript-more'), `${id} has no Load more`).toHaveCount(1);
+    await expect(sets.nth(i).locator('.transcript-block:not(.ts-ellipsis):not([hidden])'), id).toHaveCount(50);
+  }
+  const set = sets.first();
   const body = set.locator('.transcript-body');
   await fold(set, 'transcript').locator('summary').click();
   const shown = () => body.locator('.transcript-block:not(.ts-ellipsis):visible').count();
@@ -713,6 +743,13 @@ test('answer feedback — a failed vote is not shown as recorded, and can be ret
 
 test('about — project story card, then the lead-in to the forms', async ({ page }) => {
   await page.goto('/about');
+  await expect(page.getByRole('heading', { name: 'Mission', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'How it works' })).toBeVisible();
+  await expect(page.locator('.about-list li')).toHaveCount(4);
+  // The editorial copy (mission, how it works, sources, corrections) uses no
+  // we/our. The signed personal note and the form invitation are separate.
+  const editorial = await page.locator('#about > .content-wrap > div').first().innerText();
+  expect(editorial, 'editorial copy uses no we/our').not.toMatch(/\b(we|our|us)\b/i);
   const story = page.locator('.about-project');
   await expect(story.getByRole('heading', { name: 'About this project' })).toBeVisible();
   await expect(story).toContainText('Bloomberg LP');

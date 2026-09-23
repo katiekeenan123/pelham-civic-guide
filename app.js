@@ -298,6 +298,28 @@
     window.addEventListener('hashchange', fromHash);
   }
 
+  // ── Issues page: land on the card a link pointed at ─────────────────────
+  // The home digest's "Read more" goes to /issues#<issue-id>. The browser's
+  // own jump happens before the fade-in cards have laid out, and a card that
+  // is still transparent gives no sign it was the target — so scroll to it
+  // here and flash a highlight.
+  function highlightIssue() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    const card = document.getElementById(id);
+    if (!card || !card.classList.contains('issue-card')) return;
+    card.classList.add('visible');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card.classList.remove('is-target');
+    void card.offsetWidth; // restart the animation on a repeat visit
+    card.classList.add('is-target');
+    card.addEventListener('animationend', () => card.classList.remove('is-target'), { once: true });
+  }
+  if (document.querySelector('.issue-card[id]')) {
+    highlightIssue();
+    window.addEventListener('hashchange', highlightIssue);
+  }
+
   // Long transcripts show the first page of lines behind a "Load more"
   // button. Done here rather than at build time so the full text still reads
   // with scripts off.
@@ -381,7 +403,7 @@
     // editable on failure is what makes "try again" possible.
     document.getElementById('error-form').style.opacity = ok ? '0.5' : '1';
     reportSubmission(confirmEl, ok,
-      "✓ Correction received — we'll review it shortly.");
+      '✓ Correction received — it will be reviewed shortly.');
   }
 
   async function submitFeedbackForm() {
@@ -406,7 +428,7 @@
 
     if (btn) { btn.disabled = false; btn.textContent = 'Send →'; }
     reportSubmission(document.getElementById('fb-confirm'), ok,
-      '✓ Thanks for sharing — we read every message.');
+      '✓ Thanks for sharing — every message is read.');
   }
 
   // ── Event wiring ──

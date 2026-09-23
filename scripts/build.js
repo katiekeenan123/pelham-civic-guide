@@ -432,7 +432,7 @@ function generateIssueCards(data, r) {
   const cards = shown.map((i) => {
     const status = `<div class="issue-status"><div class="status-dot dot-${i.status}"></div>${r(i.status_label, 'issues.json')}</div>`;
     const link = `<a href="${esc(i.source_url)}"${i.source_url.startsWith('#') ? '' : ' target="_blank"'} class="issue-source-link">${r(i.source_label, 'issues.json')}</a>`;
-    return `      <div class="issue-card fade-in"><span class="issue-tag tag-${i.tag_style}">${i.tag}</span>`
+    return `      <div class="issue-card fade-in" id="${esc(i.id)}"><span class="issue-tag tag-${i.tag_style}">${i.tag}</span>`
       + `<h3>${r(i.title, 'issues.json')}</h3><p>${r(i.description, 'issues.json')}</p>${status}${link}</div>`;
   });
   return [`    <p class="section-intro">${r(data.issues.section_intro, 'issues.json')}</p>`,
@@ -1029,7 +1029,7 @@ function generateFooter(data, r) {
     .map((s) => `<a href="${esc(s.url)}" target="_blank">${s.domain}</a>`).join(' · ');
   return [
     `  <p style="margin-top:8px;">Sources: ${links}</p>`,
-    `  <p style="margin-top:8px;">This guide is for informational purposes. For official information, always check government websites directly. Last updated ${r('{{fact:site-last-updated}}', 'footer')}.</p>`,
+    `  <p style="margin-top:8px;">This site is for informational purposes. For official information, always check government websites directly. Last updated ${r('{{fact:site-last-updated}}', 'footer')}.</p>`,
   ].join('\n');
 }
 
@@ -1090,6 +1090,14 @@ function generateKnownIssues(data) {
     return `  ${k}: [${kws.map(q).join(', ')}],`;
   });
   return ['const KNOWN_ISSUES = {', ...lines, '};'].join('\n');
+}
+
+// The mission text under the hero heading. In hero.json so the words a
+// resident reads first sit with the rest of the site's content.
+function generateHeroLead(data, r) {
+  return data.hero.lead.map((t, i) => (i === 0
+    ? `      <p class="hero-lead">${r(t, 'hero.json')}</p>`
+    : `      <p class="hero-lead" style="margin-top:12px; font-size:15px;">${r(t, 'hero.json')}</p>`)).join(NL);
 }
 
 function generateHeroStats(data, r) {
@@ -1194,6 +1202,7 @@ function generateElectionsBanner(data, r) {
 
 function pageBlocks(data, r) {
   return {
+    'hero-lead': () => generateHeroLead(data, r),
     'hero-stats': () => generateHeroStats(data, r),
     'elections-banner': () => generateElectionsBanner(data, r),
     'issue-previews': () => generateIssuePreviews(data, r),

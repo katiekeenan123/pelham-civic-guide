@@ -569,6 +569,16 @@
     padding: 28px;
     position: relative;
     overflow: hidden;
+    scroll-margin-top: 90px;
+  }
+  /* Arrived at from a /issues#<id> link: a gold glow that fades out. */
+  .issue-card.is-target { animation: issue-target 2.4s ease-out; }
+  @keyframes issue-target {
+    0%, 30% { box-shadow: 0 0 0 3px var(--gold), 0 6px 18px rgba(200,151,58,0.35); background: #fffaf0; }
+    100%    { box-shadow: 0 0 0 0 rgba(200,151,58,0); background: var(--white); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .issue-card.is-target { animation-duration: 0.01s; outline: 3px solid var(--gold); }
   }
 
   .issue-tag {
@@ -1454,6 +1464,9 @@
   /* ── About · headings, body copy, editorial callout ── */
   .about-h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 14px; color: var(--navy); }
   .about-body { font-size: 15px; line-height: 1.75; color: var(--slate); }
+  .about-list { list-style: none; margin: 0 0 4px; padding: 0; }
+  .about-list li { position: relative; padding-left: 18px; margin-bottom: 10px; font-size: 15px; line-height: 1.7; color: var(--slate); }
+  .about-list li::before { content: '→'; position: absolute; left: 0; top: 1px; color: var(--gold); font-size: 12px; }
   /* About this project: the founder's note as a single-column card, signed
      at the foot, then the lead-in the forms below answer. */
   .about-project {

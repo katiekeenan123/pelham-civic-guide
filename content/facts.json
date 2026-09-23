@@ -914,7 +914,7 @@
     {
       "id": "site-last-updated",
       "category": "governance",
-      "fact": "Date this guide's content was last reviewed",
+      "fact": "Date this site's content was last reviewed",
       "value": null,
       "display": "September 2026",
       "qualifier": "rendered in the Current Issues intro and the site footer, which previously disagreed",
