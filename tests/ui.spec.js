@@ -447,6 +447,11 @@ test('gov-101 — layer diagram shows five bodies and the village split', async 
 
 test('gov-101 — officials cards name officeholders and flag contested bodies', async ({ page }) => {
   await page.goto('/gov-101');
+  // Title and name must not run together in the page text ("MayorChance
+  // Mullen") — that is what screen readers and CSS-less views read.
+  const first = page.locator('#officials-village-of-pelham .officials-list li').first();
+  expect((await first.textContent()).replace(/s+/g, ' ').trim()).toBe('Mayor: Chance Mullen');
+  await expect(page.locator('.officials-sep').first()).not.toBeInViewport();
   const cards = page.locator('.officials-card');
   // Four bodies have a local roster; the county does not.
   await expect(cards).toHaveCount(4);

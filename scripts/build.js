@@ -812,7 +812,10 @@ function generateOfficialsCards(data, r) {
         : esc(o.name);
       const tag = o.seat_type !== 'elected'
         ? ` <span class="officials-seat">${o.seat_type}</span>` : '';
-      out.push(`          <li><span class="officials-role">${esc(o.title)}</span><span class="officials-name">${who}${tag}</span></li>`);
+      // The colon is real text, hidden visually by the two-column layout: without
+      // it, anything reading the page without CSS — reader mode, a screen
+      // reader, copy and paste — gets "MayorChance Mullen".
+      out.push(`          <li><span class="officials-role">${esc(o.title)}</span><span class="officials-sep">: </span><span class="officials-name">${who}${tag}</span></li>`);
     }
     out.push('        </ul>');
     out.push(`        <div class="officials-verified">Roster verified ${data.officials.verified}</div>`);

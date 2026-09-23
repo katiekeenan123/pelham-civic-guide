@@ -1458,7 +1458,7 @@
      at the foot — then a rule, then the lead-in the forms below answer. */
   .about-project {
     background: var(--white); border: 1px solid var(--border); border-top: 4px solid var(--gold);
-    padding: 32px 40px 28px;
+    padding: 32px 40px 36px;
   }
   .about-project .about-h3 { margin-bottom: 16px; }
   .about-project .about-body { max-width: 72ch; margin: 0 0 18px; }
@@ -1466,8 +1466,8 @@
     font-family: 'Playfair Display', serif; font-style: italic; font-size: 17px; color: var(--navy);
     margin: 22px 0 0; padding-top: 14px; border-top: 1px solid var(--border); max-width: 72ch;
   }
-  .about-divider { border: none; border-top: 1px solid var(--border); margin: 48px 0 36px; }
-  .about-involve { margin-bottom: 24px; }
+  .about-divider { border: none; border-top: 1px solid var(--border); margin: 64px 0 56px; }
+  .about-involve { margin-bottom: 48px; }
   .about-involve .about-h3 { margin-bottom: 10px; }
   .about-involve .about-body { max-width: 72ch; margin: 0; }
   @media (max-width: 768px) {
@@ -2062,10 +2062,18 @@
 .officials-list li {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   gap: 12px;
-  padding: 7px 0;
+  padding: 11px 0;
   border-bottom: 1px solid var(--border);
-  font-size: 13px;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+/* Kept in the text for screen readers and CSS-less views; the columns
+   already separate title from name on screen. */
+.officials-sep {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
 }
 .officials-list li:last-child { border-bottom: none; }
 .officials-role { color: var(--slate); flex: 1 1 auto; }
