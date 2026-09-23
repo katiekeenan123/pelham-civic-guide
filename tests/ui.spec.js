@@ -699,6 +699,7 @@ test('about — project story, a rule, then the lead-in to the forms', async ({ 
     .map((sel) => document.querySelector(sel).getBoundingClientRect().top));
   expect(ys, 'story → rule → lead-in → forms').toEqual([...ys].sort((a, b) => a - b));
   await expect(page.locator('.about-involve')).toContainText('Use the forms below');
+  await expect(page.locator('.about-involve a[href="mailto:katherine.e.keenan@gmail.com"]')).toBeVisible();
 });
 
 /* ── About page forms ──────────────────────────────────────────────────── */

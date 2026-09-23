@@ -1454,13 +1454,27 @@
   /* ── About · headings, body copy, editorial callout ── */
   .about-h3 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; margin-bottom: 14px; color: var(--navy); }
   .about-body { font-size: 15px; line-height: 1.75; color: var(--slate); }
-  /* About this project: the founder's note, then a rule, then the lead-in the
+  /* About this project: the founder's note as a card — heading and sign-off
+     on the left, the story on the right — then a rule, then the lead-in the
      forms below answer. */
-  .about-project { max-width: 760px; }
-  .about-project .about-body { margin-bottom: 14px; }
-  .about-signoff { font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: var(--navy); margin-top: 4px; }
-  .about-divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
-  .about-involve { max-width: 760px; margin-bottom: 24px; }
+  .about-project {
+    display: grid; grid-template-columns: 220px 1fr; gap: 40px;
+    background: var(--white); border: 1px solid var(--border); border-top: 4px solid var(--gold);
+    padding: 32px 36px;
+  }
+  .about-project .about-h3 { margin-bottom: 10px; }
+  .about-project-body .about-body { margin-bottom: 14px; max-width: 70ch; }
+  .about-project-body .about-body:last-child { margin-bottom: 0; }
+  .about-signoff { font-family: 'Playfair Display', serif; font-style: italic; font-size: 16px; color: var(--navy); margin: 0; }
+  .about-divider { border: none; border-top: 1px solid var(--border); margin: 48px 0 36px; }
+  .about-involve { margin-bottom: 24px; }
+  .about-involve .about-h3 { margin-bottom: 10px; }
+  .about-involve .about-body { max-width: 70ch; }
+  .about-involve a { color: var(--navy); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--gold); }
+  .about-involve a:hover { color: var(--red); border-bottom-color: var(--red); }
+  @media (max-width: 768px) {
+    .about-project { grid-template-columns: 1fr; gap: 16px; padding: 24px 20px; }
+  }
   .editorial-callout { margin-top: 24px; padding: 20px; background: var(--white); border: 1px solid var(--border); border-left: 4px solid var(--gold); }
 
   /* ── About · correction & feedback forms ── */
