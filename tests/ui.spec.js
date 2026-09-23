@@ -591,7 +591,7 @@ test('meetings — summary sections: exec and residents open, the rest folded', 
   await expect(fold(summary(page, VILLAGE_SEP), 'detailed')).not.toHaveAttribute('open', '');
 });
 
-test('meetings — a hash deep-links to a meeting, and long transcripts load in pages', async ({ page }) => {
+test('meetings — a hash deep-links to a meeting', async ({ page }) => {
   // The home digest links /meetings#<id>; that must open the right board.
   await page.goto('/meetings#' + VILLAGE_JUL);
   await expect(bodyTab(page, 'village-of-pelham')).toHaveAttribute('aria-selected', 'true');
@@ -600,37 +600,44 @@ test('meetings — a hash deep-links to a meeting, and long transcripts load in 
   // The date list now offers the latest meeting to go back to.
   await expect(page.locator(`.mtg-date-link[data-meeting="${VILLAGE_SEP}"]`)).toBeVisible();
 
-  // No real transcript is long enough to page yet, so serve the page with
-  // EVERY transcript padded to 130 lines: each meeting must page, not just one.
-  await page.route('**/meetings', async (route) => {
-    const res = await route.fetch();
-    const html = (await res.text()).replace(
-      /(<div class="transcript-body">\s*)(<div class="transcript-block">[\s\S]*?<\/div>)/g,
-      (m, open, line) => open + line.repeat(130),
-    );
-    await route.fulfill({ response: res, body: html });
-  });
+});
+
+// Checked against the real transcript files, not padded content. Today every
+// transcript is a short excerpt (8–14 lines), so none should show "Load
+// more". The assertion follows the data: if a transcript ever runs past 50
+// lines — full transcripts are on ROADMAP.md — the same test requires the
+// button instead.
+test('meetings — transcript excerpts: labelled, linked to the recording, paged only past 50 real lines', async ({ page }) => {
+  const fs = require('fs');
+  const path = require('path');
+  const root = path.resolve(__dirname, '..');
+  const { meetings } = JSON.parse(fs.readFileSync(path.join(root, 'content/meetings.json'), 'utf8'));
+  const PAGE = 50;
+
   await page.goto('/meetings');
-  const sets = page.locator('.mtg-set');
-  const total = await sets.count();
-  expect(total).toBeGreaterThanOrEqual(8);
-  for (let i = 0; i < total; i++) {
-    const id = await sets.nth(i).getAttribute('data-meeting');
-    await expect(sets.nth(i).locator('.transcript-more'), `${id} has no Load more`).toHaveCount(1);
-    await expect(sets.nth(i).locator('.transcript-block:not(.ts-ellipsis):not([hidden])'), id).toHaveCount(50);
+  const published = meetings.filter((m) => m.status === 'published');
+  expect(published.length).toBeGreaterThanOrEqual(8);
+
+  for (const m of published) {
+    const file = fs.readFileSync(path.join(root, m.transcript_file), 'utf8');
+    const lines = (file.match(/class="transcript-block"/g) || []).length;
+    const set = summary(page, m.id);
+    const f = fold(set, 'transcript');
+
+    await expect(f.locator('.mtg-fold-title'), m.id).toHaveText('Transcript excerpt');
+    const link = f.locator('.transcript-note a');
+    await expect(f.locator('.transcript-note'), m.id).toContainText('This is a short excerpt.');
+    await expect(link, m.id).toHaveAttribute('href', m.recording_url);
+
+    // Every line in the file reaches the page — nothing is cut in the build.
+    await expect(set.locator('.transcript-block:not(.ts-ellipsis)'), m.id).toHaveCount(lines);
+    if (lines > PAGE) {
+      await expect(set.locator('.transcript-more'), `${m.id}: ${lines} lines should page`).toHaveCount(1);
+    } else {
+      await expect(set.locator('.transcript-more'), `${m.id}: ${lines} lines, no Load more`).toHaveCount(0);
+      await expect(set.locator('.transcript-block[hidden]'), m.id).toHaveCount(0);
+    }
   }
-  const set = sets.first();
-  const body = set.locator('.transcript-body');
-  await fold(set, 'transcript').locator('summary').click();
-  const shown = () => body.locator('.transcript-block:not(.ts-ellipsis):visible').count();
-  expect(await shown()).toBe(50);
-  const more = set.locator('.transcript-more');
-  await expect(more).toContainText('Load more');
-  await more.click();
-  expect(await shown()).toBe(100);
-  await more.click();
-  await expect(more).toHaveCount(0);
-  expect(await shown()).toBeGreaterThan(130);
 });
 
 test('meetings — the schedule table lists every board', async ({ page }) => {

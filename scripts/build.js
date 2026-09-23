@@ -670,9 +670,13 @@ function generateMeetingSet(m, r, shown) {
   fold('votes', 'Key votes', exec.votes && exec.votes.note, exec.votes ? exec.votes.body : '');
   fold('actions', 'Action items', exec.actions && exec.actions.note, exec.actions ? exec.actions.body : '');
   fold('detailed', 'Detailed summary', `${detailed.length} sections, with timestamps`, detailed.map((s) => s.html).join('\n'));
-  // "Load more" is added by app.js once the transcript runs past a page; the
-  // whole transcript is in the markup so it still reads without JS.
-  fold('transcript', 'Full transcript (raw)', 'AI transcription', transcript);
+  // The transcript partials are hand-picked excerpts (8–14 lines), not the
+  // full Whisper output, so the section says so and points to the recording.
+  // Full transcripts need a privacy and name-correction pass first — see
+  // ROADMAP.md. "Load more" is still added by app.js if a transcript ever
+  // runs past a page; the whole text is in the markup so it reads without JS.
+  const excerptNote = `<p class="transcript-note">This is a short excerpt. For the full transcript, <a href="${esc(m.recording_url)}" target="_blank" rel="noopener">watch the official recording →</a></p>`;
+  fold('transcript', 'Transcript excerpt', 'AI transcription', excerptNote + transcript);
 
   out.push('      </article>');
   return out.join('\n');

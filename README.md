@@ -5,7 +5,8 @@ school district and Westchester County fit together; where property taxes go;
 current issues; AI-generated summaries of every public meeting; and an "Ask
 Pelham" assistant backed by Claude.
 
-Live at **pelhamengagementproject.netlify.app**.
+Live at **pelhamengagementproject.netlify.app**. Planned work is in
+[ROADMAP.md](ROADMAP.md).
 
 ---
 
