@@ -2,7 +2,7 @@
   "$schema": "./schema/hero.schema.json",
   "lead": [
     "The Pelham Engagement Project exists to increase civic awareness and engagement in Pelham, NY — by making public information accessible, understandable, and actionable for every resident.",
-    "In Pelham, two villages run day-to-day services, the Town handles the ones that serve everyone, and a school district runs the schools; Westchester County adds a share of the tax bill and county-wide services. This site cuts through the complexity so you can show up informed, ask better questions, and make your voice count."
+    "In Pelham, two villages run day-to-day services, the Town handles the ones that serve everyone, and a school district runs the schools; Westchester County adds a share of the tax bill and county-wide services. This site cuts through the complexity so you can show up informed, ask better questions, and participate in local government."
   ],
   "stats": [
     {

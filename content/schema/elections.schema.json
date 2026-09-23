@@ -72,6 +72,10 @@
       "items": {
         "$ref": "#/$defs/candidate"
       }
+    },
+    "profile_methodology": {
+      "type": "string",
+      "description": "Rendered once, above the races: how to read a thin profile. Separate from editorial_note, which is the non-endorsement statement."
     }
   },
   "$defs": {
@@ -129,13 +133,6 @@
           ],
           "description": "The 'Context:' paragraph below the grid -- retirements, prior margins, how the seats are decided. Safe HTML subset plus {{fact:<id>}} tokens."
         },
-        "shared_platforms": {
-          "type": "object",
-          "description": "Named blocks of platform text shared by several candidates in this race, keyed by a slug that candidates reference via platform_ref. This exists because the three Neighborhood Party candidates each carried an IDENTICAL 60-word joint-platform paragraph pasted into their card -- the single largest verbatim duplication found in the audit.",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
         "show_seats": {
           "type": "boolean",
           "default": true,
@@ -152,7 +149,7 @@
         "name",
         "party",
         "party_style",
-        "summary",
+        "profile",
         "source_url",
         "source_label"
       ],
@@ -197,17 +194,6 @@
           "type": "string",
           "description": "The one-line credential strip under the name: 'Incumbent . First elected 2020 . Running for third term'."
         },
-        "summary": {
-          "type": "string",
-          "description": "Candidate's own platform summary. Safe HTML subset plus {{fact:<id>}} tokens. Do NOT paste shared platform text here -- use platform_ref."
-        },
-        "platform_ref": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Key into the race's shared_platforms. When set, that text is appended to summary at build time, so a joint platform is stored once and edited once."
-        },
         "source_url": {
           "type": "string",
           "description": "Link to the reporting this profile is drawn from."
@@ -215,6 +201,58 @@
         "source_label": {
           "type": "string",
           "description": "Link text, e.g. 'Examiner September 4, 2026'."
+        },
+        "profile": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "The six-slot profile every candidate is rendered through, in a fixed order, so no candidate gets a longer or more favourable shape than another. A slot the public record does not fill is null and renders as an explicit \"not found\" line rather than being silently dropped -- an absent slot must read as a gap in the record, not as a judgement about the campaign. The sixth slot, Source, is source_url plus source_label.",
+          "required": [
+            "background",
+            "why_running",
+            "prior_service",
+            "priorities",
+            "quotes"
+          ],
+          "properties": {
+            "background": {
+              "type": "string",
+              "description": "Who they are and what they do. Safe HTML subset plus {{fact:<id>}} tokens."
+            },
+            "why_running": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Their stated reason for running, always attributed to them (\"he says\", \"she argues\") so the site never adopts a candidate rationale as its own voice. Null where no statement of intent exists in the public record."
+            },
+            "prior_service": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Elected or appointed public service. The literal string \"No prior elected office.\" where there is none -- never null, because an empty slot here would read as missing research rather than as a fact about the candidate."
+            },
+            "priorities": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "description": "Stated campaign priorities, one per item. Where several candidates signed one joint platform they each carry its pledges, which is accurate: they each signed it."
+            },
+            "quotes": {
+              "type": [
+                "array",
+                "null"
+              ],
+              "items": {
+                "type": "string"
+              },
+              "description": "Direct quotes from the public record, verbatim. Null where the record carries none."
+            }
+          }
         }
       }
     }

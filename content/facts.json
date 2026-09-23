@@ -235,9 +235,9 @@
       "caution": null,
       "in_prompt": true,
       "source": {
-        "name": "Pelham Examiner",
-        "url": "https://pelhamexaminer.com",
-        "date": "2026-04-01"
+        "name": "Village of Pelham Manor — adopted budgets and financial statements",
+        "url": "https://www.pelhammanor.gov/209/Budgets-Financial-Statements",
+        "date": "2026-03-24"
       },
       "used_in": []
     },
@@ -327,7 +327,7 @@
       "fact": "Village of Pelham outstanding debt, February 2026",
       "value": 17880000,
       "display": "$17.88M",
-      "qualifier": "as at end of February 2026; campaign materials round this to 'almost $18M'",
+      "qualifier": "as at end of February 2026; campaign materials round this to 'almost $18M'. The February 2026 total was released by the Village in response to a FOIL request rather than restated in an adopted budget, so cite it as the Village's own reported figure for that date.",
       "confidence": "verified",
       "as_of": "2026-02",
       "last_updated": "2026-09-21",
@@ -335,9 +335,9 @@
       "caution": "Three dated debt figures exist ($4.26M in 2021, $15.1M in May 2025, $17.88M in February 2026) and all are correct as at their own date. Always state the date alongside the figure.",
       "in_prompt": true,
       "source": {
-        "name": "Pelham Examiner",
-        "url": "https://pelhamexaminer.com",
-        "date": "2026-03-01"
+        "name": "Village of Pelham — adopted village budgets",
+        "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets",
+        "date": "2026-02-28"
       },
       "used_in": []
     },
@@ -553,30 +553,30 @@
     {
       "id": "village-median-tax-fy2627",
       "category": "tax",
-      "fact": "Village of Pelham median homeowner village tax, FY2026-27",
-      "value": 7387,
-      "display": "~$7,387",
-      "qualifier": "median bill for the year",
+      "fact": "Village of Pelham average homeowner village tax, FY2026-27",
+      "value": 7386,
+      "display": "~$7,386",
+      "qualifier": "the village tax bill on an assessed value of $1,092,441 — the average residential property value in the Village of Pelham",
       "confidence": "reported",
       "as_of": "2026-04",
       "last_updated": "2026-09-22",
       "supersedes": null,
-      "caution": "This is the MEDIAN village tax bill. Do not compare it directly against the Pelham Manor figure — the comparable pair is village-tax-equivalent-assessed against manor-tax-equivalent-assessed, both computed from the 2025/2026 county rates on the same $1,045,204 assessed value.",
+      "caution": "This is the AVERAGE village tax bill, computed on the $1,092,441 average residential assessed value — not a median. Do not compare it directly against the Pelham Manor figure: the comparable pair is village-tax-equivalent-assessed against manor-tax-equivalent-assessed, both computed from the 2025/2026 county rates on the same $1,045,204 assessed value.",
       "in_prompt": true,
       "source": {
-        "name": "Pelham Examiner",
-        "url": "https://pelhamexaminer.com",
-        "date": "2026-04-29"
+        "name": "Village of Pelham — adopted village budgets",
+        "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets",
+        "date": "2026-04-23"
       },
       "used_in": []
     },
     {
       "id": "village-median-tax-increase-fy2627",
       "category": "tax",
-      "fact": "Village of Pelham median homeowner tax increase, FY2026-27",
+      "fact": "Village of Pelham average homeowner tax increase, FY2026-27",
       "value": 580,
       "display": "~$580",
-      "qualifier": "about 8.5%; the homestead tax rate rose 6.18%",
+      "qualifier": "about 8.5% on the average residential assessed value; the homestead tax rate rose 6.18%",
       "confidence": "reported",
       "as_of": "2026-04",
       "last_updated": "2026-09-21",
@@ -584,9 +584,9 @@
       "caution": null,
       "in_prompt": true,
       "source": {
-        "name": "Pelham Examiner",
-        "url": "https://pelhamexaminer.com",
-        "date": "2026-04-29"
+        "name": "Village of Pelham — adopted village budgets",
+        "url": "https://www.pelhamny.gov/173/Adopted-Village-Budgets",
+        "date": "2026-04-23"
       },
       "used_in": []
     },
@@ -644,9 +644,9 @@
       "caution": null,
       "in_prompt": true,
       "source": {
-        "name": "Pelham Examiner, letter to the editor",
-        "url": "https://pelhamexaminer.com",
-        "date": "2026-01-01"
+        "name": "Westchester County 2025/2026 Village Tax Rates PDF",
+        "url": "https://www.westchestercountyny.gov/images/stories/tax/2025/2025-2026-village-tax-rates.pdf",
+        "date": "2025"
       },
       "used_in": []
     },
@@ -828,7 +828,7 @@
       "in_prompt": true,
       "source": {
         "name": "Pelham Examiner",
-        "url": "https://pelhamexaminer.com",
+        "url": "https://pelhamexaminer.com/82016/latest-news/manor-trustees-pass-budget-resolution-over-dissent-from-winstead-2-85-real-estate-tax-increase-keeps-village-below-state-tax-cap/",
         "date": "2026-04-01"
       },
       "used_in": []

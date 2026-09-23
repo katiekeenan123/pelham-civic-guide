@@ -49,7 +49,7 @@ content/
 ├── elections.json      races and candidates
 ├── meetings.json       meeting metadata
 ├── taxes.json          the tax-breakdown panel
-├── sources.json        the vetted-source list
+├── sources.json        the list of sources used by the site
 ├── quick-reference.json  "who to call for what"
 ├── hero.json           the four hero statistics
 ├── prompt-template.md  hand-written half of the AI system prompt

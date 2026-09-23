@@ -151,11 +151,38 @@ function phase1() {
   const raceIds = new Set(data.elections.races.map((r) => r.id));
   data.elections.candidates.forEach((c) => {
     if (!raceIds.has(c.race_id)) fail('elections.json', `${c.id} → unknown race_id "${c.race_id}"`);
-    if (c.platform_ref) {
-      const race = data.elections.races.find((r) => r.id === c.race_id);
-      if (!race || !(race.shared_platforms || {})[c.platform_ref]) {
-        fail('elections.json', `${c.id} → unknown platform_ref "${c.platform_ref}"`);
-      }
+    // Every slot of the template must be present, so a candidate cannot be
+    // rendered through a shorter shape than the one beside them. null is a
+    // valid value — an absent KEY is not, because it would silently skip the
+    // "not found in the public record" line the template depends on.
+    for (const [key] of PROFILE_SLOTS) {
+      if (!(key in c.profile)) fail('elections.json', `${c.id} → profile missing "${key}"`);
+    }
+  });
+
+  // ── no citation may point at a site's front door ────────────────────────
+  // A source audit found seven fields citing pelhamexaminer.com itself rather
+  // than an article — five of them on tax or budget figures, which are the
+  // numbers most likely to be challenged. A front page is not evidence: it
+  // changes daily and cannot support the claim attached to it.
+  // Scoped to the Examiner deliberately. A government front page at least
+  // leads to a stable document tree; a news front page is a moving feed, and
+  // it was where every one of the seven bad citations pointed.
+  const FRONT_DOORS = ['https://pelhamexaminer.com', 'https://www.pelhamexaminer.com'];
+  const isFrontDoor = (u) => FRONT_DOORS.includes(String(u || '').replace(/\/+$/, ''));
+  data.facts.facts.forEach((f) => {
+    if (isFrontDoor((f.source || {}).url)) {
+      fail('facts.json', `${f.id} → cites a site front page, not a document: ${f.source.url}`);
+    }
+  });
+  data.issues.issues.forEach((i) => {
+    if (isFrontDoor(i.source_url)) {
+      fail('issues.json', `${i.id} → cites a site front page, not an article: ${i.source_url}`);
+    }
+  });
+  data.elections.candidates.forEach((c) => {
+    if (isFrontDoor(c.source_url)) {
+      fail('elections.json', `${c.id} → cites a site front page, not an article: ${c.source_url}`);
     }
   });
 
@@ -245,9 +272,14 @@ function buildPrompt(data, r) {
         for (const c of e.candidates.filter((x) => x.race_id === race.id)) {
           const office = c.office ? ` for ${c.office}` : '';
           out.push(`    - ${c.name} (${c.party})${office}${c.incumbent ? ' — INCUMBENT' : ''}: ${plain(r(c.meta, 'elections.json'))}`);
-          let sum = plain(r(c.summary, 'elections.json'));
-          if (c.platform_ref) sum += ' ' + plain(r(race.shared_platforms[c.platform_ref], 'elections.json'));
-          out.push(`        ${sum}`);
+          // The same six slots the page renders, so the model cannot describe
+          // one candidate in more depth than the record supports. An unfilled
+          // slot is stated as unfilled rather than omitted, otherwise the
+          // model fills the silence from training knowledge.
+          for (const [label, text] of profileSlots(c, r)) {
+            out.push(`        ${label}: ${plain(text)}`);
+          }
+          out.push(`        Source: ${c.source_label} — ${c.source_url}`);
         }
       }
       return out.join(NL);
@@ -263,7 +295,7 @@ function buildPrompt(data, r) {
       return out.join(NL);
     },
 
-    'vetted-sources': () =>
+    'sources-used': () =>
       data.sources.sources.filter((s) => s.in_prompt !== false)
         .map((s) => `- ${s.domain} (${s.description})`).join('\n'),
 
@@ -461,12 +493,38 @@ function generateIssueCards(data, r) {
     '    <div class="issues-grid">', ...cards, '    </div>'].join('\n');
 }
 
+// The candidate profile template. Fixed order, fixed labels, applied to all
+// fourteen candidates in all three races — the audit found candidate depth
+// varied with how much the Examiner happened to have written, which reads as
+// the site rating the campaigns. A slot the record does not fill says so.
+const PROFILE_SLOTS = [
+  ['background', 'Background'],
+  ['why_running', 'Why they say they’re running'],
+  ['prior_service', 'Prior public service'],
+  ['priorities', 'Stated priorities'],
+  ['quotes', 'Relevant quotes'],
+];
+const NO_RECORD = 'Not found in the public record reviewed for this profile.';
+
+// Flattened for the AI prompt: lists collapse to one line, empties are stated.
+function profileSlots(c, r) {
+  return PROFILE_SLOTS.map(([key, label]) => {
+    const v = c.profile[key];
+    if (!v || (Array.isArray(v) && !v.length)) return [label, NO_RECORD];
+    const text = Array.isArray(v) ? v.join('; ') : v;
+    return [label, r(text, 'elections.json')];
+  });
+}
+
 function generateElections(data, r) {
   const e = data.elections;
   const out = [];
   out.push('    <div style="background: rgba(200,151,58,0.12); border: 1px solid rgba(200,151,58,0.3); border-left: 4px solid var(--gold); padding: 14px 18px; margin-bottom: 36px; font-size: 13px; color: #c8aa70; font-family: \'IBM Plex Sans\', sans-serif; line-height: 1.6;">');
   out.push(`      ${r(e.editorial_note, 'elections.json')}`);
   out.push('    </div>');
+  // How to read a thin profile. Above the races, once, because it applies to
+  // every card below it.
+  out.push(`    <p class="profile-methodology">${r(e.profile_methodology, 'elections.json')}</p>`);
   out.push('');
 
   for (const race of e.races) {
@@ -517,15 +575,38 @@ function generateElections(data, r) {
       out.push(`          <div class="party-label ${col.style}">${col.party}</div>`);
       out.push('');
       for (const c of col.list) {
-        let summary = r(c.summary, 'elections.json');
-        if (c.platform_ref) {
-          summary += ' ' + r(race.shared_platforms[c.platform_ref], 'elections.json');
-        }
         out.push('          <div class="candidate-card">');
         out.push(`            <div class="candidate-name">${c.name}</div>`);
         out.push(`            <div class="candidate-meta">${r(c.meta, 'elections.json')}</div>`);
-        out.push(`            <p class="candidate-summary">${summary}</p>`);
-        out.push(`            <a href="${esc(c.source_url)}" target="_blank" class="examiner-link">${c.source_label} →</a>`);
+        // .candidate-summary stays the wrapper class: it is what the page CSS
+        // and the profile-parity test both address.
+        out.push('            <div class="candidate-summary">');
+        for (const [key, label] of PROFILE_SLOTS) {
+          const v = c.profile[key];
+          const empty = !v || (Array.isArray(v) && !v.length);
+          out.push('              <div class="profile-slot">');
+          out.push(`                <div class="profile-label">${label}</div>`);
+          if (empty) {
+            out.push(`                <div class="profile-value profile-empty">${NO_RECORD}</div>`);
+          } else if (key === 'quotes') {
+            for (const q of v) {
+              out.push(`                <blockquote class="profile-quote">${r(q, 'elections.json')}</blockquote>`);
+            }
+          } else if (Array.isArray(v)) {
+            out.push('                <ul class="profile-list">');
+            for (const item of v) out.push(`                  <li>${r(item, 'elections.json')}</li>`);
+            out.push('                </ul>');
+          } else {
+            out.push(`                <div class="profile-value">${r(v, 'elections.json')}</div>`);
+          }
+          out.push('              </div>');
+        }
+        // Sixth slot. Labelled like the rest so the card has one shape.
+        out.push('              <div class="profile-slot">');
+        out.push('                <div class="profile-label">Source</div>');
+        out.push(`                <a href="${esc(c.source_url)}" target="_blank" class="examiner-link">${c.source_label} →</a>`);
+        out.push('              </div>');
+        out.push('            </div>');
         out.push('          </div>');
       }
       out.push('        </div>');
@@ -1331,7 +1412,7 @@ const PAGE_DESCRIPTIONS = {
   'get-involved': 'How to email an official, speak at a public meeting, write to the editor, or organise with neighbours in Pelham.',
   taxes: 'Where Pelham property taxes go — the school district, village, county and town shares.',
   'gov-101': 'How Pelham is governed: two villages, a town, a school district and the county, and who to call for what.',
-  'ask-ai': 'An assistant that answers questions about Pelham civic life using only vetted local sources.',
+  'ask-ai': 'An assistant that answers questions about Pelham civic life using only the local sources this site relies on.',
   about: 'How this site is made, the sources it draws on, and how to report an error.',
 };
 

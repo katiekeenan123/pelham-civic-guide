@@ -1208,6 +1208,56 @@
     line-height: 1.65;
     margin-bottom: 8px;
   }
+  /* The candidate profile template. Every card carries the same six labelled
+     slots in the same order, so a reader comparing two candidates is
+     comparing like with like — and a slot the public record does not fill
+     reads as a gap in the record rather than as a thinner campaign. */
+  .profile-slot { margin-bottom: 10px; }
+  .profile-slot:last-child { margin-bottom: 0; }
+  .profile-label {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--slate-mid);
+    margin-bottom: 3px;
+  }
+  .profile-value {
+    font-size: 13px;
+    color: var(--slate-light);
+    line-height: 1.65;
+  }
+  /* Muted and italic, deliberately: it should not read with the same weight
+     as a sourced statement. */
+  .profile-empty {
+    color: var(--slate-mid);
+    font-style: italic;
+  }
+  .profile-list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+    color: var(--slate-light);
+    line-height: 1.65;
+  }
+  .profile-quote {
+    margin: 0 0 6px;
+    padding-left: 10px;
+    border-left: 2px solid rgba(200,151,58,0.35);
+    font-size: 13px;
+    color: var(--slate-light);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .profile-quote:last-child { margin-bottom: 0; }
+  .profile-methodology {
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--slate-mid);
+    line-height: 1.7;
+    max-width: 760px;
+    margin: -22px 0 34px;
+  }
   .examiner-link {
     font-size: 11px;
     font-family: 'IBM Plex Mono', monospace;

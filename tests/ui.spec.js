@@ -357,6 +357,34 @@ test('elections — Neighborhood Party candidates each have their own profile', 
   for (const t of summaries) expect(t.length).toBeGreaterThan(400);
 });
 
+test('elections — every candidate is rendered through the same six slots', async ({ page }) => {
+  await page.goto('/elections');
+  const cards = page.locator('.candidate-card');
+  await expect(cards).toHaveCount(14);
+
+  // The template is the fairness claim: identical labels, identical order, on
+  // all fourteen candidates across all three races. Depth varies with the
+  // public record, but shape must not.
+  const LABELS = ['Background', 'Why they say they’re running', 'Prior public service',
+    'Stated priorities', 'Relevant quotes', 'Source'];
+  for (let i = 0; i < 14; i++) {
+    const card = cards.nth(i);
+    const name = await card.locator('.candidate-name').innerText();
+    // textContent, not innerText: the labels are display-uppercased in CSS.
+    expect(await card.locator('.profile-label').allTextContents(), `${name} slots`).toEqual(LABELS);
+    const href = await card.locator('a.examiner-link').getAttribute('href');
+    expect(href, `${name} cites a front page, not an article`)
+      .not.toMatch(/^https:\/\/(www\.)?pelhamexaminer\.com\/?$/);
+  }
+
+  // A slot the record does not fill is stated, not quietly dropped — that is
+  // what stops a thin profile reading as a verdict on the campaign.
+  await expect(page.locator('.profile-empty').first())
+    .toContainText('Not found in the public record');
+  await expect(page.locator('.profile-methodology'))
+    .toContainText('does not indicate the importance, quality, or strength');
+});
+
 test('about — leads with the independence statement, above the fold', async ({ page }) => {
   await page.goto('/about');
   const ind = page.locator('.independence');

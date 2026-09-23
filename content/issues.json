@@ -1,6 +1,6 @@
 {
   "$schema": "./schema/issues.schema.json",
-  "section_intro": "Issues actively being debated in board meetings and local coverage. Last updated {{fact:site-last-updated}}.",
+  "section_intro": "Issues actively being debated in board meetings and local coverage, drawn from local news coverage and official meeting records. Last updated {{fact:site-last-updated}}.",
   "issues": [
     {
       "id": "rising-property-taxes-village-debt",
@@ -9,7 +9,7 @@
       "status_label": "FY2026-27 adopted — structural debt debate ongoing",
       "tag": "Budget / Taxes",
       "tag_style": "budget",
-      "description": "Village of Pelham adopted {{fact:village-budget-fy2627}} FY2026-27 budget — {{fact:village-budget-increase-fy2627}} increase overriding the state tax cap. Village debt grew from {{fact:village-debt-2021}} in 2021 to {{fact:village-debt-2026}} by early 2026. The fiscal debate is central to November 2026 election.",
+      "description": "Village of Pelham adopted {{fact:village-budget-fy2627}} FY2026-27 budget — {{fact:village-budget-increase-fy2627}} increase overriding the state tax cap. Village debt grew from {{fact:village-debt-2021}} in 2021 to {{fact:village-debt-2026}} by early 2026. Fiscal management has been a major focus of the November 2026 election.",
       "governing_body": [
         "village-of-pelham"
       ],
@@ -219,9 +219,9 @@
       "governing_body": [
         "village-of-pelham-manor"
       ],
-      "source_url": "https://pelhamexaminer.com",
-      "source_label": "Pelham Examiner coverage",
-      "source_date": null,
+      "source_url": "https://pelhamexaminer.com/84102/latest-news/pelham-manor-trustees-say-no-to-trucking-on-boston-post-road-embarking-on-a-long-range-trip-to-ban-tractor-trailers-from-route-1/",
+      "source_label": "Pelham Examiner — August 5, 2026",
+      "source_date": "2026-08-05",
       "last_updated": "2026-09-21",
       "keywords": [
         "tractor-trailer",
