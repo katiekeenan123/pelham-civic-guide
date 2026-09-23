@@ -120,6 +120,15 @@ function phase1() {
   data.taxes.explainers.forEach((e) => checkBody('taxes', e.id, e.governing_body));
   ((data.taxes.comparison || {}).entries || []).forEach((e) => checkBody('taxes', e.id, e.governing_body));
 
+  // An "N-member" board size in a Governing Body row must match the elected
+  // seats in officials.json — the school card once said 9 against a roster of 7.
+  data.bodies.bodies.forEach((b) => {
+    const row = (b.detail_rows || []).find((x) => x.key === 'Governing Body');
+    const m = row && /^(\d+)-member\b/.exec(row.value);
+    if (!m) return;
+    const elected = data.officials.officials.filter((o) => o.governing_body === b.id && o.seat_type === 'elected').length;
+    if (Number(m[1]) !== elected) fail('bodies.json', `${b.id} says a ${m[1]}-member board but officials.json has ${elected} elected seats`);
+  });
   // "Mayor + N Trustees" must match the elected seats in officials.json.
   data.bodies.bodies.filter((b) => b.type === 'village' && b.composition).forEach((b) => {
     const m = /^Mayor \+ (\d+) Trustees$/.exec(b.composition);
