@@ -63,7 +63,7 @@
       "accent": "none",
       "link": {
         "label": "School budget documents",
-        "url": "https://www.pelhamschools.org/district/about/financials"
+        "url": "https://www.pelhamschools.org/board-of-education/2026-27-budget"
       },
       "governing_body": "pelham-schools"
     },
@@ -75,7 +75,7 @@
       "accent": "gold",
       "link": {
         "label": "County budget",
-        "url": "https://www.westchestercountyny.gov/government/departments/budget"
+        "url": "https://www.westchestercountyny.gov/county-budgets"
       },
       "governing_body": "westchester-county"
     },
@@ -107,7 +107,7 @@
       "id": "town-of-pelham",
       "title": "Town of Pelham",
       "icon": "🏡",
-      "description": "Smallest share — covers courts, assessor, recreation, library, and ambulance service shared between both villages.",
+      "description": "Smallest share — funds the services it would be wasteful to duplicate in each village: EMS (ambulance) for every Pelham resident, tax assessment and collection, and the town courts, plus the library and recreation.",
       "accent": "green",
       "link": {
         "label": "Town budgets & reports",

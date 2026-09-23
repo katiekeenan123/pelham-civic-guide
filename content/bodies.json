@@ -7,26 +7,20 @@
       "type": "village",
       "label": "Village Government",
       "accent": "none",
-      "description": "The primary local government for residents of \"Pelham Heights\" and former North Pelham. The Board of Trustees sets policy, manages the budget, and runs most everyday services — police, fire, garbage, water, and roads.",
+      "description": "The local government for Pelham Heights and the former North Pelham. An elected Mayor and Board of Trustees set policy and the budget, and run day-to-day services: police, fire, public works (roads, sanitation, storm sewers) and building permits.",
       "budget": {
         "label": "FY2026–27 Budget",
         "fact_ref": "village-budget-fy2627",
-        "note": "(↑{{fact:village-budget-increase-fy2627}})"
+        "note": "(↑{{fact:village-budget-increase-fy2627}})",
+        "breakdown": null
       },
-      "detail_rows": [
-        {
-          "key": "Governing Body",
-          "value": "Mayor + 6 Trustees"
-        },
-        {
-          "key": "Meetings",
-          "value": "2nd & 4th Tuesday, monthly"
-        },
-        {
-          "key": "Meeting Location",
-          "value": "200 Fifth Ave, 1st floor"
-        }
-      ],
+      "composition": "Mayor + 6 Trustees",
+      "area_sq_miles": 0.8,
+      "area_source": {
+        "label": "Village of Pelham — About the Village",
+        "url": "https://www.pelhamny.gov/226/About-the-Village"
+      },
+      "detail_rows": [],
       "meeting_schedule": {
         "cadence": "2nd & 4th Tuesdays",
         "cadence_detail": "2nd & 4th Tuesday of each month",
@@ -60,7 +54,7 @@
       "board_name": "Village of Pelham Board of Trustees",
       "short_name": "Village of Pelham",
       "icon": "🏛",
-      "layer_controls": "Police, fire, refuse, water, roads and the building department — for Village of Pelham residents only."
+      "layer_controls": "Police, fire, public works (roads, sanitation, storm sewers) and building permits — for Village of Pelham residents only."
     },
     {
       "id": "village-of-pelham-manor",
@@ -68,26 +62,23 @@
       "type": "village",
       "label": "Village Government",
       "accent": "gold",
-      "description": "The second of Pelham's two villages, covering the Manor neighborhood. Has its own elected Mayor and Board of Trustees, runs its own police and fire departments, and manages village-level services independently.",
+      "description": "The local government for the Manor, Pelham's other village. An elected Mayor and Board of Trustees set policy and the budget, and run day-to-day services: police, fire, public works (roads, sanitation, storm sewers) and building permits.",
       "budget": {
         "label": "FY2026–27 Budget",
         "fact_ref": "manor-budget-fy2627",
-        "note": "({{fact:manor-budget-operating-fy2627}} ops + {{fact:manor-budget-capital-fy2627}} capital)"
-      },
-      "detail_rows": [
-        {
-          "key": "Governing Body",
-          "value": "Mayor + Board of Trustees"
-        },
-        {
-          "key": "Area",
-          "value": "1.2 square miles"
-        },
-        {
-          "key": "Village Hall",
-          "value": "4 Penfield Place"
+        "note": null,
+        "breakdown": {
+          "operating_fact_ref": "manor-budget-operating-fy2627",
+          "capital_fact_ref": "manor-budget-capital-fy2627"
         }
-      ],
+      },
+      "composition": "Mayor + 4 Trustees",
+      "area_sq_miles": 1.2,
+      "area_source": {
+        "label": "Village of Pelham Manor — Village Information",
+        "url": "https://www.pelhammanor.gov/219/Village-Information"
+      },
+      "detail_rows": [],
       "meeting_schedule": {
         "cadence": "Monthly Mondays",
         "cadence_detail": "Monthly (typically 2nd Monday at 8:15 pm)",
@@ -121,7 +112,7 @@
       "board_name": "Village of Pelham Manor Board of Trustees",
       "short_name": "Pelham Manor",
       "icon": "🏛",
-      "layer_controls": "Its own police, fire and public works departments — for Pelham Manor residents only."
+      "layer_controls": "Police, fire, public works (roads, sanitation, storm sewers) and building permits — for Pelham Manor residents only."
     },
     {
       "id": "town-of-pelham",
@@ -129,7 +120,7 @@
       "type": "town",
       "label": "Town Government",
       "accent": "red",
-      "description": "The Town umbrella covers both villages. Rather than duplicating services, it handles shared functions that make sense to consolidate: municipal courts, tax assessment &amp; collection, recreation programs, the public library, and ambulance service.",
+      "description": "The Town covers every Pelham resident in both villages. It runs the services that would be wasteful to duplicate in each village — above all EMS (the ambulance service, funded by Town taxes), tax assessment and collection, and the town courts — plus the public library, recreation and senior programs.",
       "budget": {
         "label": "2025 Budget",
         "fact_ref": "town-budget-2025",
@@ -142,7 +133,7 @@
         },
         {
           "key": "Key Services",
-          "value": "Courts, Assessor, Recreation"
+          "value": "EMS, tax collection, courts"
         },
         {
           "key": "Town Hall",
@@ -186,7 +177,7 @@
       "board_name": "Town of Pelham Town Board",
       "short_name": "Town Board",
       "icon": "🏛",
-      "layer_controls": "Municipal courts, tax assessment and collection, recreation programmes, the public library, and the ambulance service shared by both villages."
+      "layer_controls": "Services it would be wasteful to duplicate in each village — above all EMS, tax assessment and collection, and the town courts. Also the library, recreation and senior programs."
     },
     {
       "id": "pelham-schools",
@@ -229,15 +220,15 @@
       "source_links": [
         {
           "label": "Budget & Financials",
-          "url": "https://www.pelhamschools.org/district/about/financials"
+          "url": "https://www.pelhamschools.org/district/business-office"
         },
         {
           "label": "Board of Education",
-          "url": "https://www.pelhamschools.org/district/board-of-education"
+          "url": "https://www.pelhamschools.org/board-of-education/members"
         },
         {
           "label": "District News",
-          "url": "https://www.pelhamschools.org/district/news"
+          "url": "https://www.pelhamschools.org/district/about/district-news"
         }
       ],
       "board_name": "Pelham Board of Education",
@@ -251,7 +242,7 @@
       "type": "county",
       "label": "County Government",
       "accent": "none",
-      "description": "County government provides regional services including the county police, health department, parks, sewer districts, and social services. Westchester is also the entity that establishes equalization rates used in property tax assessments.",
+      "description": "For Pelham residents the County is mostly two things: a share of the property tax bill, and county-wide services — county police and public safety, the courts, the health department and county parks. It also sets the equalization rates used in property assessments. It is not a local board residents deal with day to day; Pelham has one seat in the County Legislature.",
       "budget": null,
       "detail_rows": [
         {
@@ -268,7 +259,7 @@
         },
         {
           "key": "Key Services",
-          "value": "Health, Parks, Sewer, Courts"
+          "value": "Public safety, courts, health, parks"
         }
       ],
       "meeting_schedule": null,
@@ -279,17 +270,17 @@
       "source_links": [
         {
           "label": "County Budget",
-          "url": "https://www.westchestercountyny.gov/government/departments/budget"
+          "url": "https://www.westchestercountyny.gov/county-budgets"
         },
         {
           "label": "Legislature",
-          "url": "https://www.westchestercountyny.gov/government/legislature"
+          "url": "https://www.westchesterlegislatorsny.gov/"
         }
       ],
       "board_name": null,
       "short_name": "Westchester County",
       "icon": null,
-      "layer_controls": "Health department, parks, sewer districts, social services, county police — and the equalization rates used in property assessments."
+      "layer_controls": "A share of the tax bill, and county-wide services: county police and public safety, the courts, health and parks — plus the equalization rates used in property assessments."
     }
   ],
   "extra_schedule_rows": [

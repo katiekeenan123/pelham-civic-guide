@@ -120,6 +120,19 @@ function phase1() {
   data.taxes.explainers.forEach((e) => checkBody('taxes', e.id, e.governing_body));
   ((data.taxes.comparison || {}).entries || []).forEach((e) => checkBody('taxes', e.id, e.governing_body));
 
+  // "Mayor + N Trustees" must match the elected seats in officials.json.
+  data.bodies.bodies.filter((b) => b.type === 'village' && b.composition).forEach((b) => {
+    const m = /^Mayor \+ (\d+) Trustees$/.exec(b.composition);
+    const elected = data.officials.officials.filter((o) => o.governing_body === b.id && o.seat_type === 'elected').length;
+    if (!m) fail('bodies.json', `${b.id}.composition should read "Mayor + N Trustees"`);
+    else if (Number(m[1]) !== elected - 1) fail('bodies.json', `${b.id}.composition says ${m[1]} trustees but officials.json has ${elected - 1} besides the mayor`);
+  });
+  data.bodies.bodies.forEach((b) => {
+    const bd = b.budget && b.budget.breakdown;
+    if (bd) for (const k of ['operating_fact_ref', 'capital_fact_ref']) {
+      if (!factIds.has(bd[k])) fail('bodies.json', `${b.id}.budget.breakdown.${k} → unknown fact "${bd[k]}"`);
+    }
+  });
   data.bodies.bodies.forEach((b) => {
     if (b.budget && !factIds.has(b.budget.fact_ref)) {
       fail('bodies.json', `${b.id}.budget.fact_ref → unknown fact "${b.budget.fact_ref}"`);
@@ -836,6 +849,26 @@ function generateOfficialsCards(data, r) {
   return out.join(NL);
 }
 
+// Village card rows, in a fixed order from structured fields. A missing
+// field is a build error, except the ops/capital split, which a village may
+// simply not have published: that renders without the split and is listed in
+// the build summary as a gap.
+const villageGaps = [];
+function villageRows(b, budgetRow) {
+  const need = { composition: b.composition, area_sq_miles: b.area_sq_miles, meeting_schedule: b.meeting_schedule, offices_address: b.offices_address, budget: b.budget };
+  for (const [k, v] of Object.entries(need)) {
+    if (v === null || v === undefined) fail('bodies.json', `${b.id} is a village with no ${k} — both village cards must carry the same rows`);
+  }
+  if (b.budget && !b.budget.breakdown) villageGaps.push(`${b.id}: no operating/capital budget split`);
+  return [
+    { key: 'Governing Body', value: b.composition || '' },
+    ...(b.budget ? [budgetRow()] : []),
+    { key: 'Area', value: `${b.area_sq_miles} square miles` },
+    { key: 'Meetings', value: (b.meeting_schedule || {}).cadence_detail || '' },
+    { key: 'Village Hall', value: b.offices_address || '' },
+  ];
+}
+
 function generateGovernanceCards(data, r) {
   const out = ['    <div class="gov-grid">'];
   for (const b of data.bodies.bodies) {
@@ -846,12 +879,21 @@ function generateGovernanceCards(data, r) {
     out.push(`        <p>${r(b.description, 'bodies.json')}</p>`);
     out.push('        <div class="gov-card-detail">');
 
-    const rows = b.detail_rows.slice();
-    if (b.budget) {
+    const budgetRow = () => {
       const fact = r(`{{fact:${b.budget.fact_ref}}}`, 'bodies.json');
+      const bd = b.budget.breakdown;
+      const split = bd
+        ? ` (${r(`{{fact:${bd.operating_fact_ref}}}`, 'bodies.json')} ops + ${r(`{{fact:${bd.capital_fact_ref}}}`, 'bodies.json')} capital)`
+        : '';
       const note = b.budget.note ? ` ${r(b.budget.note, 'bodies.json')}` : '';
-      rows.splice(1, 0, { key: b.budget.label, value: `${fact}${note}` });
-    }
+      return { key: b.budget.label, value: `${fact}${split}${note}` };
+    };
+    // The two village cards are built from the same structured fields in the
+    // same order, so one cannot quietly carry a row the other lacks.
+    const rows = b.type === 'village'
+      ? villageRows(b, budgetRow)
+      : b.detail_rows.slice();
+    if (b.type !== 'village' && b.budget) rows.splice(1, 0, budgetRow());
     for (const row of rows) {
       out.push(`          <div class="detail-row"><span class="detail-key">${row.key}</span><span class="detail-val">${r(row.value, 'bodies.json')}</span></div>`);
     }
@@ -1423,6 +1465,7 @@ function main() {
   for (const s of stripped.filter((x) => x.kind === 'BUILD')) {
     console.log(`  ⚠ ${s.file} contained a BUILD comment; stripped, but that would have broken the splice`);
   }
+  for (const g of villageGaps) console.log(`  ⚠ village gap       ${g}`);
   console.log(`  system prompt      ${promptText.length.toLocaleString()} chars → netlify/functions/system-prompt.js`);
   console.log(`  KNOWN_ISSUES       ${stats.ragKeys} canonical keys → netlify/functions/ask-pelham.js`);
   console.log(`  output             ${changed.length ? changed.join(', ') : 'unchanged (idempotent)'}`);

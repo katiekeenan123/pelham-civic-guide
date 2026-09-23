@@ -426,6 +426,21 @@ test('taxes — Learn more sits last and points at the primary sources', async (
   }
 });
 
+test('gov-101 — the two village cards carry the same rows; the Town leads with EMS', async ({ page }) => {
+  await page.goto('/gov-101');
+  const rows = (name) => page.locator('.gov-card', { has: page.locator('h3', { hasText: new RegExp(`^${name}$`) }) })
+    .locator('.detail-key').allTextContents();
+  const pelham = await rows('Village of Pelham');
+  const manor = await rows('Village of Pelham Manor');
+  expect(pelham).toEqual(['Governing Body', 'FY2026–27 Budget', 'Area', 'Meetings', 'Village Hall']);
+  expect(manor, 'Manor card rows match the Village of Pelham card').toEqual(pelham);
+
+  const town = page.locator('.gov-card', { has: page.locator('h3', { hasText: /^Town of Pelham$/ }) });
+  await expect(town).toContainText('wasteful to duplicate');
+  await expect(town).toContainText('EMS, tax collection, courts');
+  await expect(page.locator('#officials-village-of-pelham-manor')).toContainText('Lindsey Luft');
+});
+
 test('gov-101 — the five governing bodies plus the quick-reference card', async ({ page }) => {
   await page.goto('/gov-101');
   await expect(page.locator('.gov-card')).toHaveCount(6);

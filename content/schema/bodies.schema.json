@@ -133,8 +133,62 @@
                 "null"
               ],
               "description": "Short parenthetical shown after the value, e.g. 'voter-approved' or 'levy up 3.48%'."
+            },
+            "breakdown": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": false,
+              "required": [
+                "operating_fact_ref",
+                "capital_fact_ref"
+              ],
+              "description": "Operating vs capital split, as two facts.json ids. Rendered as \"(<ops> ops + <capital> capital)\". Null when the body has not published a split — the build reports that as a gap for villages.",
+              "properties": {
+                "operating_fact_ref": {
+                  "type": "string"
+                },
+                "capital_fact_ref": {
+                  "type": "string"
+                }
+              }
             }
           }
+        },
+        "composition": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Who sits on the governing board, e.g. \"Mayor + 6 Trustees\". For villages the build checks the trustee count against the elected seats in officials.json."
+        },
+        "area_sq_miles": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Land area in square miles, as the body states it on its own website."
+        },
+        "area_source": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "label",
+            "url"
+          ],
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          },
+          "description": "Where area_sq_miles comes from."
         },
         "detail_rows": {
           "type": "array",
