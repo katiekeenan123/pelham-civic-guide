@@ -322,12 +322,52 @@ test('elections — race context sits under the header, above the candidates', a
   expect(ctx.y, 'context should frame the race before the candidates').toBeLessThan(cards.y);
 });
 
-test('elections — voter info names both villages in full', async ({ page }) => {
+test('elections — voter info covers registration, early voting and lookup', async ({ page }) => {
   await page.goto('/elections');
-  const note = page.locator('.voter-info-box', { hasText: 'Where to Vote' }).locator('.voter-info-note');
-  await expect(note).toContainText('Village of Pelham —');
-  await expect(note).toContainText('Village of Pelham Manor —');
-  await expect(note, 'the separator bullet was dropped for two lines').not.toContainText('·');
+  const boxes = page.locator('.voter-info-box');
+  await expect(boxes).toHaveCount(4);
+
+  const main = page.locator('main');
+  // The deadline is a date, not "25 days before" — and the mail postmark is
+  // five days earlier than the in-person cutoff, which is the part residents
+  // get wrong.
+  await expect(main).toContainText('October 24');
+  await expect(main).toContainText('postmarked by October 19');
+  await expect(main, 'the old relative deadline should be gone').not.toContainText('25 days');
+
+  await expect(main).toContainText('Early voting');
+  await expect(main).toContainText('November 1');
+
+  // Polling places move, so the page sends people to the lookup rather than
+  // naming a building that may be wrong by November.
+  await expect(main.locator('a[href*="voterlookup.elections.ny.gov"]')).toHaveCount(1);
+  await expect(main, 'no hard-coded polling address').not.toContainText('Fowler Ave');
+  // Absentee / mail ballots get a route too.
+  await expect(main).toContainText('absentee');
+});
+
+test('elections — Neighborhood Party candidates each have their own profile', async ({ page }) => {
+  await page.goto('/elections');
+  const np = page.locator('.party-column', { hasText: 'Neighborhood Party · Republican' }).first();
+  const summaries = await np.locator('.candidate-summary').allTextContents();
+  expect(summaries.length).toBe(3);
+  // They previously shared one identical paragraph appended to each card.
+  expect(new Set(summaries).size, 'each challenger needs their own text').toBe(3);
+  // And of comparable weight to the Democratic profiles beside them.
+  for (const t of summaries) expect(t.length).toBeGreaterThan(400);
+});
+
+test('branding and canonical host', async ({ page }) => {
+  for (const pg of PAGES) {
+    await page.goto(pg.url);
+    await expect(page.locator('footer')).toContainText('The Pelham Engagement Project');
+    await expect(page.locator('footer'), 'old name retired').not.toContainText('Pelham Civic Guide');
+    const canonical = page.locator('link[rel="canonical"]');
+    await expect(canonical).toHaveCount(1);
+    await expect(canonical).toHaveAttribute('href', `https://pelhamengagementproject.org${pg.url}`);
+    await expect(page.locator('meta[property="og:url"]'))
+      .toHaveAttribute('content', `https://pelhamengagementproject.org${pg.url}`);
+  }
 });
 
 test('no page links to a URL that does not exist', async ({ page, request }) => {

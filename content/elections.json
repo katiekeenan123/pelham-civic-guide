@@ -5,19 +5,24 @@
   "editorial_note": "<strong style=\"color: var(--gold-light);\">Editorial note:</strong> Candidate profiles are drawn from Pelham Examiner reporting and candidate statements. This site does not endorse any candidate. All facts sourced from <a href=\"https://pelhamexaminer.com\" target=\"_blank\" style=\"color: var(--gold-light);\">pelhamexaminer.com</a>. Register to vote at <a href=\"https://www.elections.ny.gov\" target=\"_blank\" style=\"color: var(--gold-light);\">elections.ny.gov</a> — registration deadline is typically {{fact:voter-registration-deadline}} the election.",
   "voter_info": [
     {
-      "label": "Election Date",
+      "label": "Election Day",
       "value": "{{fact:election-date-2026.short}}",
-      "note": "Verify exact date at Westchester County Board of Elections"
+      "note": "Polls open {{fact:polling-hours}}."
     },
     {
-      "label": "Register to Vote",
-      "value": "{{fact:voter-registration-deadline}}",
-      "note": "<a href=\"https://www.elections.ny.gov\" target=\"_blank\" style=\"color: var(--gold-light);\">elections.ny.gov</a> or Westchester County Board of Elections 914-995-5700"
+      "label": "Register by",
+      "value": "{{fact:voter-registration-deadline.short}}",
+      "note": "In person or online by October 24. By mail, postmarked by October 19 and received by October 24. <a href=\"https://elections.ny.gov/registration-and-voting-deadlines\" target=\"_blank\" style=\"color: var(--gold-light);\">Deadlines at elections.ny.gov</a>"
     },
     {
-      "label": "Where to Vote",
-      "value": "{{fact:polling-hours}}",
-      "note": "Village of Pelham — Daronco Town House, 20 Fifth Ave<br>Village of Pelham Manor — Our Lady of Perpetual Help, 575 Fowler Ave"
+      "label": "Early voting",
+      "value": "{{fact:early-voting-2026.short}}",
+      "note": "Saturday October 24 through Sunday November 1. Hours and sites: <a href=\"https://www.westchestercountyny.gov/boe\" target=\"_blank\" style=\"color: var(--gold-light);\">Westchester County Board of Elections</a>"
+    },
+    {
+      "label": "Where to vote",
+      "value": "Look it up",
+      "note": "Polling places move between elections, so check yours rather than trusting last time: <a href=\"https://voterlookup.elections.ny.gov\" target=\"_blank\" style=\"color: var(--gold-light);\">voterlookup.elections.ny.gov</a>. Voting by mail? Apply for an absentee or early mail ballot at <a href=\"https://elections.ny.gov/registration-and-voting-deadlines\" target=\"_blank\" style=\"color: var(--gold-light);\">elections.ny.gov</a>."
     }
   ],
   "races": [
@@ -29,10 +34,7 @@
       "term_length": "2-year terms",
       "badge": "First contested race since 2019",
       "note": null,
-      "context": "<strong>Context:</strong> Hanan Eldahry, who has served since 2018, is not seeking reelection. The central issue in this race is fiscal management — the village passed a {{fact:village-budget-fy2627}} budget with a {{fact:village-budget-increase-fy2627}} increase, overriding the state tax cap for the first time. Three seats are up; top three vote-getters win.",
-      "shared_platforms": {
-        "neighborhood-party-2026": "In their joint platform statement, Long, Speros and Anzilotti describe the Village's current path as 'unsustainable,' citing debt growth from $4.3M in 2021 to almost $18M now, undisciplined spending (including a $3.655M Municipal Center authorization with $800K for furniture), and lack of transparency on the Picture House RFQ. They pledge to: serve without pay, vote not to exceed the tax cap, create an infrastructure plan, and bring openness to Village decisions."
-      }
+      "context": "<strong>Context:</strong> Hanan Eldahry, who has served since 2018, is not seeking reelection. The central issue in this race is fiscal management — the village passed a {{fact:village-budget-fy2627}} budget with a {{fact:village-budget-increase-fy2627}} increase, overriding the state tax cap for the first time. Three seats are up; top three vote-getters win."
     },
     {
       "id": "pelham-manor-trustees",
@@ -65,8 +67,8 @@
       "party": "Democratic Party",
       "party_style": "dem",
       "incumbent": true,
-      "meta": "Incumbent · First elected 2020 · Running for third term",
-      "summary": "Now in his third term, Solomon emphasizes a collaborative approach: \"I've made it a point to sit down directly with neighbors, local groups and business owners, understand what they need from their village government, and follow through.\" Key achievements: championed 25 mph speed limit village-wide, supported hiring of a Traffic Safety Officer, worked on sewer infrastructure (over two miles of pipes repaired). Has served as liaison for pedestrian safety, DPW, and downtown business.",
+      "meta": "Incumbent · First elected 2020 · Seeking a third term",
+      "summary": "Solomon emphasises a collaborative approach: \"I've made it a point to sit down directly with neighbors, local groups and business owners, understand what they need from their village government, and follow through.\" Key achievements: championed the 25 mph speed limit village-wide, supported hiring a Traffic Safety Officer, and worked on sewer infrastructure (over two miles of pipes repaired). Has served as liaison for pedestrian safety, DPW and downtown business.",
       "platform_ref": null,
       "source_url": "https://pelhamexaminer.com/84500/latest-news/kristen-burke-russell-solomon-and-krystal-howell-make-the-case-for-why-theyre-running-in-novembers-village-of-pelham-election/",
       "source_label": "Examiner September 4, 2026"
@@ -93,7 +95,7 @@
       "party": "Democratic Party",
       "party_style": "dem",
       "incumbent": false,
-      "meta": "Town Council Member stepping up · General Counsel, Mercy University",
+      "meta": "Town Council Member · General Counsel, Mercy University",
       "summary": "Currently serving on the Town of Pelham Town Council (four-year term through 2027) — if elected to the Village board, she will step down. An attorney, Burke serves as General Counsel at Mercy University. Her rationale for running: \"One of the reasons I am running for Village Trustee is that currently, while there are three attorneys serving on the Town Board, along with a Town attorney, there are none on the Village board.\" Her campaign priorities: flood mitigation, rising costs, downtown improvement, pedestrian safety, and sustainability. Motto: \"Inserviendo Consummere\" — consumed in service.",
       "platform_ref": null,
       "source_url": "https://pelhamexaminer.com/84500/latest-news/kristen-burke-russell-solomon-and-krystal-howell-make-the-case-for-why-theyre-running-in-novembers-village-of-pelham-election/",
@@ -108,8 +110,8 @@
       "party_style": "nbhd",
       "incumbent": false,
       "meta": "Challenger · Ran in 2019",
-      "summary": "Attorney at Latham & Watkins. Ran for the board in 2019. Says the village is at a \"tipping point\" — the current board's \"unanimous actions have dangerously stretched the Village's finances.\" Primary concern: fiscal management and debt levels.",
-      "platform_ref": "neighborhood-party-2026",
+      "summary": "An attorney at Latham &amp; Watkins who ran for the board in 2019. He says the village is at a \"tipping point\" and that the current board's \"unanimous actions have dangerously stretched the Village's finances.\" His focus is debt and fiscal management: the joint Neighborhood Party platform he signed with Speros and Anzilotti calls the village's path \"unsustainable,\" citing debt growth from $4.3M in 2021 to almost $18M now and a $3.655M Municipal Center authorization that included $800K for furniture. The three pledge to serve without pay, vote against exceeding the tax cap, produce an infrastructure plan, and open up the Picture House RFQ.",
+      "platform_ref": null,
       "source_url": "https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/",
       "source_label": "NP platform statement — September 14, 2026"
     },
@@ -122,8 +124,8 @@
       "party_style": "nbhd",
       "incumbent": false,
       "meta": "Challenger · Pelham resident since 2007",
-      "summary": "Has two children in Pelham high schools. Focused on affordability: \"Our village should be a place where residents can afford to stay.\" Concerned about budget management and the rise in property taxes under current leadership.",
-      "platform_ref": "neighborhood-party-2026",
+      "summary": "A Pelham resident since 2007 with two children in the district's high schools. He runs on affordability — \"Our village should be a place where residents can afford to stay\" — and on budget management after successive increases in property taxes. With Long and Anzilotti he signed the joint Neighborhood Party platform, which describes the village's current path as \"unsustainable\" and commits the three to serving without pay, voting against exceeding the tax cap, creating an infrastructure plan, and bringing transparency to the Picture House RFQ.",
+      "platform_ref": null,
       "source_url": "https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/",
       "source_label": "NP platform statement — September 14, 2026"
     },
@@ -136,8 +138,8 @@
       "party_style": "nbhd",
       "incumbent": false,
       "meta": "Challenger · Pelham resident 50+ years",
-      "summary": "Longtime Pelham resident, most recently in the Village for the past 12 years. Says he has \"18 million reasons\" for running — each dollar of outstanding village debt. Warns the village deficit is \"on a trajectory that is unsustainable without continuous substantial tax increases.\"",
-      "platform_ref": "neighborhood-party-2026",
+      "summary": "A Pelham resident for more than 50 years, the last 12 of them in the Village. He says he has \"18 million reasons\" for running — one for each dollar of outstanding village debt — and warns the deficit is \"on a trajectory that is unsustainable without continuous substantial tax increases.\" With Long and Speros he signed the Neighborhood Party's joint platform, which faults undisciplined spending including the $3.655M Municipal Center authorization, and pledges trustees who serve without pay, hold to the tax cap, plan for infrastructure, and open up Village decisions.",
+      "platform_ref": null,
       "source_url": "https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/",
       "source_label": "NP platform statement — September 14, 2026"
     },
@@ -220,7 +222,7 @@
       "party_style": "dem",
       "incumbent": true,
       "meta": "Incumbent Town Clerk · First elected 2025",
-      "summary": "Elected Town Clerk in November 2025. Campaign theme: \"My experiences will strengthen and enhance communication with town officials.\" Running for re-election after less than a year in office due to a New York State law change. Has focused her first term on financial systems and improving resident access to Town government.",
+      "summary": "Elected Town Clerk in November 2025. Campaign theme: \"My experiences will strengthen and enhance communication with town officials.\" Running for re-election after less than a year in office because of the New York State law change that moves odd-year municipal elections to even years.",
       "platform_ref": null,
       "source_url": "https://pelhamexaminer.com/84767/showcase/town-supervisor-theresa-mohan-and-town-clerk-eileen-miller-announce-campaigns-for-re-election-in-november/",
       "source_label": "Re-election announcement — September 21, 2026"

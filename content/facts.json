@@ -714,19 +714,41 @@
     {
       "id": "voter-registration-deadline",
       "category": "election",
-      "fact": "Voter registration deadline before an election",
-      "value": 25,
-      "display": "25 days before",
-      "qualifier": "typical deadline; register at elections.ny.gov or through the Westchester County Board of Elections on 914-995-5700",
+      "fact": "Voter registration deadline for the November 2026 election",
+      "value": "2026-10-24",
+      "display": "October 24, 2026",
+      "qualifier": "in person or online by October 24; by mail, postmarked by October 19 and received by October 24",
       "confidence": "verified",
       "as_of": "2026",
       "last_updated": "2026-09-21",
+      "supersedes": null,
+      "caution": "Do not describe the deadline as \"25 days before\" the election. New York closes registration 10 days before for in-person and online, and 15 days before for the postmark on a mailed form.",
+      "in_prompt": true,
+      "source": {
+        "name": "New York State Board of Elections",
+        "url": "https://elections.ny.gov/registration-and-voting-deadlines",
+        "date": null
+      },
+      "used_in": [],
+      "display_short": "Oct 24"
+    },
+    {
+      "id": "early-voting-2026",
+      "category": "election",
+      "fact": "Early voting period, November 2026 election",
+      "value": null,
+      "display": "October 24 – November 1, 2026",
+      "display_short": "Oct 24 – Nov 1",
+      "qualifier": "nine days of early voting; hours and locations are set by the Westchester County Board of Elections",
+      "confidence": "verified",
+      "as_of": "2026",
+      "last_updated": "2026-09-23",
       "supersedes": null,
       "caution": null,
       "in_prompt": true,
       "source": {
         "name": "New York State Board of Elections",
-        "url": "https://www.elections.ny.gov",
+        "url": "https://elections.ny.gov/registration-and-voting-deadlines",
         "date": null
       },
       "used_in": []
@@ -946,7 +968,7 @@
       "in_prompt": false,
       "source": {
         "name": "The Pelham Engagement Project",
-        "url": "https://pelhamengagementproject.netlify.app",
+        "url": "https://pelhamengagementproject.org",
         "date": "2026-09-21"
       },
       "used_in": []

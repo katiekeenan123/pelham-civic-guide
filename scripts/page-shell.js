@@ -28,7 +28,10 @@ const esc = (s) =>
     .replace(/"/g, '&quot;');
 
 const SITE_NAME = 'The Pelham Engagement Project';
-const SITE_URL = 'https://pelhamengagementproject.netlify.app';
+// Canonical host. The netlify.app address still serves the site, but it is
+// the deploy URL, not the public one — canonical and og:url must name the
+// domain we want indexed or the two compete for the same content.
+const SITE_URL = 'https://pelhamengagementproject.org';
 
 // The shell assumes these exist at the publish root. Checked explicitly so the
 // failure is a clear message rather than nine pages that render unstyled.
@@ -107,7 +110,7 @@ ${content}
 ${askCta}</main>
 
 <footer>
-  <p><strong>Pelham Civic Guide</strong> — An independent resource for Pelham, NY residents.</p>
+  <p><strong>The Pelham Engagement Project</strong> — An independent resource for Pelham, NY residents.</p>
   <p class="footer-feedback">See something wrong or have a suggestion? <a href="/about#feedback">Share feedback →</a></p>
 ${footer}
 </footer>
