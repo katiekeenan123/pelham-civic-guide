@@ -55,9 +55,8 @@
         "tag_style",
         "description",
         "governing_body",
-        "source_url",
-        "source_label",
-        "last_updated"
+        "last_updated",
+        "sources"
       ],
       "properties": {
         "id": {
@@ -107,21 +106,6 @@
           },
           "description": "Foreign keys to bodies.json ids. An ARRAY because issues span bodies: the EMS station is Town + Village, the Con Ed rate case is Village + County. Build fails on an id with no matching body."
         },
-        "source_url": {
-          "type": "string",
-          "description": "Primary source link. May be an on-page anchor such as '#elections'."
-        },
-        "source_label": {
-          "type": "string",
-          "description": "The COMPLETE link text as rendered, e.g. 'Pelham Examiner coverage' or 'Pelham Examiner — September 9, 2026'. Phrasing varies per card by design and the build does not assemble it from source_date; that field is metadata for staleness review, not a display component."
-        },
-        "source_date": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "description": "Publication date of the source (YYYY-MM-DD). Null for undated links like a search page."
-        },
         "last_updated": {
           "type": "string",
           "description": "When a human last reviewed this card against its source (YYYY-MM-DD). Surfaced by the build as a staleness warning."
@@ -165,6 +149,37 @@
             "null"
           ],
           "description": "Where the homepage preview's 'Read more' sends the reader. Some issues are better served by a topic page than by their own card — a tax or budget issue lands on /taxes, an election issue on /elections. Null routes to the issue's anchor on /issues, which is the right default for anything without a natural home."
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Where the card comes from, oldest first, rendered as one link per entry. An array rather than a single source_url because the editorial rule is that where possible the two most recent sources are cited -- on a contested topic, citing only one side of an exchange misrepresents it. A single-source issue is a one-element array.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "url",
+              "label",
+              "date"
+            ],
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "Article, document or recording. May be a site-relative path for an internal destination. Never a site front page -- the build rejects those."
+              },
+              "label": {
+                "type": "string",
+                "description": "Link text. Names the outlet and the date so two sources on one card are distinguishable at a glance."
+              },
+              "date": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "Publication date, ISO. Null where the source carries none."
+              }
+            }
+          }
         }
       }
     }

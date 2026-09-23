@@ -13,9 +13,13 @@
       "governing_body": [
         "village-of-pelham"
       ],
-      "source_url": "https://pelhamexaminer.com/82552/latest-news/village-board-passes-20-5-million-budget-most-homeowners-tax-bills-will-rise-10-board-discusses-updating-bdfz-9th-avenue-parking/",
-      "source_label": "Pelham Examiner coverage",
-      "source_date": "2026-04-29",
+      "sources": [
+        {
+          "url": "https://pelhamexaminer.com/82552/latest-news/village-board-passes-20-5-million-budget-most-homeowners-tax-bills-will-rise-10-board-discusses-updating-bdfz-9th-avenue-parking/",
+          "label": "Pelham Examiner coverage",
+          "date": "2026-04-29"
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "village budget",
@@ -49,9 +53,13 @@
       "governing_body": [
         "town-of-pelham"
       ],
-      "source_url": "https://pelhamexaminer.com/84610/latest-news/erica-winter-steps-down-as-pelhams-receiver-of-taxes-deputy-receiver-assumes-her-duties-town-council-to-select-replacement/",
-      "source_label": "Pelham Examiner — September 9, 2026",
-      "source_date": "2026-09-09",
+      "sources": [
+        {
+          "url": "https://pelhamexaminer.com/84610/latest-news/erica-winter-steps-down-as-pelhams-receiver-of-taxes-deputy-receiver-assumes-her-duties-town-council-to-select-replacement/",
+          "label": "Pelham Examiner — September 9, 2026",
+          "date": "2026-09-09"
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "receiver of taxes",
@@ -87,9 +95,13 @@
         "village-of-pelham-manor",
         "town-of-pelham"
       ],
-      "source_url": "/elections",
-      "source_label": "See full candidate profiles",
-      "source_date": null,
+      "sources": [
+        {
+          "url": "/elections",
+          "label": "See full candidate profiles",
+          "date": null
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "election",
@@ -114,9 +126,13 @@
       "governing_body": [
         "village-of-pelham"
       ],
-      "source_url": "https://pelhamexaminer.com/81915/latest-news/village-trustees-terminate-mou-with-normoyles-php-partners-and-correct-blight-study-mullen-swears-in-ken-shirreffs-to-planning-board/",
-      "source_label": "Pelham Examiner",
-      "source_date": "2026-03-11",
+      "sources": [
+        {
+          "url": "https://pelhamexaminer.com/81915/latest-news/village-trustees-terminate-mou-with-normoyles-php-partners-and-correct-blight-study-mullen-swears-in-ken-shirreffs-to-planning-board/",
+          "label": "Pelham Examiner",
+          "date": "2026-03-11"
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "Picture House",
@@ -148,9 +164,13 @@
       "governing_body": [
         "pelham-schools"
       ],
-      "source_url": "https://pelhamexaminer.com/84556/schools/first-day-of-school-brings-new-ac-window-units-to-colonial-siwanoy-and-prospect-hill-after-ptas-pledge-to-raise-funds/",
-      "source_label": "Pelham Examiner — September 2026",
-      "source_date": "2026-09-08",
+      "sources": [
+        {
+          "url": "https://pelhamexaminer.com/84556/schools/first-day-of-school-brings-new-ac-window-units-to-colonial-siwanoy-and-prospect-hill-after-ptas-pledge-to-raise-funds/",
+          "label": "Pelham Examiner — September 2026",
+          "date": "2026-09-08"
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "Colonial Elementary",
@@ -185,9 +205,18 @@
       "governing_body": [
         "town-of-pelham"
       ],
-      "source_url": "https://pelhamexaminer.com/84133/letters-to-the-editor/the-pelham-public-library-has-come-up-with-a-15-20-million-transformation-project-is-that-really-a-pelham-priority/",
-      "source_label": "Pelham Examiner — August 2026",
-      "source_date": "2026-08-01",
+      "sources": [
+        {
+          "url": "https://pelhamexaminer.com/84133/letters-to-the-editor/the-pelham-public-library-has-come-up-with-a-15-20-million-transformation-project-is-that-really-a-pelham-priority/",
+          "label": "Pelham Examiner — letter to the editor, August 6, 2026",
+          "date": "2026-08-06"
+        },
+        {
+          "url": "https://pelhamexaminer.com/84213/announcing/pelham-public-library-trustees-respond-to-steven-shekanes-letter-clarify-details-about-multi-year-transformation-project/",
+          "label": "Pelham Examiner — library trustees respond, August 13, 2026",
+          "date": "2026-08-13"
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "library",
@@ -204,6 +233,7 @@
         "library board",
         "library renovation",
         "transformation project",
+        "shekane",
         "shakane"
       ],
       "link_to": "/taxes"
@@ -219,9 +249,13 @@
       "governing_body": [
         "village-of-pelham-manor"
       ],
-      "source_url": "https://pelhamexaminer.com/84102/latest-news/pelham-manor-trustees-say-no-to-trucking-on-boston-post-road-embarking-on-a-long-range-trip-to-ban-tractor-trailers-from-route-1/",
-      "source_label": "Pelham Examiner — August 5, 2026",
-      "source_date": "2026-08-05",
+      "sources": [
+        {
+          "url": "https://pelhamexaminer.com/84102/latest-news/pelham-manor-trustees-say-no-to-trucking-on-boston-post-road-embarking-on-a-long-range-trip-to-ban-tractor-trailers-from-route-1/",
+          "label": "Pelham Examiner — August 5, 2026",
+          "date": "2026-08-05"
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "tractor-trailer",
@@ -248,17 +282,21 @@
       "id": "ems-station-first-street",
       "title": "EMS Station & Community Church — First Street",
       "status": "watch",
-      "status_label": "No vote taken — Community Church site emerging as alternative",
+      "status_label": "No vote taken · no alternative site confirmed",
       "tag": "EMS / Emergency Services",
       "tag_style": "infrastructure",
-      "description": "Proposed EMS station near Post Office draws opposition over pedestrian safety and green space. Community Church of the Pelhams appeared for sale in April 2026 — raised as alternative site at Town Council meeting. No vote taken.",
+      "description": "Proposed EMS station near Post Office draws opposition over pedestrian safety and green space. Community Church of the Pelhams appeared for sale in April 2026 and was raised at a Town Council meeting. No vote taken and no alternative site has been confirmed.",
       "governing_body": [
         "town-of-pelham",
         "village-of-pelham"
       ],
-      "source_url": "https://pelhamexaminer.com/82282/latest-news/community-church-appears-to-be-for-sale-again-says-neighborhood-group-second-avenue-resident-raises-objections-to-new-ems-hq/",
-      "source_label": "Pelham Examiner — April 2026",
-      "source_date": "2026-04-01",
+      "sources": [
+        {
+          "url": "https://pelhamexaminer.com/82282/latest-news/community-church-appears-to-be-for-sale-again-says-neighborhood-group-second-avenue-resident-raises-objections-to-new-ems-hq/",
+          "label": "Pelham Examiner — April 2026",
+          "date": "2026-04-01"
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "EMS station",
@@ -292,9 +330,13 @@
       "governing_body": [
         "village-of-pelham"
       ],
-      "source_url": "https://pelhamexaminer.com/79929/latest-news/coned-to-slash-rate-hikes-following-deal-with-westchester-county-towns-and-villages-including-the-pelhams/",
-      "source_label": "Pelham Examiner",
-      "source_date": "2025-11-13",
+      "sources": [
+        {
+          "url": "https://pelhamexaminer.com/79929/latest-news/coned-to-slash-rate-hikes-following-deal-with-westchester-county-towns-and-villages-including-the-pelhams/",
+          "label": "Pelham Examiner",
+          "date": "2025-11-13"
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "Con Edison",
@@ -328,9 +370,13 @@
       "governing_body": [
         "village-of-pelham"
       ],
-      "source_url": "https://pelhamny.portal.civicclerk.com/event/2524/media",
-      "source_label": "Village of Pelham board meeting recording",
-      "source_date": "2026-07-14",
+      "sources": [
+        {
+          "url": "https://pelhamny.portal.civicclerk.com/event/2524/media",
+          "label": "Village of Pelham board meeting recording",
+          "date": "2026-07-14"
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "fireworks",
@@ -357,9 +403,13 @@
       "governing_body": [
         "village-of-pelham-manor"
       ],
-      "source_url": "https://vimeo.com/1219072948",
-      "source_label": "Pelham Manor board meeting recording",
-      "source_date": "2026-08-17",
+      "sources": [
+        {
+          "url": "https://vimeo.com/1219072948",
+          "label": "Pelham Manor board meeting recording",
+          "date": "2026-08-17"
+        }
+      ],
       "last_updated": "2026-09-21",
       "keywords": [
         "Amtrak",

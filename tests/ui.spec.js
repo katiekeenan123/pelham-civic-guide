@@ -402,14 +402,16 @@ test('about — leads with the independence statement, above the fold', async ({
   }
 });
 
-test('about — how this site works covers all six disclosures', async ({ page }) => {
+test('about — how this site works covers all seven disclosures', async ({ page }) => {
   await page.goto('/about');
   const items = page.locator('.works-item');
-  await expect(items).toHaveCount(6);
+  await expect(items).toHaveCount(7);
   const text = await page.locator('.works-grid').innerText();
   for (const claim of ['Pelham Examiner', 'All candidates in each race are presented',
                        'AI-generated', 'Corrections are logged publicly',
-                       'does not endorse candidates', 'Self-funded']) {
+                       'does not endorse candidates', 'Self-funded',
+                       // How a topic earns a card, and how many sources it carries.
+                       'appeared at least twice', 'two most recent sources']) {
     expect(text, `missing disclosure: ${claim}`).toContain(claim);
   }
 });

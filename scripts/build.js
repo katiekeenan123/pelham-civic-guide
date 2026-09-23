@@ -176,9 +176,11 @@ function phase1() {
     }
   });
   data.issues.issues.forEach((i) => {
-    if (isFrontDoor(i.source_url)) {
-      fail('issues.json', `${i.id} → cites a site front page, not an article: ${i.source_url}`);
-    }
+    i.sources.forEach((s) => {
+      if (isFrontDoor(s.url)) {
+        fail('issues.json', `${i.id} → cites a site front page, not an article: ${s.url}`);
+      }
+    });
   });
   data.elections.candidates.forEach((c) => {
     if (isFrontDoor(c.source_url)) {
@@ -256,7 +258,9 @@ function buildPrompt(data, r) {
       for (const i of data.issues.issues) {
         out.push(`- ${plain(r(i.title, 'issues.json'))} [${i.status}: ${plain(r(i.status_label, 'issues.json'))}]`);
         out.push(`    ${plain(r(i.description, 'issues.json'))}`);
-        out.push(`    Source: ${i.source_label}${i.source_date ? ` (${i.source_date})` : ''} ${i.source_url}`);
+        for (const s of i.sources) {
+          out.push(`    Source: ${s.label}${s.date ? ` (${s.date})` : ''} ${s.url}`);
+        }
       }
       return out.join(NL);
     },
@@ -485,9 +489,15 @@ function generateIssueCards(data, r) {
   const shown = data.issues.issues.filter((i) => i.show_on_home !== false);
   const cards = shown.map((i) => {
     const status = `<div class="issue-status"><div class="status-dot dot-${i.status}"></div>${r(i.status_label, 'issues.json')}</div>`;
-    const link = `<a href="${esc(i.source_url)}"${i.source_url.startsWith('#') ? '' : ' target="_blank"'} class="issue-source-link">${r(i.source_label, 'issues.json')}</a>`;
+    // One link per source. A card citing both sides of an exchange needs both
+    // visible, so they stack rather than collapsing into "coverage".
+    const links = i.sources.map((s) => {
+      const external = !s.url.startsWith('#') && !s.url.startsWith('/');
+      return `<a href="${esc(s.url)}"${external ? ' target="_blank"' : ''} class="issue-source-link">${r(s.label, 'issues.json')}</a>`;
+    }).join('');
     return `      <div class="issue-card fade-in" id="${esc(i.id)}"><span class="issue-tag tag-${i.tag_style}">${i.tag}</span>`
-      + `<h3>${r(i.title, 'issues.json')}</h3><p>${r(i.description, 'issues.json')}</p>${status}${link}</div>`;
+      + `<h3>${r(i.title, 'issues.json')}</h3><p>${r(i.description, 'issues.json')}</p>${status}`
+      + `<div class="issue-sources">${links}</div></div>`;
   });
   return [`    <p class="section-intro">${r(data.issues.section_intro, 'issues.json')}</p>`,
     '    <div class="issues-grid">', ...cards, '    </div>'].join('\n');

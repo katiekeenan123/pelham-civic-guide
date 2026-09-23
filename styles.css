@@ -418,11 +418,21 @@
     opacity: 0.6;
   }
 
+  /* A card may cite two sources — a letter and the reply to it, say — and
+     both need to be visible, so they stack as separate citations instead of
+     collapsing into a single "coverage" link. */
+  .issue-sources {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
   .issue-source-link {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    margin-top: 10px;
     font-size: 11px;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: 500;
@@ -1221,17 +1231,18 @@
   }
   .profile-slot:first-child { border-top: none; padding-top: 0; }
   .profile-slot:last-child { padding-bottom: 0; }
-  /* The site's label idiom in a dark section: mono, uppercase, tracked, gold
-     — the same shape as .section-eyebrow above and .voter-info-label further
-     down this page. Previously slate-mid, which sat at roughly 2.3:1 against
-     the card and read as more body text rather than as a heading. */
+  /* Mono, uppercase, tracked and semibold — the shape carries the heading,
+     not the colour. Slate-light rather than gold: six labels on each of
+     fourteen cards put too much gold on a page already spending it on the
+     eyebrow, the race badges and the voter-info boxes. Not slate-mid, which
+     is where these started and sits at roughly 2.3:1 against the card. */
   .profile-label {
     font-size: 11px;
     font-family: 'IBM Plex Mono', monospace;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--gold-light);
+    color: var(--slate-light);
     margin-bottom: 5px;
   }
   .profile-value {

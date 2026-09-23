@@ -261,7 +261,7 @@ const KNOWN_ISSUES = {
   'Picture House': ['picture house', 'php partners', 'smithmeyer', 'wolfs lane'],
   'Colonial Elementary AC': ['colonial', 'colonial elementary', 'air conditioning', 'air-conditioning', 'hvac', 'prospect hill'],
   'EMS station': ['ems', 'ems station', 'ambulance', 'emergency medical', 'paramedic', 'first street', 'community church'],
-  'library transformation': ['library', 'library board', 'library renovation', 'transformation project', 'shakane'],
+  'library transformation': ['library', 'library board', 'library renovation', 'transformation project', 'shekane', 'shakane'],
   'tractor-trailer ban': ['tractor-trailer', 'tractor trailer', 'truck ban', 'trucks', 'trucking', 'boston post road', 'nys dot'],
   'Con Edison rate': ['con edison', 'coned', 'con ed', 'utility rate', 'rate hike', 'public service commission', 'electric rates'],
   'rising taxes': ['tax levy', 'taxes', 'tax rate', 'assessment', 'property taxes', 'tax cap override', 'village budget'],
