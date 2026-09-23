@@ -18,6 +18,10 @@
 -- the table reachable, the policy decides which rows are allowed.
 --
 -- Run this in the Supabase SQL editor.
+--
+-- STATUS: run against production on 23 September 2026. All three paths
+-- verified returning {"ok":true}. Keep this file — it is the setup step for
+-- any new Supabase project, and the record of why the grants exist.
 
 -- ── feedback: 👍/👎 on an AI answer ─────────────────────────────────────────
 alter table public.feedback enable row level security;
