@@ -357,6 +357,64 @@ test('elections — Neighborhood Party candidates each have their own profile', 
   for (const t of summaries) expect(t.length).toBeGreaterThan(400);
 });
 
+test('about — leads with the independence statement, above the fold', async ({ page }) => {
+  await page.goto('/about');
+  const ind = page.locator('.independence');
+  await expect(ind).toBeVisible();
+  await expect(ind).toContainText('independent and resident-created');
+  await expect(ind).toContainText('does not endorse candidates');
+
+  // "Above the fold" is the claim, so check it rather than assume it.
+  const box = await ind.boundingBox();
+  expect(box.y, 'independence statement should be visible without scrolling').toBeLessThan(900);
+
+  // And ahead of everything else on the page.
+  for (const sel of ['.works-grid', '.about-project', '.about-form-card']) {
+    expect(box.y).toBeLessThan((await page.locator(sel).first().boundingBox()).y);
+  }
+});
+
+test('about — how this site works covers all six disclosures', async ({ page }) => {
+  await page.goto('/about');
+  const items = page.locator('.works-item');
+  await expect(items).toHaveCount(6);
+  const text = await page.locator('.works-grid').innerText();
+  for (const claim of ['Pelham Examiner', 'All candidates in each race are presented',
+                       'AI-generated', 'Corrections are logged publicly',
+                       'does not endorse candidates', 'Self-funded']) {
+    expect(text, `missing disclosure: ${claim}`).toContain(claim);
+  }
+});
+
+test('about — the perspective callout invites rather than deflects', async ({ page }) => {
+  await page.goto('/about');
+  const callout = page.locator('.editorial-callout');
+  await expect(callout).toContainText('Add your voice');
+  // The old wording told readers their absence was their own fault.
+  await expect(callout).not.toContainText('not a failure of this site');
+  await expect(callout.locator('a[href="/about#feedback"]')).toHaveCount(1);
+});
+
+test('elections — nonpartisan statement appears before the first race', async ({ page }) => {
+  await page.goto('/elections');
+  const note = page.locator('main').getByText('does not endorse any candidate or party').first();
+  await expect(note).toBeVisible();
+  expect((await note.boundingBox()).y)
+    .toBeLessThan((await page.locator('.race-block').first().boundingBox()).y);
+  await expect(page.locator('main')).toContainText('All candidates in each race are presented');
+  // The deadline sentence was left ungrammatical when the fact became a date.
+  await expect(page.locator('main')).not.toContainText('typically October');
+});
+
+test('home — Current Issues leads, elections is one section among several', async ({ page }) => {
+  await page.goto('/');
+  const issuesY = (await page.locator('#home-issues').boundingBox()).y;
+  const bannerY = (await page.locator('.home-banner').boundingBox()).y;
+  const meetingsY = (await page.locator('#home-meetings').boundingBox()).y;
+  expect(issuesY, 'issues should come before the election banner').toBeLessThan(bannerY);
+  expect(bannerY, 'the banner sits between issues and meetings').toBeLessThan(meetingsY);
+});
+
 test('branding and canonical host', async ({ page }) => {
   for (const pg of PAGES) {
     await page.goto(pg.url);
@@ -823,12 +881,18 @@ test('answer feedback — a failed vote is not shown as recorded, and can be ret
 test('about — project story card, then the lead-in to the forms', async ({ page }) => {
   await page.goto('/about');
   await expect(page.getByRole('heading', { name: 'Mission', exact: true })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'How it works' })).toBeVisible();
-  await expect(page.locator('.about-list li')).toHaveCount(4);
-  // The editorial copy (mission, how it works, sources, corrections) uses no
-  // we/our. The signed personal note and the form invitation are separate.
-  const editorial = await page.locator('#about > .content-wrap > div').first().innerText();
-  expect(editorial, 'editorial copy uses no we/our').not.toMatch(/\b(we|our|us)\b/i);
+  // The four-item "How it works" list became the six-disclosure
+  // "How this site works" grid; that has its own test.
+  await expect(page.getByRole('heading', { name: 'How this site works' })).toBeVisible();
+
+  // Editorial copy uses no we/our — the signed note and the form invitation
+  // are the only places first person belongs. Checked across every editorial
+  // block rather than just the first, so a new section cannot slip past.
+  const FIRST_PERSON = new RegExp(String.raw`(we|our|us)`, 'i');
+  for (const sel of ['.independence', '.works-grid', '.about-cols']) {
+    const copy = await page.locator(sel).innerText();
+    expect(copy, `${sel} should use no we/our`).not.toMatch(FIRST_PERSON);
+  }
   const story = page.locator('.about-project');
   await expect(story.getByRole('heading', { name: 'About this project' })).toBeVisible();
   await expect(story).toContainText('Bloomberg LP');

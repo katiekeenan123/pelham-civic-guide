@@ -2113,3 +2113,42 @@
   font-size: 10px;
   color: var(--slate);
 }
+
+/* ── About: independence statement leads the page ── */
+.independence {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--navy);
+  padding: 22px 26px;
+  margin-bottom: 40px;
+}
+.independence p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--navy);
+}
+
+.about-h3-major {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 3vw, 25px);
+  margin-top: 8px;
+}
+
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px 32px;
+  margin: 18px 0 44px;
+}
+.works-item h4 {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 6px;
+}
+.works-item p { margin: 0; font-size: 14px; line-height: 1.7; color: var(--slate); }
+
+.about-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-bottom: 56px; }
+@media (max-width: 760px) { .about-cols { grid-template-columns: 1fr; gap: 32px; } }

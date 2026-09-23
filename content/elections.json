@@ -2,7 +2,7 @@
   "$schema": "./schema/elections.schema.json",
   "election_date": "2026-11-03",
   "polling_hours": "6am - 9pm",
-  "editorial_note": "<strong style=\"color: var(--gold-light);\">Editorial note:</strong> Candidate profiles are drawn from Pelham Examiner reporting and candidate statements. This site does not endorse any candidate. All facts sourced from <a href=\"https://pelhamexaminer.com\" target=\"_blank\" style=\"color: var(--gold-light);\">pelhamexaminer.com</a>. Register to vote at <a href=\"https://www.elections.ny.gov\" target=\"_blank\" style=\"color: var(--gold-light);\">elections.ny.gov</a> — registration deadline is typically {{fact:voter-registration-deadline}} the election.",
+  "editorial_note": "<strong style=\"color: var(--gold-light);\">This site does not endorse any candidate or party.</strong> Candidate profiles are drawn from their own public statements and Pelham Examiner coverage. All candidates in each race are presented. Register to vote by {{fact:voter-registration-deadline}} — see <a href=\"/about\" style=\"color: var(--gold-light);\">how this site works</a>.",
   "voter_info": [
     {
       "label": "Election Day",
