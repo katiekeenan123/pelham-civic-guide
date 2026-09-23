@@ -411,6 +411,49 @@ test('gov-101 — the five governing bodies plus the quick-reference card', asyn
   await expect(page.locator('main')).toContainText('Who to call for what?');
 });
 
+
+test('gov-101 — layer diagram shows five bodies and the village split', async ({ page }) => {
+  await page.goto('/gov-101');
+  const diagram = page.locator('.layer-diagram');
+  await expect(diagram).toBeVisible();
+  await expect(diagram.locator('.layer')).toHaveCount(5);
+
+  // The split is the point of the diagram: the two villages sit side by side
+  // on one tier, not stacked in a chain under the Town.
+  const split = diagram.locator('.layer-row.is-split');
+  await expect(split).toHaveCount(1);
+  await expect(split.locator('.layer')).toHaveCount(2);
+  const both = await split.locator('.layer').all();
+  const boxA = await both[0].boundingBox();
+  const boxB = await both[1].boundingBox();
+  expect(Math.abs(boxA.y - boxB.y), 'the two villages share a tier').toBeLessThan(4);
+
+  // Scope is stated in words, not by colour alone.
+  await expect(diagram.locator('.layer-scope.is-partial')).toHaveCount(2);
+  await expect(diagram.locator('.layer-scope.is-everyone')).toHaveCount(3);
+  await expect(diagram).toHaveAttribute('role', 'img');
+});
+
+test('gov-101 — officials cards name officeholders and flag contested bodies', async ({ page }) => {
+  await page.goto('/gov-101');
+  const cards = page.locator('.officials-card');
+  // Four bodies have a local roster; the county does not.
+  await expect(cards).toHaveCount(4);
+
+  const main = page.locator('main');
+  for (const name of ['Chance Mullen', 'Theresa Mohan', 'Jennifer Monachino Lapey', 'Dr. Cheryl H. Champ']) {
+    await expect(main, `${name} should appear in the roster`).toContainText(name);
+  }
+  // The vacancy is shown as vacant rather than quietly omitted.
+  await expect(page.locator('.officials-vacant')).toHaveCount(1);
+
+  // Every body with a race this November links to it — three, not two: the
+  // Town Supervisor and Clerk are on the ballot as well as the two villages.
+  const contested = page.locator('.officials-contested');
+  await expect(contested).toHaveCount(3);
+  await expect(contested.first()).toHaveAttribute('href', '/elections');
+});
+
 test('get-involved — three parts: raise a concern, vote, run for office', async ({ page }) => {
   await page.goto('/get-involved');
   const parts = page.locator('.involved-part');

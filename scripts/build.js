@@ -720,6 +720,97 @@ function generateMeetings(data, r) {
   return out.join('\n').trimEnd();
 }
 
+// ── Gov 101: how Pelham is layered ─────────────────────────────────────────
+//
+// The point of the diagram is the split: the Town is not "above" the villages
+// in a chain, it is divided into them, and the school district cuts across
+// both. A stacked list would lose exactly the thing a new resident is
+// confused about, so tier 3 renders as two boxes side by side.
+//
+// Tier, scope and colour are all derived from bodies[].type — only the
+// one-line `layer_controls` is authored.
+const LAYER_TIER = { county: 1, town: 2, village: 3, school: 4 };
+const LAYER_SCOPE = {
+  county: 'Every Pelham resident',
+  town: 'Every Pelham resident',
+  village: 'Village residents only',
+  school: 'Every Pelham resident',
+};
+
+function generateLayerDiagram(data, r) {
+  const tiers = new Map();
+  for (const b of data.bodies.bodies) {
+    const t = LAYER_TIER[b.type];
+    if (!t) { fail('bodies.json', `${b.id} has type "${b.type}" with no diagram tier`); continue; }
+    if (!tiers.has(t)) tiers.set(t, []);
+    tiers.get(t).push(b);
+  }
+
+  const box = (b) => {
+    const scope = LAYER_SCOPE[b.type];
+    const scopeClass = b.type === 'village' ? 'is-partial' : 'is-everyone';
+    return [
+      `          <div class="layer layer-${b.type}">`,
+      `            <div class="layer-name">${b.name}</div>`,
+      `            <div class="layer-scope ${scopeClass}">${scope}</div>`,
+      `            <p class="layer-controls">${r(b.layer_controls, 'bodies.json')}</p>`,
+      '          </div>',
+    ].join(NL);
+  };
+
+  const out = [];
+  out.push('    <div class="layer-diagram" role="img" aria-label="Pelham\'s five governing layers: Westchester County and the Town of Pelham cover every resident, the Town divides into the Village of Pelham and the Village of Pelham Manor which each cover only their own residents, and the school district covers everyone.">');
+  const ordered = [...tiers.keys()].sort((a, b) => a - b);
+  ordered.forEach((t, idx) => {
+    const row = tiers.get(t);
+    if (idx > 0) {
+      // The connector into tier 3 forks, because that is where the Town
+      // divides rather than simply handing down.
+      out.push(`      <div class="layer-link${row.length > 1 ? ' is-fork' : ''}" aria-hidden="true"></div>`);
+    }
+    out.push(`      <div class="layer-row${row.length > 1 ? ' is-split' : ''}">`);
+    for (const b of row) out.push(box(b));
+    out.push('      </div>');
+  });
+  out.push('    </div>');
+  return out.join(NL);
+}
+
+// ── Gov 101: who holds each seat right now ─────────────────────────────────
+//
+// The roster used to exist only inside the AI system prompt — the page named
+// no one. This is where officials.json finally reaches a reader.
+function generateOfficialsCards(data, r) {
+  const contested = new Set(data.elections.races.map((x) => x.body));
+  const out = ['    <div class="officials-grid">'];
+
+  for (const b of data.bodies.bodies) {
+    const people = data.officials.officials.filter((o) => o.governing_body === b.id);
+    if (!people.length) continue;   // the county has no local roster
+
+    out.push(`      <div class="officials-card fade-in" id="officials-${esc(b.id)}">`);
+    out.push(`        <h3 class="officials-card-title">${b.name}</h3>`);
+    if (contested.has(b.id)) {
+      out.push('        <a class="officials-contested" href="/elections">On the ballot this November →</a>');
+    }
+    out.push('        <ul class="officials-list">');
+    for (const o of people) {
+      const who = o.vacant
+        ? '<span class="officials-vacant">Vacant</span>'
+        : esc(o.name);
+      const tag = o.seat_type !== 'elected'
+        ? ` <span class="officials-seat">${o.seat_type}</span>` : '';
+      out.push(`          <li><span class="officials-role">${esc(o.title)}</span><span class="officials-name">${who}${tag}</span></li>`);
+    }
+    out.push('        </ul>');
+    out.push(`        <div class="officials-verified">Roster verified ${data.officials.verified}</div>`);
+    out.push('      </div>');
+  }
+
+  out.push('    </div>');
+  return out.join(NL);
+}
+
 function generateGovernanceCards(data, r) {
   const out = ['    <div class="gov-grid">'];
   for (const b of data.bodies.bodies) {
@@ -1091,6 +1182,8 @@ function pageBlocks(data, r) {
     meetings: () => generateMeetings(data, r),
     taxes: () => generateTaxSection(data, r),
     governance: () => generateGovernanceCards(data, r),
+    'layer-diagram': () => generateLayerDiagram(data, r),
+    'officials-cards': () => generateOfficialsCards(data, r),
     'source-chips': () => generateSourceChips(data),
     'get-involved': () => generateGetInvolved(data),
     'involved-vote': () => generateInvolvedVote(data, r),

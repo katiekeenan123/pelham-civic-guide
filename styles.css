@@ -1929,3 +1929,138 @@
 @media (max-width: 560px) {
   .ask-cta .content-wrap { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   GOV 101 — layer diagram and officials
+   ══════════════════════════════════════════════════════════════════════ */
+
+.gov-subhead {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 700;
+  color: var(--navy);
+  margin: 48px 0 8px;
+}
+.gov-subintro { font-size: 15px; line-height: 1.7; color: var(--slate); max-width: 720px; margin: 0 0 24px; }
+
+/* ── Layer diagram ──
+   Tier 3 renders as two boxes side by side because the Town divides into the
+   villages rather than handing down to them — a stacked list would lose the
+   one thing a new resident is actually confused about. */
+.layer-diagram { display: flex; flex-direction: column; align-items: stretch; }
+.layer-row { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.layer-row.is-split { grid-template-columns: 1fr 1fr; }
+
+.layer {
+  border: 1px solid var(--border);
+  border-left: 5px solid var(--slate-mid);
+  background: var(--white);
+  padding: 16px 18px;
+}
+.layer-county, .layer-town { border-left-color: #3a6ea5; }   /* everyone */
+.layer-village           { border-left-color: var(--gold); } /* village only */
+.layer-school            { border-left-color: #6b4fa0; }     /* everyone, but its own levy */
+
+.layer-name {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+}
+.layer-scope {
+  display: inline-block;
+  margin: 6px 0 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 2px;
+}
+.layer-scope.is-everyone { color: #26537f; background: rgba(58,110,165,0.12); }
+.layer-scope.is-partial  { color: #8a6516; background: rgba(200,151,58,0.16); }
+.layer-controls { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--slate); }
+
+/* Connector between tiers; forks where the Town splits. */
+.layer-link { height: 22px; position: relative; }
+.layer-link::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.layer-link.is-fork::after {
+  content: '';
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  bottom: 0;
+  height: 2px;
+  background: var(--border);
+}
+.layer-link.is-fork { height: 26px; }
+
+@media (max-width: 680px) {
+  /* Stack the villages, but keep the fork visible so the split still reads. */
+  .layer-row.is-split { grid-template-columns: 1fr; }
+  .layer-link.is-fork::after { left: 50%; right: auto; width: 2px; height: 0; }
+}
+
+/* ── Officials cards ── */
+.officials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+.officials-card {
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--navy);
+  background: var(--white);
+  padding: 18px;
+}
+.officials-card-title {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 6px;
+}
+.officials-contested {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--red);
+  text-decoration: none;
+  border-bottom: 1px solid var(--red);
+}
+.officials-list { list-style: none; margin: 0; padding: 0; }
+.officials-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.officials-list li:last-child { border-bottom: none; }
+.officials-role { color: var(--slate); flex: 1 1 auto; }
+.officials-name { color: var(--navy); font-weight: 600; text-align: right; flex: 0 1 auto; }
+.officials-vacant { color: var(--red); font-style: italic; font-weight: 600; }
+.officials-seat {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--slate);
+  font-weight: 400;
+}
+.officials-verified {
+  margin-top: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--slate);
+}

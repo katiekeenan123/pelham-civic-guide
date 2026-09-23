@@ -59,7 +59,8 @@
       ],
       "board_name": "Village of Pelham Board of Trustees",
       "short_name": "Village of Pelham",
-      "icon": "🏛"
+      "icon": "🏛",
+      "layer_controls": "Police, fire, refuse, water, roads and the building department — for Village of Pelham residents only."
     },
     {
       "id": "village-of-pelham-manor",
@@ -119,7 +120,8 @@
       ],
       "board_name": "Village of Pelham Manor Board of Trustees",
       "short_name": "Pelham Manor",
-      "icon": "🏛"
+      "icon": "🏛",
+      "layer_controls": "Its own police, fire and public works departments — for Pelham Manor residents only."
     },
     {
       "id": "town-of-pelham",
@@ -183,7 +185,8 @@
       ],
       "board_name": "Town of Pelham Town Board",
       "short_name": "Town Board",
-      "icon": "🏛"
+      "icon": "🏛",
+      "layer_controls": "Municipal courts, tax assessment and collection, recreation programmes, the public library, and the ambulance service shared by both villages."
     },
     {
       "id": "pelham-schools",
@@ -239,7 +242,8 @@
       ],
       "board_name": "Pelham Board of Education",
       "short_name": "Board of Education",
-      "icon": "🎓"
+      "icon": "🎓",
+      "layer_controls": "K–12 education across four elementary schools, the middle school and Pelham Memorial High School."
     },
     {
       "id": "westchester-county",
@@ -284,7 +288,8 @@
       ],
       "board_name": null,
       "short_name": "Westchester County",
-      "icon": null
+      "icon": null,
+      "layer_controls": "Health department, parks, sewer districts, social services, county police — and the equalization rates used in property assessments."
     }
   ],
   "extra_schedule_rows": [

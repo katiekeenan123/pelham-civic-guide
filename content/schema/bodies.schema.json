@@ -270,6 +270,10 @@
             "null"
           ],
           "description": "Emoji shown before short_name in the meeting chips."
+        },
+        "layer_controls": {
+          "type": "string",
+          "description": "One sentence naming what this body actually decides, for the layer diagram on Gov 101. Shorter and blunter than `description`, which introduces the body; this answers 'what does it control'. The diagram's tier, scope and colour are all derived from `type` rather than stored, so this is the only part that has to be written."
         }
       }
     }
