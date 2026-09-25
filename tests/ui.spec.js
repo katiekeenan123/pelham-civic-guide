@@ -819,6 +819,32 @@ test('home — asking a question renders an answer bubble', async ({ page }) => 
   await expect(page.locator('.chat-bubble.assistant')).toContainText('Test answer.');
 });
 
+/* The Q&A log groups follow-up questions onto the exchange that started them,
+ * which only works if the browser actually sends a session id and sends the
+ * SAME one twice. Nothing on the page surfaces this, so without a test it
+ * would fail silently and the log would read as one-off questions. */
+test('ask — every request carries one stable session id', async ({ page }) => {
+  const sent = [];
+  await page.route('**/api/ask', (route) => {
+    sent.push(JSON.parse(route.request().postData() || '{}').session_id);
+    return route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify({ answer: 'Test answer.' }),
+    });
+  });
+  await page.goto('/');
+
+  for (const q of ['Who is the mayor?', 'How do I email them?']) {
+    await page.fill('#ai-input', q);
+    await page.click('#ask-btn');
+    await expect(page.locator('#ask-btn')).toBeEnabled();
+  }
+
+  expect(sent.length).toBe(2);
+  expect(sent[0], 'session id missing from the request body').toBeTruthy();
+  expect(sent[1], 'a follow-up must reuse the page-load id').toBe(sent[0]);
+});
+
 /* Chat bubbles are built with innerHTML, so anything the reader types — or
  * anything the model returns — reaches the DOM as markup unless it is escaped
  * first. The assistant path matters as much as the user path: the answer text

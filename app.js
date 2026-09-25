@@ -9,6 +9,21 @@
 
   let conversationHistory = [];
 
+  // Q&A logging active — review after 30 days and decide whether to keep.
+  //
+  // One id per page load, so the log can tell "one person asked six follow-up
+  // questions" from "six people each asked one". Deliberately not a cookie and
+  // not stored: it dies with the tab, identifies nobody, and survives no
+  // longer than the conversation it groups.
+  const SESSION_ID = (() => {
+    try {
+      return crypto.randomUUID();
+    } catch {
+      // Older Safari, and any non-secure context.
+      return 'sess-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+    }
+  })();
+
   function usePrompt(btn) {
     document.getElementById('ai-input').value = btn.textContent;
     document.getElementById('ai-input').focus();
@@ -168,7 +183,7 @@
       const response = await fetch('/api/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: conversationHistory })
+        body: JSON.stringify({ messages: conversationHistory, session_id: SESSION_ID })
       });
 
       if (!response.ok) {

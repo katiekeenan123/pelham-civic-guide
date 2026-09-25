@@ -18,6 +18,15 @@
 //   SUPABASE_ANON_KEY  - the project "anon"/public API key
 // If those are absent the chat path still works; only feedback writes fail.
 //
+// Q&A logging active — review after 30 days and decide whether to keep.
+// Every answered question is also written to the Supabase `qa_log` table with
+// the full answer and the caller's per-page-load session_id, so the first
+// month of real traffic can be read back and used to find gaps in the
+// content. This is a launch-period diagnostic, not a permanent feature: it is
+// the one table here that records what residents asked rather than what they
+// chose to submit, so it should be switched off or justified once the thirty
+// days are up. See logQa() below.
+//
 // RETRIEVAL (RAG): before calling Anthropic, the newest user question is
 // matched against the Supabase `articles` table -- Pelham Examiner coverage
 // tagged nightly by the check_examiner.py pipeline in the companion repo. Any
@@ -120,11 +129,53 @@ exports.handler = async (event) => {
         ? data.content[0].text
         : '';
 
-    return json(200, { answer: withSources(answer, articles) });
+    const delivered = withSources(answer, articles);
+    // Q&A logging active — review after 30 days and decide whether to keep.
+    await logQa(latestQuestion(messages), delivered, body.session_id);
+    return json(200, { answer: delivered });
   } catch (err) {
     return json(502, { error: 'Upstream request failed', detail: String(err) });
   }
 };
+
+// Q&A logging active — review after 30 days and decide whether to keep.
+//
+// Records the question and the answer exactly as delivered to the reader,
+// including the "Sources:" block, so the log shows what was actually said
+// rather than a reconstruction.
+//
+// Awaited rather than fired and forgotten. Lambda freezes the container the
+// instant the handler returns, so an un-awaited insert is silently dropped
+// whenever it has not already landed — which, for a log whose whole purpose
+// is completeness, is the worst of both worlds. The race below bounds what
+// the await can cost: if Supabase is slow or down the answer still goes out
+// on time and the log entry is the thing that is lost, which is the right way
+// round. Nothing in here can fail the request.
+const QA_LOG_TIMEOUT_MS = 1500;
+
+async function logQa(question, answer, sessionId) {
+  try {
+    const supabase = getSupabase();
+    if (!supabase || !question || !answer) return;
+    // Generous caps, not the 2000-char clip the submission forms use: the
+    // point of this table is the FULL answer.
+    const row = {
+      question: String(question).slice(0, 8000),
+      answer: String(answer).slice(0, 20000),
+      session_id: typeof sessionId === 'string' && sessionId.trim()
+        ? sessionId.slice(0, 100)
+        : null,
+    };
+    const result = await Promise.race([
+      supabase.from('qa_log').insert(row),
+      new Promise((resolve) => setTimeout(() => resolve({ timedOut: true }), QA_LOG_TIMEOUT_MS)),
+    ]);
+    if (result && result.timedOut) console.warn('[qa_log] insert timed out');
+    else if (result && result.error) console.warn('[qa_log]', result.error.message);
+  } catch (err) {
+    console.warn('[qa_log] write failed:', String(err));
+  }
+}
 
 function json(statusCode, payload) {
   return {

@@ -19,9 +19,15 @@
 --
 -- Run this in the Supabase SQL editor.
 --
--- STATUS: run against production on 23 September 2026. All three paths
--- verified returning {"ok":true}. Keep this file — it is the setup step for
--- any new Supabase project, and the record of why the grants exist.
+-- STATUS: the three submission tables were run against production on 23
+-- September 2026 and all three paths verified returning {"ok":true}. The
+-- qa_log block at the bottom was added 24 September 2026 and has NOT been run
+-- yet — until it is, every answer still returns normally and only the log
+-- write fails. Keep this file — it is the setup step for any new Supabase
+-- project, and the record of why the grants exist.
+--
+-- Re-running the whole file is safe: every statement is create-if-not-exists,
+-- add-column-if-not-exists, or drop-then-create.
 
 -- ── feedback: 👍/👎 on an AI answer ─────────────────────────────────────────
 alter table public.feedback enable row level security;
@@ -54,6 +60,38 @@ drop policy if exists "anon can insert civic_engagement" on public.civic_engagem
 create policy "anon can insert civic_engagement"
   on public.civic_engagement for insert to anon
   with check (true);
+
+-- ── qa_log: every question asked and the full answer given ────────────────
+-- Q&A logging active — review after 30 days and decide whether to keep.
+--
+-- Added for the launch period to find out what residents actually ask, and
+-- where the content does not answer them. Unlike the three tables above this
+-- records something the reader did not choose to submit, so it carries an
+-- expiry by intention rather than by neglect: after thirty days, either drop
+-- the table and the logQa() call in ask-pelham.js, or write down why it is
+-- staying. `session_id` is a random per-page-load value generated in the
+-- browser -- not a cookie, not stored, tied to no person.
+create table if not exists public.qa_log (
+  id bigserial primary key,
+  question text not null,
+  answer text not null,
+  session_id text,
+  created_at timestamptz not null default now()
+);
+alter table public.qa_log enable row level security;
+grant insert on table public.qa_log to anon;
+
+drop policy if exists "anon can insert qa_log" on public.qa_log;
+create policy "anon can insert qa_log"
+  on public.qa_log for insert to anon
+  with check (true);
+
+-- bigserial, so the sequence needs its own grant or every insert fails with
+-- "permission denied for sequence qa_log_id_seq".
+grant usage, select on sequence public.qa_log_id_seq to anon;
+
+-- The digest reads this table back; the three above are read the same way.
+grant select on table public.qa_log to service_role;
 
 -- INSERT only, deliberately. No select policy is granted, so submissions
 -- cannot be read back by the anon role — a resident reporting an error, or
