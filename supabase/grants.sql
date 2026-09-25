@@ -67,10 +67,13 @@ create policy "anon can insert civic_engagement"
 -- Added for the launch period to find out what residents actually ask, and
 -- where the content does not answer them. Unlike the three tables above this
 -- records something the reader did not choose to submit, so it carries an
--- expiry by intention rather than by neglect: after thirty days, either drop
--- the table and the logQa() call in ask-pelham.js, or write down why it is
--- staying. `session_id` is a random per-page-load value generated in the
--- browser -- not a cookie, not stored, tied to no person.
+-- expiry by intention rather than by neglect, and the expiry is enforced in
+-- code: logQa() in ask-pelham.js holds a hard cutoff of October 24, 2026 and
+-- writes nothing after it, so the table stops growing whether or not anyone
+-- remembers. Restarting it takes a deliberate edit. On or before that date,
+-- either drop this table and the logQa() call, or move the cutoff and write
+-- down why it is staying. `session_id` is a random per-page-load value
+-- generated in the browser -- not a cookie, not stored, tied to no person.
 create table if not exists public.qa_log (
   id bigserial primary key,
   question text not null,

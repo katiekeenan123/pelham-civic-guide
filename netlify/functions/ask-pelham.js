@@ -25,7 +25,8 @@
 // content. This is a launch-period diagnostic, not a permanent feature: it is
 // the one table here that records what residents asked rather than what they
 // chose to submit, so it should be switched off or justified once the thirty
-// days are up. See logQa() below.
+// days are up. It stops on its own: logQa() holds a hard cutoff of October
+// 24, 2026 and writes nothing after it. See logQa() below.
 //
 // RETRIEVAL (RAG): before calling Anthropic, the newest user question is
 // matched against the Supabase `articles` table -- Pelham Examiner coverage
@@ -153,8 +154,26 @@ exports.handler = async (event) => {
 // round. Nothing in here can fail the request.
 const QA_LOG_TIMEOUT_MS = 1500;
 
+// 30-day Q&A logging period ends October 24, 2026 — review qa_log table and
+// decide whether to extend or make permanent.
+//
+// A hard stop rather than a reminder. A comment asking someone to switch this
+// off in a month only works if someone reads it in a month, and this is the
+// one table that records what residents asked rather than what they chose to
+// submit — so it should stop on its own and require a deliberate act to
+// restart. Past the cutoff logQa returns before it builds a row; answers are
+// unaffected, and the table simply stops growing.
+//
+// To extend, move this date. To make it permanent, delete the constant and
+// the guard below, and say so in supabase/grants.sql.
+//
+// End of October 24 in Pelham's own timezone (EDT, UTC-4) rather than UTC
+// midnight, which would cut four hours off the final day.
+const QA_LOG_UNTIL = Date.parse('2026-10-25T04:00:00Z');
+
 async function logQa(question, answer, sessionId) {
   try {
+    if (Date.now() >= QA_LOG_UNTIL) return;
     const supabase = getSupabase();
     if (!supabase || !question || !answer) return;
     // Generous caps, not the 2000-char clip the submission forms use: the
