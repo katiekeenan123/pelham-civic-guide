@@ -21,9 +21,8 @@
 --
 -- STATUS: the three submission tables were run against production on 23
 -- September 2026 and all three paths verified returning {"ok":true}. The
--- qa_log block at the bottom was added 24 September 2026 and has NOT been run
--- yet — until it is, every answer still returns normally and only the log
--- write fails. Keep this file — it is the setup step for any new Supabase
+-- qa_log block at the bottom was added 24 September 2026. Completed — table
+-- and policies are live in production. Keep this file — it is the setup step for any new Supabase
 -- project, and the record of why the grants exist.
 --
 -- Re-running the whole file is safe: every statement is create-if-not-exists,
