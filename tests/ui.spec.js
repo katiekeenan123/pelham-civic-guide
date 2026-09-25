@@ -695,16 +695,16 @@ const bodyTab = (page, body) => page.locator(`.mtg-body-tab[data-body="${body}"]
 const summary = (page, id) => page.locator(`.mtg-set[data-meeting="${id}"]`);
 const fold = (set, key) => set.locator(`details.mtg-fold[data-section="${key}"]`);
 
-const VILLAGE_SEP = 'pelham-board-sep2026';
-const VILLAGE_JUL = 'pelham-board-jul2026';
+const VILLAGE_LATEST = 'pelham-board-sep22-2026';
+const VILLAGE_SEP8 = 'pelham-board-sep2026';
 const TOWN_AUG = 'town-council-aug2026';
 
 test('meetings — four board tabs, each opening on its latest meeting with earlier ones as dates', async ({ page }) => {
   await page.goto('/meetings');
   await expect(page.locator('.mtg-body-tab')).toHaveCount(4);
   await expect(bodyTab(page, 'village-of-pelham')).toHaveAttribute('aria-selected', 'true');
-  await expect(summary(page, VILLAGE_SEP)).toBeVisible();
-  await expect(summary(page, VILLAGE_JUL)).toBeHidden();
+  await expect(summary(page, VILLAGE_LATEST)).toBeVisible();
+  await expect(summary(page, VILLAGE_SEP8)).toBeHidden();
 
   // Every published meeting is reachable: the latest per board by its tab,
   // the rest from that board's date list.
@@ -748,17 +748,17 @@ test('meetings — summary sections: exec and residents open, the rest folded', 
   await fold(set, 'detailed').locator('summary').click();
   await expect(fold(set, 'detailed')).toContainText('Bruno Barbosa');
   // Opening one meeting's section must not open another meeting's.
-  await expect(fold(summary(page, VILLAGE_SEP), 'detailed')).not.toHaveAttribute('open', '');
+  await expect(fold(summary(page, VILLAGE_LATEST), 'detailed')).not.toHaveAttribute('open', '');
 });
 
 test('meetings — a hash deep-links to a meeting', async ({ page }) => {
   // The home digest links /meetings#<id>; that must open the right board.
-  await page.goto('/meetings#' + VILLAGE_JUL);
+  await page.goto('/meetings#' + VILLAGE_SEP8);
   await expect(bodyTab(page, 'village-of-pelham')).toHaveAttribute('aria-selected', 'true');
-  await expect(summary(page, VILLAGE_JUL)).toBeVisible();
-  await expect(summary(page, VILLAGE_SEP)).toBeHidden();
+  await expect(summary(page, VILLAGE_SEP8)).toBeVisible();
+  await expect(summary(page, VILLAGE_LATEST)).toBeHidden();
   // The date list now offers the latest meeting to go back to.
-  await expect(page.locator(`.mtg-date-link[data-meeting="${VILLAGE_SEP}"]`)).toBeVisible();
+  await expect(page.locator(`.mtg-date-link[data-meeting="${VILLAGE_LATEST}"]`)).toBeVisible();
 
 });
 
