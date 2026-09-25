@@ -359,6 +359,51 @@
           ],
           "description": "Main public phone number, e.g. the Town Receiver of Taxes line. Referenced from facts.json where the same number appears in prose."
         },
+        "clerk": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "title",
+            "office",
+            "phone"
+          ],
+          "description": "How to reach the clerk's office -- the usual first stop for agendas, records requests and meeting questions. Rendered as the 'Clerk' row on the village cards and emitted into the prompt's officials block.",
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "The clerk's title as the body publishes it, e.g. 'Village Clerk', 'Village Manager/Clerk'."
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Who holds the post. Should match the officials.json entry."
+            },
+            "office": {
+              "type": "string",
+              "description": "Street address of the clerk's office, including floor where published."
+            },
+            "phone": {
+              "type": "string",
+              "description": "Clerk's office phone."
+            },
+            "hours": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Office hours as published, including any seasonal hours."
+            },
+            "source_url": {
+              "type": "string",
+              "description": "The official page the contact details were verified against."
+            }
+          }
+        },
         "source_links": {
           "type": "array",
           "description": "The small link row at the foot of the card (budgets, agendas, rosters, news).",

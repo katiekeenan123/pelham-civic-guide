@@ -36,6 +36,7 @@
         "elected_date": { "type": ["string", "null"], "description": "When they took the seat (YYYY-MM). Null for staff." },
         "term_end": { "type": ["string", "null"], "description": "When the current term expires (YYYY-MM). All seven Board of Education members have explicit terms; most village and town seats can leave this null and rely on elections.json." },
         "source_url": { "type": "string", "description": "The official roster page this entry was verified against -- each governing body publishes its own." },
+        "phone": { "type": ["string", "null"], "description": "Direct public phone line for this person's office, as published on source_url, e.g. '914-231-3320'. Emitted into the prompt." },
         "notes": { "type": ["string", "null"], "description": "Anything the prompt or a future card should carry: 'First woman elected to the role', or for a vacancy, who is fulfilling the duties and under what authority." },
         "in_prompt": { "type": "boolean", "default": true, "description": "Whether to emit this person into the generated system prompt. Default true; set false only for a seat the AI should not volunteer." }
       }

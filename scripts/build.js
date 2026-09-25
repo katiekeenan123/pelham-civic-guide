@@ -323,8 +323,10 @@ function buildPrompt(data, r) {
           if (o.seat_type !== 'elected') bits.push(o.seat_type);
           const tail = bits.length ? ` (${bits.join('; ')})` : '';
           out.push(`    ${o.title}: ${who}${tail}`);
+          if (o.phone) out.push(`      phone: ${o.phone}`);
           if (o.notes) out.push(`      note: ${r(o.notes, 'officials.json')}`);
         }
+        if (b.clerk) out.push(`    Clerk's office: ${clerkLine(b.clerk)}`);
       }
       return [`Current elected officials and senior staff (roster verified ${data.officials.verified}):`,
         ...out].join('\n');
@@ -961,7 +963,7 @@ function generateOfficialsCards(data, r) {
 // the build summary as a gap.
 const villageGaps = [];
 function villageRows(b, budgetRow) {
-  const need = { composition: b.composition, area_sq_miles: b.area_sq_miles, meeting_schedule: b.meeting_schedule, offices_address: b.offices_address, budget: b.budget };
+  const need = { composition: b.composition, area_sq_miles: b.area_sq_miles, meeting_schedule: b.meeting_schedule, offices_address: b.offices_address, budget: b.budget, clerk: b.clerk };
   for (const [k, v] of Object.entries(need)) {
     if (v === null || v === undefined) fail('bodies.json', `${b.id} is a village with no ${k} — both village cards must carry the same rows`);
   }
@@ -972,7 +974,15 @@ function villageRows(b, budgetRow) {
     { key: 'Area', value: `${b.area_sq_miles} square miles` },
     { key: 'Meetings', value: (b.meeting_schedule || {}).cadence_detail || '' },
     { key: 'Village Hall', value: b.offices_address || '' },
+    { key: 'Clerk', value: clerkLine(b.clerk) },
   ];
+}
+
+// "Adriana Rugova, Village Clerk — 200 Fifth Avenue, 3rd Floor · 914-231-3320 · hours"
+function clerkLine(c) {
+  if (!c) return '';
+  const who = c.name ? `${c.name}, ${c.title}` : c.title;
+  return `${who} — ${[c.office, c.phone, c.hours].filter(Boolean).join(' · ')}`;
 }
 
 function generateGovernanceCards(data, r) {

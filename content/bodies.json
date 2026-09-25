@@ -46,6 +46,14 @@
       "offices_address": "200 Fifth Ave",
       "website": "https://www.pelhamny.gov",
       "phone": null,
+      "clerk": {
+        "title": "Village Clerk",
+        "name": "Adriana Rugova",
+        "office": "200 Fifth Avenue, 3rd Floor",
+        "phone": "914-231-3320",
+        "hours": "Monday–Friday 9am–4:30pm (summer hours: Mon–Thu 8:30am–4:30pm, Fri 8:30am–12:30pm)",
+        "source_url": "https://www.pelhamny.gov/177/Village-Clerk"
+      },
       "source_links": [
         {
           "label": "Board of Trustees",
@@ -100,7 +108,7 @@
       "detail_rows": [],
       "meeting_schedule": {
         "cadence": "2nd & 4th Mondays",
-        "cadence_detail": "2nd and 4th Monday of each month. Watch live on Vimeo or Facebook — see pelhammanor.gov/199/Board-of-Trustees for details.",
+        "cadence_detail": "2nd and 4th Monday of each month at 8:15pm. Watch live on Vimeo or Facebook — see pelhammanor.gov/199/Board-of-Trustees for details.",
         "location_name": "Village Hall",
         "address": "4 Penfield Place",
         "participation": "Public comment period at each meeting",
@@ -110,6 +118,14 @@
       "offices_address": "4 Penfield Place",
       "website": "https://www.pelhammanor.gov",
       "phone": null,
+      "clerk": {
+        "title": "Village Manager/Clerk",
+        "name": "Lindsey Luft",
+        "office": "4 Penfield Place, Pelham Manor, NY 10803",
+        "phone": "914-738-8820",
+        "hours": null,
+        "source_url": "https://www.pelhammanor.gov/182/Village-ManagerClerk"
+      },
       "source_links": [
         {
           "label": "Board of Trustees",
