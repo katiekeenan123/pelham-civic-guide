@@ -377,6 +377,10 @@
               "url": {
                 "type": "string",
                 "description": "Destination."
+              },
+              "note": {
+                "type": "string",
+                "description": "Maintainer note about the link (e.g. a known problem to check). Not rendered."
               }
             }
           }

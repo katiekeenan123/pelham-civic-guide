@@ -207,7 +207,7 @@
       "fact": "Village of Pelham Manor capital budget, FY2026-27",
       "value": 2500000,
       "display": "$2.5M",
-      "qualifier": "Derived: the adopted total of $21.9M less $19.4M operating. The pre-refactor system prompt gave $2.6M, which does not reconcile with the stated total. Confirm against the adopted budget before treating as verified.",
+      "qualifier": "Derived: $21.9M total minus $19.4M operating. Verify against 2026-27 Adopted Budget PDF at pelhammanor.gov/209/Budgets-Financial-Statements",
       "confidence": "reported",
       "as_of": "2026-03-24",
       "last_updated": "2026-09-21",

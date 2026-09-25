@@ -36,7 +36,7 @@
       "detail_rows": [],
       "meeting_schedule": {
         "cadence": "2nd & 4th Tuesdays",
-        "cadence_detail": "2nd & 4th Tuesday of each month",
+        "cadence_detail": "2nd & 4th Tuesday of each month (Regular at 8pm, Work Session 7-7:45pm). Available via Zoom — see pelhamny.gov for link. Note: July, August and December meetings may vary — check pelhamny.gov/AgendaCenter to confirm.",
         "location_name": "Village Hall",
         "address": "200 Fifth Ave",
         "participation": "Sign up for public comment at the meeting; agendas posted online",
@@ -99,8 +99,8 @@
       },
       "detail_rows": [],
       "meeting_schedule": {
-        "cadence": "Monthly Mondays",
-        "cadence_detail": "Monthly (typically 2nd Monday at 8:15 pm)",
+        "cadence": "2nd & 4th Mondays",
+        "cadence_detail": "2nd and 4th Monday of each month. Watch live on Vimeo or Facebook — see pelhammanor.gov/199/Board-of-Trustees for details.",
         "location_name": "Village Hall",
         "address": "4 Penfield Place",
         "participation": "Public comment period at each meeting",
@@ -293,7 +293,8 @@
         },
         {
           "label": "Legislature",
-          "url": "https://www.westchesterlegislatorsny.gov/"
+          "url": "https://www.westchesterlegislatorsny.gov/",
+          "note": "npm run verify:sources gets a certificate error here (UNABLE_TO_VERIFY_LEAF_SIGNATURE, September 2026). Verify the site's certificate before relying on this link."
         }
       ],
       "board_name": null,
