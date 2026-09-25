@@ -13,6 +13,12 @@
 // what the content files produce, which catches someone hand-editing
 // generated HTML instead of the JSON behind it.
 //
+//   node scripts/build.js --verify-sources   (npm run verify:sources)
+//
+// Checks every cited URL over the network and reports what came back. It never
+// writes files and always exits 0: run it before a major content update or a
+// launch, not on every build.
+//
 // Phases:
 //   1  load + validate (ajv 2020-12), foreign keys, token resolution
 //   2  generate the system prompt as a JS module
@@ -1529,6 +1535,175 @@ function phase5(html, data, pageId = 'home') {
                     + Object.keys(data.issues.rag_only_issues || {}).length };
 }
 
+// ── Source verification (--verify-sources) ─────────────────────────────────
+// Walks the content files for citation URLs (any `source_url`, or `url` inside
+// a source object), sends each unique URL one HEAD request with a browser
+// user-agent, and reports the result. Hosts' robots.txt is honoured: a
+// disallowed path is reported and not requested.
+
+const VERIFY_FILES = ['facts', 'bodies', 'officials', 'issues', 'elections'];
+const VERIFY_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+  + '(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
+const VERIFY_TIMEOUT_MS = 10000;
+const VERIFY_CONCURRENCY = 4;
+
+function collectCitations() {
+  const out = [];
+  const walk = (v, where, rec) => {
+    if (Array.isArray(v)) return v.forEach((x, i) => walk(x, `${where}[${i}]`, rec));
+    if (!v || typeof v !== 'object') return;
+    const id = v.id || rec;
+    for (const [k, x] of Object.entries(v)) {
+      const field = `${where}.${k}`;
+      if ((k === 'source_url' || k === 'url') && typeof x === 'string' && /^https?:\/\//i.test(x)) {
+        out.push({ url: x.trim(), rec: id || '(top level)', field });
+      } else walk(x, field, id);
+    }
+  };
+  for (const f of VERIFY_FILES) walk(readJson(path.join(CONTENT, `${f}.json`)), f, null);
+  return out;
+}
+
+// Minimal robots.txt reader: the `User-agent: *` group, longest match wins,
+// Allow beats Disallow on a tie, `*` and `$` wildcards supported.
+const robotsCache = new Map();
+function robotsRules(origin) {
+  if (!robotsCache.has(origin)) {
+    robotsCache.set(origin, fetch(`${origin}/robots.txt`, {
+      headers: { 'User-Agent': VERIFY_UA },
+      signal: AbortSignal.timeout(VERIFY_TIMEOUT_MS),
+    }).then((res) => (res.ok ? res.text() : '')).catch(() => '').then((txt) => {
+      const rules = [];
+      let agents = [], inRules = false;
+      for (const raw of txt.split(/\r?\n/)) {
+        const line = raw.replace(/#.*/, '').trim();
+        const m = line.match(/^([a-z-]+)\s*:\s*(.*)$/i);
+        if (!m) continue;
+        const key = m[1].toLowerCase(), val = m[2].trim();
+        if (key === 'user-agent') {
+          if (inRules) { agents = []; inRules = false; }
+          agents.push(val);
+        } else if (key === 'allow' || key === 'disallow') {
+          inRules = true;
+          if (agents.includes('*') && val) rules.push({ allow: key === 'allow', path: val });
+        }
+      }
+      return rules;
+    }));
+  }
+  return robotsCache.get(origin);
+}
+
+function robotsAllows(rules, pathname) {
+  let best = null;
+  for (const r of rules) {
+    const anchored = r.path.endsWith('$');
+    const body = (anchored ? r.path.slice(0, -1) : r.path)
+      .replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*');
+    const re = new RegExp('^' + body + (anchored ? '$' : ''));
+    if (!re.test(pathname)) continue;
+    if (!best || r.path.length > best.path.length || (r.path.length === best.path.length && r.allow)) best = r;
+  }
+  return !best || best.allow;
+}
+
+async function checkUrl(url) {
+  let u;
+  try { u = new URL(url); } catch { return { kind: 'error', detail: 'invalid URL' }; }
+  const rules = await robotsRules(u.origin);
+  if (!robotsAllows(rules, u.pathname + u.search)) return { kind: 'robots' };
+
+  const attempt = (method) => fetch(url, {
+    method,
+    redirect: 'follow',
+    headers: { 'User-Agent': VERIFY_UA, Accept: 'text/html,application/xhtml+xml,*/*;q=0.8' },
+    signal: AbortSignal.timeout(VERIFY_TIMEOUT_MS),
+  });
+  try {
+    let res = await attempt('HEAD');
+    // Some servers refuse HEAD outright; one GET (body discarded) settles it.
+    if (res.status === 405 || res.status === 501) {
+      res = await attempt('GET');
+      res.body?.cancel();
+    }
+    const s = res.status;
+    const kind = s >= 200 && s < 300 ? 'ok' : s === 403 ? 'forbidden' : s === 404 || s === 410 ? 'notfound' : 'other';
+    return { kind, status: s, redirected: res.redirected ? res.url : null };
+  } catch (e) {
+    if (e.name === 'TimeoutError' || e.name === 'AbortError') return { kind: 'timeout' };
+    return { kind: 'error', detail: e.cause?.code || e.message };
+  }
+}
+
+const isHomepage = (url) => {
+  try { const u = new URL(url); return (u.pathname === '/' || u.pathname === '') && !u.search; }
+  catch { return false; }
+};
+
+async function verifySources() {
+  const cites = collectCitations();
+  const byUrl = new Map();
+  for (const c of cites) {
+    if (!byUrl.has(c.url)) byUrl.set(c.url, []);
+    byUrl.get(c.url).push(c);
+  }
+  const urls = [...byUrl.keys()];
+  console.log(`\n  Verifying ${urls.length} unique URLs (${cites.length} citations in ${VERIFY_FILES.join(', ')})…\n`);
+
+  const results = new Map();
+  let next = 0;
+  await Promise.all(Array.from({ length: VERIFY_CONCURRENCY }, async () => {
+    while (next < urls.length) {
+      const url = urls[next++];
+      results.set(url, await checkUrl(url));
+    }
+  }));
+
+  const LABEL = {
+    ok: '200 OK', forbidden: '403 Forbidden (bot-blocked, may exist)', notfound: '404 Not Found',
+    robots: 'robots.txt blocked (not requested)', timeout: `timeout (>${VERIFY_TIMEOUT_MS / 1000}s)`,
+    other: 'other status', error: 'network error',
+  };
+  const order = ['notfound', 'timeout', 'error', 'other', 'forbidden', 'robots', 'ok'];
+  const refs = (url) => byUrl.get(url).map((c) => `${c.field} (${c.rec})`);
+
+  for (const kind of order) {
+    const group = urls.filter((u) => results.get(u).kind === kind);
+    if (!group.length) continue;
+    console.log(`  ${LABEL[kind]} — ${group.length}`);
+    for (const url of group) {
+      const r = results.get(url);
+      const extra = [r.status && kind !== 'ok' && kind !== 'forbidden' && kind !== 'notfound' ? `HTTP ${r.status}` : '',
+        r.detail || '', r.redirected && r.redirected !== url ? `→ ${r.redirected}` : ''].filter(Boolean).join(' ');
+      console.log(`    ${url}${extra ? '  ' + extra : ''}`);
+      if (kind !== 'ok') refs(url).forEach((x) => console.log(`        ${x}`));
+    }
+    console.log('');
+  }
+
+  const broken = urls.filter((u) => ['notfound', 'timeout'].includes(results.get(u).kind));
+  const homepages = urls.filter(isHomepage);
+  if (broken.length) {
+    console.log(`  ⚠ build warning: ${broken.length} cited URL(s) returned 404 or timed out`);
+    for (const url of broken) {
+      console.log(`    ${url}`);
+      refs(url).forEach((x) => console.log(`        ${x}`));
+    }
+    console.log('');
+  }
+  if (homepages.length) {
+    console.log(`  ⚠ citation quality: ${homepages.length} URL(s) point to a homepage, not the page with the claim`);
+    for (const url of homepages) {
+      console.log(`    ${url}`);
+      refs(url).forEach((x) => console.log(`        ${x}`));
+    }
+    console.log('');
+  }
+  const counts = order.map((k) => [k, urls.filter((u) => results.get(u).kind === k).length])
+    .filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(', ');
+  console.log(`  Summary: ${counts}. ${broken.length} broken, ${homepages.length} homepage citations. (Report only — exit 0.)\n`);
+}
+
 // =========================================================================
 function main() {
   const data = phase1();
@@ -1616,4 +1791,7 @@ function report() {
 // module from inside main(), and would otherwise see an empty exports object.
 module.exports = { generateNav, generateFooter, phase1, makeResolver };
 
-if (require.main === module) main();
+if (require.main === module) {
+  if (process.argv.includes('--verify-sources')) verifySources();
+  else main();
+}
