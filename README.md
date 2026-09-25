@@ -32,9 +32,26 @@ JavaScript — is hand-written and safe to edit directly.
 | `npm run test:local` | Builds, serves the working tree, runs the UI tests against it |
 | `npm test` | Runs UI **and** AI tests against the deployed Netlify site |
 | `npm run test:ai` | The AI tests only — live Anthropic calls, so slower and not free |
+| `npm run verify:sources` | Requests every cited URL in `content/` and reports 404s, timeouts and homepage-only citations. Report only — always exits 0 |
 
 Use `test:local` while working; it's the only one that tests uncommitted
 changes. `npm test` tests production.
+
+### Before committing
+
+```
+npm run build:check
+npm run test:local
+npm run verify:sources
+```
+
+`verify:sources` never fails on its own, so read its output. **Any new 404
+or homepage-only citation should be investigated before committing** — a
+dead link or a citation that points at a site's front page instead of the
+page carrying the claim. Compare against the summary line from the last run.
+On 24 September 2026 it was `0 broken, 5 homepage citations` (12 forbidden,
+1 error). The `403 Forbidden` results are the village sites blocking
+automated requests; they are expected and are checked by hand instead.
 
 ---
 
