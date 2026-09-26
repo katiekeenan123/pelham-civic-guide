@@ -16,6 +16,8 @@ const ENDPOINT = '/api/ask';
 async function ask(request, question) {
   const res = await request.post(ENDPOINT, {
     data: { messages: [{ role: 'user', content: question }] },
+    // Tells the function not to write this synthetic question to qa_log.
+    headers: { 'X-Test-Request': 'true' },
     timeout: 90_000,
   });
   expect(res.ok(), `POST ${ENDPOINT} -> HTTP ${res.status()}`).toBeTruthy();

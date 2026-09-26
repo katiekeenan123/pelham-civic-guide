@@ -132,7 +132,7 @@ exports.handler = async (event) => {
 
     const delivered = withSources(answer, articles);
     // Q&A logging active — review after 30 days and decide whether to keep.
-    await logQa(latestQuestion(messages), delivered, body.session_id);
+    await logQa(latestQuestion(messages), delivered, body.session_id, event.headers);
     return json(200, { answer: delivered });
   } catch (err) {
     return json(502, { error: 'Upstream request failed', detail: String(err) });
@@ -171,9 +171,12 @@ const QA_LOG_TIMEOUT_MS = 1500;
 // midnight, which would cut four hours off the final day.
 const QA_LOG_UNTIL = Date.parse('2026-10-25T04:00:00Z');
 
-async function logQa(question, answer, sessionId) {
+async function logQa(question, answer, sessionId, headers) {
   try {
     if (Date.now() >= QA_LOG_UNTIL) return;
+    // tests/ai.spec.js sends X-Test-Request so its synthetic questions stay
+    // out of the log. Netlify lowercases incoming header names.
+    if (headers && headers['x-test-request']) return;
     const supabase = getSupabase();
     if (!supabase || !question || !answer) return;
     // Generous caps, not the 2000-char clip the submission forms use: the
