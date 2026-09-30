@@ -37,6 +37,7 @@ Generated blocks used below:
 | `{{generated:critical-facts}}` | every non-null `facts[].caution`, each rendered as the fact followed by its caution |
 | `{{generated:issue-cautions}}` | every non-null `issues[].prompt_caution` — jurisdiction and attribution guards |
 | `{{generated:public-comment-by-body}}` | `bodies[].public_comment_process` |
+| `{{generated:quick-reference}}` | `quick-reference.json` — the "Who to call for what?" card |
 
 `critical-facts` and `issue-cautions` are deliberately separate and must
 not be merged: the first guards *figures* (a vote tally that never happened,
@@ -74,6 +75,14 @@ rates, and the village, town, county and school district websites. Each fact
 carries its own source and date below.
 
 {{generated:key-facts}}
+
+## Quick reference: who to call for what
+
+The same routing list as the site's "Who to call for what?" card. Where a
+question depends on which village the resident lives in, ask or give both —
+the two villages run separate offices.
+
+{{generated:quick-reference}}
 
 ## Current issues
 

@@ -894,6 +894,46 @@
       "used_in": []
     },
     {
+      "id": "pelham-building-dept-phone",
+      "category": "contact",
+      "fact": "Village of Pelham Building Department telephone",
+      "value": null,
+      "display": "914-738-2258",
+      "qualifier": "for building permits and inspections; 200 Fifth Avenue, 3rd floor",
+      "confidence": "verified",
+      "as_of": "2026",
+      "last_updated": "2026-09-30",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": true,
+      "source": {
+        "name": "Village of Pelham",
+        "url": "https://www.pelhamny.gov/157/Building-Department",
+        "date": null
+      },
+      "used_in": []
+    },
+    {
+      "id": "manor-village-hall-phone",
+      "category": "contact",
+      "fact": "Village of Pelham Manor Village Hall telephone",
+      "value": null,
+      "display": "914-738-8820",
+      "qualifier": "for building permits and other village business; 4 Penfield Place",
+      "confidence": "verified",
+      "as_of": "2026",
+      "last_updated": "2026-09-30",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": true,
+      "source": {
+        "name": "Village of Pelham Manor",
+        "url": "https://www.pelhammanor.gov/184/Building-Permits",
+        "date": null
+      },
+      "used_in": []
+    },
+    {
       "id": "founding-year",
       "category": "history",
       "fact": "Year Thomas Pell purchased the land that became Pelham",

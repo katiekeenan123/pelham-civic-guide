@@ -39,6 +39,28 @@
       "note": "Seat vacant since September 2026; the Deputy Receiver is fulfilling all duties"
     },
     {
+      "id": "building-permit-pelham",
+      "question": "Building permit in the Village of Pelham?",
+      "route_to": "Village Building Dept",
+      "governing_body": [
+        "village-of-pelham"
+      ],
+      "phone": "{{fact:pelham-building-dept-phone}}",
+      "url": "https://www.pelhamny.gov/157/Building-Department",
+      "note": "200 Fifth Avenue, 3rd floor. The Building Department issues building permits, not the Village Clerk"
+    },
+    {
+      "id": "building-permit-manor",
+      "question": "Building permit in Pelham Manor?",
+      "route_to": "Village Hall",
+      "governing_body": [
+        "village-of-pelham-manor"
+      ],
+      "phone": "{{fact:manor-village-hall-phone}}",
+      "url": "https://www.pelhammanor.gov/184/Building-Permits",
+      "note": "4 Penfield Place"
+    },
+    {
       "id": "school-issue",
       "question": "School issue?",
       "route_to": "Board of Education",

@@ -129,3 +129,26 @@ test('Amtrak on Forest Road — attributed to Pelham Manor, not the Village of P
     /Village of Pelham(?! Manor)\s+(Board|board|Board of Trustees)\s+(is|are|was|has|will)?\s*(currently\s+)?(handling|addressing|leading|overseeing|managing|responsible for|in charge of)/i,
   );
 });
+
+// Routing guard from the quick-reference card. In the Village of Pelham the
+// Building Department issues building permits, not the Village Clerk: they
+// share 200 Fifth Avenue but not a phone line, and the Clerk's 231-3320 was
+// the number first proposed for this answer.
+test('building permit — Village of Pelham goes to the Building Department, not the Clerk', async ({ request }) => {
+  const answer = await ask(request, 'I live in the Village of Pelham. Who do I call about a building permit?');
+
+  expect(
+    answer,
+    'expected the Building Department and its number, got: ' + answer.slice(0, 300),
+  ).toMatch(/738-2258/);
+  expect(answer, 'gave the Village Clerk\'s number for a building permit').not.toMatch(/231-3320/);
+});
+
+test('building permit — Pelham Manor goes to Village Hall at 4 Penfield Place', async ({ request }) => {
+  const answer = await ask(request, 'how do I get a building permit in Pelham Manor?');
+
+  expect(
+    answer,
+    'expected the Manor Village Hall number, got: ' + answer.slice(0, 300),
+  ).toMatch(/738-8820/);
+});

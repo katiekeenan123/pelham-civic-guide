@@ -357,6 +357,19 @@ function buildPrompt(data, r) {
       data.issues.issues.filter((i) => i.prompt_caution)
         .map((i) => `- ${i.title}\n  ${r(i.prompt_caution, 'issues.json')}`).join('\n'),
 
+    // The "Who to call for what?" card, so the model routes a resident to the
+    // same office, number and page the card does.
+    'quick-reference': () =>
+      data['quick-reference'].entries.map((q) => {
+        const bodies = q.governing_body
+          .map((g) => data.bodies.bodies.find((b) => b.id === g).name).join(' or ');
+        const bits = [`${plain(q.question)} → ${plain(q.route_to)} (${bodies})`];
+        if (q.phone) bits.push(`phone ${r(q.phone, 'quick-reference.json')}`);
+        if (q.note) bits.push(plain(r(q.note, 'quick-reference.json')));
+        if (q.url) bits.push(q.url);
+        return `- ${bits.join(' — ')}`;
+      }).join('\n'),
+
     'public-comment-by-body': () =>
       data.bodies.bodies.filter((b) => b.public_comment_process)
         .map((b) => `- ${b.name}: ${b.public_comment_process}`).join('\n'),
