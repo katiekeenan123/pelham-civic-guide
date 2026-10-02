@@ -13,6 +13,13 @@
   status = 200
   force = true
 
+# Email signup form → subscribe function.
+[[redirects]]
+  from = "/api/subscribe"
+  to = "/.netlify/functions/subscribe"
+  status = 200
+  force = true
+
 # ── Clean URLs ────────────────────────────────────────────────────────────
 # Netlify's "Pretty URLs" post-processing usually serves /issues from
 # issues.html on its own, but it is a dashboard setting that can be switched

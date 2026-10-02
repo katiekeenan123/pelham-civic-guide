@@ -1429,6 +1429,31 @@ function generateElectionsBanner(data, r) {
   ].join(NL);
 }
 
+// Email signup, shared by every page that carries the anchor. The page id is
+// sent as `source` so the subscribers table records where each signup came
+// from; app.js posts the form to /api/subscribe.
+function generateSignupForm(pageId) {
+  return [
+    `<section class="section signup-section" id="signup">`,
+    '  <div class="content-wrap signup-inner">',
+    '    <div class="signup-copy">',
+    '      <h2 class="section-title">Stay informed about Pelham</h2>',
+    '      <p class="section-intro">Get updates on local government, meetings, and civic issues — delivered to your inbox.</p>',
+    '    </div>',
+    `    <form class="signup-form" data-source="${esc(pageId)}">`,
+    '      <label class="signup-label" for="signup-email">Email address</label>',
+    '      <div class="signup-row">',
+    '        <input type="email" id="signup-email" name="email" class="signup-input" required autocomplete="email" placeholder="you@example.com">',
+    '        <button type="submit" class="signup-btn">Sign me up →</button>',
+    '      </div>',
+    '      <input type="text" name="website" class="signup-hp" tabindex="-1" autocomplete="off" aria-hidden="true">',
+    '    </form>',
+    '    <p class="signup-msg" role="status" aria-live="polite" hidden></p>',
+    '  </div>',
+    '</section>',
+  ].join(NL);
+}
+
 // =========================================================================
 // PAGE ASSEMBLY
 // =========================================================================
@@ -1461,6 +1486,7 @@ function pageBlocks(data, r) {
     'elected-offices': () => generateElectedOffices(data),
     'meeting-schedule': () => generateMeetingSchedule(data, r),
     'about-sources': () => generateAboutSources(data),
+    'signup-form': (pageId) => generateSignupForm(pageId),
   };
 }
 
@@ -1517,7 +1543,7 @@ function buildPages(data, r) {
         fail(`content/pages/${pg.id}.html`, `anchor BUILD:${name} has no generator`);
         continue;
       }
-      html = splice(html, name, blocks[name](), 'html');
+      html = splice(html, name, blocks[name](pg.id), 'html');
     }
 
     written.push([p(pg.file), html, pg]);

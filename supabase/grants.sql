@@ -95,6 +95,39 @@ grant usage, select on sequence public.qa_log_id_seq to anon;
 -- The digest reads this table back; the three above are read the same way.
 grant select on table public.qa_log to service_role;
 
+-- ── subscribers: email signup form (home and Get Involved) ────────────────
+-- STATUS: added 2 October 2026, NOT YET RUN against production. Until it is,
+-- /api/subscribe returns 502 and the form shows its error message.
+--
+-- Written by netlify/functions/subscribe.js, which lowercases the address
+-- before inserting. The anon key is public, so anyone could also insert
+-- directly through the REST API, bypassing the function; the check
+-- constraints repeat the function's rules so the table stays clean either
+-- way. Column-level grants let anon set email and source only, so a client
+-- cannot mark itself confirmed. No select, as with the tables below: the
+-- function detects a duplicate from the unique-violation error (23505) and
+-- treats it as success.
+create table if not exists public.subscribers (
+  id uuid primary key default gen_random_uuid(),
+  email text not null unique,
+  created_at timestamptz not null default now(),
+  source text,
+  confirmed boolean not null default false,
+  constraint subscribers_email_format check (
+    email = lower(email)
+    and length(email) <= 254
+    and email ~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$'
+  ),
+  constraint subscribers_source_length check (source is null or length(source) <= 50)
+);
+alter table public.subscribers enable row level security;
+grant insert (email, source) on table public.subscribers to anon;
+
+drop policy if exists "anon can insert subscribers" on public.subscribers;
+create policy "anon can insert subscribers"
+  on public.subscribers for insert to anon
+  with check (confirmed = false);
+
 -- INSERT only, deliberately. No select policy is granted, so submissions
 -- cannot be read back by the anon role — a resident reporting an error, or
 -- describing how they got involved, should not be readable by anyone who
@@ -118,3 +151,11 @@ grant select on table public.qa_log to service_role;
 --
 -- Expect {"ok":true} and HTTP 200. Before the fix this returned HTTP 502 with
 -- "permission denied for table feedback".
+--
+-- For subscribers (run the same request twice: both should return ok):
+--
+--   curl -s -X POST https://pelhamengagementproject.netlify.app/api/subscribe \
+--     -H 'Content-Type: application/json' \
+--     -d '{"email":"test@example.com","source":"home"}'
+--
+-- Then delete the test row in the dashboard.

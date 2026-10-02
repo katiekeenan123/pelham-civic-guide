@@ -446,6 +446,46 @@
       '✓ Thanks for sharing — every message is read.');
   }
 
+  // ── Email signup ──
+  // The browser's own required/type="email" check runs before submit fires,
+  // so only a plausible address reaches the server, which validates again.
+  // As with the forms above, success is shown only when the server says the
+  // address was stored; on failure the form stays usable so the reader can
+  // try again.
+  document.querySelectorAll('.signup-form').forEach((form) => {
+    const msg = form.parentElement.querySelector('.signup-msg');
+    const btn = form.querySelector('.signup-btn');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'Signing you up…';
+      let ok = false;
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: form.elements.email.value.trim(),
+            source: form.dataset.source,
+            website: form.elements.website.value,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        ok = res.ok && data.ok === true;
+      } catch (err) {
+        console.warn('Signup failed:', err);
+      }
+      btn.disabled = false;
+      btn.textContent = 'Sign me up →';
+      msg.classList.toggle('is-error', !ok);
+      msg.textContent = ok
+        ? "You're on the list — we'll keep you informed about Pelham civic life."
+        : 'Something went wrong — please try again.';
+      msg.hidden = false;
+      if (ok) form.hidden = true;
+    });
+  });
+
   // ── Event wiring ──
   // All click handlers are bound here instead of inline onclick="" attributes.
   // Behavior and function names are unchanged. This script block sits at the end

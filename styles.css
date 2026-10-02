@@ -1955,6 +1955,48 @@
 .home-about-band a { color: var(--navy); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--border); white-space: nowrap; }
 .home-about-band a:hover { border-color: var(--navy); }
 
+/* ── Email signup (home, Get Involved) ── */
+.signup-section { background: var(--white); border-top: 4px solid var(--gold); }
+.signup-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px 48px; flex-wrap: wrap; }
+.signup-copy { flex: 1 1 380px; }
+.signup-copy .section-intro { margin-bottom: 0; }
+.signup-form { flex: 1 1 400px; max-width: 520px; }
+.signup-label { display: block; font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
+.signup-row { display: flex; gap: 8px; }
+.signup-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  background: var(--cream);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  color: var(--navy);
+}
+.signup-input:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+.signup-btn {
+  flex: 0 0 auto;
+  padding: 14px 22px;
+  border: none;
+  background: var(--gold);
+  color: var(--navy);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.signup-btn:hover, .signup-btn:focus-visible { background: var(--gold-light); }
+.signup-btn:disabled { opacity: 0.6; cursor: default; }
+/* Honeypot: off-screen rather than display:none, which some bots skip. */
+.signup-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.signup-msg { flex: 1 1 100%; margin: 0; font-size: 15px; font-weight: 500; color: var(--green); }
+.signup-msg.is-error { color: var(--red); }
+@media (max-width: 640px) {
+  .signup-row { flex-direction: column; }
+  .signup-btn { width: 100%; }
+}
+
 /* ── Meeting preview cards ── */
 .mtg-card-grid {
   display: grid;

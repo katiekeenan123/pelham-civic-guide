@@ -255,6 +255,58 @@ test('home — independence band sits last, above the footer, and links to About
   await expect(page).toHaveURL(/\/about$/);
 });
 
+test('signup — home form reports failure, then success, and sends source "home"', async ({ page }) => {
+  let status = 502;
+  let sent = null;
+  await page.route('**/api/subscribe', (route) => {
+    sent = route.request().postDataJSON();
+    return route.fulfill({ status, contentType: 'application/json', body: status === 200 ? '{"ok":true}' : '{}' });
+  });
+  await page.goto('/');
+  // Between the Get Involved teaser and the independence band.
+  await expect(page.locator('#home-involved + #signup.signup-section + .home-about-band')).toHaveCount(1);
+  const section = page.locator('#signup');
+  await expect(section.locator('h2')).toHaveText('Stay informed about Pelham');
+
+  await section.locator('#signup-email').fill('Reader@Example.com ');
+  await section.locator('.signup-btn').click();
+  const msg = section.locator('.signup-msg');
+  await expect(msg).toHaveText('Something went wrong — please try again.');
+  await expect(msg).toHaveClass(/is-error/);
+  await expect(section.locator('.signup-form')).toBeVisible();
+  expect(sent).toEqual({ email: 'Reader@Example.com', source: 'home', website: '' });
+
+  status = 200;
+  await section.locator('.signup-btn').click();
+  await expect(msg).toHaveText("You're on the list — we'll keep you informed about Pelham civic life.");
+  await expect(msg).not.toHaveClass(/is-error/);
+  await expect(section.locator('.signup-form')).toBeHidden();
+});
+
+test('signup — an invalid address is stopped in the browser and never sent', async ({ page }) => {
+  let calls = 0;
+  await page.route('**/api/subscribe', (route) => { calls++; return route.fulfill({ status: 200, body: '{"ok":true}' }); });
+  await page.goto('/');
+  await page.fill('#signup-email', 'not-an-email');
+  await page.click('#signup .signup-btn');
+  await expect(page.locator('#signup .signup-msg')).toBeHidden();
+  expect(calls).toBe(0);
+});
+
+test('signup — Get Involved carries the form just before the Ask Pelham AI CTA, with source "get-involved"', async ({ page }) => {
+  let sent = null;
+  await page.route('**/api/subscribe', (route) => {
+    sent = route.request().postDataJSON();
+    return route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+  });
+  await page.goto('/get-involved');
+  await expect(page.locator('main > #signup + .ask-cta')).toHaveCount(1);
+  await page.fill('#signup-email', 'neighbor@example.org');
+  await page.click('#signup .signup-btn');
+  await expect(page.locator('#signup .signup-msg')).toContainText("You're on the list");
+  expect(sent.source).toBe('get-involved');
+});
+
 test('home — Get Involved teaser links to the full page', async ({ page }) => {
   await page.goto('/');
   await page.click('#home-involved .digest-more');
