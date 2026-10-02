@@ -1405,22 +1405,27 @@ function generateMeetingPreviews(data, r) {
   return ['    <div class="mtg-card-grid">', ...cards, '    </div>'].join(NL);
 }
 
-// Election notice, shown until election day. Like the nav badge it carries its own
-// expiry rather than being omitted at build time, so it clears itself on the
-// day even if nobody rebuilds the site.
+// Election announcement, shown until election day. Like the nav badge it
+// carries its own expiry rather than being omitted at build time, so app.js
+// clears it after the day even if nobody rebuilds the site. The countdown is
+// filled in by app.js for the same reason: a day count written at build time
+// would go stale, and would make the build output change every day.
 function generateElectionsBanner(data, r) {
   const date = data.elections.election_date;
   const races = data.elections.races.length;
   const cands = data.elections.candidates.length;
   return [
-    `<a class="home-banner" href="/elections" data-hide-after="${esc(date)}">`,
-    '  <span class="home-banner-body">',
-    '    <span class="home-banner-tag">🗳 Election Day</span>',
-    `    <span class="home-banner-date">${r('{{fact:election-date-2026}}', 'elections.json')}</span>`,
-    `    <span class="home-banner-text">${races} contested races, ${cands} candidates. Polls ${r('{{fact:polling-hours}}', 'elections.json')}.</span>`,
-    '  </span>',
-    '  <span class="home-banner-cta">See who\'s running →</span>',
-    '</a>',
+    `<section class="home-banner" id="home-election" data-hide-after="${esc(date)}">`,
+    '  <div class="content-wrap home-banner-inner">',
+    '    <div class="home-banner-body">',
+    '      <div class="home-banner-eyebrow">🗳 Election Day</div>',
+    `      <h2 class="home-banner-date">${r('{{fact:election-date-2026}}', 'elections.json')}</h2>`,
+    `      <div class="home-banner-countdown" data-countdown-to="${esc(date)}" hidden></div>`,
+    `      <p class="home-banner-text">${races} contested races · ${cands} candidates · Polls open ${r('{{fact:polling-hours}}', 'elections.json')}</p>`,
+    '    </div>',
+    '    <a class="home-banner-cta" href="/elections">See who\'s running →</a>',
+    '  </div>',
+    '</section>',
   ].join(NL);
 }
 

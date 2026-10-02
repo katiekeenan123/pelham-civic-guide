@@ -218,15 +218,32 @@ test('home — hero mission text comes from hero.json, and says "site" not "guid
   await expect(page.locator('body')).not.toContainText('This guide');
 });
 
-test('home — election banner links through and carries its expiry', async ({ page }) => {
+test('home — election banner: date headline, countdown, button through to /elections', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-02T10:00:00'));
   await page.goto('/');
-  const banner = page.locator('.home-banner');
+  const banner = page.locator('#home-election.home-banner');
   await expect(banner).toBeVisible();
   await expect(banner).toHaveAttribute('data-hide-after', '2026-11-03');
   // The date is the headline of the notice, not a phrase inside a sentence.
-  await expect(banner.locator('.home-banner-date')).toHaveText('November 3, 2026');
-  await banner.click();
+  await expect(banner.locator('h2.home-banner-date')).toHaveText('November 3, 2026');
+  await expect(banner.locator('.home-banner-countdown')).toHaveText('32 days away');
+  await expect(banner.locator('.home-banner-text')).toContainText('contested races · ');
+  // Sits between Current Issues and Meeting Summaries.
+  await expect(page.locator('#home-issues + #home-election + #home-meetings')).toHaveCount(1);
+  await banner.locator('a.home-banner-cta').click();
   await expect(page).toHaveURL(/\/elections$/);
+});
+
+test('home — election banner stays up through the evening of election day, then clears itself', async ({ page }) => {
+  // 9:30pm local on November 3 is already November 4 in UTC.
+  await page.clock.setFixedTime(new Date('2026-11-03T21:30:00'));
+  await page.goto('/');
+  await expect(page.locator('#home-election .home-banner-countdown')).toHaveText('Today');
+
+  await page.clock.setFixedTime(new Date('2026-11-04T09:00:00'));
+  await page.reload();
+  await expect(page.locator('#home-election')).toHaveCount(0);
+  await expect(page.locator('.nav-badge')).toHaveCount(0);
 });
 
 test('home — independence band sits last, above the footer, and links to About', async ({ page }) => {

@@ -1869,51 +1869,78 @@
 .involved-section .digest-more:hover { color: var(--white); border-bottom-color: var(--white); }
 
 /* ── Election banner ── */
-/* Election notice: a full-width band framed in gold, with the date as the
-   largest thing in it, so it reads as a notice rather than a footnote. */
+/* Election announcement: a full-width navy section framed in gold, with the
+   date set larger than any section heading, so it reads as a notice
+   residents cannot miss rather than a footnote between sections. */
 .home-banner {
+  position: relative;
+  padding: 56px 0;
+  background: var(--navy);
+  border-top: 6px solid var(--gold);
+  border-bottom: 6px solid var(--gold);
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+.home-banner-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px 32px;
+  gap: 28px 48px;
   flex-wrap: wrap;
-  padding: 32px clamp(20px, 5vw, 64px);
-  background: var(--navy);
-  border-top: 5px solid var(--gold);
-  border-bottom: 5px solid var(--gold);
-  text-decoration: none;
-  font-family: 'IBM Plex Sans', sans-serif;
 }
-.home-banner:hover { background: #13263f; }
-.home-banner-body { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1 1 360px; }
-.home-banner-tag {
+.home-banner-body { flex: 1 1 420px; }
+.home-banner-eyebrow {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
+  font-size: clamp(14px, 1.6vw, 17px);
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--navy);
-  background: var(--gold);
-  padding: 5px 10px;
+  color: var(--gold-light);
+  margin-bottom: 14px;
 }
 .home-banner-date {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(28px, 4.5vw, 42px);
-  font-weight: 700;
-  line-height: 1.1;
+  font-size: clamp(40px, 6.5vw, 68px);
+  font-weight: 900;
+  line-height: 1.05;
   color: var(--white);
+  margin: 0;
 }
-.home-banner-text { font-size: 16px; color: var(--slate-light); line-height: 1.5; }
+.home-banner-countdown {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 6px 14px;
+  border: 1px solid var(--gold);
+  color: var(--gold-light);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.home-banner-countdown[hidden] { display: none; }
+.home-banner-text {
+  margin-top: 16px;
+  font-size: clamp(16px, 1.8vw, 19px);
+  color: var(--slate-light);
+  line-height: 1.5;
+}
 .home-banner-cta {
   flex: 0 0 auto;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--navy);
+  display: inline-block;
+  padding: 18px 32px;
   background: var(--gold);
-  padding: 12px 20px;
+  color: var(--navy);
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
   white-space: nowrap;
+  transition: background 0.15s;
 }
-.home-banner:hover .home-banner-cta { background: var(--gold-light); }
+.home-banner-cta:hover, .home-banner-cta:focus-visible { background: var(--gold-light); }
+@media (max-width: 640px) {
+  .home-banner { padding: 44px 0; }
+  .home-banner-cta { width: 100%; text-align: center; }
+}
 
 /* Slim independence note at the foot of the home page, above the footer. */
 .home-about-band {

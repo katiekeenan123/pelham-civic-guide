@@ -519,10 +519,31 @@
   // time. The site is only rebuilt when content changes, so a build-time
   // check would leave "Nov 3" showing into December if nobody edited
   // anything. Comparing here means the page corrects itself.
-  var today = new Date().toISOString().slice(0, 10);
+  // The home election banner carries the same attribute. Dates are compared
+  // in the reader's local time: toISOString() is UTC, which in New York turns
+  // over at 8pm and would hide everything while polls are still open.
+  var now = new Date();
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var today = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
   Array.prototype.forEach.call(
-    document.querySelectorAll('.nav-badge[data-hide-after]'),
+    document.querySelectorAll('[data-hide-after]'),
     function (b) { if (today > b.dataset.hideAfter) b.remove(); },
+  );
+
+  // ── Election countdown ─────────────────────────────────────────────────
+  // Computed here, not at build time, so it is right on the day it is read.
+  Array.prototype.forEach.call(
+    document.querySelectorAll('[data-countdown-to]'),
+    function (el) {
+      var p = el.dataset.countdownTo.split('-');
+      var target = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+      var start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      var days = Math.round((target - start) / 86400000);
+      if (days < 0) return;
+      el.textContent = days === 0 ? 'Today'
+        : days === 1 ? 'Tomorrow' : days + ' days away';
+      el.hidden = false;
+    },
   );
 
   // ── Mobile drawer ──────────────────────────────────────────────────────
