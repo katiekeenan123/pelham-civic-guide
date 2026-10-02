@@ -277,6 +277,13 @@ function buildPrompt(data, r) {
         for (const s of i.sources) {
           out.push(`    Source: ${s.label}${s.date ? ` (${s.date})` : ''} ${s.url}`);
         }
+        // Lets the assistant answer "what's the latest on X?" with the
+        // meeting that last covered it, and send the reader to that summary.
+        const u = i.last_meeting_update;
+        const m = u && data.meetings.meetings.find((x) => x.id === u.meeting_id);
+        if (m) {
+          out.push(`    Recent meeting coverage: discussed at ${m.title} (${m.date}) — ${plain(r(u.note, 'issues.json'))} Summary: /meetings#${m.id}`);
+        }
       }
       return out.join(NL);
     },

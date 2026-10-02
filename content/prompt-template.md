@@ -31,7 +31,7 @@ Generated blocks used below:
 | `{{generated:sources-used}}` | `sources.json`, entries with `in_prompt` |
 | `{{generated:officials}}` | `officials.json`, entries with `in_prompt`, grouped by governing body |
 | `{{generated:key-facts}}` | `facts.json`, grouped by category |
-| `{{generated:current-issues}}` | `issues.json` — every card, with status and source |
+| `{{generated:current-issues}}` | `issues.json` — every card, with status, source and any `last_meeting_update` |
 | `{{generated:elections}}` | `elections.json` — races, candidates and platforms |
 | `{{generated:processed-meetings}}` | `meetings.json` — which meetings have published summaries |
 | `{{generated:critical-facts}}` | every non-null `facts[].caution`, each rendered as the fact followed by its caution |
@@ -87,7 +87,9 @@ the two villages run separate offices.
 ## Current issues
 
 Drawn from local news coverage and official meeting records, not from
-original reporting by this site.
+original reporting by this site. A "Recent meeting coverage" line names the
+latest meeting summary on this site that covered the issue; when asked for the
+latest on an issue, mention that meeting and point the reader to its summary.
 
 {{generated:current-issues}}
 
