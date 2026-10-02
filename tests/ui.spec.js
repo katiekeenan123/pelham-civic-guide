@@ -482,6 +482,37 @@ test('issues — every tracked issue is listed, each with a source', async ({ pa
   await expect(page.locator('.issue-card .issue-source-link').first()).toBeVisible();
 });
 
+// Follows the data: every card with last_meeting_update shows the line and
+// links to that meeting, and no card without one shows it. Until entries are
+// filled in, only the second half has anything to check.
+test('issues — latest meeting coverage links to the meeting summary', async ({ page }) => {
+  const fs = require('fs');
+  const path = require('path');
+  const root = path.resolve(__dirname, '..');
+  const { issues } = JSON.parse(fs.readFileSync(path.join(root, 'content/issues.json'), 'utf8'));
+  const { meetings } = JSON.parse(fs.readFileSync(path.join(root, 'content/meetings.json'), 'utf8'));
+
+  await page.goto('/issues');
+  const shown = issues.filter((i) => i.show_on_home !== false);
+  for (const i of shown) {
+    const line = page.locator(`.issue-card[id="${i.id}"] .issue-meeting-update`);
+    if (!i.last_meeting_update) {
+      await expect(line, i.id).toHaveCount(0);
+      continue;
+    }
+    const m = meetings.find((x) => x.id === i.last_meeting_update.meeting_id);
+    await expect(line, i.id).toContainText('Latest meeting coverage:');
+    await expect(line.locator('a'), i.id).toHaveAttribute('href', `/meetings#${m.id}`);
+    await expect(line.locator('a'), i.id).toContainText(m.title);
+  }
+
+  const linked = shown.find((i) => i.last_meeting_update);
+  if (linked) {
+    await page.locator(`.issue-card[id="${linked.id}"] .issue-meeting-link`).click();
+    await expect(page.locator(`.mtg-set[data-meeting="${linked.last_meeting_update.meeting_id}"]`)).toBeVisible();
+  }
+});
+
 test('elections — three race blocks and every candidate named', async ({ page }) => {
   await page.goto('/elections');
   await expect(page.locator('.race-block')).toHaveCount(3);

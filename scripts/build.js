@@ -154,6 +154,16 @@ function phase1() {
     }
   });
 
+  // An issue's latest meeting coverage must point at a meeting the site
+  // actually publishes, or the card links to a summary that is not there.
+  const publishedMeetings = new Set(data.meetings.meetings.filter((m) => m.status === 'published').map((m) => m.id));
+  data.issues.issues.forEach((i) => {
+    const u = i.last_meeting_update;
+    if (u && !publishedMeetings.has(u.meeting_id)) {
+      fail('issues.json', `${i.id}.last_meeting_update → "${u.meeting_id}" is not a published meeting in meetings.json`);
+    }
+  });
+
   const raceIds = new Set(data.elections.races.map((r) => r.id));
   data.elections.candidates.forEach((c) => {
     if (!raceIds.has(c.race_id)) fail('elections.json', `${c.id} → unknown race_id "${c.race_id}"`);
@@ -516,8 +526,16 @@ function generateIssueCards(data, r) {
       const external = !s.url.startsWith('#') && !s.url.startsWith('/');
       return `<a href="${esc(s.url)}"${external ? ' target="_blank"' : ''} class="issue-source-link">${r(s.label, 'issues.json')}</a>`;
     }).join('');
+    // Hand-maintained pointer to the latest meeting summary on the issue.
+    // The link text is the meeting's own title, so it cannot drift.
+    const u = i.last_meeting_update;
+    const meeting = u && data.meetings.meetings.find((m) => m.id === u.meeting_id);
+    const coverage = meeting
+      ? `<div class="issue-meeting-update"><strong>Latest meeting coverage:</strong> ${r(u.note, 'issues.json')} `
+        + `<a href="/meetings#${esc(meeting.id)}" class="issue-meeting-link">${esc(meeting.title)} →</a></div>`
+      : '';
     return `      <div class="issue-card fade-in" id="${esc(i.id)}"><span class="issue-tag tag-${i.tag_style}">${i.tag}</span>`
-      + `<h3>${r(i.title, 'issues.json')}</h3><p>${r(i.description, 'issues.json')}</p>${status}`
+      + `<h3>${r(i.title, 'issues.json')}</h3><p>${r(i.description, 'issues.json')}</p>${status}${coverage}`
       + `<div class="issue-sources">${links}</div></div>`;
   });
   return [`    <p class="section-intro">${r(data.issues.section_intro, 'issues.json')}</p>`,

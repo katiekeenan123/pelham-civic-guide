@@ -150,6 +150,29 @@
           ],
           "description": "Where the homepage preview's 'Read more' sends the reader. Some issues are better served by a topic page than by their own card — a tax or budget issue lands on /taxes, an election issue on /elections. Null routes to the issue's anchor on /issues, which is the right default for anything without a natural home."
         },
+        "last_meeting_update": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "meeting_id",
+            "note"
+          ],
+          "description": "Optional. The most recent meeting summary on this site that covers the issue, rendered on the card as a 'Latest meeting coverage:' line linking to /meetings#<meeting_id>. Maintained by hand: nothing detects mentions automatically. Omit or null when no published meeting has covered the issue.",
+          "properties": {
+            "meeting_id": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+              "description": "Foreign key to a meetings.json id. The build fails unless it names a published meeting. The link text is that meeting's title, so it is never retyped here."
+            },
+            "note": {
+              "type": "string",
+              "description": "One or two sentences on what the meeting said or decided about this issue. Safe HTML subset plus {{fact:<id>}} tokens."
+            }
+          }
+        },
         "sources": {
           "type": "array",
           "minItems": 1,
