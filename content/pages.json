@@ -14,6 +14,8 @@
     { "id": "taxes",        "label": "Taxes",        "url": "/taxes",        "file": "taxes.html",        "icon": "💰", "group": "more", "badge": null },
     { "id": "gov-101",      "label": "Gov 101",      "url": "/gov-101",      "file": "gov-101.html",      "icon": "🏛", "group": "more", "badge": null },
     { "id": "ask-ai",       "label": "Ask AI",       "url": "/ask",          "file": "ask.html",          "icon": "✦",  "group": "more", "badge": null },
-    { "id": "about",        "label": "About",        "url": "/about",        "file": "about.html",        "icon": "ℹ️", "group": "more", "badge": null }
+    { "id": "about",        "label": "About",        "url": "/about",        "file": "about.html",        "icon": "ℹ️", "group": "more", "badge": null },
+
+    { "id": "subscribe",    "label": "Subscribe",    "url": "/subscribe",    "file": "subscribe.html",    "icon": "✉️", "group": "none", "badge": null }
   ]
 }

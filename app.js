@@ -447,6 +447,8 @@
   }
 
   // ── Email signup ──
+  // preventDefault stops the form's native POST (its fallback when this script
+  // has not run) so the page does not reload.
   // The browser's own required/type="email" check runs before submit fires,
   // so only a plausible address reaches the server, which validates again.
   // As with the forms above, success is shown only when the server says the
@@ -466,7 +468,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: form.elements.email.value.trim(),
-            source: form.dataset.source,
+            source: form.elements.source.value,
             website: form.elements.website.value,
           }),
         });

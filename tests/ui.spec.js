@@ -283,6 +283,93 @@ test('signup — home form reports failure, then success, and sends source "home
   await expect(section.locator('.signup-form')).toBeHidden();
 });
 
+test('signup — the privacy note sits under the form on home and Get Involved', async ({ page }) => {
+  for (const url of ['/', '/get-involved']) {
+    await page.goto(url);
+    await expect(page.locator('#signup .signup-note'), url)
+      .toHaveText('Your email address is used only to send you civic updates about Pelham. It is never shared or sold.');
+  }
+});
+
+test('subscribe — standalone page: one document, the form as its h1, source "subscribe", in no menu', async ({ page }) => {
+  let sent = null;
+  await page.route('**/api/subscribe', (route) => {
+    sent = route.request().postDataJSON();
+    return route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+  });
+  const res = await page.goto('/subscribe');
+  expect(res.status()).toBeLessThan(400);
+  await expect(page).toHaveTitle(/Stay informed about Pelham/);
+  await expect(page.locator('main#main')).toHaveCount(1);
+  await expect(page.locator('footer')).toHaveCount(1);
+  const dupes = await page.evaluate(() => {
+    const c = new Map();
+    for (const el of document.querySelectorAll('[id]')) c.set(el.id, (c.get(el.id) || 0) + 1);
+    return [...c].filter(([, n]) => n > 1).map(([id]) => id);
+  });
+  expect(dupes).toEqual([]);
+  await expect(page.locator('h1')).toHaveText('Stay informed about Pelham');
+  await expect(page.locator('#signup .signup-note')).toContainText('never shared or sold');
+  // Reached by a shared link only: neither the desktop nav nor the drawer lists it.
+  await expect(page.locator('nav.nav-bar a[href="/subscribe"], #nav-drawer a[href="/subscribe"]')).toHaveCount(0);
+
+  await page.fill('#signup-email', 'reader@example.com');
+  await page.click('#signup .signup-btn');
+  await expect(page.locator('#signup .signup-msg')).toContainText("You're on the list");
+  expect(sent.source).toBe('subscribe');
+});
+
+test('signup — submitting through the script does not reload the page', async ({ page }) => {
+  await page.route('**/api/subscribe', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }));
+  await page.goto('/');
+  let navigations = 0;
+  page.on('framenavigated', (f) => { if (f === page.mainFrame()) navigations++; });
+  await page.fill('#signup-email', 'reader@example.com');
+  await page.click('#signup .signup-btn');
+  await expect(page.locator('#signup .signup-msg')).toContainText("You're on the list");
+  expect(navigations).toBe(0);
+  expect(page.url()).not.toContain('email=');
+});
+
+test('signup — the honeypot stays off screen even if the stylesheet fails to load', async ({ page }) => {
+  await page.route('**/styles.css*', (route) => route.abort());
+  await page.goto('/');
+  const box = await page.locator('#signup-website').boundingBox();
+  expect(box === null || box.x + box.width <= 0).toBe(true);
+});
+
+test('signup — without JavaScript the form still posts and gets a confirmation page', async ({ browser }) => {
+  // The real function code, against a stub database, answers the native POST.
+  const { createHandler } = require('../netlify/functions/subscribe');
+  const inserted = [];
+  const handler = createHandler(() => ({ from: () => ({ insert: async (row) => { inserted.push(row); return { error: null }; } }) }));
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.route('**/api/subscribe', async (route) => {
+    const req = route.request();
+    const res = await handler({ httpMethod: req.method(), headers: req.headers(), body: req.postData() });
+    await route.fulfill({ status: res.statusCode, headers: res.headers, body: res.body });
+  });
+  await page.goto('/get-involved');
+  await page.fill('#signup-email', 'nojs@example.com');
+  // Enter submits natively. (A click needs Playwright's stability check,
+  // which is unreliable with page JavaScript disabled.)
+  await page.press('#signup-email', 'Enter');
+  await expect(page.locator('body')).toContainText("You're on the list");
+  expect(inserted).toEqual([{ email: 'nojs@example.com', source: 'get-involved' }]);
+  await context.close();
+});
+
+test('assets — styles.css and app.js are linked with a hash of their current contents', async ({ page }) => {
+  const crypto = require('crypto');
+  const fs = require('fs');
+  const path = require('path');
+  const hash = (f) => crypto.createHash('sha1').update(fs.readFileSync(path.resolve(__dirname, '..', f))).digest('hex').slice(0, 10);
+  await page.goto('/');
+  await expect(page.locator('link[rel="stylesheet"][href^="/styles.css"]')).toHaveAttribute('href', `/styles.css?v=${hash('styles.css')}`);
+  await expect(page.locator('script[src^="/app.js"]')).toHaveAttribute('src', `/app.js?v=${hash('app.js')}`);
+});
+
 test('signup — an invalid address is stopped in the browser and never sent', async ({ page }) => {
   let calls = 0;
   await page.route('**/api/subscribe', (route) => { calls++; return route.fulfill({ status: 200, body: '{"ok":true}' }); });
@@ -481,14 +568,15 @@ test('about — leads with the independence statement, above the fold', async ({
   }
 });
 
-test('about — how this site works covers all seven disclosures', async ({ page }) => {
+test('about — how this site works covers all eight disclosures', async ({ page }) => {
   await page.goto('/about');
   const items = page.locator('.works-item');
-  await expect(items).toHaveCount(7);
+  await expect(items).toHaveCount(8);
   const text = await page.locator('.works-grid').innerText();
   for (const claim of ['Pelham Examiner', 'All candidates in each race are presented',
                        'AI-generated', 'Corrections are logged publicly',
                        'does not endorse candidates', 'Self-funded',
+                       'used only to send you civic updates about Pelham. It is never shared or sold',
                        // How a topic earns a card, and how many sources it carries.
                        'appeared at least twice', 'two most recent sources']) {
     expect(text, `missing disclosure: ${claim}`).toContain(claim);

@@ -14,6 +14,7 @@
 
 'use strict';
 
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 // Required lazily inside generatePageShell, not at module load. build.js
@@ -35,6 +36,17 @@ const SITE_URL = 'https://pelhamengagementproject.org';
 
 // The shell assumes these exist at the publish root. Checked explicitly so the
 // failure is a clear message rather than nine pages that render unstyled.
+// Cache-busting: /styles.css and /app.js are linked with a short hash of
+// their contents, so a page can never be paired with an older copy of either.
+// Without it, a browser holding the previous app.js ran new markup with old
+// behaviour -- the signup form fell back to a native submit and reloaded the
+// page. The hash changes only when the file does, so the build stays
+// idempotent; editing either file without rebuilding fails build:check.
+function assetUrl(file) {
+  const hash = crypto.createHash('sha1').update(fs.readFileSync(path.join(ROOT, file))).digest('hex').slice(0, 10);
+  return `/${file}?v=${hash}`;
+}
+
 function extractionRequired() {
   const missing = ['styles.css', 'app.js'].filter(
     (f) => !fs.existsSync(path.join(ROOT, f)),
@@ -99,7 +111,7 @@ ${canonical ? `<link rel="canonical" href="${esc(canonical)}">\n` : ''}<meta pro
 ${canonical ? `<meta property="og:url" content="${esc(canonical)}">\n` : ''}<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="${assetUrl('styles.css')}">
 ${headExtra}</head>
 <body${bodyClass ? ` class="${esc(bodyClass)}"` : ''}>
 
@@ -115,7 +127,7 @@ ${askCta}</main>
 ${footer}
 </footer>
 
-<script src="/app.js" defer></script>
+<script src="${assetUrl('app.js')}" defer></script>
 </body>
 </html>
 `;

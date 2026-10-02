@@ -506,7 +506,7 @@ function generateNav(activePage, data) {
   out.push('    <button class="nav-drawer-close" id="nav-drawer-close" aria-label="Close menu">×</button>');
   out.push('  </div>');
   out.push('  <ul class="nav-drawer-list">');
-  for (const pg of pages) {
+  for (const pg of pages.filter((x) => x.group !== 'none')) {
     const active = pg.id === activePage;
     out.push(`    <li><a href="${esc(pg.url)}" class="${active ? 'is-active' : ''}"${active ? ' aria-current="page"' : ''}><span class="nav-ico" aria-hidden="true">${pg.icon}</span><span class="nav-drawer-label">${esc(pg.label)}</span>${navBadge(pg.badge)}</a></li>`);
   }
@@ -1431,24 +1431,34 @@ function generateElectionsBanner(data, r) {
 
 // Email signup, shared by every page that carries the anchor. The page id is
 // sent as `source` so the subscribers table records where each signup came
-// from; app.js posts the form to /api/subscribe.
+// from. app.js intercepts the submit and posts JSON to /api/subscribe; the
+// method/action are the fallback if the script never runs, and the function
+// answers a plain form post with its own confirmation page. The honeypot is
+// hidden inline so it stays off screen even if the stylesheet fails to load.
 function generateSignupForm(pageId) {
+  // On /subscribe the form is the whole page, so its heading is the h1.
+  const h = pageId === 'subscribe' ? 'h1' : 'h2';
   return [
-    `<section class="section signup-section" id="signup">`,
+    `<section class="section signup-section${pageId === 'subscribe' ? ' signup-page' : ''}" id="signup">`,
     '  <div class="content-wrap signup-inner">',
     '    <div class="signup-copy">',
-    '      <h2 class="section-title">Stay informed about Pelham</h2>',
+    `      <${h} class="section-title">Stay informed about Pelham</${h}>`,
     '      <p class="section-intro">Get updates on local government, meetings, and civic issues — delivered to your inbox.</p>',
     '    </div>',
-    `    <form class="signup-form" data-source="${esc(pageId)}">`,
+    '    <form class="signup-form" id="signup-form" method="post" action="/api/subscribe">',
+    `      <input type="hidden" name="source" value="${esc(pageId)}">`,
     '      <label class="signup-label" for="signup-email">Email address</label>',
     '      <div class="signup-row">',
     '        <input type="email" id="signup-email" name="email" class="signup-input" required autocomplete="email" placeholder="you@example.com">',
     '        <button type="submit" class="signup-btn">Sign me up →</button>',
     '      </div>',
-    '      <input type="text" name="website" class="signup-hp" tabindex="-1" autocomplete="off" aria-hidden="true">',
+    '      <div class="signup-hp" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">',
+    '        <label for="signup-website">Leave this field empty</label>',
+    '        <input type="text" id="signup-website" name="website" tabindex="-1" autocomplete="off">',
+    '      </div>',
     '    </form>',
     '    <p class="signup-msg" role="status" aria-live="polite" hidden></p>',
+    '    <p class="signup-note">Your email address is used only to send you civic updates about Pelham. It is never shared or sold.</p>',
     '  </div>',
     '</section>',
   ].join(NL);
@@ -1499,6 +1509,7 @@ const PAGE_TITLES = {
   taxes: 'Where Your Taxes Go',
   'gov-101': 'Who Governs Pelham',
   'ask-ai': 'Ask Pelham AI',
+  subscribe: 'Stay informed about Pelham',
   about: 'About & Corrections',
 };
 
@@ -1512,6 +1523,7 @@ const PAGE_DESCRIPTIONS = {
   'gov-101': 'How Pelham is governed: two villages, a town, a school district and the county, and who to call for what.',
   'ask-ai': 'An assistant that answers questions about Pelham civic life using only the local sources this site relies on.',
   about: 'How this site is made, the sources it draws on, and how to report an error.',
+  subscribe: 'Sign up for updates on Pelham local government, meetings and civic issues.',
 };
 
 function buildPages(data, r) {

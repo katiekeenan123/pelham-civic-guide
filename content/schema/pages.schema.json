@@ -22,7 +22,7 @@
           "url": { "type": "string", "description": "Href used in links. Extensionless, so Netlify serves issues.html at /issues; see the redirect note in netlify.toml." },
           "file": { "type": "string", "description": "Output filename written to the publish root." },
           "icon": { "type": "string", "description": "Emoji shown in the mobile drawer, and in the More menu. The desktop bar stays text-only." },
-          "group": { "enum": ["primary", "more"], "description": "'primary' sits directly in the desktop bar; 'more' sits behind the More menu. The mobile drawer ignores this and lists everything." },
+          "group": { "enum": ["primary", "more", "none"], "description": "'primary' sits directly in the desktop bar; 'more' sits behind the More menu; the mobile drawer lists both. 'none' is built and served at its clean URL but appears in no menu -- for pages reached by a shared link, such as /subscribe." },
           "badge": {
             "type": ["object", "null"],
             "additionalProperties": false,

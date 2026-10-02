@@ -67,3 +67,8 @@
   from = "/about"
   to = "/about.html"
   status = 200
+
+[[redirects]]
+  from = "/subscribe"
+  to = "/subscribe.html"
+  status = 200

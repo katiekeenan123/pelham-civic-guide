@@ -17,6 +17,11 @@
 //
 // `website` is a honeypot: a field hidden from people that naive form-filling
 // bots fill in. A filled honeypot gets { ok: true } and nothing is stored.
+//
+// The form normally submits through app.js as JSON. If the script has not run
+// (blocked, failed, or a cached old copy), the browser posts the form itself
+// as application/x-www-form-urlencoded; that path gets the same handling and
+// a small HTML confirmation page with a link back, instead of raw JSON.
 
 const MAX_EMAIL = 254;
 // Deliberately loose: one @, something on each side, a dot in the domain, no
@@ -25,7 +30,7 @@ const MAX_EMAIL = 254;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Where the form appears. Anything else is stored as null rather than
 // trusting arbitrary text from the client.
-const SOURCES = ['home', 'get-involved'];
+const SOURCES = ['home', 'get-involved', 'subscribe'];
 // Postgres unique_violation.
 const UNIQUE_VIOLATION = '23505';
 
@@ -35,6 +40,35 @@ function json(statusCode, payload) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   };
+}
+
+const MESSAGES = {
+  ok: "You're on the list — we'll keep you informed about Pelham civic life.",
+  invalid: 'Please enter a valid email address.',
+  error: 'Something went wrong — please try again.',
+};
+
+function page(statusCode, message, source) {
+  const back = { 'get-involved': '/get-involved#signup', subscribe: '/subscribe' }[source] || '/#signup';
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stay informed about Pelham</title></head>
+<body style="font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f7f3ec;color:#1a2744;margin:0;padding:64px 24px;text-align:center;">
+<p style="font-size:18px;max-width:520px;margin:0 auto 24px;">${message}</p>
+<a href="${back}" style="display:inline-block;background:#c8973a;color:#1a2744;padding:12px 24px;font-weight:600;text-decoration:none;">Back to the Pelham Engagement Project →</a>
+</body></html>`;
+  return { statusCode, headers: { 'Content-Type': 'text/html; charset=utf-8' }, body: html };
+}
+
+function readBody(event) {
+  const raw = event.isBase64Encoded
+    ? Buffer.from(event.body || '', 'base64').toString('utf8')
+    : event.body || '';
+  const type = String((event.headers || {})['content-type'] || '').toLowerCase();
+  if (type.includes('application/x-www-form-urlencoded')) {
+    return { form: true, body: Object.fromEntries(new URLSearchParams(raw)) };
+  }
+  return { form: false, body: JSON.parse(raw || '{}') };
 }
 
 function normalizeEmail(raw) {
@@ -50,36 +84,40 @@ function createHandler(getClient) {
   return async (event) => {
     if (event.httpMethod !== 'POST') return json(405, { error: 'Method not allowed' });
 
-    let body;
+    let parsed;
     try {
-      body = JSON.parse(event.body || '{}');
+      parsed = readBody(event);
     } catch {
       return json(400, { error: 'Invalid JSON' });
     }
+    const { form, body } = parsed;
     if (!body || typeof body !== 'object') return json(400, { error: 'Invalid request' });
+    const source = SOURCES.includes(body.source) ? body.source : null;
+    // JSON for the script, a page for a plain form post.
+    const reply = (status, key, payload) => (form ? page(status, MESSAGES[key], source) : json(status, payload));
 
-    if (typeof body.website === 'string' && body.website.trim()) return json(200, { ok: true });
+    if (typeof body.website === 'string' && body.website.trim()) return reply(200, 'ok', { ok: true });
 
     const email = normalizeEmail(body.email);
-    if (!email) return json(400, { error: 'Please enter a valid email address.' });
-    const source = SOURCES.includes(body.source) ? body.source : null;
+    if (!email) return reply(400, 'invalid', { error: MESSAGES.invalid });
 
     const supabase = getClient();
     if (!supabase) {
-      return json(500, { error: 'Server is missing SUPABASE_URL or SUPABASE_ANON_KEY' });
+      console.warn('[subscribe] missing SUPABASE_URL or SUPABASE_ANON_KEY');
+      return reply(500, 'error', { error: 'Server is missing SUPABASE_URL or SUPABASE_ANON_KEY' });
     }
 
     try {
       const { error } = await supabase.from('subscribers').insert({ email, source });
       if (error && error.code !== UNIQUE_VIOLATION) {
         console.warn('[subscribe]', error.message);
-        return json(502, { error: 'Could not save your signup' });
+        return reply(502, 'error', { error: 'Could not save your signup' });
       }
     } catch (err) {
       console.warn('[subscribe] insert failed:', String(err));
-      return json(502, { error: 'Could not save your signup' });
+      return reply(502, 'error', { error: 'Could not save your signup' });
     }
-    return json(200, { ok: true });
+    return reply(200, 'ok', { ok: true });
   };
 }
 

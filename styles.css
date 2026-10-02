@@ -1963,38 +1963,47 @@
 .signup-form { flex: 1 1 400px; max-width: 520px; }
 .signup-label { display: block; font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
 .signup-row { display: flex; gap: 8px; }
+/* Same metrics as the Ask Pelham AI input and its gold Ask button, with the
+   input's colours turned for a light background. */
 .signup-input {
   flex: 1 1 auto;
   min-width: 0;
-  padding: 14px 16px;
+  padding: 12px 16px;
   border: 1px solid var(--border);
   background: var(--cream);
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 15px;
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--navy);
+  outline: none;
 }
-.signup-input:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+.signup-input:focus { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
 .signup-btn {
   flex: 0 0 auto;
-  padding: 14px 22px;
+  padding: 0 24px;
   border: none;
   background: var(--gold);
   color: var(--navy);
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
 }
 .signup-btn:hover, .signup-btn:focus-visible { background: var(--gold-light); }
 .signup-btn:disabled { opacity: 0.6; cursor: default; }
-/* Honeypot: off-screen rather than display:none, which some bots skip. */
-.signup-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+/* Honeypot: off-screen rather than display:none, which some bots skip. Also
+   set inline in the markup, so it stays hidden if this file fails to load. */
+.signup-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .signup-msg { flex: 1 1 100%; margin: 0; font-size: 15px; font-weight: 500; color: var(--green); }
+.signup-note { flex: 1 1 100%; margin: 0; font-size: 12px; color: var(--slate); }
+/* /subscribe: the form is the page, so give it room. */
+.signup-page { padding: clamp(56px, 10vw, 112px) 0; border-top: none; min-height: 62vh; display: flex; align-items: center; }
+.signup-page > .content-wrap { width: 100%; }
 .signup-msg.is-error { color: var(--red); }
 @media (max-width: 640px) {
   .signup-row { flex-direction: column; }
-  .signup-btn { width: 100%; }
+  .signup-btn { width: 100%; padding: 12px 24px; }
 }
 
 /* ── Meeting preview cards ── */

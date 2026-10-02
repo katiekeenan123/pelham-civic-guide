@@ -70,3 +70,42 @@ test('subscribe — only POST, only JSON, and a clear error when Supabase is not
   expect(res.statusCode).toBe(500);
   expect(parse(res).error).toContain('SUPABASE_URL');
 });
+
+// The no-JavaScript fallback: the browser posts the form itself.
+const formPost = (fields, base64 = false) => {
+  const raw = new URLSearchParams(fields).toString();
+  return {
+    httpMethod: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: base64 ? Buffer.from(raw).toString('base64') : raw,
+    isBase64Encoded: base64,
+  };
+};
+
+test('subscribe — a plain form post is stored and answered with a page, not JSON', async () => {
+  for (const base64 of [false, true]) {
+    const { client, inserted } = stubClient();
+    const res = await createHandler(() => client)(formPost({ email: 'Reader@Example.com', source: 'get-involved', website: '' }, base64));
+    expect(res.statusCode).toBe(200);
+    expect(res.headers['Content-Type']).toContain('text/html');
+    expect(res.body).toContain("You're on the list");
+    expect(res.body).toContain('href="/get-involved#signup"');
+    expect(inserted[0].row).toEqual({ email: 'reader@example.com', source: 'get-involved' });
+  }
+});
+
+test('subscribe — a plain form post with a bad address gets a page saying so', async () => {
+  const { client, inserted } = stubClient();
+  const res = await createHandler(() => client)(formPost({ email: 'nope', source: 'home' }));
+  expect(res.statusCode).toBe(400);
+  expect(res.body).toContain('Please enter a valid email address.');
+  expect(res.body).toContain('href="/#signup"');
+  expect(inserted).toHaveLength(0);
+});
+
+test('subscribe — the /subscribe page is an accepted source, and its fallback page links back to it', async () => {
+  const { client, inserted } = stubClient();
+  const res = await createHandler(() => client)(formPost({ email: 'reader@example.com', source: 'subscribe' }));
+  expect(inserted[0].row.source).toBe('subscribe');
+  expect(res.body).toContain('href="/subscribe"');
+});
