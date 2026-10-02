@@ -1869,33 +1869,64 @@
 .involved-section .digest-more:hover { color: var(--white); border-bottom-color: var(--white); }
 
 /* ── Election banner ── */
+/* Election notice: a full-width band framed in gold, with the date as the
+   largest thing in it, so it reads as a notice rather than a footnote. */
 .home-banner {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: space-between;
+  gap: 20px 32px;
   flex-wrap: wrap;
-  padding: 16px clamp(20px, 5vw, 64px);
+  padding: 32px clamp(20px, 5vw, 64px);
   background: var(--navy);
-  border-top: 3px solid var(--gold);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-top: 5px solid var(--gold);
+  border-bottom: 5px solid var(--gold);
   text-decoration: none;
   font-family: 'IBM Plex Sans', sans-serif;
 }
 .home-banner:hover { background: #13263f; }
+.home-banner-body { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; flex: 1 1 360px; }
 .home-banner-tag {
-  flex: 0 0 auto;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--navy);
   background: var(--gold);
-  padding: 4px 8px;
+  padding: 5px 10px;
 }
-.home-banner-text { flex: 1 1 320px; font-size: 14px; color: var(--slate-light); line-height: 1.5; }
-.home-banner-text strong { color: var(--white); }
-.home-banner-cta { flex: 0 0 auto; font-size: 13px; font-weight: 600; color: var(--gold-light); white-space: nowrap; }
+.home-banner-date {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4.5vw, 42px);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--white);
+}
+.home-banner-text { font-size: 16px; color: var(--slate-light); line-height: 1.5; }
+.home-banner-cta {
+  flex: 0 0 auto;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  background: var(--gold);
+  padding: 12px 20px;
+  white-space: nowrap;
+}
+.home-banner:hover .home-banner-cta { background: var(--gold-light); }
+
+/* Slim independence note at the foot of the home page, above the footer. */
+.home-about-band {
+  padding: 14px clamp(20px, 5vw, 64px);
+  background: var(--light);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--slate);
+}
+.home-about-band a { color: var(--navy); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.home-about-band a:hover { border-color: var(--navy); }
 
 /* ── Meeting preview cards ── */
 .mtg-card-grid {

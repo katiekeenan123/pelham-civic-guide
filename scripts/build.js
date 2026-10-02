@@ -1405,7 +1405,7 @@ function generateMeetingPreviews(data, r) {
   return ['    <div class="mtg-card-grid">', ...cards, '    </div>'].join(NL);
 }
 
-// Slim banner, shown until election day. Like the nav badge it carries its own
+// Election notice, shown until election day. Like the nav badge it carries its own
 // expiry rather than being omitted at build time, so it clears itself on the
 // day even if nobody rebuilds the site.
 function generateElectionsBanner(data, r) {
@@ -1414,8 +1414,11 @@ function generateElectionsBanner(data, r) {
   const cands = data.elections.candidates.length;
   return [
     `<a class="home-banner" href="/elections" data-hide-after="${esc(date)}">`,
-    '  <span class="home-banner-tag">🗳 Election</span>',
-    `  <span class="home-banner-text"><strong>${r('{{fact:election-date-2026}}', 'elections.json')}</strong> — ${races} contested races, ${cands} candidates. Polls ${r('{{fact:polling-hours}}', 'elections.json')}.</span>`,
+    '  <span class="home-banner-body">',
+    '    <span class="home-banner-tag">🗳 Election Day</span>',
+    `    <span class="home-banner-date">${r('{{fact:election-date-2026}}', 'elections.json')}</span>`,
+    `    <span class="home-banner-text">${races} contested races, ${cands} candidates. Polls ${r('{{fact:polling-hours}}', 'elections.json')}.</span>`,
+    '  </span>',
     '  <span class="home-banner-cta">See who\'s running →</span>',
     '</a>',
   ].join(NL);

@@ -223,9 +223,19 @@ test('home — election banner links through and carries its expiry', async ({ p
   const banner = page.locator('.home-banner');
   await expect(banner).toBeVisible();
   await expect(banner).toHaveAttribute('data-hide-after', '2026-11-03');
-  await expect(banner).toContainText('November 3, 2026');
+  // The date is the headline of the notice, not a phrase inside a sentence.
+  await expect(banner.locator('.home-banner-date')).toHaveText('November 3, 2026');
   await banner.click();
   await expect(page).toHaveURL(/\/elections$/);
+});
+
+test('home — independence band sits last, above the footer, and links to About', async ({ page }) => {
+  await page.goto('/');
+  const band = page.locator('main > .home-about-band');
+  await expect(band).toContainText('not affiliated with any candidate, party, or governing body');
+  await expect(page.locator('main > :last-child')).toHaveClass(/home-about-band/);
+  await band.locator('a', { hasText: 'Learn more' }).click();
+  await expect(page).toHaveURL(/\/about$/);
 });
 
 test('home — Get Involved teaser links to the full page', async ({ page }) => {
