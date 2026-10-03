@@ -19,3 +19,23 @@ pelhamny.gov and pelhammanor.gov block some automated tools, so
 Route verification of those pages through Claude Code, not the chat
 interface: do it here, where the result can be checked against the content
 files and committed together with any correction.
+
+## Editorial workflow
+
+When making site updates in response to Pelham Examiner articles (candidate
+profiles, issue cards, etc.):
+
+1. Make the site change (edit JSON, run build, test, commit, push)
+2. Mark the article as actioned in the pipeline:
+
+   ```
+   cd C:\Users\kathe\pelham-civic
+   python check_examiner.py --mark-actioned <article-id> --note "brief description of what was updated"
+   ```
+
+The article ID appears in the daily Examiner digest email and in
+`python check_examiner.py --pending`. It is the pipeline's ID (a UUID, or its
+first 8+ characters), not the number in the Examiner URL.
+
+Never leave an actioned update without marking it in the pipeline — the
+Sunday editorial review depends on it.
