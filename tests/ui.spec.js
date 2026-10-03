@@ -179,22 +179,23 @@ test('home — hero stats, with governing bodies linking to Gov 101', async ({ p
   await expect(page.getByRole('heading', { name: /Who Actually Governs Pelham/i })).toBeVisible();
 });
 
-test('home — digest shows at most four issues and links to the full list', async ({ page }) => {
+test('home — digest shows the same first three issues as the Issues page, in the same order', async ({ page }) => {
   await page.goto('/');
   const cards = page.locator('#home-issues .issue-card');
-  const n = await cards.count();
-  expect(n).toBeGreaterThan(0);
-  expect(n, 'the digest shows three in one row').toBe(3);
+  expect(await cards.count(), 'the digest shows three in one row').toBe(3);
+  const home = await cards.locator('h3').allTextContents();
 
-  // Most urgent first: an active issue must not sit below a resolved one.
-  const statuses = await cards.locator('.status-dot').evaluateAll((els) =>
-    els.map((e) => [...e.classList].find((c) => c.startsWith('dot-'))));
-  const rank = { 'dot-active': 0, 'dot-watch': 1, 'dot-resolved': 2 };
-  const ranks = statuses.map((s) => rank[s]);
-  expect(ranks, `ordering was ${statuses.join(', ')}`).toEqual([...ranks].sort((a, b) => a - b));
+  // issues.json order, after the show_on_home filter both pages apply.
+  const fs = require('fs');
+  const path = require('path');
+  const { issues } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/issues.json'), 'utf8'));
+  const expected = issues.filter((i) => i.show_on_home !== false).slice(0, 3).map((i) => i.title);
+  expect(home).toEqual(expected);
 
   await page.click('#home-issues .digest-more');
   await expect(page).toHaveURL(/\/issues$/);
+  const issuesPage = await page.locator('.issue-card h3').allTextContents();
+  expect(issuesPage.slice(0, 3)).toEqual(home);
 });
 
 test('home — one meeting card per board, linking to the meetings page', async ({ page }) => {
@@ -433,10 +434,14 @@ test('home — issue previews route by topic where one is set', async ({ page })
 });
 
 test('issues — a /issues#<id> link scrolls to that card and highlights it', async ({ page }) => {
-  await page.goto('/');
-  const href = await page.locator('#home-issues .issue-source-link[href^="/issues#"]').first().getAttribute('href');
-  const id = href.split('#')[1];
-  await page.goto(href);
+  // The last card on the page, so reaching it takes a real scroll. Taken from
+  // issues.json rather than from a home preview: the previews may all route
+  // to topic pages (/taxes, /elections) and carry no /issues# link at all.
+  const fs = require('fs');
+  const path = require('path');
+  const { issues } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/issues.json'), 'utf8'));
+  const id = issues.filter((i) => i.show_on_home !== false).at(-1).id;
+  await page.goto(`/issues#${id}`);
   const card = page.locator(`.issue-card#${id}`);
   await expect(card).toHaveCount(1);
   await expect(card).toHaveClass(/is-target/);

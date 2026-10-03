@@ -1364,16 +1364,13 @@ function generateAboutSources(data) {
 // The homepage is a doorway, not a copy of the site. Each block shows a few
 // items and links to the page that holds all of them.
 
-// Most urgent first, then most recently updated. Only cards marked for the
-// home grid, capped at four — a digest that shows everything is not a digest.
-const ISSUE_URGENCY = { active: 0, watch: 1, resolved: 2 };
-
+// The first three cards in issues.json order — the same cards, in the same
+// order, that open the Issues page. The array order is the one editorial
+// ordering (see issues.schema.json); the digest previously re-sorted by
+// status and date, so the two pages led with different issues.
 function generateIssuePreviews(data, r, limit = 3) {
   const picked = data.issues.issues
     .filter((i) => i.show_on_home !== false)
-    .slice()
-    .sort((a, b) => (ISSUE_URGENCY[a.status] - ISSUE_URGENCY[b.status])
-      || String(b.last_updated).localeCompare(String(a.last_updated)))
     .slice(0, limit);
 
   const cards = picked.map((i) => {
