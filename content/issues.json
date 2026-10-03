@@ -50,7 +50,7 @@
         "tax cap override",
         "village budget"
       ],
-      "link_to": "/taxes"
+      "link_to": null
     },
     {
       "id": "receiver-of-taxes-vacancy",

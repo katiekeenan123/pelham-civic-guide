@@ -431,6 +431,13 @@ test('home — issue previews route by topic where one is set', async ({ page })
     .evaluateAll((els) => els.map((e) => e.getAttribute('href')));
   // Every route resolves somewhere real: a topic page, or the issue's anchor.
   for (const h of hrefs) expect(h).toMatch(/^\/(taxes|elections|issues#[a-z0-9-]+)$/);
+  // And each follows its card's link_to, where null means the card's own anchor.
+  const fs = require('fs');
+  const path = require('path');
+  const { issues } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/issues.json'), 'utf8'));
+  const expected = issues.filter((i) => i.show_on_home !== false).slice(0, 3)
+    .map((i) => i.link_to || `/issues#${i.id}`);
+  expect(hrefs).toEqual(expected);
 });
 
 test('issues — a /issues#<id> link scrolls to that card and highlights it', async ({ page }) => {
