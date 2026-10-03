@@ -9,7 +9,7 @@
       "status_label": "FY2026-27 adopted — structural debt debate ongoing",
       "tag": "Budget / Taxes",
       "tag_style": "budget",
-      "description": "Village of Pelham adopted {{fact:village-budget-fy2627}} FY2026-27 budget — {{fact:village-budget-increase-fy2627}} increase overriding the state tax cap. Village debt grew from {{fact:village-debt-2021}} in 2021 to {{fact:village-debt-2026}} by early 2026. Fiscal management has been a major focus of the November 2026 election. In a September 30 2026 statement, the three Neighborhood Party trustee candidates warned that Village debt could pass $50M, putting it at about $53.7M if the flood mitigation project goes ahead. Their figure takes the project cost they cite ($48.5M), adds 10% for future overruns, subtracts about $17.6M in expected county, state and FEMA grants, and adds roughly $18M of existing debt; they say it could be much higher if the earmarks fall through. This is a campaign projection, not a Village figure, and has not been independently verified.",
+      "description": "Village of Pelham adopted {{fact:village-budget-fy2627}} FY2026-27 budget — {{fact:village-budget-increase-fy2627}} increase overriding the state tax cap. Village debt grew from {{fact:village-debt-2021}} in 2021 to {{fact:village-debt-2026}} by early 2026. Fiscal management has been a major focus of the November 2026 election, and the cost of the flood mitigation project is now the center of an ongoing debate between the candidates. <strong>Neighborhood Party candidates</strong> (September 30 statement) project Village debt of about $53.7M: the $48.5M project cost they cite, plus 10% for future overruns, less about $17.6M in expected county, state and FEMA grants, plus roughly $18M of existing debt. They say it could be much higher if the earmarks fall through. <strong>Incumbent trustees Russell Solomon and Krystal Howell</strong> (October 2 response) say no bond has been authorized to build the project, that the roughly $48.5M figure is an engineering estimate that will keep changing as the design develops, and that the Village is pursuing every source of outside funding to reduce the cost to taxpayers. Both are campaign statements, not Village figures, and neither has been independently verified.",
       "governing_body": [
         "village-of-pelham"
       ],
@@ -23,9 +23,14 @@
           "url": "https://pelhamexaminer.com/84905/announcing/vop-trustee-candidates-village-debt-is-about-to-increase-further/",
           "label": "NP candidates' statement on Village debt",
           "date": "2026-09-30"
+        },
+        {
+          "url": "https://pelhamexaminer.com/84941/announcing/village-of-pelham-incumbent-trustees-to-challengers-our-opponents-are-counting-a-debt-that-doesnt-exist-were-counting-a-cost-our-neighbors-are-already-paying/",
+          "label": "Incumbent trustees' response on Village debt",
+          "date": "2026-10-02"
         }
       ],
-      "last_updated": "2026-09-30",
+      "last_updated": "2026-10-03",
       "keywords": [
         "village budget",
         "tax cap override",
