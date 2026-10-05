@@ -295,7 +295,7 @@ test('signup — every form carries a privacy note: full on Get Involved and /su
       .toHaveText('Your email address is used only to send you civic updates about Pelham. It is never shared or sold.');
   }
   await page.goto('/');
-  await expect(page.locator('#signup .signup-note')).toHaveText('Civic updates about Pelham only. Never shared or sold.');
+  await expect(page.locator('#signup .signup-note')).toHaveText('Monthly civic updates about Pelham. Never shared or sold.');
 });
 
 test('ask button — floats on every page except /ask, links there, and steps aside for the footer', async ({ page }) => {
@@ -355,6 +355,7 @@ test('subscribe — standalone page: one document, the form as its h1, source "s
   });
   expect(dupes).toEqual([]);
   await expect(page.locator('h1')).toHaveText('Stay informed about Pelham');
+  await expect(page.locator('#signup .section-intro')).toHaveText('Get monthly civic updates on local government, meetings, and civic issues — delivered to your inbox.');
   await expect(page.locator('#signup .signup-note')).toContainText('never shared or sold');
   // Reached by a shared link only: neither the desktop nav nor the drawer lists it.
   await expect(page.locator('nav.nav-bar a[href="/subscribe"], #nav-drawer a[href="/subscribe"]')).toHaveCount(0);
