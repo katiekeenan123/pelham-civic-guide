@@ -313,6 +313,11 @@ test('ask button — floats on every page except /ask, links there, and steps as
   const fab = page.locator('a.ask-fab');
   await expect(fab).toBeInViewport();
   await expect(fab).toContainText('Ask AI');
+  // Bottom left, clear of Netlify's toolbar in the bottom-right corner.
+  const box = await fab.boundingBox();
+  const vp = page.viewportSize();
+  expect(box.x).toBeLessThan(vp.width / 4);
+  expect(box.y + box.height).toBeGreaterThan(vp.height - 100);
   await page.locator('footer').scrollIntoViewIfNeeded();
   await expect(fab).toHaveClass(/is-tucked/);
   await page.evaluate(() => window.scrollTo(0, 0));

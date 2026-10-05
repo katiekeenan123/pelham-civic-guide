@@ -97,7 +97,7 @@ function generatePageShell(o) {
 </aside>
 `;
 
-  // Floating "Ask AI" button, bottom right, on every page except the Ask page
+  // Floating "Ask AI" button, bottom left, on every page except the Ask page
   // itself. A plain link to /ask, so it works without JavaScript; app.js only
   // tucks it away while the footer is on screen so it never covers the
   // footer's links.
