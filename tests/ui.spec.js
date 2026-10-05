@@ -519,6 +519,27 @@ test('issues — context strip sits at the top and links out', async ({ page }) 
   expect(stripBox.y, 'strip should sit above the cards').toBeLessThan(cardBox.y);
 });
 
+test('elections — candidates with no published statement say so, muted, in the "why running" slot', async ({ page }) => {
+  const fs = require('fs');
+  const path = require('path');
+  const { candidates } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/elections.json'), 'utf8'));
+  const flagged = candidates.filter((c) => c.no_statement_as_of).map((c) => c.name);
+  expect(flagged.sort()).toEqual(['Breda Bennett', 'Joe Liberatore', 'Ryan Kurtz']);
+
+  await page.goto('/elections');
+  for (const c of candidates) {
+    const card = page.locator('.candidate-card', { has: page.locator('.candidate-name', { hasText: c.name }) });
+    const slot = card.locator('.profile-slot', { has: page.locator('.profile-label', { hasText: 'Why they say' }) });
+    if (c.no_statement_as_of) {
+      const note = slot.locator('.profile-value.profile-empty');
+      await expect(note, c.name).toHaveText('No campaign statement has been published as of October 5, 2026.');
+      await expect(note, c.name).toHaveCSS('font-style', 'italic');
+    } else {
+      await expect(slot, c.name).not.toContainText('No campaign statement has been published');
+    }
+  }
+});
+
 test('elections — each race collapses and expands', async ({ page }) => {
   await page.goto('/elections');
   const toggles = page.locator('.race-toggle');
@@ -628,8 +649,10 @@ test('elections — every candidate is rendered through the same six slots', asy
 
   // A slot the record does not fill is stated, not quietly dropped — that is
   // what stops a thin profile reading as a verdict on the campaign.
-  await expect(page.locator('.profile-empty').first())
-    .toContainText('Not found in the public record');
+  // (Some empty "why running" slots carry a dated no-statement note instead;
+  // see the next test.)
+  await expect(page.locator('.profile-empty', { hasText: 'Not found in the public record' }).first())
+    .toBeVisible();
   await expect(page.locator('.profile-methodology'))
     .toContainText('does not indicate the importance, quality, or strength');
 });

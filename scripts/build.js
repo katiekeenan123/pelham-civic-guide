@@ -174,6 +174,10 @@ function phase1() {
     for (const [key] of PROFILE_SLOTS) {
       if (!(key in c.profile)) fail('elections.json', `${c.id} → profile missing "${key}"`);
     }
+    // A "no statement published" note must not outlive the statement.
+    if (c.no_statement_as_of && c.profile.why_running) {
+      fail('elections.json', `${c.id} → no_statement_as_of is set but why_running has content; remove the note`);
+    }
   });
 
   // ── no citation may point at a site's front door ────────────────────────
@@ -562,11 +566,22 @@ const PROFILE_SLOTS = [
 ];
 const NO_RECORD = 'Not found in the public record reviewed for this profile.';
 
+// What an empty slot says. For why_running, a candidate checked and found to
+// have published no statement says that, with the date of the check.
+function emptySlotText(c, key) {
+  if (key === 'why_running' && c.no_statement_as_of) {
+    const when = new Date(c.no_statement_as_of + 'T12:00:00Z').toLocaleDateString('en-US',
+      { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    return `No campaign statement has been published as of ${when}.`;
+  }
+  return NO_RECORD;
+}
+
 // Flattened for the AI prompt: lists collapse to one line, empties are stated.
 function profileSlots(c, r) {
   return PROFILE_SLOTS.map(([key, label]) => {
     const v = c.profile[key];
-    if (!v || (Array.isArray(v) && !v.length)) return [label, NO_RECORD];
+    if (!v || (Array.isArray(v) && !v.length)) return [label, emptySlotText(c, key)];
     const text = Array.isArray(v) ? v.join('; ') : v;
     return [label, r(text, 'elections.json')];
   });
@@ -646,7 +661,7 @@ function generateElections(data, r) {
           out.push('              <div class="profile-slot">');
           out.push(`                <div class="profile-label">${label}</div>`);
           if (empty) {
-            out.push(`                <div class="profile-value profile-empty">${NO_RECORD}</div>`);
+            out.push(`                <div class="profile-value profile-empty">${emptySlotText(c, key)}</div>`);
           } else if (key === 'quotes') {
             for (const q of v) {
               out.push(`                <blockquote class="profile-quote">${r(q, 'elections.json')}</blockquote>`);

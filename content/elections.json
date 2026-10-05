@@ -235,6 +235,7 @@
       "party_style": "nbhd",
       "incumbent": true,
       "meta": "Incumbent Deputy Mayor · Serving since 2018",
+      "no_statement_as_of": "2026-10-05",
       "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
       "source_label": "Examiner announcement",
       "profile": {
@@ -254,6 +255,7 @@
       "party_style": "nbhd",
       "incumbent": false,
       "meta": "Challenger · Manor ZBA member",
+      "no_statement_as_of": "2026-10-05",
       "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
       "source_label": "Examiner announcement",
       "profile": {
@@ -273,6 +275,7 @@
       "party_style": "dem",
       "incumbent": false,
       "meta": "Challenger · Ran in 2025 (lost by 2 votes)",
+      "no_statement_as_of": "2026-10-05",
       "source_url": "https://pelhamexaminer.com/83541/announcing/pelham-democrats-announce-candidates-for-manor-board-of-trustees-chris-dlutkowski-and-ryan-kurtz/",
       "source_label": "Democratic announcement",
       "profile": {
