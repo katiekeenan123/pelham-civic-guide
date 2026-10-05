@@ -894,6 +894,7 @@ test('get-involved — three parts: raise a concern, vote, run for office', asyn
   const run = parts.nth(2);
   await expect(run.locator('.office-list li')).toHaveCount(4);
   await expect(run).toContainText('Board of Education');
+  await expect(run).toContainText('All elected positions in Pelham are part-time.');
 
   await page.click('.involved-jump a[href="#vote"]');
   await expect(page).toHaveURL(/#vote$/);
