@@ -312,7 +312,8 @@ test('ask button — floats on every page except /ask, links there, and steps as
   await page.goto('/issues');
   const fab = page.locator('a.ask-fab');
   await expect(fab).toBeInViewport();
-  await expect(fab).toContainText('Ask AI');
+  await expect(fab).toHaveText('Ask Pelham AI');
+  await expect(fab).toHaveAttribute('aria-label', 'Ask Pelham AI');
   // Bottom left, clear of Netlify's toolbar in the bottom-right corner.
   const box = await fab.boundingBox();
   const vp = page.viewportSize();

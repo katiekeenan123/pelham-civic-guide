@@ -97,12 +97,12 @@ function generatePageShell(o) {
 </aside>
 `;
 
-  // Floating "Ask AI" button, bottom left, on every page except the Ask page
+  // Floating "Ask Pelham AI" button, bottom left, on every page except the Ask page
   // itself. A plain link to /ask, so it works without JavaScript; app.js only
   // tucks it away while the footer is on screen so it never covers the
   // footer's links.
   const askFab = activePage === 'ask-ai' ? '' : `
-<a class="ask-fab" href="/ask" aria-label="Ask Pelham AI"><svg class="ask-fab-ico" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></svg><span class="ask-fab-text">Ask AI</span></a>
+<a class="ask-fab" href="/ask" aria-label="Ask Pelham AI"><svg class="ask-fab-ico" aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></svg><span class="ask-fab-text">Ask Pelham AI</span></a>
 `;
 
   return `<!DOCTYPE html>

@@ -2362,7 +2362,7 @@
 .about-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-bottom: 56px; }
 @media (max-width: 760px) { .about-cols { grid-template-columns: 1fr; gap: 32px; } }
 
-/* ── Floating "Ask AI" button (every page but /ask) ──
+/* ── Floating "Ask Pelham AI" button (every page but /ask) ──
    Bottom LEFT: Netlify's toolbar sits bottom right for logged-in team
    members and on deploy previews. z-index 130: above page content and the top nav (100/120), below the
    mobile menu's scrim and drawer (140/150) so an open menu covers it. */
