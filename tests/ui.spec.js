@@ -524,7 +524,8 @@ test('elections — candidates with no published statement say so, muted, in the
   const path = require('path');
   const { candidates } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/elections.json'), 'utf8'));
   const flagged = candidates.filter((c) => c.no_statement_as_of).map((c) => c.name);
-  expect(flagged.sort()).toEqual(['Breda Bennett', 'Joe Liberatore', 'Ryan Kurtz']);
+  // Bennett and Liberatore were filled in from the August 19 announcement.
+  expect(flagged.sort()).toEqual(['Ryan Kurtz']);
 
   await page.goto('/elections');
   for (const c of candidates) {
@@ -568,6 +569,10 @@ test('elections — digest links land on each race heading, below the nav', asyn
   const { races } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/elections.json'), 'utf8'));
   expect(races).toHaveLength(3);
   for (const race of races) {
+    // A fresh load each time, as a click from the digest email is. Changing
+    // only the hash in the same tab would smooth-scroll from the previous
+    // race instead, which is slower and not what readers do.
+    await page.goto('about:blank');
     await page.goto(`/elections#race-panel-${race.id}`);
     const block = page.locator(`.race-block#race-panel-${race.id}`);
     await expect(block).toHaveCount(1);

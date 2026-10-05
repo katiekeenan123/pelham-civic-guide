@@ -235,15 +235,21 @@
       "party_style": "nbhd",
       "incumbent": true,
       "meta": "Incumbent Deputy Mayor · Serving since 2018",
-      "no_statement_as_of": "2026-10-05",
       "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
-      "source_label": "Examiner announcement",
+      "source_label": "Examiner announcement — August 19, 2026",
       "profile": {
-        "background": "Deputy Mayor and Police Commissioner of the Village of Pelham Manor, and a member of the board since 2018. She is running with Joe Liberatore on the Neighborhood Party line and has also filed on the Republican line.",
-        "why_running": null,
+        "background": "Deputy Mayor and Police Commissioner of the Village of Pelham Manor, and a member of the board since 2018. A mother of six, she has lived in the Manor for three decades. She is running with Joe Liberatore on the Neighborhood Party line and has also filed on the Republican line.",
+        "why_running": "She calls service on the Village Board &ldquo;a logical extension&rdquo; of her commitment to local volunteerism, and says that since joining the board in 2018 she has been closely involved in its fiscal policy and in improving village services. She wants to keep Pelham Manor providing the highest level of village services in a fiscally responsible manner, noting that the Village carries no debt and consistently stays within the state tax cap, and describes listening as central to her approach.",
         "prior_service": "Village of Pelham Manor Board of Trustees, 2018 to present. Currently Deputy Mayor and Police Commissioner.",
-        "priorities": null,
-        "quotes": null
+        "priorities": [
+          "Maintaining high-level village services",
+          "Fiscal responsibility: no debt and compliance with the state tax cap",
+          "Approachable, listening-first leadership"
+        ],
+        "quotes": [
+          "I want to keep Pelham Manor on track to continue providing the highest level of village services in a fiscally responsible manner.",
+          "Listening is central to my approach as a municipal leader."
+        ]
       }
     },
     {
@@ -255,15 +261,21 @@
       "party_style": "nbhd",
       "incumbent": false,
       "meta": "Challenger · Manor ZBA member",
-      "no_statement_as_of": "2026-10-05",
       "source_url": "https://pelhamexaminer.com/84245/latest-news/bennett-and-liberatore-to-run-for-seats-on-pelham-manor-board-of-trustees-owen-michaane-to-step-down-after-3-terms/",
-      "source_label": "Examiner announcement",
+      "source_label": "Examiner announcement — August 19, 2026",
       "profile": {
-        "background": "A member of the Village of Pelham Manor Zoning Board of Appeals. This is his first run for elective office. He is running alongside Breda Bennett on the Neighborhood Party and Republican lines.",
-        "why_running": null,
+        "background": "A CPA and fractional CFO for for-profit and non-profit groups, including conservation and wildlife advocacy organizations. He has lived in Pelham Manor for 25 years and is a member of the Village&rsquo;s Zoning Board of Appeals. This is his first run for elective office. He is running alongside Breda Bennett on the Neighborhood Party and Republican lines.",
+        "why_running": "He says he wants to keep the Village &ldquo;unique and neighborly&rdquo; &mdash; a warm community where children can walk safely to school along tree-lined streets &mdash; and that his experience as a CPA and fractional CFO brings important financial skills to the board. He describes his approach as collaborative, with his door always open to neighbors.",
         "prior_service": "No prior elected office. Appointed member of the Pelham Manor Zoning Board of Appeals.",
-        "priorities": null,
-        "quotes": null
+        "priorities": [
+          "Keeping the Village unique and neighborly",
+          "Bringing financial expertise to the board",
+          "A collaborative, open-door approach"
+        ],
+        "quotes": [
+          "I want to keep this Village unique and neighborly.",
+          "My approach is collaborative, and my door has always been open for my neighbors."
+        ]
       }
     },
     {
