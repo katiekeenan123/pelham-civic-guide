@@ -128,6 +128,27 @@ create policy "anon can insert subscribers"
   on public.subscribers for insert to anon
   with check (confirmed = false);
 
+-- ── Digest: /api/unsubscribe and /api/digest-approve ──────────────────────
+-- Added 5 October 2026. Both functions use the SERVICE key
+-- (SUPABASE_SERVICE_KEY on Netlify), never the anon key: they read and update
+-- rows the public must not touch. The service role bypasses RLS but not table
+-- privileges, so it needs explicit grants.
+--
+-- The subscriber columns and the digests table belong to the digest pipeline
+-- and are created by pelham-civic/schema.sql ("Subscriber digest" section).
+-- The statements below repeat what that section does for subscribers, so
+-- running either file leaves the same result; everything is if-not-exists or
+-- a grant, so re-running is safe.
+alter table public.subscribers add column if not exists unsubscribed_at   timestamptz;
+alter table public.subscribers add column if not exists unsubscribe_token uuid not null default gen_random_uuid();
+create unique index if not exists subscribers_unsubscribe_token_key
+    on public.subscribers (unsubscribe_token);
+grant select, update on table public.subscribers to service_role;
+
+-- digests is created by pelham-civic/schema.sql; this grant fails with
+-- "relation public.digests does not exist" until that has been run.
+grant select, update on table public.digests to service_role;
+
 -- INSERT only, deliberately. No select policy is granted, so submissions
 -- cannot be read back by the anon role — a resident reporting an error, or
 -- describing how they got involved, should not be readable by anyone who

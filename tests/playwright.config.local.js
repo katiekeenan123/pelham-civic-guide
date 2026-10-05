@@ -20,7 +20,7 @@ const BASE_URL = 'http://127.0.0.1:' + PORT;
 
 module.exports = defineConfig({
   testDir: '.',
-  testMatch: ['ui.spec.js', 'functions.spec.js'],
+  testMatch: ['ui.spec.js', 'functions.spec.js', 'digest-functions.spec.js'],
 
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
