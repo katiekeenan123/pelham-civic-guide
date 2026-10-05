@@ -585,7 +585,10 @@ function generateElections(data, r) {
 
   for (const race of e.races) {
     const body = data.bodies.bodies.find((b) => b.id === race.body);
-    out.push('    <div class="race-block">');
+    // The block carries race-panel-<race id>: check_digest.py (companion
+    // repo) links /elections#race-panel-<race id>, and the block, unlike the
+    // panel inside it, starts at the race heading. Do not rename.
+    out.push(`    <div class="race-block" id="race-panel-${esc(race.id)}">`);
     out.push('      <div class="race-header">');
     out.push('        <div class="race-meta">');
     out.push(`          <span class="race-body">${body.name}</span>`);
@@ -597,9 +600,9 @@ function generateElections(data, r) {
     if (race.badge) out.push(`        <span class="race-badge contested">${race.badge}</span>`);
     // Collapsing a race is a button, not a <details>, so the existing header
     // layout survives; app.js toggles it and it stays open without JS.
-    out.push(`        <button class="race-toggle" aria-expanded="true" aria-controls="race-panel-${esc(race.id)}" aria-label="Collapse ${esc(race.title)}"><span aria-hidden="true">▾</span></button>`);
+    out.push(`        <button class="race-toggle" aria-expanded="true" aria-controls="race-content-${esc(race.id)}" aria-label="Collapse ${esc(race.title)}"><span aria-hidden="true">▾</span></button>`);
     out.push('      </div>');
-    out.push(`      <div class="race-panel" id="race-panel-${esc(race.id)}">`);
+    out.push(`      <div class="race-panel" id="race-content-${esc(race.id)}">`);
     out.push('');
     // Context sits directly under the header rather than below the cards —
     // it frames the race, so a reader needs it before the candidates.

@@ -538,6 +538,31 @@ test('elections — each race collapses and expands', async ({ page }) => {
   await expect(body).toBeVisible();
 });
 
+// check_digest.py (companion repo) links /elections#race-panel-<race id>.
+// The id is on the race block, so the link lands on the race heading, and
+// scroll-margin keeps that heading clear of the sticky nav.
+test('elections — digest links land on each race heading, below the nav', async ({ page }) => {
+  const fs = require('fs');
+  const path = require('path');
+  const { races } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/elections.json'), 'utf8'));
+  expect(races).toHaveLength(3);
+  for (const race of races) {
+    await page.goto(`/elections#race-panel-${race.id}`);
+    const block = page.locator(`.race-block#race-panel-${race.id}`);
+    await expect(block).toHaveCount(1);
+    // The toggle controls the panel inside the block, under its own id.
+    await expect(block.locator('.race-toggle')).toHaveAttribute('aria-controls', `race-content-${race.id}`);
+    await expect(block.locator(`.race-panel#race-content-${race.id}`)).toBeVisible();
+    // Smooth scrolling animates the jump, so wait for it to settle.
+    const navBottom = (await page.locator('.nav-bar').boundingBox()).height;
+    await expect.poll(async () => Math.round((await block.boundingBox()).y), { timeout: 5000 })
+      .toBeGreaterThanOrEqual(Math.floor(navBottom));
+    await expect.poll(async () => Math.round((await block.boundingBox()).y), { timeout: 5000 })
+      .toBeLessThan(120);
+    await expect(block.locator('.race-header')).toBeInViewport();
+  }
+});
+
 test('elections — race context sits under the header, above the candidates', async ({ page }) => {
   await page.goto('/elections');
   const block = page.locator('.race-block').first();

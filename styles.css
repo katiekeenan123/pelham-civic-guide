@@ -1176,6 +1176,8 @@
     border: 1px solid rgba(255,255,255,0.1);
     margin-bottom: 32px;
     overflow: hidden;
+    /* Clear the sticky nav when a digest link lands on the race. */
+    scroll-margin-top: 80px;
   }
   .race-header {
     background: rgba(255,255,255,0.05);
