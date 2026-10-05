@@ -276,7 +276,7 @@
       "source_url": "https://pelhamexaminer.com/83541/announcing/pelham-democrats-announce-candidates-for-manor-board-of-trustees-chris-dlutkowski-and-ryan-kurtz/",
       "source_label": "Democratic announcement",
       "profile": {
-        "background": "He ran for the Pelham Manor board in November 2025 and lost to incumbent Tim Case by two votes after a manual recount, one of the closest results in Manor history. He is running again in 2026 alongside Chris Dlutkowski.",
+        "background": "He ran for the Pelham Manor board in November 2025 and lost to incumbent Tim Case by two votes after a manual recount, one of the closest results in Manor history. He is running again in 2026 alongside Chris Dlutowski.",
         "why_running": null,
         "prior_service": "No prior elected office. Ran for the Pelham Manor Board of Trustees in 2025.",
         "priorities": null,
@@ -287,19 +287,27 @@
       "id": "chris-dlutkowski",
       "race_id": "pelham-manor-trustees",
       "office": null,
-      "name": "Chris Dlutkowski",
+      "name": "Chris Dlutowski",
       "party": "Democratic Party",
       "party_style": "dem",
       "incumbent": false,
       "meta": "Challenger · First run for office",
-      "source_url": "https://pelhamexaminer.com/83541/announcing/pelham-democrats-announce-candidates-for-manor-board-of-trustees-chris-dlutkowski-and-ryan-kurtz/",
-      "source_label": "Democratic announcement",
+      "source_url": "https://pelhamexaminer.com/84960/showcase/chris-dlutowskis-campaign-statement-the-manor-has-a-proud-past-but-i-think-it-could-have-an-even-brighter-future/",
+      "source_label": "Campaign statement — Examiner October 5, 2026",
       "profile": {
-        "background": "He announced his candidacy in June 2026 and is running alongside Ryan Kurtz on the Democratic line.",
-        "why_running": null,
+        "background": "A transactional attorney for more than 30 years, representing clients such as the New York City retirement systems. He moved to Pelham with his family a little over five years ago, and his daughters walk to school and bike locally. He is President of the Board of the Pelham Art Center and served on the parent panel that interviewed the new principal at Siwanoy. He is running on the Democratic line alongside Ryan Kurtz.",
+        "why_running": "He says the board answered residents&rsquo; traffic safety concerns with AAA safety demonstrations rather than meaningful changes, and proposes a systemic traffic safety analysis, including physical design changes and the needs of cyclists and runners as well as pedestrians and drivers. He also wants to assess how the village logs residents&rsquo; concerns and follows up on them, and make that information easy to find, and notes that the village has not had a strategic plan for nearly 50 years.",
         "prior_service": "No prior elected office.",
-        "priorities": null,
-        "quotes": null
+        "priorities": [
+          "Traffic safety improvements",
+          "More responsive village government",
+          "An updated village strategic plan",
+          "Holding the line on taxes"
+        ],
+        "quotes": [
+          "The Manor has a proud past, but I think it could have an even brighter future.",
+          "I am also committed to an updated strategic plan."
+        ]
       }
     },
     {

@@ -768,7 +768,10 @@ test('elections — three race blocks and every candidate named', async ({ page 
   await expect(page.locator('.race-block')).toHaveCount(3);
   for (const name of ['Solomon', 'Howell', 'Burke', 'Long', 'Speros', 'Anzilotti']) {
     await expect(page.locator('main')).toContainText(name);
-  }
+  }  // The candidate's own spelling (statement, Examiner Oct 5 2026). The old
+  // "Dlutkowski" survives only in an Examiner URL, never in visible text.
+  await expect(page.locator('main')).toContainText('Chris Dlutowski');
+  await expect(page.locator('main')).not.toContainText('Dlutkowski');
 });
 
 test('taxes — sourced shares for every body, then the village comparison', async ({ page }) => {

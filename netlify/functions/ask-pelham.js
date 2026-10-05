@@ -352,6 +352,13 @@ const KNOWN_CANDIDATES = [
   'Borsella', 'Eldahry',
 ];
 
+// Other spellings a reader may type, mapped to the canonical key above. The
+// key stays as check_examiner.py stores it, so articles already tagged under
+// it keep matching. The candidate spells his own name "Dlutowski" (campaign
+// statement, Examiner October 5 2026); "Dlutkowski" came from an earlier
+// announcement.
+const CANDIDATE_ALIASES = { Dlutkowski: ['dlutowski'] };
+
 // Surnames that are also ordinary English words. "How long is the meeting?"
 // must not retrieve coverage of candidate Arthur Long, so these only count as a
 // candidate when the reader actually capitalized them.
@@ -450,6 +457,9 @@ function matchCandidate(low, properNouns) {
       continue;
     }
     if (new RegExp(`\\b${name.toLowerCase()}\\b`).test(low)) return name;
+    for (const alias of CANDIDATE_ALIASES[name] || []) {
+      if (new RegExp(`\\b${alias}\\b`).test(low)) return name;
+    }
   }
   return null;
 }
