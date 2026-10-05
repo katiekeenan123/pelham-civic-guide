@@ -1460,7 +1460,7 @@ function generateSignupForm(pageId) {
     '  <div class="content-wrap signup-inner">',
     '    <div class="signup-copy">',
     `      <${h} class="section-title">Stay informed about Pelham</${h}>`,
-    '      <p class="section-intro">Get monthly civic updates on local government, meetings, and civic issues — delivered to your inbox.</p>',
+    '      <p class="section-intro">Get monthly updates on local government, meetings, and civic issues — delivered to your inbox.</p>',
     '    </div>',
     ...signupFormMarkup(pageId, { visibleLabel: true }),
     '    <p class="signup-note">Your email address is used only to send you civic updates about Pelham. It is never shared or sold.</p>',

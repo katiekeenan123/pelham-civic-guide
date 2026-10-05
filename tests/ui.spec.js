@@ -355,7 +355,7 @@ test('subscribe — standalone page: one document, the form as its h1, source "s
   });
   expect(dupes).toEqual([]);
   await expect(page.locator('h1')).toHaveText('Stay informed about Pelham');
-  await expect(page.locator('#signup .section-intro')).toHaveText('Get monthly civic updates on local government, meetings, and civic issues — delivered to your inbox.');
+  await expect(page.locator('#signup .section-intro')).toHaveText('Get monthly updates on local government, meetings, and civic issues — delivered to your inbox.');
   await expect(page.locator('#signup .signup-note')).toContainText('never shared or sold');
   // Reached by a shared link only: neither the desktop nav nor the drawer lists it.
   await expect(page.locator('nav.nav-bar a[href="/subscribe"], #nav-drawer a[href="/subscribe"]')).toHaveCount(0);
