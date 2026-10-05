@@ -1426,25 +1426,19 @@ function generateElectionsBanner(data, r) {
   ].join(NL);
 }
 
-// Email signup, shared by every page that carries the anchor. The page id is
-// sent as `source` so the subscribers table records where each signup came
-// from. app.js intercepts the submit and posts JSON to /api/subscribe; the
-// method/action are the fallback if the script never runs, and the function
-// answers a plain form post with its own confirmation page. The honeypot is
-// hidden inline so it stays off screen even if the stylesheet fails to load.
-function generateSignupForm(pageId) {
-  // On /subscribe the form is the whole page, so its heading is the h1.
-  const h = pageId === 'subscribe' ? 'h1' : 'h2';
+// Email signup, in two sizes sharing one form: the full section (Get
+// Involved, /subscribe) and a slim band (home, under the hero). The page id
+// is sent as `source` so the subscribers table records where each signup
+// came from. app.js intercepts the submit and posts JSON to /api/subscribe;
+// the method/action are the fallback if the script never runs, and the
+// function answers a plain form post with its own confirmation page. The
+// honeypot is hidden inline so it stays off screen even if the stylesheet
+// fails to load. Both sizes use the same ids, so a page carries only one.
+function signupFormMarkup(pageId, { visibleLabel }) {
   return [
-    `<section class="section signup-section${pageId === 'subscribe' ? ' signup-page' : ''}" id="signup">`,
-    '  <div class="content-wrap signup-inner">',
-    '    <div class="signup-copy">',
-    `      <${h} class="section-title">Stay informed about Pelham</${h}>`,
-    '      <p class="section-intro">Get updates on local government, meetings, and civic issues — delivered to your inbox.</p>',
-    '    </div>',
     '    <form class="signup-form" id="signup-form" method="post" action="/api/subscribe">',
     `      <input type="hidden" name="source" value="${esc(pageId)}">`,
-    '      <label class="signup-label" for="signup-email">Email address</label>',
+    `      <label class="${visibleLabel ? 'signup-label' : 'visually-hidden'}" for="signup-email">Email address</label>`,
     '      <div class="signup-row">',
     '        <input type="email" id="signup-email" name="email" class="signup-input" required autocomplete="email" placeholder="you@example.com">',
     '        <button type="submit" class="signup-btn">Sign me up →</button>',
@@ -1455,7 +1449,36 @@ function generateSignupForm(pageId) {
     '      </div>',
     '    </form>',
     '    <p class="signup-msg" role="status" aria-live="polite" hidden></p>',
+  ];
+}
+
+function generateSignupForm(pageId) {
+  // On /subscribe the form is the whole page, so its heading is the h1.
+  const h = pageId === 'subscribe' ? 'h1' : 'h2';
+  return [
+    `<section class="section signup-section${pageId === 'subscribe' ? ' signup-page' : ''}" id="signup">`,
+    '  <div class="content-wrap signup-inner">',
+    '    <div class="signup-copy">',
+    `      <${h} class="section-title">Stay informed about Pelham</${h}>`,
+    '      <p class="section-intro">Get updates on local government, meetings, and civic issues — delivered to your inbox.</p>',
+    '    </div>',
+    ...signupFormMarkup(pageId, { visibleLabel: true }),
     '    <p class="signup-note">Your email address is used only to send you civic updates about Pelham. It is never shared or sold.</p>',
+    '  </div>',
+    '</section>',
+  ].join(NL);
+}
+
+// Slim band for prime position on the home page: a short heading, the
+// field and the button. The privacy line is kept, shortened, because this
+// is still where the address is collected.
+function generateSignupSlim(pageId) {
+  return [
+    '<section class="signup-slim" id="signup">',
+    '  <div class="content-wrap signup-slim-inner">',
+    '    <h2 class="signup-slim-title">Stay informed</h2>',
+    ...signupFormMarkup(pageId, { visibleLabel: false }),
+    '    <p class="signup-note">Civic updates about Pelham only. Never shared or sold.</p>',
     '  </div>',
     '</section>',
   ].join(NL);
@@ -1494,6 +1517,7 @@ function pageBlocks(data, r) {
     'meeting-schedule': () => generateMeetingSchedule(data, r),
     'about-sources': () => generateAboutSources(data),
     'signup-form': (pageId) => generateSignupForm(pageId),
+    'signup-slim': (pageId) => generateSignupSlim(pageId),
   };
 }
 

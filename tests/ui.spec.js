@@ -264,10 +264,14 @@ test('signup — home form reports failure, then success, and sends source "home
     return route.fulfill({ status, contentType: 'application/json', body: status === 200 ? '{"ok":true}' : '{}' });
   });
   await page.goto('/');
-  // Between the Get Involved teaser and the independence band.
-  await expect(page.locator('#home-involved + #signup.signup-section + .home-about-band')).toHaveCount(1);
+  // Slim band directly under the hero, above Current Issues, and the only
+  // signup form on the page.
+  await expect(page.locator('.hero + #signup.signup-slim + #home-issues')).toHaveCount(1);
+  await expect(page.locator('.signup-form')).toHaveCount(1);
   const section = page.locator('#signup');
-  await expect(section.locator('h2')).toHaveText('Stay informed about Pelham');
+  await expect(section.locator('h2')).toHaveText('Stay informed');
+  // The label is for screen readers; the band shows only the field and button.
+  await expect(page.getByLabel('Email address')).toBeVisible();
 
   await section.locator('#signup-email').fill('Reader@Example.com ');
   await section.locator('.signup-btn').click();
@@ -284,12 +288,47 @@ test('signup — home form reports failure, then success, and sends source "home
   await expect(section.locator('.signup-form')).toBeHidden();
 });
 
-test('signup — the privacy note sits under the form on home and Get Involved', async ({ page }) => {
-  for (const url of ['/', '/get-involved']) {
+test('signup — every form carries a privacy note: full on Get Involved and /subscribe, short on home', async ({ page }) => {
+  for (const url of ['/get-involved', '/subscribe']) {
     await page.goto(url);
     await expect(page.locator('#signup .signup-note'), url)
       .toHaveText('Your email address is used only to send you civic updates about Pelham. It is never shared or sold.');
   }
+  await page.goto('/');
+  await expect(page.locator('#signup .signup-note')).toHaveText('Civic updates about Pelham only. Never shared or sold.');
+});
+
+test('ask button — floats on every page except /ask, links there, and steps aside for the footer', async ({ page }) => {
+  for (const pg of PAGES.filter((x) => x.id !== 'ask-ai')) {
+    await page.goto(pg.url);
+    const fab = page.locator('a.ask-fab');
+    await expect(fab, pg.url).toHaveCount(1);
+    await expect(fab, pg.url).toHaveAttribute('href', '/ask');
+    await expect(fab, pg.url).toHaveCSS('position', 'fixed');
+  }
+  await page.goto('/ask');
+  await expect(page.locator('.ask-fab')).toHaveCount(0);
+
+  await page.goto('/issues');
+  const fab = page.locator('a.ask-fab');
+  await expect(fab).toBeInViewport();
+  await expect(fab).toContainText('Ask AI');
+  await page.locator('footer').scrollIntoViewIfNeeded();
+  await expect(fab).toHaveClass(/is-tucked/);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(fab).not.toHaveClass(/is-tucked/);
+  await fab.click();
+  await expect(page).toHaveURL(/\/ask$/);
+});
+
+test('ask button — icon only on a phone, with an accessible name', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const fab = page.locator('a.ask-fab');
+  await expect(fab).toHaveAttribute('aria-label', 'Ask Pelham AI');
+  const box = await fab.boundingBox();
+  expect(Math.round(box.width)).toBe(52);
+  expect(Math.round(box.height)).toBe(52);
 });
 
 test('subscribe — standalone page: one document, the form as its h1, source "subscribe", in no menu', async ({ page }) => {

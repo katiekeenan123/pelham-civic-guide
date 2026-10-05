@@ -572,6 +572,17 @@
     function (b) { if (today > b.dataset.hideAfter) b.remove(); },
   );
 
+  // ── Floating Ask AI button ─────────────────────────────────────────────
+  // Tucked away while the footer is on screen so it never covers the
+  // footer's links. Without IntersectionObserver it simply stays put.
+  var fab = document.querySelector('.ask-fab');
+  var footerEl = document.querySelector('footer');
+  if (fab && footerEl && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      fab.classList.toggle('is-tucked', entries[0].isIntersecting);
+    }).observe(footerEl);
+  }
+
   // ── Election countdown ─────────────────────────────────────────────────
   // Computed here, not at build time, so it is right on the day it is read.
   Array.prototype.forEach.call(
