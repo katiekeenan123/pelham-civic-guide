@@ -9,7 +9,7 @@
       "status_label": "FY2026-27 adopted — structural debt debate ongoing",
       "tag": "Budget / Taxes",
       "tag_style": "budget",
-      "description": "Village of Pelham adopted {{fact:village-budget-fy2627}} FY2026-27 budget — {{fact:village-budget-increase-fy2627}} increase overriding the state tax cap. Village debt grew from {{fact:village-debt-2021}} in 2021 to {{fact:village-debt-2026}} by early 2026. Fiscal management has been a major focus of the November 2026 election, and the cost of the flood mitigation project is now the center of an ongoing debate between the candidates. <strong>Neighborhood Party candidates</strong> (September 30 statement) project Village debt of about $53.7M: the $48.5M project cost they cite, plus 10% for future overruns, less about $17.6M in expected county, state and FEMA grants, plus roughly $18M of existing debt. They say it could be much higher if the earmarks fall through. <strong>Incumbent trustees Russell Solomon and Krystal Howell</strong> (October 2 response) say no bond has been authorized to build the project, that the roughly $48.5M figure is an engineering estimate that will keep changing as the design develops, and that the Village is pursuing every source of outside funding to reduce the cost to taxpayers. Both are campaign statements, not Village figures, and neither has been independently verified.",
+      "description": "Village of Pelham adopted {{fact:village-budget-fy2627}} FY2026-27 budget — {{fact:village-budget-increase-fy2627}} increase overriding the state tax cap. Village debt grew from {{fact:village-debt-2021}} in 2021 to {{fact:village-debt-2026}} by early 2026. Fiscal management has been a major focus of the November 2026 election, and the cost of the flood mitigation project is now the center of an ongoing debate between the candidates. <strong>Neighborhood Party candidates</strong> (September 30 statement) project Village debt of about $53.7M: the $48.5M project cost they cite, plus 10% for future overruns, less about $17.6M in expected county, state and FEMA grants, plus roughly $18M of existing debt. They say it could be much higher if the earmarks fall through. <strong>Incumbent trustees Russell Solomon and Krystal Howell</strong> (October 2 response) say no bond has been authorized to build the project, that the roughly $48.5M figure is an engineering estimate that will keep changing as the design develops, and that the Village is pursuing every source of outside funding to reduce the cost to taxpayers. Both are campaign statements, not Village figures, and neither has been independently verified.<br><br><strong>NYS Comptroller fiscal stress score:</strong> The New York State Comptroller&rsquo;s office has published fiscal 2025 fiscal stress scores for New York municipalities. <strong>Neighborhood Party candidates Anzilotti, Long and Speros</strong> (October 5 statement) report that the Village of Pelham scored 19.2, up from 3.3 in fiscal 2024 &mdash; the worst score of any Westchester village and the second worst of all Westchester municipalities, behind only Yonkers &mdash; while Pelham Manor, Ardsley, Bronxville, Irvington and Larchmont scored between 1.7 and 3.3. They say the largest component of the Village&rsquo;s score is the ratio of its general fund to its annual spending, and point to the September 22 purchase of an Avant 640i loader from the contingency budget line, in anticipation of revenue the Village &ldquo;might&rdquo; receive later this year. They also say growth in that contingency line (at most $320,000 in budgets since 2019, over $780,000 for FY2026-27), together with increased debt service &mdash; including on almost $1 million in debt for Municipal Center furniture and window treatments &mdash; is what made the Village break the tax cap this year. These figures come from a candidate press release, which the Examiner publishes as received; this site has not independently verified them.",
       "governing_body": [
         "village-of-pelham"
       ],
@@ -28,9 +28,14 @@
           "url": "https://pelhamexaminer.com/84941/announcing/village-of-pelham-incumbent-trustees-to-challengers-our-opponents-are-counting-a-debt-that-doesnt-exist-were-counting-a-cost-our-neighbors-are-already-paying/",
           "label": "Incumbent trustees' response on Village debt",
           "date": "2026-10-02"
+        },
+        {
+          "url": "https://pelhamexaminer.com/84973/announcing/village-of-pelhams-fiscal-peers-are-now-yonkers-and-peekskill/",
+          "label": "NP candidates on NYS Comptroller fiscal stress score — Examiner October 5, 2026",
+          "date": "2026-10-05"
         }
       ],
-      "last_updated": "2026-10-03",
+      "last_updated": "2026-10-05",
       "keywords": [
         "village budget",
         "tax cap override",
