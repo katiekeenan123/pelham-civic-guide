@@ -275,7 +275,7 @@ function buildPrompt(data, r) {
   const blocks = {
     'current-issues': () => {
       const out = ['The issues the site is actively tracking. Each is sourced; cite the source when you use one.'];
-      for (const i of data.issues.issues) {
+      for (const i of sortedIssues(data)) {
         out.push(`- ${plain(r(i.title, 'issues.json'))} [${i.status}: ${plain(r(i.status_label, 'issues.json'))}]`);
         out.push(`    ${plain(r(i.description, 'issues.json'))}`);
         for (const s of i.sources) {
@@ -527,8 +527,20 @@ function generateNav(activePage, data) {
 // PHASE 3 — the nine HTML generators
 // =========================================================================
 
+// Display order for issue cards, shared by the Issues page, the home digest
+// and the AI prompt so they can never disagree: active, then watch, then
+// resolved; within a status, most recently updated first. Array.sort is
+// stable, so issues.json order breaks ties. (The RAG keyword map keeps its own
+// pinned rag_order; reordering it would change question routing.)
+const ISSUE_STATUS_RANK = { active: 0, watch: 1, resolved: 2 };
+function sortedIssues(data) {
+  return data.issues.issues.slice().sort((a, b) =>
+    (ISSUE_STATUS_RANK[a.status] - ISSUE_STATUS_RANK[b.status])
+    || String(b.last_updated).localeCompare(String(a.last_updated)));
+}
+
 function generateIssueCards(data, r) {
-  const shown = data.issues.issues.filter((i) => i.show_on_home !== false);
+  const shown = sortedIssues(data).filter((i) => i.show_on_home !== false);
   const cards = shown.map((i) => {
     const status = `<div class="issue-status"><div class="status-dot dot-${i.status}"></div>${r(i.status_label, 'issues.json')}</div>`;
     // One link per source. A card citing both sides of an exchange needs both
@@ -1382,12 +1394,10 @@ function generateAboutSources(data) {
 // The homepage is a doorway, not a copy of the site. Each block shows a few
 // items and links to the page that holds all of them.
 
-// The first three cards in issues.json order — the same cards, in the same
-// order, that open the Issues page. The array order is the one editorial
-// ordering (see issues.schema.json); the digest previously re-sorted by
-// status and date, so the two pages led with different issues.
+// The first three cards in sortedIssues() order — the same cards, in the
+// same order, that open the Issues page.
 function generateIssuePreviews(data, r, limit = 3) {
-  const picked = data.issues.issues
+  const picked = sortedIssues(data)
     .filter((i) => i.show_on_home !== false)
     .slice(0, limit);
 

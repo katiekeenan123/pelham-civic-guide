@@ -19,7 +19,7 @@
     },
     "issues": {
       "type": "array",
-      "description": "DISPLAY ORDER IS ARRAY ORDER. There is deliberately no 'order' field: a second source of ordering is a second thing to keep in sync.",
+      "description": "Display order is computed, not array order: status (active, then watch, then resolved), then last_updated, newest first; array order only breaks ties. The Issues page, the home digest (first three) and the AI prompt all use it (sortedIssues in scripts/build.js). To move a card up, change its status or last_updated. There is deliberately no 'order' field.",
       "items": {
         "$ref": "#/$defs/issue"
       }

@@ -179,18 +179,42 @@ test('home — hero stats, with governing bodies linking to Gov 101', async ({ p
   await expect(page.getByRole('heading', { name: /Who Actually Governs Pelham/i })).toBeVisible();
 });
 
+// The issue cards in display order, computed here independently of the
+// build: active, then watch, then resolved; within a status, last_updated
+// newest first; issues.json order breaks ties. Hidden cards are dropped.
+function displayedIssues() {
+  const fs = require('fs');
+  const path = require('path');
+  const { issues } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/issues.json'), 'utf8'));
+  const rank = { active: 0, watch: 1, resolved: 2 };
+  return issues
+    .map((issue, index) => ({ issue, index }))
+    .filter(({ issue }) => issue.show_on_home !== false)
+    .sort((a, b) => (rank[a.issue.status] - rank[b.issue.status])
+      || (a.issue.last_updated < b.issue.last_updated ? 1 : a.issue.last_updated > b.issue.last_updated ? -1 : 0)
+      || (a.index - b.index))
+    .map(({ issue }) => issue);
+}
+
+test('issues — cards are ordered active, then watch, then resolved, newest update first', async ({ page }) => {
+  await page.goto('/issues');
+  const ids = await page.locator('.issue-card[id]').evaluateAll((els) => els.map((e) => e.id));
+  expect(ids).toEqual(displayedIssues().map((i) => i.id));
+  // Status runs never interleave: once a lower-priority status appears, a
+  // higher one cannot follow it.
+  const dots = await page.locator('.issue-card .status-dot').evaluateAll((els) =>
+    els.map((e) => ({ 'dot-active': 0, 'dot-watch': 1, 'dot-resolved': 2 })[[...e.classList].find((c) => c.startsWith('dot-'))]));
+  expect(dots).toEqual([...dots].sort((a, b) => a - b));
+});
+
 test('home — digest shows the same first three issues as the Issues page, in the same order', async ({ page }) => {
   await page.goto('/');
   const cards = page.locator('#home-issues .issue-card');
   expect(await cards.count(), 'the digest shows three in one row').toBe(3);
   const home = await cards.locator('h3').allTextContents();
 
-  // issues.json order, after the show_on_home filter both pages apply.
-  const fs = require('fs');
-  const path = require('path');
-  const { issues } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/issues.json'), 'utf8'));
-  const expected = issues.filter((i) => i.show_on_home !== false).slice(0, 3).map((i) => i.title);
-  expect(home).toEqual(expected);
+  // The first three in display order, the same three that open /issues.
+  expect(home).toEqual(displayedIssues().slice(0, 3).map((i) => i.title));
 
   await page.click('#home-issues .digest-more');
   await expect(page).toHaveURL(/\/issues$/);
@@ -478,11 +502,7 @@ test('home — issue previews route by topic where one is set', async ({ page })
   // Every route resolves somewhere real: a topic page, or the issue's anchor.
   for (const h of hrefs) expect(h).toMatch(/^\/(taxes|elections|issues#[a-z0-9-]+)$/);
   // And each follows its card's link_to, where null means the card's own anchor.
-  const fs = require('fs');
-  const path = require('path');
-  const { issues } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/issues.json'), 'utf8'));
-  const expected = issues.filter((i) => i.show_on_home !== false).slice(0, 3)
-    .map((i) => i.link_to || `/issues#${i.id}`);
+  const expected = displayedIssues().slice(0, 3).map((i) => i.link_to || `/issues#${i.id}`);
   expect(hrefs).toEqual(expected);
 });
 
@@ -490,10 +510,7 @@ test('issues — a /issues#<id> link scrolls to that card and highlights it', as
   // The last card on the page, so reaching it takes a real scroll. Taken from
   // issues.json rather than from a home preview: the previews may all route
   // to topic pages (/taxes, /elections) and carry no /issues# link at all.
-  const fs = require('fs');
-  const path = require('path');
-  const { issues } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/issues.json'), 'utf8'));
-  const id = issues.filter((i) => i.show_on_home !== false).at(-1).id;
+  const id = displayedIssues().at(-1).id;
   await page.goto(`/issues#${id}`);
   const card = page.locator(`.issue-card#${id}`);
   await expect(card).toHaveCount(1);

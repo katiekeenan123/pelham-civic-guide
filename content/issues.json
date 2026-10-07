@@ -5,7 +5,7 @@
     {
       "id": "rising-property-taxes-village-debt",
       "title": "Rising Property Taxes & Village Debt",
-      "status": "watch",
+      "status": "active",
       "status_label": "FY2026-27 adopted — structural debt debate ongoing",
       "tag": "Budget / Taxes",
       "tag_style": "budget",
@@ -266,7 +266,7 @@
     {
       "id": "manor-tractor-trailer-ban",
       "title": "Pelham Manor — Tractor-Trailer Ban on Boston Post Road",
-      "status": "active",
+      "status": "watch",
       "status_label": "Request submitted to NYS DOT",
       "tag": "Transportation",
       "tag_style": "transit",
@@ -306,7 +306,7 @@
     {
       "id": "ems-station-first-street",
       "title": "EMS Station & Community Church — First Street",
-      "status": "watch",
+      "status": "active",
       "status_label": "No vote taken · site still undecided as of October 5",
       "tag": "EMS / Emergency Services",
       "tag_style": "infrastructure",
