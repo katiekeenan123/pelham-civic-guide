@@ -71,10 +71,10 @@
       "id": "receiver-of-taxes-vacancy",
       "title": "Receiver of Taxes Vacancy — Appointment or Referendum Under Discussion",
       "status": "active",
-      "status_label": "Active — replacement under discussion — board weighing appointment vs. referendum; October meeting scheduled",
+      "status_label": "Active — no appointment yet; not taken up at the October 5 meeting",
       "tag": "Personnel",
       "tag_style": "budget",
-      "description": "Erica Winter, elected Town Receiver of Taxes in November 2025, stepped down after less than a year citing a new professional opportunity. Deputy Receiver Darlene Paolericio assumed her duties and continues to fulfill them. The Town Board made no appointment at its September 14, 2026 meeting and is weighing whether to appoint a replacement or hold a public referendum to make the position permanently appointed rather than elected; full discussion is scheduled for the October 2026 meeting. The Receiver of Taxes is responsible for collecting property tax payments from all Pelham residents.",
+      "description": "Erica Winter, elected Town Receiver of Taxes in November 2025, stepped down after less than a year citing a new professional opportunity. Deputy Receiver Darlene Paolericio assumed her duties and continues to fulfill them. The Town Board made no appointment at its September 14, 2026 meeting and is weighing whether to appoint a replacement or hold a public referendum to make the position permanently appointed rather than elected. A full discussion had been expected at the October meeting, but the vacancy was not discussed at the October 5 Town Council meeting, according to its recording, and no appointment has been made. The Receiver of Taxes is responsible for collecting property tax payments from all Pelham residents.",
       "governing_body": [
         "town-of-pelham"
       ],
@@ -83,9 +83,14 @@
           "url": "https://pelhamexaminer.com/84610/latest-news/erica-winter-steps-down-as-pelhams-receiver-of-taxes-deputy-receiver-assumes-her-duties-town-council-to-select-replacement/",
           "label": "Pelham Examiner — September 9, 2026",
           "date": "2026-09-09"
+        },
+        {
+          "url": "/meetings#town-council-oct2026",
+          "label": "Town Council meeting summary — October 5, 2026",
+          "date": "2026-10-05"
         }
       ],
-      "last_updated": "2026-09-21",
+      "last_updated": "2026-10-07",
       "keywords": [
         "receiver of taxes",
         "Erica Winter",
