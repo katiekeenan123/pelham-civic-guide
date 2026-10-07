@@ -524,8 +524,9 @@ test('elections — candidates with no published statement say so, muted, in the
   const path = require('path');
   const { candidates } = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'content/elections.json'), 'utf8'));
   const flagged = candidates.filter((c) => c.no_statement_as_of).map((c) => c.name);
-  // Bennett and Liberatore were filled in from the August 19 announcement.
-  expect(flagged.sort()).toEqual(['Ryan Kurtz']);
+  // Bennett and Liberatore were filled in from the August 19 announcement,
+  // Kurtz from his October 7 statement; no candidate is flagged today.
+  expect(flagged.sort()).toEqual([]);
 
   await page.goto('/elections');
   for (const c of candidates) {

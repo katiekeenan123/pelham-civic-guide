@@ -290,15 +290,22 @@
       "party_style": "dem",
       "incumbent": false,
       "meta": "Challenger · Ran in 2025 (lost by 2 votes)",
-      "no_statement_as_of": "2026-10-05",
-      "source_url": "https://pelhamexaminer.com/83541/announcing/pelham-democrats-announce-candidates-for-manor-board-of-trustees-chris-dlutkowski-and-ryan-kurtz/",
-      "source_label": "Democratic announcement",
+      "source_url": "https://pelhamexaminer.com/84996/showcase/ryan-kurtzs-campaign-statement-im-running-again-because-i-think-we-can-do-more-without-taxing-more-through-continued-fiscal-responsibility-coupled-with-strategic-and-pro/",
+      "source_label": "Campaign statement — Examiner October 7, 2026",
       "profile": {
-        "background": "He ran for the Pelham Manor board in November 2025 and lost to incumbent Tim Case by two votes after a manual recount, one of the closest results in Manor history. He is running again in 2026 alongside Chris Dlutowski.",
-        "why_running": null,
+        "background": "An attorney at a large Manhattan law firm, representing mainly nonprofit organizations on governance, ethics, personnel and compliance matters, and handling workplace investigations and litigation; earlier in his career he was a public defender and clerked for Judge Christopher F. Droney of the U.S. Court of Appeals for the Second Circuit. He and his wife moved to Pelham in 2020 and are raising two young children here; he coaches kindergarten boys soccer and supports Pelham Pride. He ran for the Pelham Manor board in November 2025 and lost to incumbent Tim Case by two votes, 1,222 to 1,220, after a manual recount. He is running again in 2026 alongside Chris Dlutowski on the Democratic and Manor Together lines.",
+        "why_running": "He says the Village can &ldquo;do more&mdash;without taxing more&rdquo; through continued fiscal responsibility combined with strategic and professional long-term planning. He notes that Pelham Manor&rsquo;s last comprehensive plan dates to 1979, the oldest of any Westchester village, and argues the incumbent board&rsquo;s approach to traffic safety shows it is time for change. On flooding, he calls the Highbrook project welcome progress but says the Village&rsquo;s engineers modeled it to prevent surcharging only through a one-year storm, and only if the blockage under Glover Field is fixed.",
         "prior_service": "No prior elected office. Ran for the Pelham Manor Board of Trustees in 2025.",
-        "priorities": null,
-        "quotes": null
+        "priorities": [
+          "Fiscal responsibility: do more while holding the line on taxes",
+          "A data-driven approach to traffic and pedestrian safety",
+          "Modern strategic and capital plans for the Manor",
+          "Better flood mitigation"
+        ],
+        "quotes": [
+          "I&rsquo;m running again because I think we can do more&mdash;without taxing more&mdash;through continued fiscal responsibility, coupled with strategic and professional long-term planning.",
+          "We must be protecting residents against the storms of today and tomorrow, not yesterday."
+        ]
       }
     },
     {
