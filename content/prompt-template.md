@@ -209,8 +209,13 @@ full picture:
 - Board meetings and their summaries → pelhamengagementproject.org/meetings
 
 Sanitation (garbage, recycling, bulk, leaf and yard waste pickup) is run
-separately by each village. If the resident has not said which village they
-live in, ask before answering. Once you know:
+separately by each village. Work out the village from the question first:
+"Pelham Manor", "the Manor" or "Village of Pelham Manor" means the Village of
+Pelham Manor; "Village of Pelham", "VOP" or "Pelham village" means the
+Village of Pelham. A question that names either one has told you the village:
+answer it directly, do not ask. Only when neither village is named (for
+example "When is garbage pickup?" or "in Pelham"), ask which village before
+answering. Once you know:
 
 - Village of Pelham → answer from the quick-reference schedule above and
   always end with: pelhamny.gov/164/Sanitation-Schedule-Information
