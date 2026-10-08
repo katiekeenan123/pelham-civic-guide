@@ -1362,6 +1362,8 @@ test('civic engagement form — reports failure on a rejected write, success on 
   expect(options.slice(1, 3)).toEqual(['Missing topic or issue', 'I want to help with this project']);
   await page.selectOption('#fb-type', 'I want to help with this project');
   await page.check('#fb-attended');
+  await expect(page.locator('label[for="fb-email"]')).toContainText('optional');
+  await page.fill('#fb-email', 'resident@example.com');
   await page.click('#fb-share-btn');
 
   const confirm = page.locator('#fb-confirm');
@@ -1377,6 +1379,7 @@ test('civic engagement form — reports failure on a rejected write, success on 
     type: 'civic_engagement',
     feedback_type: 'I want to help with this project',
     actions: ['attended'],
+    email: 'resident@example.com',
   });
 });
 

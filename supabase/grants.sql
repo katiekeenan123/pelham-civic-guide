@@ -51,7 +51,9 @@ create policy "anon can insert corrections"
 
 -- ── civic_engagement: community feedback form ─────────────────────────────
 -- `feedback_type` is the form's "What's on your mind?" choice.
+-- `email` is the form's optional follow-up address (added October 2026).
 alter table public.civic_engagement add column if not exists feedback_type text;
+alter table public.civic_engagement add column if not exists email text;
 alter table public.civic_engagement enable row level security;
 grant insert on table public.civic_engagement to anon;
 

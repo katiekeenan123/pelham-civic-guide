@@ -433,6 +433,10 @@
     // What the message is about. Stored in civic_engagement.feedback_type.
     const typeEl = document.getElementById('fb-type');
     const feedbackType = typeEl ? typeEl.value : '';
+    // Optional reply address, stored in civic_engagement.email. Left empty it
+    // is not stored, so sending feedback never requires identifying yourself.
+    const emailEl = document.getElementById('fb-email');
+    const email = emailEl ? emailEl.value.trim() : '';
     const actions = [
       ['attended', 'fb-attended'],
       ['commented', 'fb-commented'],
@@ -444,7 +448,7 @@
     if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
 
     const ok = await postSubmission({
-      type: 'civic_engagement', feedback_type: feedbackType, actions, governing_body: governingBody, story,
+      type: 'civic_engagement', feedback_type: feedbackType, actions, governing_body: governingBody, story, email,
     });
 
     if (btn) { btn.disabled = false; btn.textContent = 'Send →'; }

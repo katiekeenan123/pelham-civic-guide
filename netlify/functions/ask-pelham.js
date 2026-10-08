@@ -85,7 +85,7 @@ exports.handler = async (event) => {
   // never touch Anthropic:
   //   { type: "feedback",         vote, question, answer_snippet }
   //   { type: "correction",       section, description, source, contact }
-  //   { type: "civic_engagement", feedback_type, actions, governing_body, story }
+  //   { type: "civic_engagement", feedback_type, actions, governing_body, story, email }
   if (body && (body.type === 'feedback' || body.type === 'correction' || body.type === 'civic_engagement')) {
     return recordSubmission(body);
   }
@@ -301,6 +301,9 @@ async function recordSubmission(body) {
     // the value is null, so an unconditional key would fail every submission
     // until civic_engagement.feedback_type exists (supabase/grants.sql).
     if (clip(body.feedback_type)) row.feedback_type = clip(body.feedback_type);
+    // Optional follow-up address. Sent only when given, for the same reason:
+    // until civic_engagement.email exists, a blank field still saves.
+    if (clip(body.email)) row.email = body.email.trim().slice(0, 320);
   } else {
     return json(400, { error: 'Unknown submission type' });
   }
