@@ -151,7 +151,7 @@ test('prompt — site pages, sanitation links, the tax cap question and assessme
   for (const s of ['pelhamengagementproject.org/gov-101', 'pelhamengagementproject.org/taxes',
     'pelhamengagementproject.org/issues', 'pelhamengagementproject.org/meetings',
     'pelhamny.gov/164/Sanitation-Schedule-Information', 'pelhammanor.gov/242/Refuse-Recycling',
-    'ask before answering', 'pelhamengagementproject.org/issues#rising-property-taxes-village-debt',
+    'ask which village before', 'pelhamengagementproject.org/issues#rising-property-taxes-village-debt',
     'pelhamexaminer.com/66859/', 'pelhamexaminer.com/56461/']) {
     expect(prompt, s).toContain(s);
   }
