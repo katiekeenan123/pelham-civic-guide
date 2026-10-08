@@ -39,3 +39,24 @@ first 8+ characters), not the number in the Examiner URL.
 
 Never leave an actioned update without marking it in the pipeline — the
 Sunday editorial review depends on it.
+
+## Candidate profile update standard
+
+Candidate profiles are updated ONLY from these sources:
+
+1. Published Pelham Examiner articles
+2. Official public records (election results, official rosters, meeting minutes)
+
+Campaign websites are NOT used as sources — they are self-published and
+unverified.
+
+Direct candidate outreach is a tip to investigate, not a source. When a
+candidate contacts the site with a correction:
+
+1. Search the Examiner and public records to verify the claim
+2. If verified, update the profile and cite the published source
+3. If unverified, respond asking them to publish a statement in the Examiner
+   first
+
+Never update a candidate profile based solely on direct outreach without a
+published source.
