@@ -17,6 +17,10 @@
       "type": "string",
       "description": "Lead paragraph above the meeting selector buttons."
     },
+    "coverage_note": {
+      "type": "string",
+      "description": "Short, muted note under the intro saying where to find meetings older than the summaries here (each body's official site). Safe HTML subset."
+    },
     "meetings": {
       "type": "array",
       "description": "SELECTOR ORDER IS ARRAY ORDER. Worth stating because the pre-refactor page had the buttons in one order and the panel markup in another; generating both from this array makes them agree by construction.",

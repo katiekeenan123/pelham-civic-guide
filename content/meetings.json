@@ -1,6 +1,7 @@
 {
   "$schema": "./schema/meetings.schema.json",
   "section_intro": "Every public meeting is recorded. We process them automatically into a summary for each meeting. Choose a board to see its latest meeting; earlier meetings are listed below it.",
+  "coverage_note": "Meeting summaries are available for recent meetings from each of Pelham's four governing bodies. For the full archive of past meetings and recordings, visit <a href=\"https://www.pelhamny.gov\" target=\"_blank\">pelhamny.gov</a>, <a href=\"https://www.pelhammanor.gov\" target=\"_blank\">pelhammanor.gov</a>, <a href=\"https://townofpelhamny.gov\" target=\"_blank\">townofpelhamny.gov</a>, or <a href=\"https://www.pelhamschools.org\" target=\"_blank\">pelhamschools.org</a>.",
   "meetings": [
     {
       "id": "pelham-board-sep22-2026",

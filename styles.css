@@ -2436,3 +2436,7 @@
 .qr-details ul { margin: 6px 0 6px 18px; padding: 0; font-size: 12px; line-height: 1.55; color: var(--slate); }
 .qr-details li { margin-bottom: 3px; }
 .qr-link { font-size: 12px; font-weight: 600; color: var(--navy); }
+
+/* Meetings: where to find meetings older than the summaries here. */
+.mtg-coverage-note { margin: -34px 0 32px; max-width: 620px; font-size: 13px; line-height: 1.55; color: var(--slate); }
+.mtg-coverage-note a { color: var(--navy); }

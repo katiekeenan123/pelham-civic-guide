@@ -900,6 +900,9 @@ function generateMeetings(data, r) {
 
   const out = [];
   out.push(`    <p class="section-intro">${r(data.meetings.section_intro, 'meetings.json')}</p>`);
+  if (data.meetings.coverage_note) {
+    out.push(`    <p class="mtg-coverage-note">${r(data.meetings.coverage_note, 'meetings.json')}</p>`);
+  }
   out.push('    <div class="mtg-body-tabs" role="tablist" aria-label="Governing body">');
   bodies.forEach((b, i) => {
     const latest = published.filter((m) => m.governing_body === b.id).sort((a, c) => c.date.localeCompare(a.date))[0];

@@ -1501,3 +1501,11 @@ test('elections — Eileen Miller is quoted from her cited statement', async ({ 
   await expect(card.locator('.profile-quote')).toHaveText('Better communication helps keep residents engaged, strengthens transparency, and builds community.');
 });
 
+
+test('meetings — a short note under the intro says where older meetings live', async ({ page }) => {
+  await page.goto('/meetings');
+  const note = page.locator('#meeting-summaries .section-intro + .mtg-coverage-note');
+  await expect(note).toContainText('For the full archive of past meetings and recordings, visit');
+  await expect(note.locator('a')).toHaveText(['pelhamny.gov', 'pelhammanor.gov', 'townofpelhamny.gov', 'pelhamschools.org']);
+  for (const a of await note.locator('a').all()) await expect(a).toHaveAttribute('target', '_blank');
+});
