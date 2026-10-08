@@ -1395,3 +1395,46 @@ test('fade-in sections become visible on scroll', async ({ page }) => {
 
   await expect(deep).toHaveClass(/(^|\s)visible(\s|$)/);
 });
+
+/* ── Sanitation, Recreation Commission, corrections, press ─────────────── */
+
+test('gov 101 — sanitation and Recreation Commission routes, details collapsed until opened', async ({ page }) => {
+  await page.goto('/gov-101');
+  const tile = page.locator('.qr-list');
+  await expect(tile).toContainText('Garbage, recycling or bulk pickup in the Village of Pelham?');
+  await expect(tile).toContainText('Garbage, recycling or leaf pickup in Pelham Manor?');
+  await expect(tile).toContainText('Want to serve on the Recreation Commission?');
+  await expect(tile).toContainText('914-738-2015, option 2');
+
+  const pelham = tile.locator('details.qr-details').first();
+  await expect(pelham.locator('li').first()).toBeHidden();
+  await pelham.locator('summary').click();
+  await expect(pelham).toContainText('Area A: October 19, November 2 and 16, December 7 and 28');
+  await expect(pelham.locator('a.qr-link')).toHaveAttribute('href', 'https://www.pelhamny.gov/164/Sanitation-Schedule-Information');
+  await expect(tile.locator('a.qr-link', { hasText: 'Apply' })).toHaveAttribute('href', /forms\.cloud\.microsoft/);
+});
+
+test('get involved — Recreation Commission call for applications, with apply link', async ({ page }) => {
+  await page.goto('/get-involved');
+  const block = page.locator('#serve-on-a-commission + p');
+  await expect(block).toContainText('Join the Town of Pelham Recreation Commission');
+  await expect(block).toContainText('November 6, 2026');
+  await expect(page.locator('a.involved-cta', { hasText: 'Apply to the Recreation Commission' }))
+    .toHaveAttribute('href', /^https:\/\/forms\.cloud\.microsoft\//);
+});
+
+test('about — corrections log leads with the Feeney Park fix; press link to the Examiner letter', async ({ page }) => {
+  await page.goto('/about');
+  await expect(page.locator('#corrections-log > div').first()).toContainText('Feeney Park');
+  await expect(page.locator('.about-press a')).toHaveAttribute('href', /pelhamexaminer\.com\/85015\//);
+});
+
+test('feeney park — the old transcription "Fini Park" survives only in the corrections log', async ({ page }) => {
+  for (const url of ['/issues', '/meetings', '/', '/gov-101']) {
+    await page.goto(url);
+    expect(await page.locator('body').textContent(), url).not.toMatch(/\bFini Park\b/);
+  }
+  await page.goto('/issues');
+  await expect(page.locator('#fini-park-fireworks')).toContainText('Feeney Park, in New Rochelle');
+});
+

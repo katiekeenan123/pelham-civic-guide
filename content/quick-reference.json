@@ -103,6 +103,65 @@
       "phone": null,
       "url": "https://www.pelhamlibrary.org",
       "note": "Town-run, and an independent corporate entity with its own board and audit"
+    },
+    {
+      "id": "sanitation-pelham",
+      "question": "Garbage, recycling or bulk pickup in the Village of Pelham?",
+      "route_to": "Village of Pelham DPW (Sanitation)",
+      "governing_body": [
+        "village-of-pelham"
+      ],
+      "phone": "{{fact:village-sanitation-phone}}",
+      "url": "https://www.pelhamny.gov/164/Sanitation-Schedule-Information",
+      "note": "sanitation@pelhamny.gov · Monday–Friday 9am–4:30pm",
+      "details": [
+        "Area A (Pelville, Chester Park): garbage Monday; bulk on Mondays, twice a month; recycling Thursday.",
+        "Area B (Pelham Heights, Pelhamwood): garbage Tuesday; bulk on Tuesdays, twice a month; recycling Friday.",
+        "Apartments and commercial (Fifth Avenue, Wolfs Lane, Lincoln Avenue): garbage Monday, Wednesday and Friday; bulk on Wednesdays, twice a month; recycling Thursday.",
+        "Remaining 2026 bulk dates — Area A: October 19, November 2 and 16, December 7 and 28. Area B: October 20, November 4 and 17, December 8 and 29.",
+        "Organic yard waste: Wednesdays, May 6 to October 7 (the 2026 season has ended).",
+        "Leaf collection, loose leaves only: March 15 to April 30 and October 15 to December 15.",
+        "No collection on holidays, including Election Day, November 3, 2026; see pelhamny.gov for the holiday list.",
+        "The Recycle Coach app gives a personalized schedule."
+      ]
+    },
+    {
+      "id": "sanitation-manor",
+      "question": "Garbage, recycling or leaf pickup in Pelham Manor?",
+      "route_to": "Village of Pelham Manor",
+      "governing_body": [
+        "village-of-pelham-manor"
+      ],
+      "phone": "{{fact:manor-village-hall-phone}}",
+      "url": "https://www.pelhammanor.gov/242/Refuse-Recycling",
+      "note": "Schedule and regulations approved by the Board of Trustees July 21, 2025",
+      "details": [
+        "Garbage, collected from the rear yard twice a week: north of Boston Post Road Mondays and Thursdays; south Tuesdays and Fridays.",
+        "Paper recycling: village-wide, Wednesdays.",
+        "Commingled recycling: north of Boston Post Road Thursdays; south Fridays.",
+        "Garden refuse: north Mondays; south Tuesdays.",
+        "Appliances and metal: the first Wednesday of each month.",
+        "Unbagged leaves: March 15 to April 15 and October 15 to December 15.",
+        "Put items at the road no earlier than 7pm the night before collection.",
+        "No collection on holidays and no paper recycling in holiday weeks; collections move a day (see the schedule PDF on pelhammanor.gov).",
+        "The Recycle Coach app gives a personalized schedule."
+      ]
+    },
+    {
+      "id": "recreation-commission",
+      "question": "Want to serve on the Recreation Commission?",
+      "route_to": "Town of Pelham — applications open",
+      "governing_body": [
+        "town-of-pelham"
+      ],
+      "phone": null,
+      "url": "https://forms.cloud.microsoft/pages/responsepage.aspx?id=XDDYYGFzV02_ICU9WfpC1KUDidFnOqlApbL3TjxcgqZURVg5RzhPS1FDTURLVTFKUzJLWTVTVlgwMy4u&route=shorturl",
+      "url_label": "Apply",
+      "note": "Applications due November 6, 2026",
+      "details": [
+        "The Town of Pelham is seeking applications for new Recreation Commissioners (announced at the October 5, 2026 Town Council meeting).",
+        "About the commission: https://townofpelhamny.gov/pelham-recreation-commission/"
+      ]
     }
   ]
 }

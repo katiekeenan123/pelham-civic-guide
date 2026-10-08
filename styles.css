@@ -2428,3 +2428,11 @@
   /* One line on wide screens: title, form, note. */
   .signup-slim .signup-note { flex: 0 1 auto; }
 }
+
+/* ── Quick-reference tile: routes with schedules (Gov 101) ── */
+.qr-contact { font-size: 12px; color: var(--slate); }
+.qr-details { margin-top: 4px; }
+.qr-details summary { cursor: pointer; font-size: 12px; font-weight: 600; color: var(--navy); }
+.qr-details ul { margin: 6px 0 6px 18px; padding: 0; font-size: 12px; line-height: 1.55; color: var(--slate); }
+.qr-details li { margin-bottom: 3px; }
+.qr-link { font-size: 12px; font-weight: 600; color: var(--navy); }

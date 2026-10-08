@@ -181,3 +181,9 @@ test('sources — a question the coverage does answer still cites it', async ({ 
   expect(answer).toMatch(/^Sources:/m);
   expect(answer).toMatch(/pelhamexaminer\.com\/\d+/);
 });
+
+test('sanitation — bulk pickup question gets the Village of Pelham schedule', async ({ request }) => {
+  const answer = await ask(request, 'When is bulk trash pickup in the Village of Pelham?');
+  expect(answer).toMatch(/area a|area b|october 19|october 20|november 2|twice a month/i);
+});
+

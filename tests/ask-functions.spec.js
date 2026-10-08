@@ -117,3 +117,17 @@ test('retrieval — "community church" searches titles, not the EMS station tag'
   // EMS questions still route to the EMS station issue.
   expect(planFor('where will the new ambulance station go?')[0]).toEqual([['eq', 'matched_issue', 'EMS station']]);
 });
+
+/* ── What the prompt carries ───────────────────────────────────────────── */
+
+test('prompt — sanitation schedules and the Recreation Commission reach the AI', () => {
+  const prompt = require('../netlify/functions/system-prompt');
+  expect(prompt).toContain('Area A (Pelville, Chester Park): garbage Monday');
+  expect(prompt).toContain('Area B: October 20, November 4 and 17, December 8 and 29');
+  expect(prompt).toContain('north of Boston Post Road Mondays and Thursdays');
+  expect(prompt).toContain('914-738-2015, option 2');
+  expect(prompt).toContain('Want to serve on the Recreation Commission?');
+  expect(prompt).toContain('Applications due November 6, 2026');
+  expect(prompt).not.toMatch(/\bFini\b/);
+});
+

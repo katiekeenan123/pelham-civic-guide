@@ -388,7 +388,9 @@ function buildPrompt(data, r) {
         if (q.phone) bits.push(`phone ${r(q.phone, 'quick-reference.json')}`);
         if (q.note) bits.push(plain(r(q.note, 'quick-reference.json')));
         if (q.url) bits.push(q.url);
-        return `- ${bits.join(' — ')}`;
+        // Schedules and dates, so "when is bulk pickup?" gets a real answer.
+        const details = (q.details || []).map((d) => `    ${plain(r(d, 'quick-reference.json'))}`);
+        return [`- ${bits.join(' — ')}`, ...details].join('\n');
       }).join('\n'),
 
     'public-comment-by-body': () =>
@@ -1104,8 +1106,21 @@ function generateGovernanceCards(data, r) {
   out.push('      <div class="gov-card fade-in" style="background: var(--light); border-style: dashed;">');
   out.push(`        <div class="gov-card-label">${q.label}</div>`);
   out.push(`        <h3>${q.title}</h3>`);
-  out.push('        <p style="font-size:13px;">');
-  const lines = q.entries.map((x) => `          <strong>${x.question}</strong> → ${x.route_to}`);
+  out.push('        <div class="qr-list" style="font-size:13px;line-height:1.6;">');
+  const lines = q.entries.map((x) => {
+    let line = `          <strong>${x.question}</strong> → ${x.route_to}`;
+    // Entries with schedules get the contact, a link and a collapsed list,
+    // so the tile stays a one-line-per-route list until a reader opens one.
+    if (x.details && x.details.length) {
+      const contact = [x.phone && r(x.phone, 'quick-reference.json'), x.note && r(x.note, 'quick-reference.json')]
+        .filter(Boolean).join(' · ');
+      line += `<br><span class="qr-contact">${contact}</span>`
+        + `<details class="qr-details"><summary>Schedule &amp; details</summary><ul>`
+        + x.details.map((d) => `<li>${esc(r(d, 'quick-reference.json'))}</li>`).join('')
+        + `</ul>${x.url ? `<a href="${esc(x.url)}" target="_blank" class="qr-link">${esc(x.url_label || 'Official page')} →</a>` : ''}</details>`;
+    }
+    return line;
+  });
   out.push(lines.join('<br><br>\n'));
   out.push('        </p>');
   out.push('      </div>');
