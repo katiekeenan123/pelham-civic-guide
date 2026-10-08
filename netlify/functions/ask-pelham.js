@@ -333,7 +333,7 @@ async function recordSubmission(body) {
 const KNOWN_ISSUES = {
   'Picture House': ['picture house', 'php partners', 'smithmeyer', 'wolfs lane'],
   'Colonial Elementary AC': ['colonial', 'colonial elementary', 'air conditioning', 'air-conditioning', 'hvac', 'prospect hill'],
-  'EMS station': ['ems', 'ems station', 'ambulance', 'emergency medical', 'paramedic', 'first street', 'community church'],
+  'EMS station': ['ems', 'ems station', 'ambulance', 'emergency medical', 'paramedic', 'first street'],
   'library transformation': ['library', 'library board', 'library renovation', 'transformation project', 'shekane', 'shakane'],
   'tractor-trailer ban': ['tractor-trailer', 'tractor trailer', 'truck ban', 'trucks', 'trucking', 'boston post road', 'nys dot'],
   'Con Edison rate': ['con edison', 'coned', 'con ed', 'utility rate', 'rate hike', 'public service commission', 'electric rates'],
@@ -389,7 +389,18 @@ const PROPER_NOUN_STOPWORDS = new Set([
   'Manor', 'Village', 'Town', 'County', 'Westchester', 'New', 'York', 'Board',
   'Trustees', 'Trustee', 'Mayor', 'Examiner', 'And', 'But', 'For', 'This',
   'That', 'There', 'Here', 'Tell', 'Give', 'Please', 'Also',
+  // Local abbreviations. "What date is bulk trash pick up in VOP?" title-matched
+  // "VOP Trustee candidates: Village debt…" and cited it. (extractProperNouns
+  // also skips every all-caps word of four letters or fewer; these are listed
+  // so the intent survives if that rule changes.)
+  'VOP', 'POM', 'TOP', 'DPW', 'EMS', 'BOE',
 ]);
+
+// Phrases that name one specific thing, searched for in article titles ahead
+// of the capitalized-word search. "community church" used to route through the
+// EMS station issue tag, which answered a question about the church's sale
+// with two candidate statements that mention EMS.
+const TITLE_PHRASES = ['community church'];
 
 /** The newest user message — the question retrieval should actually answer. */
 function latestQuestion(messages) {
@@ -411,6 +422,7 @@ function extractSearchTerms(question) {
     issue: matchIssue(low),
     candidate: matchCandidate(low, properNouns),
     topics: matchTopics(low),
+    titlePhrase: TITLE_PHRASES.find((phrase) => low.includes(phrase)) || null,
     properNouns,
   };
 }
@@ -486,6 +498,10 @@ function extractProperNouns(text) {
   const found = text.match(/\b[A-Z][a-zA-Z]{2,}\b/g) || [];
   const unique = [];
   for (const word of found) {
+    // An all-caps word of four letters or fewer is an abbreviation (VOP, DPW,
+    // EMS, MTA), not a name. As a title search it matches any headline that
+    // happens to use it; the keyword lists handle the subjects these stand for.
+    if (/^[A-Z]{2,4}$/.test(word)) continue;
     if (!PROPER_NOUN_STOPWORDS.has(word) && !unique.includes(word)) unique.push(word);
   }
   return unique.slice(0, 3);
@@ -551,6 +567,14 @@ function buildSearchPlan(terms) {
   // Note the tag tier cannot be salvaged by a relevance floor here:
   // relevance_score rates how important an article is, not whether it bears on
   // this question, so the miscited story scored the maximum 5.
+  // A known phrase naming one specific thing: search titles for the phrase
+  // itself, and stop there for the same reason as the proper-noun branch.
+  if (terms.titlePhrase) {
+    const phrase = terms.titlePhrase;
+    plan.push({ narrow: (q) => q.ilike('title', `%${phrase}%`) });
+    return plan;
+  }
+
   if (terms.properNouns.length) {
     const noun = terms.properNouns[0];
     plan.push({ narrow: (q) => q.ilike('title', `%${noun}%`) });
@@ -646,6 +670,15 @@ function buildContextBlock(articles) {
     'yourself does not apply to these specific articles. Ignore any of them',
     'that turn out not to bear on the question, and do not list the sources at',
     'the end yourself; that is added for you.',
+    '',
+    // Read by parseUsedSources(): only the articles named here are cited, and
+    // the line is removed before the reader sees the answer.
+    'Finish your reply with one line on its own, exactly in this form:',
+    'USED_SOURCES: <numbers of the articles above that your answer actually',
+    'drew on, comma-separated, e.g. 1,3>',
+    'or, if none of them contributed (including when you say you do not have',
+    'the information), exactly:',
+    'USED_SOURCES: none',
   ].join('\n');
 }
 
@@ -664,14 +697,48 @@ function formatDate(value) {
 // --- Step 4: source attribution --------------------------------------------- #
 
 /**
+ * Read and remove the model's "USED_SOURCES:" line (see buildContextBlock).
+ * Returns the answer without it, and the 1-based numbers of the retrieved
+ * articles to cite, in order, without repeats.
+ *
+ * Fails toward citing nothing: a missing line, "none", or anything that is not
+ * a plain list of numbers cites no sources. Numbers outside 1..count are
+ * dropped and the in-range ones kept. If the line appears more than once, the
+ * last one counts, and every copy is removed from the text.
+ */
+const USED_SOURCES_LINE = /^[ \t]*\**USED_SOURCES\**:\**[ \t]*(.*?)[ \t]*$/gim;
+function parseUsedSources(answer, count) {
+  const raw = typeof answer === 'string' ? answer : '';
+  const matches = [...raw.matchAll(USED_SOURCES_LINE)];
+  const text = raw.replace(USED_SOURCES_LINE, '').replace(/\n{3,}/g, '\n\n').trim();
+  if (!matches.length) return { text, used: [] };
+
+  const value = matches[matches.length - 1][1].trim().replace(/[.\s]+$/, '');
+  if (!value || /^none$/i.test(value)) return { text, used: [] };
+  const parts = value.split(/\s*,\s*/);
+  if (!parts.every((p) => /^\d+$/.test(p))) return { text, used: [] };
+
+  const used = [];
+  for (const n of parts.map(Number)) {
+    if (n >= 1 && n <= count && !used.includes(n)) used.push(n);
+  }
+  return { text, used };
+}
+
+/**
  * Append the sources the answer was given. Plain text, not markdown: the page
  * renders answers with escapeHtml() and a newline-to-<br> pass, so a markdown
  * link would show up as literal brackets.
  */
-function withSources(answer, articles) {
-  if (!articles.length || !answer.trim()) return answer;
+function withSources(rawAnswer, articles) {
+  const { text: answer, used } = parseUsedSources(rawAnswer, articles.length);
+  // Only the articles the model says it drew on. Retrieval returns the newest
+  // matches, not the relevant ones, so citing everything retrieved listed
+  // candidate statements under answers that said "I don't have that".
+  const cited = used.map((n) => articles[n - 1]);
+  if (!cited.length || !answer.trim()) return answer;
 
-  const block = ['Sources:', ...articles.map((a) => `• ${a.title} — ${a.url}`)].join('\n');
+  const block = ['Sources:', ...cited.map((a) => `• ${a.title} — ${a.url}`)].join('\n');
 
   // index.html parses a trailing "DEEPER_PROMPT:" marker greedily to the end of
   // the string, so the block has to go BEFORE that line — appended after it,
@@ -681,3 +748,7 @@ function withSources(answer, articles) {
   if (marker === -1) return `${answer.trimEnd()}\n\n${block}`;
   return `${answer.slice(0, marker).trimEnd()}\n\n${block}\n\n${answer.slice(marker).trim()}`;
 }
+
+// Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
+// Netlify only calls `handler`.
+exports._test = { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan };

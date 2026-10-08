@@ -25,6 +25,8 @@ async function ask(request, question) {
   const body = await res.json();
   expect(typeof body.answer, 'response JSON should carry an "answer" string').toBe('string');
   expect(body.answer.trim().length, 'answer should not be empty').toBeGreaterThan(0);
+  // The model's citation line is for the function to read, never the reader.
+  expect(body.answer, 'the USED_SOURCES line must be stripped').not.toMatch(/USED_SOURCES/i);
   return body.answer;
 }
 
@@ -151,4 +153,31 @@ test('building permit — Pelham Manor goes to Village Hall at 4 Penfield Place'
     answer,
     'expected the Manor Village Hall number, got: ' + answer.slice(0, 300),
   ).toMatch(/738-8820/);
+});
+
+/* ── Source citations ──────────────────────────────────────────────────── */
+// Sources are listed only for articles the model says it drew on. Before this,
+// every retrieved article was appended, so an answer saying it had no
+// information still cited candidate statements.
+
+test('sources — a question the site has no information on gets no Sources block', async ({ request }) => {
+  // No Examiner coverage of the church sale is in the articles table; this
+  // used to cite Kristen Burke's campaign statement via the EMS station tag.
+  const answer = await ask(request, 'What is the latest on the Community Church sale?');
+  expect(answer).not.toMatch(/^Sources:/m);
+});
+
+test('sources — bulk trash pickup gets no Sources block', async ({ request }) => {
+  // "VOP" used to title-match a Neighborhood Party press release.
+  const answer = await ask(request, 'What date is bulk trash pick up in VOP?');
+  expect(answer).not.toMatch(/^Sources:/m);
+  expect(answer).not.toMatch(/Village debt is about to increase/i);
+});
+
+test('sources — a question the coverage does answer still cites it', async ({ request }) => {
+  // Guards the other direction: if the model stopped writing its citation
+  // line, every Sources block would silently disappear.
+  const answer = await ask(request, "What did Kristen Burke say in her campaign statement about why she's running for Village trustee?");
+  expect(answer).toMatch(/^Sources:/m);
+  expect(answer).toMatch(/pelhamexaminer\.com\/\d+/);
 });
