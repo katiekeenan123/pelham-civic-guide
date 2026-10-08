@@ -239,3 +239,13 @@ test('prompt — latest meeting per board, floor-based public comment, citing an
   expect(prompt).toContain('in anticipation of future revenue the Village expected to receive');
 });
 
+test('prompt — library governance, the corrections URL and meeting coverage scope', () => {
+  const prompt = require('../netlify/functions/system-prompt');
+  const flat = prompt.replace(/\s+/g, ' ');
+  expect(flat).toContain('The Town of Pelham appoints the Pelham Public Library Board of Trustees and funds the library. The Board of Trustees manages library operations independently.');
+  expect(flat).not.toMatch(/Pelham Public Library \(Town-run\)|The library, recreation programs, and senior services are also Town-run/);
+  expect(flat).toContain('pelhamengagementproject.org/about — scroll to the forms at the bottom of the page');
+  expect(flat).toContain('Never say "if there\'s a contact form"');
+  expect(flat).toContain('This site launched in fall 2026 and summarizes meetings going forward from mid-2026.');
+});
+

@@ -155,7 +155,7 @@
       "type": "town",
       "label": "Town Government",
       "accent": "red",
-      "description": "The Town provides services shared by all residents: EMS, tax assessment and collection, and the town courts. The library, recreation programs, and senior services are also Town-run and available to everyone.",
+      "description": "The Town provides services shared by all residents: EMS, tax assessment and collection, and the town courts. Recreation programs and senior services are also Town-run and available to everyone. The Town of Pelham appoints the Pelham Public Library Board of Trustees and funds the library. The Board of Trustees manages library operations independently.",
       "budget": {
         "label": "2025 Budget",
         "fact_ref": "town-budget-2025",

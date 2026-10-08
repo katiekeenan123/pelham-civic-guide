@@ -235,3 +235,21 @@ test('public comment — Village of Pelham is floor-based, not a sign-in at the 
   }
 });
 
+test('library — the Town appoints the board and funds it; the board runs it', async ({ request }) => {
+  const answer = await ask(request, 'Does the Town of Pelham run the Pelham Public Library?');
+  expect(answer).toMatch(/appoint/i);
+  expect(answer).toMatch(/Board of Trustees/i);
+  expect(answer).toMatch(/independent/i);
+});
+
+test('feedback — a reported error gets the About page URL', async ({ request }) => {
+  const answer = await ask(request, 'I think something on your site is wrong about the library. How do I tell you?');
+  expect(answer).toMatch(/pelhamengagementproject\.org\/about/);
+  expect(answer).not.toMatch(/if there'?s a contact form/i);
+});
+
+test('meetings — coverage scope is explained directly', async ({ request }) => {
+  const answer = await ask(request, "Why aren't meetings from earlier in 2026 summarized on this site?");
+  expect(answer).toMatch(/fall 2026|mid-2026/i);
+});
+

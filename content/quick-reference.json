@@ -96,13 +96,13 @@
     {
       "id": "library",
       "question": "Library hours?",
-      "route_to": "Pelham Public Library (Town-run)",
+      "route_to": "Pelham Public Library",
       "governing_body": [
         "town-of-pelham"
       ],
       "phone": null,
       "url": "https://www.pelhamlibrary.org",
-      "note": "Town-run, and an independent corporate entity with its own board and audit"
+      "note": "The Town of Pelham appoints the Pelham Public Library Board of Trustees and funds the library. The Board of Trustees manages library operations independently."
     },
     {
       "id": "sanitation-pelham",

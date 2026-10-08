@@ -1488,3 +1488,16 @@ test('taxes — Learn more lists both Town Assessor articles', async ({ page }) 
   await expect(list.locator('a[href*="pelhamexaminer.com/56461/"]')).toContainText('Ins and outs of property tax assessment and filing grievances');
 });
 
+test('gov 101 — the library is described as Town-appointed and Town-funded, independently run', async ({ page }) => {
+  await page.goto('/gov-101');
+  const body = await page.locator('main').innerText();
+  expect(body).toContain('The Town of Pelham appoints the Pelham Public Library Board of Trustees and funds the library.');
+  expect(body).not.toMatch(/Pelham Public Library \(Town-run\)/);
+});
+
+test('elections — Eileen Miller is quoted from her cited statement', async ({ page }) => {
+  await page.goto('/elections');
+  const card = page.locator('.candidate-card', { has: page.locator('.candidate-name', { hasText: 'Eileen Miller' }) });
+  await expect(card.locator('.profile-quote')).toHaveText('Better communication helps keep residents engaged, strengthens transparency, and builds community.');
+});
+

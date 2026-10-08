@@ -33,7 +33,7 @@
         },
         "phone": { "type": ["string", "null"], "description": "Direct phone number where one is published. Use a {{fact:<id>}} token rather than a literal, so the number stays in step with the same number quoted in Your Taxes and in the AI prompt." },
         "url": { "type": ["string", "null"], "description": "Deep link to the relevant page, where one exists. Null when the current card offers no link." },
-        "note": { "type": ["string", "null"], "description": "Short clarifier shown in parentheses, e.g. '(Town-run)' for the library, which residents often assume is a village service." },
+        "note": { "type": ["string", "null"], "description": "Short clarifier shown in parentheses, e.g. that the Town appoints the library's board and funds it, which residents often assume is a village service." },
         "url_label": { "type": "string", "description": "Link text for url on the Gov 101 tile, e.g. 'Apply'. Defaults to 'Official page'." },
         "details": { "type": "array", "items": { "type": "string" }, "description": "Optional longer information for this route: schedules, dates, rules. Shown on the Gov 101 tile as a collapsed list under the line, and passed to the AI prompt in full, so residents get real answers (e.g. bulk pickup dates). One sentence per item, plain text." }
       }
