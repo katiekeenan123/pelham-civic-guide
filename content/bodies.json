@@ -42,7 +42,7 @@
         "participation": "Sign up for public comment at the meeting; agendas posted online",
         "address_display": "200 Fifth Ave, 1st floor Meeting Room"
       },
-      "public_comment_process": "Residents typically sign in at the door before the meeting starts.",
+      "public_comment_process": "Public comment is called from the floor: when the chair opens public comment, stand or raise your hand, then state your name and address when recognized. Most boards allow 2–3 minutes per speaker.",
       "offices_address": "200 Fifth Ave",
       "website": "https://www.pelhamny.gov",
       "phone": null,
@@ -114,7 +114,7 @@
         "participation": "Public comment period at each meeting",
         "address_display": "4 Penfield Place, Pelham Manor"
       },
-      "public_comment_process": "Public comment is often called from the floor — residents simply stand or raise their hand when the chair invites public comment.",
+      "public_comment_process": "Public comment is called from the floor: when the chair opens public comment, stand or raise your hand, then state your name and address when recognized. Most boards allow 2–3 minutes per speaker.",
       "offices_address": "4 Penfield Place",
       "website": "https://www.pelhammanor.gov",
       "phone": null,
@@ -187,7 +187,7 @@
         "participation": "Public hearing notices posted; residents may comment during hearings",
         "address_display": "20 Fifth Ave (Daronco Town House)"
       },
-      "public_comment_process": "Public comment is often called from the floor — residents simply stand or raise their hand when the chair invites public comment.",
+      "public_comment_process": "Public comment is called from the floor: when the chair opens public comment, stand or raise your hand, then state your name and address when recognized. Most boards allow 2–3 minutes per speaker.",
       "offices_address": "34 Fifth Ave",
       "website": "https://townofpelhamny.gov",
       "phone": "{{fact:town-receiver-phone}}",
@@ -248,7 +248,7 @@
         "participation": "Public comment period; annual budget vote each May",
         "address_display": "District offices / Pelham Middle School"
       },
-      "public_comment_process": "A floor-based process similar to the Town Board — residents stand or raise their hand when the chair invites public comment.",
+      "public_comment_process": "Public comment is called from the floor: when the chair opens public comment, stand or raise your hand, then state your name and address when recognized. Most boards allow 2–3 minutes per speaker.",
       "offices_address": "District offices",
       "website": "https://www.pelhamschools.org",
       "phone": null,

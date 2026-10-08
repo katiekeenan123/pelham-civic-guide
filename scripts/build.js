@@ -276,7 +276,7 @@ function buildPrompt(data, r) {
     'current-issues': () => {
       const out = ['The issues the site is actively tracking. Each is sourced; cite the source when you use one.'];
       for (const i of sortedIssues(data)) {
-        out.push(`- ${plain(r(i.title, 'issues.json'))} [${i.status}: ${plain(r(i.status_label, 'issues.json'))}]`);
+        out.push(`- ${plain(r(i.title, 'issues.json'))} [${i.status}: ${plain(r(i.status_label, 'issues.json'))}] (cite as issues#${i.id})`);
         out.push(`    ${plain(r(i.description, 'issues.json'))}`);
         for (const s of i.sources) {
           out.push(`    Source: ${s.label}${s.date ? ` (${s.date})` : ''} ${s.url}`);
@@ -321,9 +321,25 @@ function buildPrompt(data, r) {
       const out = ['Meetings the site has processed and published summaries for. Point residents to the site for detail, and to the recording to verify.'];
       for (const m of pub) {
         const body = data.bodies.bodies.find((b) => b.id === m.governing_body);
-        out.push(`- ${body.name}, ${m.date}${m.chair ? ` — ${m.chair}` : ''}. Recording: ${m.recording_url}`);
+        out.push(`- ${body.name}, ${m.date}${m.chair ? ` — ${m.chair}` : ''}. Recording: ${m.recording_url} (cite as meetings#${m.id})`);
       }
       return out.join(NL);
+    },
+
+    // The latest summary from each board, in full: the executive summary and
+    // its votes. Without this the prompt only knew a meeting's date, and
+    // questions about what a board discussed got "I don't have that".
+    'recent-meetings': () => {
+      const pub = data.meetings.meetings.filter((m) => m.status === 'published');
+      const out = [];
+      for (const m of latestPerBody(pub)) {
+        const ex = parseExec(m);
+        const paras = [...ex.summary.matchAll(/<p>([\s\S]*?)<\/p>/g)].map((x) => plain(x[1]));
+        const votes = [...ex.votes.body.matchAll(/<div class="vote-row">([\s\S]*?)<\/div>/g)].map((x) => plain(x[1]));
+        out.push(`### ${m.title} (cite as meetings#${m.id})`, '', ...paras.map((t) => `${t}`), '');
+        if (votes.length) out.push(`Votes: ${votes.join('; ')}`, '');
+      }
+      return out.join(NL).trim();
     },
 
     'sources-used': () =>
@@ -1322,6 +1338,38 @@ function generateFooter(data, r) {
 // Only the keyword lists are generated. Cards whose rag_issue is null are
 // skipped: no stored article is tagged with them, so a key would match
 // nothing. rag_only_issues carries the canonical issues that have no card.
+// The site pages and anchors Ask Pelham may cite in its USED_SOURCES line,
+// and the contested issues whose citations come from their issue card. Spliced
+// into ask-pelham.js, so a renamed card or a new meeting is picked up by the
+// next build rather than by hand.
+function generateSiteSources(data) {
+  const { SITE_URL } = require('./page-shell');
+  const pages = {};
+  for (const pg of data.pages.pages) {
+    const key = pg.url.replace(/^\//, '');
+    if (!key || ['ask', 'subscribe', 'about'].includes(key)) continue;
+    pages[key] = PAGE_TITLES[pg.id] || pg.label;
+  }
+  const anchors = {};
+  for (const i of data.issues.issues) anchors[`issues#${i.id}`] = plain(i.title.replace(/\{\{[^}]+\}\}/g, '').trim());
+  for (const m of data.meetings.meetings.filter((x) => x.status === 'published')) {
+    anchors[`meetings#${m.id}`] = `Meeting summary — ${m.title}`;
+  }
+  const contested = data.issues.issues.filter((i) => (i.contested_keywords || []).length).map((i) => ({
+    anchor: `issues#${i.id}`,
+    keywords: i.contested_keywords.map((k) => k.toLowerCase()),
+    // External sources only; the card's own /meetings links are cited as anchors.
+    sources: i.sources.filter((s) => /^https?:/.test(s.url))
+      .map((s) => ({ title: plain(s.label), url: s.url, published_at: s.date || null })),
+  }));
+  return [
+    `const SITE_URL = ${JSON.stringify(SITE_URL)};`,
+    `const SITE_PAGES = ${JSON.stringify(pages, null, 2)};`,
+    `const SITE_ANCHORS = ${JSON.stringify(anchors, null, 2)};`,
+    `const CONTESTED_ISSUES = ${JSON.stringify(contested, null, 2)};`,
+  ].join(NL);
+}
+
 function generateKnownIssues(data) {
   const entries = [];
   for (const i of data.issues.issues) {
@@ -1889,6 +1937,7 @@ function main() {
   // issues.json, everything else in the file is hand-written.
   let fn = read(p('netlify', 'functions', 'ask-pelham.js'));
   fn = splice(fn, 'known-issues', generateKnownIssues(data), 'js');
+  fn = splice(fn, 'site-sources', generateSiteSources(data), 'js');
 
   if (errors.length) return report();
 

@@ -150,6 +150,11 @@
           ],
           "description": "Where the homepage preview's 'Read more' sends the reader. Some issues are better served by a topic page than by their own card — a tax or budget issue lands on /taxes, an election issue on /elections. Null routes to the issue's anchor on /issues, which is the right default for anything without a natural home."
         },
+        "contested_keywords": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Marks a contested election issue. An Ask Pelham question containing any of these (word-start match, lowercase) cites this card's own sources, which carry both sides, instead of the newest tagged articles, and always lists this card first in the Sources block. Tag retrieval alone was one-sided: every 'debt'-tagged article was a Neighborhood Party release, and the incumbents' reply is tagged 'stormwater'. Kept narrow on purpose: routing by the card's whole RAG key would also pin it to assessment and tax-rate questions."
+        },
         "last_meeting_update": {
           "type": [
             "object",

@@ -187,10 +187,15 @@ test('sanitation — bulk pickup question gets the Village of Pelham schedule', 
   expect(answer).toMatch(/area a|area b|october 19|october 20|november 2|twice a month/i);
 });
 
-test('tax cap — answer separates sides and points to the issue card', async ({ request }) => {
+test('tax cap — answer separates sides and cites the issue card first', async ({ request }) => {
   const answer = await ask(request, 'Why did the Village of Pelham override the tax cap?');
-  expect(answer).toMatch(/issues#rising-property-taxes-village-debt/);
   expect(answer).toMatch(/10\.1%|\$20\.5/);
+  // The card is pinned as the first source for a contested issue.
+  const sources = answer.split(/^Sources:
+/m)[1] || '';
+  expect(sources.split('
+')[0]).toContain('pelhamengagementproject.org/issues#rising-property-taxes-village-debt');
+  expect(answer).not.toMatch(/"might"/);
 });
 
 test('sanitation — Pelham Manor answer ends with the Manor refuse page', async ({ request }) => {
@@ -201,5 +206,23 @@ test('sanitation — Pelham Manor answer ends with the Manor refuse page', async
 test('sanitation — with no village named, it asks which village', async ({ request }) => {
   const answer = await ask(request, 'When is garbage pickup?');
   expect(answer).toMatch(/which village|village of pelham or (the village of )?pelham manor|pelham or pelham manor/i);
+});
+
+test('schools — AI and screen time are answered from the September 23 Board of Ed summary', async ({ request }) => {
+  const answer = await ask(request, 'Do Pelham elementary schools use AI? How much screen time do kids get?');
+  expect(answer).toMatch(/15 minutes/);
+  expect(answer).not.toMatch(/don't have (that|this|any) information/i);
+});
+
+test('voting — "what should I know" cites this site\'s pages', async ({ request }) => {
+  const answer = await ask(request, 'What should I know before voting on November 3?');
+  const sources = answer.split(/^Sources:\n/m)[1] || '';
+  expect(sources).toContain('pelhamengagementproject.org/elections');
+});
+
+test('public comment — Village of Pelham is floor-based, not a sign-in at the door', async ({ request }) => {
+  const answer = await ask(request, 'How do I speak during public comment at a Village of Pelham board meeting?');
+  expect(answer).toMatch(/raise your hand|stand/i);
+  expect(answer).not.toMatch(/sign in at the door|sign-in sheet|sign up at the door/i);
 });
 

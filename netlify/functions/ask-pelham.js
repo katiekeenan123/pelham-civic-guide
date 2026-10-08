@@ -99,8 +99,13 @@ exports.handler = async (event) => {
   }
 
   // Retrieval step. Never throws: on any failure `articles` is [] and the
-  // request proceeds as an ordinary prompt-only answer.
-  const articles = await findExaminerCoverage(latestQuestion(messages));
+  // request proceeds as an ordinary prompt-only answer. A contested election
+  // issue cites its issue card's own sources, which carry both sides, and
+  // always lists the card first.
+  const contested = contestedIssueFor(latestQuestion(messages));
+  const articles = contested
+    ? contested.sources
+    : await findExaminerCoverage(latestQuestion(messages));
 
   try {
     const upstream = await fetch(ANTHROPIC_URL, {
@@ -130,7 +135,7 @@ exports.handler = async (event) => {
         ? data.content[0].text
         : '';
 
-    const delivered = withSources(answer, articles);
+    const delivered = withSources(answer, articles, contested ? [contested.anchor] : []);
     // Q&A logging active — review after 30 days and decide whether to keep.
     await logQa(latestQuestion(messages), delivered, body.session_id, event.headers);
     return json(200, { answer: delivered });
@@ -329,6 +334,98 @@ async function recordSubmission(body) {
 // The keyword lists over-match on purpose; the longest keyword that hits wins
 // (see matchIssue), which is what keeps "who is the receiver of taxes" on the
 // "Receiver of Taxes transition" issue instead of the broader "rising taxes".
+// Site pages and anchors the model may cite, and the contested issues whose
+// citations come from their issue card. GENERATED from content/*.json by
+// `npm run build` (generateSiteSources); do not edit by hand.
+/* BUILD:site-sources */
+const SITE_URL = "https://pelhamengagementproject.org";
+const SITE_PAGES = {
+  "issues": "Current Issues",
+  "elections": "2026 Elections",
+  "meetings": "Meeting Summaries",
+  "get-involved": "How to Get Involved",
+  "taxes": "Where Your Taxes Go",
+  "gov-101": "Who Governs Pelham"
+};
+const SITE_ANCHORS = {
+  "issues#rising-property-taxes-village-debt": "Rising Property Taxes & Village Debt",
+  "issues#november-2026-elections": "November 2026 — First Contested Village Race Since 2019",
+  "issues#picture-house": "Pelham Picture House — Future Still Uncertain",
+  "issues#colonial-elementary-ac": "Colonial Elementary — AC Interim Fix in Place",
+  "issues#public-library-transformation": "Pelham Public Library — Transformation Project",
+  "issues#manor-tractor-trailer-ban": "Pelham Manor — Tractor-Trailer Ban on Boston Post Road",
+  "issues#ems-station-first-street": "EMS Station & Community Church — First Street",
+  "issues#receiver-of-taxes-vacancy": "Receiver of Taxes Vacancy — Appointment or Referendum Under Discussion",
+  "issues#con-edison-rate-hike": "Con Edison Rate Case — Settlement Cuts the Increase",
+  "issues#fini-park-fireworks": "Feeney Park — Nightly Illegal Fireworks",
+  "issues#amtrak-forest-road": "Amtrak Forest Road Corridor Project — Pelham Manor",
+  "meetings#pelham-board-sep22-2026": "Meeting summary — Village of Pelham · Board of Trustees · September 22, 2026",
+  "meetings#pelham-board-sep2026": "Meeting summary — Village of Pelham · Board of Trustees · September 8, 2026",
+  "meetings#pelham-board-jul2026": "Meeting summary — Village of Pelham · Board of Trustees · July 14, 2026",
+  "meetings#town-council-oct2026": "Meeting summary — Town of Pelham · Town Council · October 5, 2026",
+  "meetings#town-council-sep2026": "Meeting summary — Town of Pelham · Town Council · September 14, 2026",
+  "meetings#town-council-aug2026": "Meeting summary — Town of Pelham · Town Council · August 3, 2026",
+  "meetings#manor-board-sep28-2026": "Meeting summary — Village of Pelham Manor · Board of Trustees · September 28, 2026",
+  "meetings#manor-board-sep2026": "Meeting summary — Village of Pelham Manor · Board of Trustees · September 14, 2026",
+  "meetings#manor-board-aug2026": "Meeting summary — Village of Pelham Manor · Board of Trustees · August 17, 2026",
+  "meetings#board-of-ed-sep2026": "Meeting summary — Board of Education · Business Meeting · September 23, 2026",
+  "meetings#board-of-ed-aug2026": "Meeting summary — Board of Education · Business Meeting · August 26, 2026",
+  "meetings#board-of-ed-jun2026": "Meeting summary — Board of Education · Business Meeting · June 24, 2026"
+};
+const CONTESTED_ISSUES = [
+  {
+    "anchor": "issues#rising-property-taxes-village-debt",
+    "keywords": [
+      "tax cap",
+      "village debt",
+      "debt",
+      "borrowing",
+      "contingency",
+      "fiscal stress",
+      "stress score"
+    ],
+    "sources": [
+      {
+        "title": "Pelham Examiner coverage",
+        "url": "https://pelhamexaminer.com/82552/latest-news/village-board-passes-20-5-million-budget-most-homeowners-tax-bills-will-rise-10-board-discusses-updating-bdfz-9th-avenue-parking/",
+        "published_at": "2026-04-29"
+      },
+      {
+        "title": "NYS Comptroller — Fiscal Stress Scores announcement",
+        "url": "https://www.osc.ny.gov/press/releases/2026/09/dinapoli-announces-latest-fiscal-stress-scores-local-governments",
+        "published_at": "2026-09-24"
+      },
+      {
+        "title": "NYS Comptroller — Fiscal Year 2025 Municipal Data (Excel)",
+        "url": "https://www.osc.ny.gov/files/local-government/fiscal-monitoring/2025/excel/2025-munis-all-data-worksheet.xlsx",
+        "published_at": "2026-09-24"
+      },
+      {
+        "title": "NP candidates' statement on Village debt",
+        "url": "https://pelhamexaminer.com/84905/announcing/vop-trustee-candidates-village-debt-is-about-to-increase-further/",
+        "published_at": "2026-09-30"
+      },
+      {
+        "title": "Incumbent trustees' response on Village debt",
+        "url": "https://pelhamexaminer.com/84941/announcing/village-of-pelham-incumbent-trustees-to-challengers-our-opponents-are-counting-a-debt-that-doesnt-exist-were-counting-a-cost-our-neighbors-are-already-paying/",
+        "published_at": "2026-10-02"
+      },
+      {
+        "title": "NP candidates on NYS Comptroller fiscal stress score — Examiner October 5, 2026",
+        "url": "https://pelhamexaminer.com/84973/announcing/village-of-pelhams-fiscal-peers-are-now-yonkers-and-peekskill/",
+        "published_at": "2026-10-05"
+      }
+    ]
+  }
+];
+/* /BUILD:site-sources */
+
+/** The contested issue a question is about (by its card's keywords), or null. */
+function contestedIssueFor(question) {
+  const low = typeof question === 'string' ? question.toLowerCase() : '';
+  return CONTESTED_ISSUES.find((c) => c.keywords.some((k) => hasKeyword(low, k))) || null;
+}
+
 /* BUILD:known-issues */
 const KNOWN_ISSUES = {
   'Picture House': ['picture house', 'php partners', 'smithmeyer', 'wolfs lane'],
@@ -529,7 +626,9 @@ async function findExaminerCoverage(question) {
     const timer = setTimeout(() => controller.abort(), RAG_TIMEOUT_MS);
     try {
       for (const step of plan) {
-        const rows = dedupeArticles(await runSearch(supabase, step, controller.signal));
+        // runSearch over-fetches, so removing a duplicate cannot leave the
+        // reader with fewer than RAG_LIMIT distinct articles.
+        const rows = dedupeArticles(await runSearch(supabase, step, controller.signal)).slice(0, RAG_LIMIT);
         if (rows.length) return rows;
       }
       return [];
@@ -609,7 +708,9 @@ async function runSearch(supabase, step, signal) {
       .gte('relevance_score', step.minRelevance || RAG_MIN_RELEVANCE),
   )
     .order('published_at', { ascending: false })
-    .limit(RAG_LIMIT)
+    // Twice the limit: the Examiner moves articles between sections and the
+    // pipeline keeps both URLs, so one article can fill two rows.
+    .limit(RAG_LIMIT * 2)
     .abortSignal(signal);
 
   const { data, error } = await query;
@@ -680,7 +781,8 @@ function buildContextBlock(articles) {
   ].join('\n'));
 
   return [
-    'Recent Pelham Examiner coverage relevant to this question:',
+    'Sources relevant to this question (Pelham Examiner coverage, or the sources',
+    "listed on this site's issue card for a contested issue):",
     '',
     entries.join('\n\n'),
     '',
@@ -693,14 +795,11 @@ function buildContextBlock(articles) {
     'that turn out not to bear on the question, and do not list the sources at',
     'the end yourself; that is added for you.',
     '',
-    // Read by parseUsedSources(): only the articles named here are cited, and
-    // the line is removed before the reader sees the answer.
-    'Finish your reply with one line on its own, exactly in this form:',
-    'USED_SOURCES: <numbers of the articles above that your answer actually',
-    'drew on, comma-separated, e.g. 1,3>',
-    'or, if none of them contributed (including when you say you do not have',
-    'the information), exactly:',
-    'USED_SOURCES: none',
+    // Read by parseUsedSources(). The full rule, including site pages, is in
+    // the system prompt's "Citing your sources" section.
+    'In your USED_SOURCES line, give the numbers of the articles above that',
+    'your answer actually drew on, alongside any site pages, e.g.',
+    'USED_SOURCES: issues#rising-property-taxes-village-debt, 2',
   ].join('\n');
 }
 
@@ -733,18 +832,37 @@ function parseUsedSources(answer, count) {
   const raw = typeof answer === 'string' ? answer : '';
   const matches = [...raw.matchAll(USED_SOURCES_LINE)];
   const text = raw.replace(USED_SOURCES_LINE, '').replace(/\n{3,}/g, '\n\n').trim();
-  if (!matches.length) return { text, used: [] };
+  const nothing = { text, used: [], pages: [] };
+  if (!matches.length) return nothing;
 
   const value = matches[matches.length - 1][1].trim().replace(/[.\s]+$/, '');
-  if (!value || /^none$/i.test(value)) return { text, used: [] };
-  const parts = value.split(/\s*,\s*/);
-  if (!parts.every((p) => /^\d+$/.test(p))) return { text, used: [] };
+  if (!value || /^none$/i.test(value)) return nothing;
 
+  // Each item is an article number or a site page key ("elections",
+  // "issues#<card id>", "meetings#<meeting id>"; see SITE_PAGES and
+  // SITE_ANCHORS). An anchor that does not exist on a real page falls back to
+  // the page. Anything else makes the whole line malformed: cite nothing.
   const used = [];
-  for (const n of parts.map(Number)) {
-    if (n >= 1 && n <= count && !used.includes(n)) used.push(n);
+  const pages = [];
+  for (const part of value.split(/\s*,\s*/)) {
+    if (/^\d+$/.test(part)) {
+      const n = Number(part);
+      if (n >= 1 && n <= count && !used.includes(n)) used.push(n);
+      continue;
+    }
+    const key = part.toLowerCase().replace(/^\/+/, '');
+    const page = SITE_ANCHORS[key] || SITE_PAGES[key] ? key
+      : (SITE_PAGES[key.split('#')[0]] && key.includes('#') ? key.split('#')[0] : null);
+    if (!page) return nothing;
+    if (!pages.includes(page)) pages.push(page);
   }
-  return { text, used };
+  return { text, used, pages };
+}
+
+/** "• <title> — <url>" for a site page key, e.g. "issues#rising-…". */
+function sitePageLine(key) {
+  const title = SITE_ANCHORS[key] || SITE_PAGES[key] || key;
+  return `• Pelham Engagement Project — ${title} — ${SITE_URL}/${key}`;
 }
 
 /**
@@ -752,15 +870,21 @@ function parseUsedSources(answer, count) {
  * renders answers with escapeHtml() and a newline-to-<br> pass, so a markdown
  * link would show up as literal brackets.
  */
-function withSources(rawAnswer, articles) {
-  const { text: answer, used } = parseUsedSources(rawAnswer, articles.length);
+function withSources(rawAnswer, articles, pinnedPages = []) {
+  const { text: answer, used, pages } = parseUsedSources(rawAnswer, articles.length);
   // Only the articles the model says it drew on. Retrieval returns the newest
   // matches, not the relevant ones, so citing everything retrieved listed
   // candidate statements under answers that said "I don't have that".
   const cited = used.map((n) => articles[n - 1]);
-  if (!cited.length || !answer.trim()) return answer;
+  // Site pages: any pinned by the caller (a contested issue's card) first,
+  // then those the model named. A page's own anchor makes the bare page
+  // redundant ("issues" beside "issues#rising-…").
+  let keys = [...pinnedPages, ...pages].filter((k, i, all) => all.indexOf(k) === i);
+  keys = keys.filter((k) => k.includes('#') || !keys.some((o) => o.startsWith(`${k}#`)));
+  const lines = [...keys.map(sitePageLine), ...cited.map((a) => `• ${a.title} — ${a.url}`)];
+  if (!lines.length || !answer.trim()) return answer;
 
-  const block = ['Sources:', ...cited.map((a) => `• ${a.title} — ${a.url}`)].join('\n');
+  const block = ['Sources:', ...lines].join('\n');
 
   // index.html parses a trailing "DEEPER_PROMPT:" marker greedily to the end of
   // the string, so the block has to go BEFORE that line — appended after it,
@@ -773,4 +897,4 @@ function withSources(rawAnswer, articles) {
 
 // Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
 // Netlify only calls `handler`.
-exports._test = { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles };
+exports._test = { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };

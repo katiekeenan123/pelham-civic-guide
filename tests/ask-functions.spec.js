@@ -3,7 +3,7 @@
 // exports for testing.
 
 const { test, expect } = require('@playwright/test');
-const { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles } =
+const { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine } =
   require('../netlify/functions/ask-pelham')._test;
 
 const ARTICLES = [
@@ -167,5 +167,75 @@ test('prompt — site pages, sanitation links, the tax cap question and assessme
   // issue card and candidate profiles.
   expect(prompt.indexOf('$780,000', np)).toBeLessThan(inc);
   expect(prompt.indexOf('No bond has been authorized', inc)).toBeGreaterThan(inc);
+});
+
+/* ── Site pages as sources; contested issues ───────────────────────────── */
+
+test('USED_SOURCES — site pages and anchors are citable alongside article numbers', () => {
+  const r = parseUsedSources('A.\nUSED_SOURCES: elections, issues#rising-property-taxes-village-debt, 2', 3);
+  expect(r.used).toEqual([2]);
+  expect(r.pages).toEqual(['elections', 'issues#rising-property-taxes-village-debt']);
+  // An anchor that does not exist on a real page falls back to the page.
+  expect(parseUsedSources('A.\nUSED_SOURCES: meetings#no-such-meeting', 0).pages).toEqual(['meetings']);
+  // Unknown words still make the line malformed: nothing is cited.
+  expect(parseUsedSources('A.\nUSED_SOURCES: elections, wikipedia', 0)).toMatchObject({ used: [], pages: [] });
+});
+
+test('withSources — voting answers cite site pages, not articles that were not the source', () => {
+  const out = withSources('Here is what to know.\nUSED_SOURCES: elections, issues', ARTICLES);
+  expect(out).toContain('Sources:\n• Pelham Engagement Project — 2026 Elections — https://pelhamengagementproject.org/elections');
+  expect(out).toContain('https://pelhamengagementproject.org/issues');
+  expect(out).not.toContain('pelhamexaminer.com');
+});
+
+test('withSources — a pinned issue card comes first, and makes the bare page redundant', () => {
+  const out = withSources('Answer.\nUSED_SOURCES: issues, 1', ARTICLES, ['issues#rising-property-taxes-village-debt']);
+  const lines = out.split('Sources:\n')[1].split('\n');
+  expect(lines[0]).toBe(sitePageLine('issues#rising-property-taxes-village-debt'));
+  expect(lines[0]).toContain('https://pelhamengagementproject.org/issues#rising-property-taxes-village-debt');
+  expect(out).not.toMatch(/— https:\/\/pelhamengagementproject\.org\/issues$/m);
+  expect(lines[1]).toBe('• First article — https://pelhamexaminer.com/1/');
+  // Pinned even when the model cites nothing.
+  expect(withSources('Answer.\nUSED_SOURCES: none', ARTICLES, ['issues#rising-property-taxes-village-debt'])).toContain('Sources:');
+});
+
+test('contested — tax cap and debt questions use the issue card, with both sides', () => {
+  for (const q of ['Why did the Village of Pelham override the tax cap?', 'How much debt does the Village of Pelham have?', 'What is the contingency fund?']) {
+    const c = contestedIssueFor(q);
+    expect(c, q).not.toBeNull();
+    expect(c.anchor).toBe('issues#rising-property-taxes-village-debt');
+    const urls = c.sources.map((x) => x.url).join(' ');
+    expect(urls, 'NP statement').toContain('pelhamexaminer.com/84905/');
+    expect(urls, 'incumbent response').toContain('pelhamexaminer.com/84941/');
+  }
+  // Not contested: assessments and the school bond.
+  expect(contestedIssueFor('How do I dispute my property tax assessment?')).toBeNull();
+  expect(contestedIssueFor('What did the school bond vote decide?')).toBeNull();
+});
+
+test('prompt — latest meeting per board, floor-based public comment, citing and drafting rules', () => {
+  const prompt = require('../netlify/functions/system-prompt');
+  // Board of Education, September 23: screen time and AI.
+  expect(prompt).toContain('(cite as meetings#board-of-ed-sep2026)');
+  expect(prompt).toContain('Elementary students average about 15 minutes of technology a day');
+  expect(prompt).toMatch(/School AI|SchoolAI/);
+  expect(prompt).toMatch(/parent session on October 13 at 7/);
+  // Every board's latest summary is there.
+  for (const id of ['pelham-board-sep22-2026', 'manor-board-sep28-2026', 'town-council-oct2026', 'board-of-ed-sep2026']) {
+    expect(prompt, id).toContain(`### `);
+    expect(prompt, id).toContain(`(cite as meetings#${id})`);
+  }
+  // Public comment: floor-based everywhere, never "sign in at the door".
+  expect(prompt).not.toMatch(/sign in at the door before/i);
+  expect(prompt).toContain('Nobody signs in at the door');
+  // Citing and drafting.
+  expect(prompt).toContain('## Citing your sources');
+  expect(prompt).toContain('(cite as issues#rising-property-taxes-village-debt)');
+  // The template wraps lines, so compare against whitespace-normalized text.
+  const flat = prompt.replace(/\s+/g, ' ');
+  expect(flat).toContain("put that issue card's source URLs");
+  expect(flat).toContain('the timestamp would strengthen your comment significantly');
+  expect(prompt).not.toMatch(/&ldquo;might&rdquo;|"might" receive/);
+  expect(prompt).toContain('in anticipation of future revenue the Village expected to receive');
 });
 
