@@ -3,7 +3,7 @@
 // exports for testing.
 
 const { test, expect } = require('@playwright/test');
-const { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan } =
+const { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles } =
   require('../netlify/functions/ask-pelham')._test;
 
 const ARTICLES = [
@@ -129,5 +129,43 @@ test('prompt — sanitation schedules and the Recreation Commission reach the AI
   expect(prompt).toContain('Want to serve on the Recreation Commission?');
   expect(prompt).toContain('Applications due November 6, 2026');
   expect(prompt).not.toMatch(/\bFini\b/);
+});
+
+/* ── Duplicate articles ────────────────────────────────────────────────── */
+
+test('dedupe — one Examiner article moved between sections is listed once', () => {
+  const rows = [
+    { title: 'Statement (moved)', url: 'https://pelhamexaminer.com/84865/candidate-statements/kristen-burkes-campaign-statement/' },
+    { title: 'Statement', url: 'https://pelhamexaminer.com/84865/showcase/kristen-burkes-campaign-statement/' },
+    { title: 'Other', url: 'https://pelhamexaminer.com/84905/announcing/vop-trustee-candidates/' },
+    { title: 'No id', url: 'https://townofpelhamny.gov/news/' },
+    { title: 'No id again', url: 'https://townofpelhamny.gov/news' },
+  ];
+  expect(dedupeArticles(rows).map((r) => r.title)).toEqual(['Statement (moved)', 'Other', 'No id']);
+});
+
+/* ── Prompt guidance added October 8 ───────────────────────────────────── */
+
+test('prompt — site pages, sanitation links, the tax cap question and assessments', () => {
+  const prompt = require('../netlify/functions/system-prompt');
+  for (const s of ['pelhamengagementproject.org/gov-101', 'pelhamengagementproject.org/taxes',
+    'pelhamengagementproject.org/issues', 'pelhamengagementproject.org/meetings',
+    'pelhamny.gov/164/Sanitation-Schedule-Information', 'pelhammanor.gov/242/Refuse-Recycling',
+    'ask before answering', 'pelhamengagementproject.org/issues#rising-property-taxes-village-debt',
+    'pelhamexaminer.com/66859/', 'pelhamexaminer.com/56461/']) {
+    expect(prompt, s).toContain(s);
+  }
+  // Verified figures come from facts.json, resolved, never as raw tokens.
+  expect(prompt).toContain('the tax cap override (Local Law No. 1 of 2026) passed 5-0');
+  expect(prompt).toContain('AA+ (stable outlook)');
+  expect(prompt).toContain('designation of "No Designation"');
+  // Claims sit under their attributions.
+  const np = prompt.indexOf('Claims by the Neighborhood Party candidates');
+  const inc = prompt.indexOf('Claims by the incumbent trustees');
+  expect(np).toBeGreaterThan(-1);
+  // Search from the section headings: both phrases also appear earlier, in the
+  // issue card and candidate profiles.
+  expect(prompt.indexOf('$780,000', np)).toBeLessThan(inc);
+  expect(prompt.indexOf('No bond has been authorized', inc)).toBeGreaterThan(inc);
 });
 

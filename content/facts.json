@@ -362,6 +362,26 @@
       "used_in": []
     },
     {
+      "id": "village-sp-rating",
+      "category": "debt",
+      "fact": "Village of Pelham general obligation credit rating, S&P Global",
+      "value": null,
+      "display": "AA+ (stable outlook)",
+      "qualifier": "assigned to new bonds and affirmed on existing GO debt in S&P's August 2024 report, published on pelhamny.gov; no newer rating is on file here",
+      "confidence": "verified",
+      "as_of": "2024-08",
+      "last_updated": "2026-10-08",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": true,
+      "source": {
+        "name": "S&P Global Ratings — Pelham Village credit report, August 2024",
+        "url": "https://pelhamny.gov/DocumentCenter/View/768/Pelham-Village-SP-Credit-Report-August-2024-PDF",
+        "date": "2024-08"
+      },
+      "used_in": []
+    },
+    {
       "id": "village-share-of-tax-bill",
       "category": "tax",
       "fact": "Village of Pelham share of a resident's total property tax bill",

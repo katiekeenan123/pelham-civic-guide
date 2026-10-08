@@ -878,14 +878,16 @@ test('taxes — Learn more sits last and points at the primary sources', async (
   const links = box.locator('a');
   await expect(links).toHaveText([
     /How Pelham property taxes work/,
+    /Four biggest property tax myths/,
+    /Ins and outs of property tax assessment and filing grievances/,
     /Westchester County official tax rates/,
     /2025\/2026 School District Tax Rates \(PDF\)/,
     /2025-2026 Village Tax Rates \(PDF\)/,
     /2026 City\/Town Tax Rates \(PDF\)/,
   ]);
-  await expect(links.nth(2)).toHaveAttribute('href', /2025-2026-school-district-tax-rates\.pdf$/);
+  await expect(links.nth(4)).toHaveAttribute('href', /2025-2026-school-district-tax-rates\.pdf$/);
   // External, so they should not swallow the reader's place on the page.
-  for (let i = 0; i < 5; i++) await expect(links.nth(i)).toHaveAttribute('target', '_blank');
+  for (let i = 0; i < 7; i++) await expect(links.nth(i)).toHaveAttribute('target', '_blank');
 
   // Last thing in the section, below the explainers and the comparison.
   const lmY = (await box.boundingBox()).y;
@@ -1436,5 +1438,53 @@ test('feeney park — the old transcription "Fini Park" survives only in the cor
   }
   await page.goto('/issues');
   await expect(page.locator('#fini-park-fireworks')).toContainText('Feeney Park, in New Rochelle');
+});
+
+/* ── Ask page questions ────────────────────────────────────────────────── */
+
+test('ask — the six questions, two drafts and two explores; no school bond questions', async ({ page }) => {
+  await page.goto('/ask');
+  const plain = page.locator('#suggestion-chips .suggestion-chip:not(.draft-chip):not(.opinion-chip)');
+  await expect(plain).toHaveText([
+    'Why did the Village of Pelham override the tax cap?',
+    'When is bulk trash pickup in Pelham Manor?',
+    'How does my property tax get divided between school, village, and town?',
+    'How do I dispute my property tax assessment?',
+    "What's happening with the EMS station site?",
+    'What did the Board of Education discuss at its last meeting?',
+  ]);
+  await expect(page.locator('#suggestion-chips .draft-chip')).toHaveText([
+    'Help me write a letter to the editor about a local issue',
+    'Help me write a public comment for an upcoming board meeting',
+  ]);
+  await expect(page.locator('#suggestion-chips .opinion-chip')).toHaveText([
+    'What should I know before voting on November 3?',
+    'What questions should I ask at the next Board of Education meeting?',
+  ]);
+  await expect(page.locator('#suggestion-chips')).not.toContainText(/bond/i);
+});
+
+test('ask — a plain question submits on click; a draft chip only fills the box', async ({ page }) => {
+  const asked = [];
+  await page.route('**/api/ask', (route) => {
+    asked.push(route.request().postDataJSON());
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ answer: 'Stub answer.' }) });
+  });
+  await page.goto('/ask');
+  await page.locator('#suggestion-chips .draft-chip').first().click();
+  await expect(page.locator('#ai-input')).toHaveValue('Help me write a letter to the editor about a local issue');
+  expect(asked).toHaveLength(0);
+
+  await page.locator('#suggestion-chips .suggestion-chip', { hasText: 'When is bulk trash pickup in Pelham Manor?' }).click();
+  await expect.poll(() => asked.length).toBe(1);
+  expect(asked[0].messages.at(-1).content).toBe('When is bulk trash pickup in Pelham Manor?');
+  await expect(page.locator('#chat-window')).toContainText('Stub answer.');
+});
+
+test('taxes — Learn more lists both Town Assessor articles', async ({ page }) => {
+  await page.goto('/taxes');
+  const list = page.locator('.learn-more-list');
+  await expect(list.locator('a[href*="pelhamexaminer.com/66859/"]')).toContainText('Four biggest property tax myths');
+  await expect(list.locator('a[href*="pelhamexaminer.com/56461/"]')).toContainText('Ins and outs of property tax assessment and filing grievances');
 });
 

@@ -187,3 +187,19 @@ test('sanitation — bulk pickup question gets the Village of Pelham schedule', 
   expect(answer).toMatch(/area a|area b|october 19|october 20|november 2|twice a month/i);
 });
 
+test('tax cap — answer separates sides and points to the issue card', async ({ request }) => {
+  const answer = await ask(request, 'Why did the Village of Pelham override the tax cap?');
+  expect(answer).toMatch(/issues#rising-property-taxes-village-debt/);
+  expect(answer).toMatch(/10\.1%|\$20\.5/);
+});
+
+test('sanitation — Pelham Manor answer ends with the Manor refuse page', async ({ request }) => {
+  const answer = await ask(request, 'When is bulk trash pickup in Pelham Manor?');
+  expect(answer).toMatch(/pelhammanor\.gov\/242\/Refuse-Recycling/i);
+});
+
+test('sanitation — with no village named, it asks which village', async ({ request }) => {
+  const answer = await ask(request, 'When is garbage pickup?');
+  expect(answer).toMatch(/which village|village of pelham or (the village of )?pelham manor|pelham or pelham manor/i);
+});
+

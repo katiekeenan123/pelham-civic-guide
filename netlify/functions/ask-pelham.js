@@ -529,7 +529,7 @@ async function findExaminerCoverage(question) {
     const timer = setTimeout(() => controller.abort(), RAG_TIMEOUT_MS);
     try {
       for (const step of plan) {
-        const rows = await runSearch(supabase, step, controller.signal);
+        const rows = dedupeArticles(await runSearch(supabase, step, controller.signal));
         if (rows.length) return rows;
       }
       return [];
@@ -627,6 +627,28 @@ async function runSearch(supabase, step, signal) {
     return [];
   }
   return (data || []).filter((row) => row && row.url && row.title);
+}
+
+/**
+ * One row per Examiner article. The Examiner sometimes moves an article
+ * between sections (/announcing/ to /candidate-statements/), which changes
+ * the URL but not the numeric id in it, and the pipeline stores both. Keyed on
+ * that id, falling back to the full URL for anything without one; the first
+ * (newest) row wins. Done before the articles are numbered for the model, so
+ * USED_SOURCES indices and the Sources block can never list one twice.
+ */
+function examinerArticleKey(url) {
+  const m = /pelhamexaminer\.com\/(\d+)(?:\/|$)/i.exec(String(url || ''));
+  return m ? `examiner:${m[1]}` : String(url || '').replace(/\/+$/, '').toLowerCase();
+}
+function dedupeArticles(rows) {
+  const seen = new Set();
+  return rows.filter((row) => {
+    const key = examinerArticleKey(row.url);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 // --- Step 3: context injection ---------------------------------------------- #
@@ -751,4 +773,4 @@ function withSources(rawAnswer, articles) {
 
 // Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
 // Netlify only calls `handler`.
-exports._test = { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan };
+exports._test = { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles };

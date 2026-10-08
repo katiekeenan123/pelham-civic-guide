@@ -24,9 +24,15 @@
     }
   })();
 
+  // A plain suggestion asks at once. Draft (teal) and explore (gold) chips
+  // only fill the box: the reader is expected to add their own issue or view.
   function usePrompt(btn) {
     document.getElementById('ai-input').value = btn.textContent;
-    document.getElementById('ai-input').focus();
+    if (btn.classList.contains('draft-chip') || btn.classList.contains('opinion-chip')) {
+      document.getElementById('ai-input').focus();
+      return;
+    }
+    askClaude();
   }
 
   let feedbackCount = 0;
