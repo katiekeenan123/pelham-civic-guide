@@ -160,11 +160,18 @@ test('building permit — Pelham Manor goes to Village Hall at 4 Penfield Place'
 // every retrieved article was appended, so an answer saying it had no
 // information still cited candidate statements.
 
-test('sources — a question the site has no information on gets no Sources block', async ({ request }) => {
+test('sources — the Community Church question never cites unrelated campaign statements', async ({ request }) => {
   // No Examiner coverage of the church sale is in the articles table; this
   // used to cite Kristen Burke's campaign statement via the EMS station tag.
+  // Since site pages became citable, the answer may draw on the EMS issue
+  // card (which mentions the April 2026 listing) and cite that card, which is
+  // correct. What must never appear is an article that was not its source.
   const answer = await ask(request, 'What is the latest on the Community Church sale?');
-  expect(answer).not.toMatch(/^Sources:/m);
+  expect(answer).not.toMatch(/campaign statement/i);
+  const sources = answer.split(/^Sources:\n/m)[1] || '';
+  for (const line of sources.split('\n').filter((l) => l.startsWith('•'))) {
+    expect(line, 'only this site may be cited here').toContain('pelhamengagementproject.org/');
+  }
 });
 
 test('sources — bulk trash pickup gets no Sources block', async ({ request }) => {
@@ -191,10 +198,8 @@ test('tax cap — answer separates sides and cites the issue card first', async 
   const answer = await ask(request, 'Why did the Village of Pelham override the tax cap?');
   expect(answer).toMatch(/10\.1%|\$20\.5/);
   // The card is pinned as the first source for a contested issue.
-  const sources = answer.split(/^Sources:
-/m)[1] || '';
-  expect(sources.split('
-')[0]).toContain('pelhamengagementproject.org/issues#rising-property-taxes-village-debt');
+  const sources = answer.split(/^Sources:\n/m)[1] || '';
+  expect(sources.split('\n')[0]).toContain('pelhamengagementproject.org/issues#rising-property-taxes-village-debt');
   expect(answer).not.toMatch(/"might"/);
 });
 
@@ -223,6 +228,10 @@ test('voting — "what should I know" cites this site\'s pages', async ({ reques
 test('public comment — Village of Pelham is floor-based, not a sign-in at the door', async ({ request }) => {
   const answer = await ask(request, 'How do I speak during public comment at a Village of Pelham board meeting?');
   expect(answer).toMatch(/raise your hand|stand/i);
-  expect(answer).not.toMatch(/sign in at the door|sign-in sheet|sign up at the door/i);
+  // Saying "no sign-in required" is right; telling the reader to sign in is
+  // the error. Any line about signing in must be a denial.
+  for (const line of answer.split('\n').filter((l) => /sign[- ]?(in|up)/i.test(l))) {
+    expect(line, 'mentions of signing in must be denials').toMatch(/\b(no|not|don't|do not|never|without)\b/i);
+  }
 });
 
