@@ -1498,10 +1498,14 @@ test('gov 101 — the library is described as Town-appointed and Town-funded, in
   expect(body).not.toMatch(/Pelham Public Library \(Town-run\)/);
 });
 
-test('elections — Eileen Miller is quoted from her cited statement', async ({ page }) => {
+test('elections — Eileen Miller is quoted from her cited statements', async ({ page }) => {
   await page.goto('/elections');
   const card = page.locator('.candidate-card', { has: page.locator('.candidate-name', { hasText: 'Eileen Miller' }) });
-  await expect(card.locator('.profile-quote')).toHaveText('Better communication helps keep residents engaged, strengthens transparency, and builds community.');
+  // First from the September 21 announcement, second from the October 10 statement.
+  await expect(card.locator('.profile-quote')).toContainText([
+    'Better communication helps keep residents engaged, strengthens transparency, and builds community.',
+    'To me, effective communication isn’t just an administrative duty. It’s how we build trust, show respect, and bring our community closer together.',
+  ]);
 });
 
 
