@@ -884,10 +884,11 @@ test('taxes — Learn more sits last and points at the primary sources', async (
     /2025\/2026 School District Tax Rates \(PDF\)/,
     /2025-2026 Village Tax Rates \(PDF\)/,
     /2026 City\/Town Tax Rates \(PDF\)/,
+    /Town of Pelham Budget Guide/,
   ]);
   await expect(links.nth(4)).toHaveAttribute('href', /2025-2026-school-district-tax-rates\.pdf$/);
   // External, so they should not swallow the reader's place on the page.
-  for (let i = 0; i < 7; i++) await expect(links.nth(i)).toHaveAttribute('target', '_blank');
+  for (let i = 0; i < 8; i++) await expect(links.nth(i)).toHaveAttribute('target', '_blank');
 
   // Last thing in the section, below the explainers and the comparison.
   const lmY = (await box.boundingBox()).y;

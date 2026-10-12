@@ -171,6 +171,12 @@
         "label": "2026 City/Town Tax Rates (PDF)",
         "url": "https://www.westchestercountyny.gov/images/stories/tax/2026/2026_City_Town_Tax_Rates.pdf",
         "note": "Source of the county general levy rate"
+      },
+      {
+        "id": "town-budget-guide",
+        "label": "Town of Pelham Budget Guide",
+        "url": "https://pelhamexaminer.com/85042/announcing/town-supervisor-theresa-mohan-releases-budget-guide-and-announces-october-14-budget-meeting/",
+        "note": "Pelham Examiner, October 2026 · Plain-language explanation of how the Town budget works and how property taxes are spent"
       }
     ]
   }

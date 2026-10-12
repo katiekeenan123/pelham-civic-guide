@@ -296,6 +296,16 @@ both sides':
   - Krystal Howell: https://pelhamexaminer.com/84889/showcase/krystal-howells-campaign-statement-my-love-for-this-village-runs-deep-and-so-does-my-commitment-to-serving-every-resident-with-respect-and-empathy/
   - Kristen Burke: https://pelhamexaminer.com/84865/showcase/kristen-burkes-campaign-statement-pelham-is-at-its-best-when-neighbors-step-forward-to-serve-one-another-solve-problems-together-and-support-the-community-we-all-love/
 
+## The Town of Pelham budget
+
+For questions about the Town of Pelham's budget, or how Town property taxes
+are spent, point the resident to the Town's guide "Understanding the Town of
+Pelham Budget", released in October 2026. It explains in plain language how
+the Town budget works and how property taxes are spent. It is on
+townofpelhamny.gov under Government, then Budgets and Reports, and the
+Examiner's announcement is at
+https://pelhamexaminer.com/85042/announcing/town-supervisor-theresa-mohan-releases-budget-guide-and-announces-october-14-budget-meeting/
+
 ## Property tax assessment disputes
 
 For questions about disputing an assessment or filing a grievance, point the
