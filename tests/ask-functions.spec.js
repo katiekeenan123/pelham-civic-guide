@@ -215,13 +215,13 @@ test('contested — tax cap and debt questions use the issue card, with both sid
 
 test('prompt — latest meeting per board, floor-based public comment, citing and drafting rules', () => {
   const prompt = require('../netlify/functions/system-prompt');
-  // Board of Education, September 23: screen time and AI.
-  expect(prompt).toContain('(cite as meetings#board-of-ed-sep2026)');
-  expect(prompt).toContain('Elementary students average about 15 minutes of technology a day');
+  // Board of Education, October 7: technology framework and AI rules.
+  expect(prompt).toContain('(cite as meetings#board-of-ed-oct2026)');
+  expect(prompt).toContain('purpose before minutes');
   expect(prompt).toMatch(/School AI|SchoolAI/);
-  expect(prompt).toMatch(/parent session on October 13 at 7/);
+  expect(prompt).toMatch(/parent session follows on\W+October 13/);
   // Every board's latest summary is there.
-  for (const id of ['pelham-board-sep22-2026', 'manor-board-sep28-2026', 'town-council-oct2026', 'board-of-ed-sep2026']) {
+  for (const id of ['pelham-board-sep22-2026', 'manor-board-sep28-2026', 'town-council-oct2026', 'board-of-ed-oct2026']) {
     expect(prompt, id).toContain(`### `);
     expect(prompt, id).toContain(`(cite as meetings#${id})`);
   }
