@@ -35,6 +35,20 @@
     askClaude();
   }
 
+  // /ask?q=… fills the box with a started question and never sends it, like a
+  // draft chip: the Elections page's "Help me write a question" buttons link
+  // here so the reader can add their own concern first. Only on /ask, because
+  // the home page has an Ask box too.
+  (function prefillFromUrl() {
+    if (!/^\/ask(\.html)?$/.test(location.pathname)) return;
+    var input = document.getElementById('ai-input');
+    var q = new URLSearchParams(location.search).get('q');
+    if (!input || !q) return;
+    input.value = q.slice(0, 500);
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
+  })();
+
   let feedbackCount = 0;
 
   // 👍/👎 on an answer. Like the two About forms, this used to fire and forget

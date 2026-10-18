@@ -313,6 +313,18 @@ function buildPrompt(data, r) {
           out.push(`        Source: ${c.source_label} — ${c.source_url}`);
         }
       }
+      const d = e.debates;
+      if (d) {
+        out.push('');
+        out.push(`Candidate debates, organized by the League of Women Voters, ${r('{{fact:debates-2026}}', 'elections.json')} (source: ${d.source_label} — ${d.source_url}). After ${d.hide_after} they are over; say so rather than presenting them as upcoming.`);
+        for (const ev of d.events) {
+          const f = debateFact(ev, r);
+          if (!f) continue;
+          out.push(`  - ${ev.title}: ${plain(f.display)}. ${plain(r(f.qualifier || '', 'facts.json'))}`.trimEnd());
+        }
+        out.push(`  Residents submit questions to the League through its online form: ${d.questions_url} (or the QR code printed in the Examiner article). The League vets the questions and selects a range covering different topics.${d.organizer_url ? ` The League's website: ${d.organizer_url}` : ''}`);
+        out.push("  The site's Elections page lists the debates at pelhamengagementproject.org/elections#debates.");
+      }
       return out.join(NL);
     },
 
@@ -617,12 +629,73 @@ function profileSlots(c, r) {
   });
 }
 
+// Candidate Debates, at the top of the elections page. Each event's when and
+// where is a facts.json display string, not text held here, so this block, the
+// home banner and the AI prompt read the same values. The block carries
+// data-hide-after: app.js removes it once the last debate has passed, without
+// a rebuild.
+//
+// Each card's button opens /ask with a draft question in the box (app.js reads
+// ?q= and fills the box without sending), so the reader adds their own concern.
+function debateFact(ev, r) {
+  const f = r.byId.get(ev.fact_ref);
+  if (!f) fail('elections.json', `debates: unknown fact_ref ${ev.fact_ref}`);
+  return f;
+}
+
+function debateAskHref(ev, f) {
+  const day = new Date(f.value + 'T12:00:00Z').toLocaleDateString('en-US',
+    { month: 'long', day: 'numeric', timeZone: 'UTC' });
+  const q = `Help me write a question for the ${ev.title} candidate debate on ${day}. My concern is: `;
+  return '/ask?q=' + encodeURIComponent(q);
+}
+
+function generateDebates(data, r) {
+  const d = data.elections.debates;
+  const raceIds = new Set(data.elections.races.map((x) => x.id));
+  const out = [];
+  out.push(`    <section class="debates-block" id="debates" data-hide-after="${esc(d.hide_after)}">`);
+  out.push('      <div class="debates-head">');
+  out.push(`        <h3 class="debates-title">${d.title}</h3>`);
+  const org = d.organizer_url
+    ? `<a href="${esc(d.organizer_url)}" target="_blank" rel="noopener">League of Women Voters</a>`
+    : 'League of Women Voters';
+  out.push(`        <span class="debates-when">${org} · ${r('{{fact:debates-2026}}', 'elections.json')}</span>`);
+  out.push('      </div>');
+  out.push(`      <p class="debates-intro">${r(d.intro, 'elections.json')}</p>`);
+  out.push('      <div class="debates-grid">');
+  for (const ev of d.events) {
+    if (!raceIds.has(ev.race_id)) fail('elections.json', `debates: unknown race_id ${ev.race_id}`);
+    const f = debateFact(ev, r);
+    if (!f) continue;
+    out.push('        <div class="debate-card">');
+    out.push(`          <a class="debate-race" href="#race-panel-${esc(ev.race_id)}">${ev.title}</a>`);
+    out.push(`          <div class="debate-time">${r(`{{fact:${ev.fact_ref}}}`, 'elections.json')}</div>`);
+    if (f.qualifier) out.push(`          <div class="debate-who">${r(f.qualifier, 'facts.json')}</div>`);
+    out.push(`          <a class="debate-ask" href="${esc(debateAskHref(ev, f))}">Help me write a question →</a>`);
+    out.push('        </div>');
+  }
+  out.push('      </div>');
+  out.push('      <div class="debates-submit" id="debate-questions">');
+  out.push('        <h4 class="debates-submit-title">Submit a question for the debates</h4>');
+  out.push('        <p>Have a question for the candidates? The League of Women Voters is accepting questions from residents.</p>');
+  out.push('        <div class="debates-submit-actions">');
+  out.push(`          <a class="debates-form-link" href="${esc(d.questions_url)}" target="_blank" rel="noopener">Submit a question to the League →</a>`);
+  out.push('          <a class="debate-ask" href="/ask?q=' + encodeURIComponent('Help me write a debate question for the candidates. The race is: ') + '">Help me write a debate question →</a>');
+  out.push('        </div>');
+  out.push(`        <p class="debates-note">You can also scan the QR code printed in the <a href="${esc(d.source_url)}" target="_blank" rel="noopener">Examiner article</a>. Source: ${d.source_label}.</p>`);
+  out.push('      </div>');
+  out.push('    </section>');
+  return out.join('\n');
+}
+
 function generateElections(data, r) {
   const e = data.elections;
   const out = [];
   out.push('    <div style="background: rgba(200,151,58,0.12); border: 1px solid rgba(200,151,58,0.3); border-left: 4px solid var(--gold); padding: 14px 18px; margin-bottom: 36px; font-size: 13px; color: #c8aa70; font-family: \'IBM Plex Sans\', sans-serif; line-height: 1.6;">');
   out.push(`      ${r(e.editorial_note, 'elections.json')}`);
   out.push('    </div>');
+  if (e.debates) out.push(generateDebates(data, r));
   // How to read a thin profile. Above the races, once, because it applies to
   // every card below it.
   out.push(`    <p class="profile-methodology">${r(e.profile_methodology, 'elections.json')}</p>`);
@@ -1505,6 +1578,12 @@ function generateElectionsBanner(data, r) {
   const date = data.elections.election_date;
   const races = data.elections.races.length;
   const cands = data.elections.candidates.length;
+  // The debate count retires itself after the last debate, like the banner
+  // itself after election day.
+  const d = data.elections.debates;
+  const debates = d && d.events.length
+    ? `<span class="home-banner-debates" data-hide-after="${esc(d.hide_after)}"> · ${d.events.length} debates ${r('{{fact:debates-2026.short}}', 'elections.json')}</span>`
+    : '';
   return [
     `<section class="home-banner" id="home-election" data-hide-after="${esc(date)}">`,
     '  <div class="content-wrap home-banner-inner">',
@@ -1512,7 +1591,7 @@ function generateElectionsBanner(data, r) {
     '      <div class="home-banner-eyebrow">🗳 Election Day</div>',
     `      <h2 class="home-banner-date">${r('{{fact:election-date-2026}}', 'elections.json')}</h2>`,
     `      <div class="home-banner-countdown" data-countdown-to="${esc(date)}" hidden></div>`,
-    `      <p class="home-banner-text">${races} contested races · ${cands} candidates · Polls open ${r('{{fact:polling-hours}}', 'elections.json')}</p>`,
+    `      <p class="home-banner-text">${races} contested races · ${cands} candidates · Polls open ${r('{{fact:polling-hours}}', 'elections.json')}${debates}</p>`,
     '    </div>',
     '    <a class="home-banner-cta" href="/elections">See who\'s running →</a>',
     '  </div>',

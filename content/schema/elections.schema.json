@@ -59,6 +59,77 @@
         }
       }
     },
+    "debates": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "The Candidate Debates block at the top of the elections page, the debate line in the home banner, and the debates paragraph of the AI prompt. Dates, times and places are NOT written here: each event points at a facts.json entry whose display carries them, so the page, the banner and the prompt cannot disagree.",
+      "required": [
+        "title",
+        "intro",
+        "questions_url",
+        "source_url",
+        "source_label",
+        "hide_after",
+        "events"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string",
+          "description": "Safe HTML subset."
+        },
+        "organizer_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The organizer's site, where any remote-meeting link will be posted."
+        },
+        "questions_url": {
+          "type": "string",
+          "description": "Where residents submit questions for the debates."
+        },
+        "source_url": {
+          "type": "string"
+        },
+        "source_label": {
+          "type": "string"
+        },
+        "hide_after": {
+          "type": "string",
+          "description": "YYYY-MM-DD, the last debate. app.js removes the block and the banner line after this day, so they need no rebuild to retire."
+        },
+        "events": {
+          "type": "array",
+          "description": "DISPLAY ORDER IS ARRAY ORDER.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "race_id",
+              "title",
+              "fact_ref"
+            ],
+            "properties": {
+              "race_id": {
+                "type": "string",
+                "description": "A races[].id; the card links to that race's panel."
+              },
+              "title": {
+                "type": "string",
+                "description": "e.g. 'Town Clerk'. Also used in the pre-filled Ask Pelham question."
+              },
+              "fact_ref": {
+                "type": "string",
+                "description": "facts.json id. Its display is the when-and-where line, its value (YYYY-MM-DD) the date used in the Ask Pelham question, and its qualifier the matchup."
+              }
+            }
+          }
+        }
+      }
+    },
     "races": {
       "type": "array",
       "description": "DISPLAY ORDER IS ARRAY ORDER.",

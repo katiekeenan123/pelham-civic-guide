@@ -1517,3 +1517,75 @@ test('meetings — a short note under the intro says where older meetings live',
   await expect(note.locator('a')).toHaveText(['pelhamny.gov', 'pelhammanor.gov', 'townofpelhamny.gov', 'pelhamschools.org']);
   for (const a of await note.locator('a').all()) await expect(a).toHaveAttribute('target', '_blank');
 });
+
+/* ── Candidate debates ─────────────────────────────────────────────────── */
+
+test('elections — Candidate Debates sit above the races: four debates, each with when, where and a question button', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-18T10:00:00'));
+  await page.goto('/elections');
+  const block = page.locator('#debates.debates-block');
+  await expect(block).toBeVisible();
+  await expect(block).toHaveAttribute('data-hide-after', '2026-10-28');
+  // Above the first race, below the nonpartisan statement.
+  const blockY = (await block.boundingBox()).y;
+  expect(blockY).toBeLessThan((await page.locator('.race-block').first().boundingBox()).y);
+
+  const cards = block.locator('.debate-card');
+  await expect(cards.locator('.debate-race')).toHaveText([
+    'Pelham Manor Board of Trustees', 'Town Clerk', 'Town Supervisor', 'Village of Pelham Board of Trustees',
+  ]);
+  await expect(cards.locator('.debate-time')).toHaveText([
+    'Tuesday, October 20, 7 PM · Pelham Manor Village Hall, 4 Penfield Place',
+    'Monday, October 26, 5:30 PM · Town Hall, 34 Fifth Avenue',
+    'Monday, October 26, about 6:30 PM, directly after the Town Clerk debate · Town Hall, 34 Fifth Avenue',
+    'Wednesday, October 28, 5:30 PM · on Zoom (the League will post the link at lwvw.org in the days before)',
+  ]);
+  await expect(cards.nth(0).locator('.debate-race')).toHaveAttribute('href', '#race-panel-pelham-manor-trustees');
+
+  // Each button opens Ask Pelham with that debate's question started.
+  const href = await cards.nth(2).locator('a.debate-ask').getAttribute('href');
+  const q = new URL(href, 'http://x').searchParams.get('q');
+  expect(href.startsWith('/ask?q=')).toBe(true);
+  expect(q).toBe('Help me write a question for the Town Supervisor candidate debate on October 26. My concern is: ');
+
+  const submit = block.locator('#debate-questions');
+  await expect(submit.locator('.debates-submit-title')).toHaveText('Submit a question for the debates');
+  await expect(submit).toContainText('Have a question for the candidates? The League of Women Voters is accepting questions from residents.');
+  await expect(submit.locator('a.debates-form-link')).toHaveAttribute('href', /^https:\/\/docs\.google\.com\/forms\//);
+  await expect(submit.locator('a.debate-ask')).toHaveText('Help me write a debate question →');
+});
+
+test('elections — the debates block clears itself after the last debate', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-28T21:00:00'));
+  await page.goto('/elections');
+  await expect(page.locator('#debates')).toBeVisible();
+  await page.clock.setFixedTime(new Date('2026-10-29T09:00:00'));
+  await page.reload();
+  await expect(page.locator('#debates')).toHaveCount(0);
+  await expect(page.locator('.race-block')).toHaveCount(3);
+});
+
+test('home — election banner adds the debates until the last one, then drops that line', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-18T10:00:00'));
+  await page.goto('/');
+  const text = page.locator('#home-election .home-banner-text');
+  await expect(text).toContainText('· 4 debates Oct 20–28');
+  await page.clock.setFixedTime(new Date('2026-10-29T09:00:00'));
+  await page.reload();
+  await expect(text).toContainText('contested races · ');
+  await expect(text).not.toContainText('debates');
+});
+
+test('ask — ?q= fills the box with a started question and does not send it', async ({ page }) => {
+  const asked = [];
+  await page.route('**/api/ask', (route) => {
+    asked.push(route.request().postDataJSON());
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ answer: 'Stub answer.' }) });
+  });
+  const q = 'Help me write a question for the Town Clerk candidate debate on October 26. My concern is: ';
+  await page.goto('/ask?q=' + encodeURIComponent(q));
+  await expect(page.locator('#ai-input')).toHaveValue(q);
+  await expect(page.locator('#ai-input')).toBeFocused();
+  await page.waitForTimeout(300);
+  expect(asked).toHaveLength(0);
+});

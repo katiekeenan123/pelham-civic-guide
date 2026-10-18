@@ -774,6 +774,111 @@
       "used_in": []
     },
     {
+      "id": "debates-2026",
+      "category": "election",
+      "fact": "League of Women Voters candidate debates, November 2026 election",
+      "value": null,
+      "display": "October 20–28, 2026",
+      "display_short": "Oct 20–28",
+      "qualifier": "four forums, one per race, organized by the League of Women Voters; questions come from the public via the League's online form or the QR code printed in the Examiner, and the League vets them and selects a range of topics",
+      "confidence": "reported",
+      "as_of": "2026-10-17",
+      "last_updated": "2026-10-18",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": true,
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com/85185/latest-news/after-weeks-of-negotiations-pelham-candidates-agree-to-4-league-of-women-voters-debates-submit-your-questions-now/",
+        "date": "2026-10-17"
+      },
+      "used_in": []
+    },
+    {
+      "id": "debate-manor-trustees",
+      "category": "election",
+      "fact": "Candidate debate — Village of Pelham Manor Board of Trustees",
+      "value": "2026-10-20",
+      "display": "Tuesday, October 20, 7 PM · Pelham Manor Village Hall, 4 Penfield Place",
+      "display_short": "Tue, Oct 20 · 7 PM",
+      "qualifier": "Breda Bennett and Joe Liberatore (Neighborhood Party, also on the Republican line) vs. Chris Dlutowski and Ryan Kurtz (Pelham Democrats and Manor Together)",
+      "confidence": "reported",
+      "as_of": "2026-10-17",
+      "last_updated": "2026-10-18",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": true,
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com/85185/latest-news/after-weeks-of-negotiations-pelham-candidates-agree-to-4-league-of-women-voters-debates-submit-your-questions-now/",
+        "date": "2026-10-17"
+      },
+      "used_in": []
+    },
+    {
+      "id": "debate-town-clerk",
+      "category": "election",
+      "fact": "Candidate debate — Town Clerk",
+      "value": "2026-10-26",
+      "display": "Monday, October 26, 5:30 PM · Town Hall, 34 Fifth Avenue",
+      "display_short": "Mon, Oct 26 · 5:30 PM",
+      "qualifier": "Incumbent Eileen Miller (Democrat) vs. Maureen Borsella (Neighborhood Party)",
+      "confidence": "reported",
+      "as_of": "2026-10-17",
+      "last_updated": "2026-10-18",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": true,
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com/85185/latest-news/after-weeks-of-negotiations-pelham-candidates-agree-to-4-league-of-women-voters-debates-submit-your-questions-now/",
+        "date": "2026-10-17"
+      },
+      "used_in": []
+    },
+    {
+      "id": "debate-town-supervisor",
+      "category": "election",
+      "fact": "Candidate debate — Town Supervisor",
+      "value": "2026-10-26",
+      "display": "Monday, October 26, about 6:30 PM, directly after the Town Clerk debate · Town Hall, 34 Fifth Avenue",
+      "display_short": "Mon, Oct 26 · ~6:30 PM",
+      "qualifier": "Incumbent Theresa Mohan (Democrat) vs. Scott Wolfgang (Neighborhood Party)",
+      "confidence": "reported",
+      "as_of": "2026-10-17",
+      "last_updated": "2026-10-18",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": true,
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com/85185/latest-news/after-weeks-of-negotiations-pelham-candidates-agree-to-4-league-of-women-voters-debates-submit-your-questions-now/",
+        "date": "2026-10-17"
+      },
+      "used_in": []
+    },
+    {
+      "id": "debate-village-trustees",
+      "category": "election",
+      "fact": "Candidate debate — Village of Pelham Board of Trustees",
+      "value": "2026-10-28",
+      "display": "Wednesday, October 28, 5:30 PM · on Zoom (the League will post the link at lwvw.org in the days before)",
+      "display_short": "Wed, Oct 28 · 5:30 PM",
+      "qualifier": "Democrats Krystal Howell, Russell Solomon and Kristen Burke vs. Neighborhood Party challengers Arthur Long, Paul Anzilotti and Rhett Speros",
+      "confidence": "reported",
+      "as_of": "2026-10-17",
+      "last_updated": "2026-10-18",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": true,
+      "source": {
+        "name": "Pelham Examiner",
+        "url": "https://pelhamexaminer.com/85185/latest-news/after-weeks-of-negotiations-pelham-candidates-agree-to-4-league-of-women-voters-debates-submit-your-questions-now/",
+        "date": "2026-10-17"
+      },
+      "used_in": []
+    },
+    {
       "id": "school-budget-vote-schedule",
       "category": "election",
       "fact": "Annual school district budget vote",

@@ -88,7 +88,7 @@
       "status_label": "Campaigns underway — election {{fact:election-date-2026}}",
       "tag": "Elections",
       "tag_style": "energy",
-      "description": "Three contested races: Village of Pelham trustees (Democrats vs. Neighborhood Party/Republican challengers), Village of Pelham Manor trustees (two seats), and Town Supervisor and Clerk (Mohan and Miller re-running per new state law).",
+      "description": "Three contested races: Village of Pelham trustees (Democrats vs. Neighborhood Party/Republican challengers), Village of Pelham Manor trustees (two seats), and Town Supervisor and Clerk (Mohan and Miller re-running per new state law). After weeks of negotiations between the candidates, the League of Women Voters has scheduled four candidate debates, {{fact:debates-2026}}: Pelham Manor trustees {{fact:debate-manor-trustees.short}}; Town Clerk {{fact:debate-town-clerk.short}} and Town Supervisor {{fact:debate-town-supervisor.short}}, both at Town Hall; and Village of Pelham trustees {{fact:debate-village-trustees.short}} on Zoom. Residents can submit questions to the League. Details on the <a href=\"/elections#debates\">Elections page</a>.",
       "governing_body": [
         "village-of-pelham",
         "village-of-pelham-manor",
@@ -99,9 +99,14 @@
           "url": "/elections",
           "label": "See full candidate profiles",
           "date": null
+        },
+        {
+          "url": "https://pelhamexaminer.com/85185/latest-news/after-weeks-of-negotiations-pelham-candidates-agree-to-4-league-of-women-voters-debates-submit-your-questions-now/",
+          "label": "League of Women Voters debate schedule — Examiner October 17, 2026",
+          "date": "2026-10-17"
         }
       ],
-      "last_updated": "2026-09-21",
+      "last_updated": "2026-10-17",
       "keywords": [
         "election",
         "trustees",

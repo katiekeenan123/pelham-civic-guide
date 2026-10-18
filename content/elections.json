@@ -25,6 +25,37 @@
       "note": "Polling places move between elections, so check yours rather than trusting last time: <a href=\"https://voterlookup.elections.ny.gov\" target=\"_blank\" style=\"color: var(--gold-light);\">voterlookup.elections.ny.gov</a>. Voting by mail? Apply for an absentee or early mail ballot at <a href=\"https://elections.ny.gov/registration-and-voting-deadlines\" target=\"_blank\" style=\"color: var(--gold-light);\">elections.ny.gov</a>."
     }
   ],
+  "debates": {
+    "title": "Candidate Debates",
+    "intro": "The League of Women Voters has scheduled four candidate debates, one for each race. The questions come from residents: the League vets those submitted and picks a range covering different topics.",
+    "organizer_url": "https://lwvw.org/",
+    "questions_url": "https://docs.google.com/forms/d/e/1FAIpQLSdn8lKg4sN8vTWCgAzLbVqDh3VewA1l114OvqWX24Ul-lWLVw/viewform",
+    "source_url": "https://pelhamexaminer.com/85185/latest-news/after-weeks-of-negotiations-pelham-candidates-agree-to-4-league-of-women-voters-debates-submit-your-questions-now/",
+    "source_label": "Pelham Examiner, October 17, 2026",
+    "hide_after": "2026-10-28",
+    "events": [
+      {
+        "race_id": "pelham-manor-trustees",
+        "title": "Pelham Manor Board of Trustees",
+        "fact_ref": "debate-manor-trustees"
+      },
+      {
+        "race_id": "town-supervisor-and-clerk",
+        "title": "Town Clerk",
+        "fact_ref": "debate-town-clerk"
+      },
+      {
+        "race_id": "town-supervisor-and-clerk",
+        "title": "Town Supervisor",
+        "fact_ref": "debate-town-supervisor"
+      },
+      {
+        "race_id": "village-of-pelham-trustees",
+        "title": "Village of Pelham Board of Trustees",
+        "fact_ref": "debate-village-trustees"
+      }
+    ]
+  },
   "races": [
     {
       "id": "village-of-pelham-trustees",
