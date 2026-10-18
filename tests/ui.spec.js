@@ -1029,7 +1029,7 @@ const bodyTab = (page, body) => page.locator(`.mtg-body-tab[data-body="${body}"]
 const summary = (page, id) => page.locator(`.mtg-set[data-meeting="${id}"]`);
 const fold = (set, key) => set.locator(`details.mtg-fold[data-section="${key}"]`);
 
-const VILLAGE_LATEST = 'pelham-board-sep22-2026';
+const VILLAGE_LATEST = 'pelham-board-oct2026';
 const VILLAGE_SEP8 = 'pelham-board-sep2026';
 const TOWN_AUG = 'town-council-aug2026';
 

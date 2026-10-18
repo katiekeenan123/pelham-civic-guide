@@ -364,6 +364,7 @@ const SITE_ANCHORS = {
   "issues#con-edison-rate-hike": "Con Edison Rate Case — Settlement Cuts the Increase",
   "issues#fini-park-fireworks": "Feeney Park — Nightly Illegal Fireworks",
   "issues#amtrak-forest-road": "Amtrak Forest Road Corridor Project — Pelham Manor",
+  "meetings#pelham-board-oct2026": "Meeting summary — Village of Pelham · Board of Trustees · October 13, 2026",
   "meetings#pelham-board-sep22-2026": "Meeting summary — Village of Pelham · Board of Trustees · September 22, 2026",
   "meetings#pelham-board-sep2026": "Meeting summary — Village of Pelham · Board of Trustees · September 8, 2026",
   "meetings#pelham-board-jul2026": "Meeting summary — Village of Pelham · Board of Trustees · July 14, 2026",
