@@ -421,6 +421,11 @@ const CONTESTED_ISSUES = [
         "title": "NP candidates on NYS Comptroller fiscal stress score — Examiner October 5, 2026",
         "url": "https://pelhamexaminer.com/84973/announcing/village-of-pelhams-fiscal-peers-are-now-yonkers-and-peekskill/",
         "published_at": "2026-10-05"
+      },
+      {
+        "title": "Anzilotti campaign statement — flood remediation debt estimate and fiscal concern",
+        "url": "https://pelhamexaminer.com/85124/showcase/paul-anzilottis-campaign-statement-the-village-has-needs-that-cannot-be-ignored-and-they-must-be-addressed-through-careful-planning-realistic-cost-estimates-and-responsible-financial-managemen/",
+        "published_at": "2026-10-15"
       }
     ]
   }
