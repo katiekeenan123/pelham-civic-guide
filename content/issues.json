@@ -131,7 +131,7 @@
       "status_label": "Smithmeyer/Picture House discussions ongoing",
       "tag": "Development",
       "tag_style": "infrastructure",
-      "description": "MOU with PHP Partners terminated. Developer James Smithmeyer working directly with Picture House. No plan approved. Picture House continues to operate and ran a successful summer film series. <strong>Candidate Everitt Speros</strong> (Neighborhood Party, October 19 campaign statement) says that last winter the Mayor and board tried to force two longstanding local business owners to sell their land so a developer could build a large residential complex next to and including the Picture House, and that community pressure, not the board&rsquo;s choice, led them to drop the eminent domain threat. He criticizes exclusive developer agreements and secret &ldquo;blight studies&rdquo; made without public input. These are the candidate&rsquo;s own characterizations.",
+      "description": "MOU with PHP Partners terminated. Developer James Smithmeyer working directly with Picture House. No plan approved. Picture House continues to operate and ran a successful summer film series. <strong>Candidate Everitt Speros</strong> (Neighborhood Party, October 19 campaign statement) says that last winter the Mayor and board tried to force two longstanding local business owners to sell their land so a developer could build a large residential complex next to and including the Picture House, and that community pressure, not the board&rsquo;s choice, led them to drop the eminent domain threat. He criticizes exclusive developer agreements and secret &ldquo;blight studies&rdquo; made without public input. These are the candidate&rsquo;s own characterizations. Mayor Mullen has said he never would have used eminent domain on the two Wolf&rsquo;s Lane gas stations, according to <strong>candidate Arthur Long</strong>&rsquo;s October 14 campaign statement, which cites this as one of the Mayor&rsquo;s claims that &ldquo;just don&rsquo;t add up.&rdquo;",
       "governing_body": [
         "village-of-pelham"
       ],
@@ -145,9 +145,14 @@
           "url": "https://pelhamexaminer.com/85212/showcase/everitt-speros-campaign-statement-i-promise-to-be-a-guardian-of-your-hard-earned-tax-dollars-and-i-will-work-tirelessly-to-preserve-and-maintain-the-great-village-we-call-home/",
           "label": "Speros campaign statement — eminent domain and Picture House development claims",
           "date": "2026-10-19"
+        },
+        {
+          "url": "https://pelhamexaminer.com/85103/showcase/arthur-longs-campaign-statement-the-village-of-pelham-is-on-an-unsustainable-path-its-time-for-a-course-correction/",
+          "label": "Long campaign statement — reports the Mayor's position on eminent domain",
+          "date": "2026-10-14"
         }
       ],
-      "last_updated": "2026-10-19",
+      "last_updated": "2026-10-20",
       "keywords": [
         "Picture House",
         "PHP Partners",
