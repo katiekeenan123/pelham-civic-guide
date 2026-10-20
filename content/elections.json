@@ -188,7 +188,7 @@
       "source_url": "https://pelhamexaminer.com/85103/showcase/arthur-longs-campaign-statement-the-village-of-pelham-is-on-an-unsustainable-path-its-time-for-a-course-correction/",
       "source_label": "Campaign statement — Examiner October 2026",
       "profile": {
-        "background": "An attorney at Latham &amp; Watkins who ran for the Village of Pelham board in 2019. In his campaign statement he says he was born in 1968 and grew up in Greenwich Village, the son of two small-firm attorneys, and has practiced banking and corporate law for 31 years. He married his wife Wendy in 1998 and they have two children. The family moved to Pelham in 2017; he says the village&rsquo;s neighborhood scale and local businesses reminded him of the Greenwich Village of his childhood. He is running on the three-member Neighborhood Party slate, having signed the joint platform alongside Rhett Speros and Paul Anzilotti. (His firm, his 2019 run, his running mates and the first quote below are from the <a href=\"https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/\" target=\"_blank\">September 14, 2026 Neighborhood Party platform statement</a>.)",
+        "background": "An attorney at Latham &amp; Watkins who ran for the Village of Pelham board in 2019. In his campaign statement he says he was born in 1968 and grew up in Greenwich Village, the son of two small-firm attorneys, and has practiced banking and corporate law for 31 years. He married his wife Wendy in 1998 and they have two children. The family moved to Pelham in 2017; he says the village&rsquo;s neighborhood scale and local businesses reminded him of the Greenwich Village of his childhood. He is running on the three-member Neighborhood Party slate, having signed the joint platform alongside Everitt Speros and Paul Anzilotti. (His firm, his 2019 run, his running mates and the first quote below are from the <a href=\"https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/\" target=\"_blank\">September 14, 2026 Neighborhood Party platform statement</a>.)",
         "why_running": "He says seven years of uncontested elections have left the Village on an &ldquo;unhealthy and unsustainable path&rdquo; of debt, imprudent spending and land-use decisions the board has failed to challenge, and that new trustees are needed for sounder finances, more prudent planning and restored transparency. He cites a fiscal stress score that went in one year from among the best to the worst of any Westchester village; Village taxes 22% above Pelham Manor&rsquo;s; one or two more over-cap levies signaled by Mayor Mullen; an unbudgeted $100,000-plus loader; $2.5 million borrowed for lawyers and consultants on a $50 million-plus flood plan at least half taxpayer-funded, with grants nowhere near that; less parking alongside a sought 10% population increase; a contingency line of over $785,000, against a recent high of about $300,000; and over $150,000 for lawyers and a &ldquo;blight&rdquo; study of the Wolf&rsquo;s Lane gas stations. These are the candidate&rsquo;s own figures and characterizations.",
         "prior_service": "No prior elected office. Ran for the Village of Pelham board in 2019.",
         "priorities": [
@@ -214,30 +214,40 @@
       }
     },
     {
-      "id": "rhett-speros",
+      "id": "everitt-speros",
       "race_id": "village-of-pelham-trustees",
       "office": null,
-      "name": "Rhett Speros",
+      "name": "Everitt Speros",
       "party": "Neighborhood Party · Republican",
       "party_style": "nbhd",
       "incumbent": false,
-      "meta": "Challenger · Pelham resident since 2007",
-      "source_url": "https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/",
-      "source_label": "NP platform statement — September 14, 2026",
+      "meta": "Challenger · 19-year Pelham resident · Retired Army officer",
+      "source_url": "https://pelhamexaminer.com/85212/showcase/everitt-speros-campaign-statement-i-promise-to-be-a-guardian-of-your-hard-earned-tax-dollars-and-i-will-work-tirelessly-to-preserve-and-maintain-the-great-village-we-call-home/",
+      "source_label": "Campaign statement — Examiner October 19, 2026",
       "profile": {
-        "background": "A Pelham resident since 2007 with two children in the district&rsquo;s high schools. He signed the joint Neighborhood Party platform alongside Arthur Long and Paul Anzilotti.",
-        "why_running": "He runs on affordability and on budget management following successive increases in property taxes.",
-        "prior_service": "No prior elected office.",
+        "background": "A 19-year Pelham resident who, in his campaign statement, says he recently retired from the US Army after 26 years of service. He says he has coached Little League and softball, volunteers on the parent committees for several varsity sports, and gives back through Pelham Civics. He has two children in the district&rsquo;s high schools. He is running on the Neighborhood Party slate with Arthur Long and Paul Anzilotti; earlier Examiner coverage refers to him as Rhett Speros. (His children, the cited platform priorities and the first quote below are from the <a href=\"https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/\" target=\"_blank\">September 14, 2026 Neighborhood Party platform statement</a>.)",
+        "why_running": "He cites three reasons: municipal debt that continues to climb, which he says grew from $4.225 million in 2021 to almost $18 million and is among the highest per capita in New York State; skyrocketing property taxes, including what he describes as Mayor Mullen&rsquo;s plan to pierce the state tax cap for at least a third time to fund &ldquo;luxury municipal projects&rdquo;; and &ldquo;backroom development deals that do not benefit our community.&rdquo; He criticizes what he describes as the board&rsquo;s effort last winter to force two longstanding local business owners to sell so a developer could build a residential complex next to and including the Picture House, along with &ldquo;secret &lsquo;blight studies,&rsquo;&rdquo; and calls for ending the Business District Floating Zone. These are the candidate&rsquo;s own figures and characterizations.",
+        "prior_service": "No prior elected office. 26 years of service in the US Army (retired).",
         "priorities": [
-          "Serve as a trustee without pay",
-          "Vote against exceeding the state tax cap",
-          "Produce an infrastructure plan",
+          "Stop frivolous spending and manage the budget responsibly",
+          "Vote against piercing the state tax cap for a third time",
+          "End the Business District Floating Zone",
+          "Oppose what he calls backroom development deals, including exclusive developer agreements and secret blight studies made without public input",
+          "Oppose high-density housing he says will strain infrastructure and schools before flooding is addressed",
+          "Stop spending on what he calls endless surveys and legal fees, including aggressive eminent domain efforts",
+          "Village debt: says debt grew from $4.225M in 2021 to almost $18M &mdash; the candidate&rsquo;s own figures, not Village figures",
+          "Serve as a trustee without pay (pelhamexaminer.com/84605, September 14, 2026)",
+          "Produce an infrastructure plan (pelhamexaminer.com/84605, September 14, 2026)",
+          "Open up the Picture House RFQ (pelhamexaminer.com/84605, September 14, 2026)",
           "Village debt projection: says flood mitigation borrowing could push total Village debt to $53.7M even after $17.65M in expected grants, and higher if grants fall through. (pelhamexaminer.com/84905, September 30, 2026)",
-          "Open up the Picture House RFQ",
           "Comptroller fiscal stress score: cites the Village&rsquo;s fiscal 2025 score of 19.2, up from 3.3 &mdash; worst among Westchester villages, second worst in the county &mdash; and blames contingency growth and rising debt service for the tax-cap override. (pelhamexaminer.com/84973, October 5, 2026)"
         ],
         "quotes": [
-          "Our village should be a place where residents can afford to stay."
+          "Our village should be a place where residents can afford to stay.",
+          "I promise to be a guardian of your hard-earned tax dollars, and I will work tirelessly to preserve and maintain the great village we all chose to call home.",
+          "The current administration treats Pelham taxpayers like an open checkbook.",
+          "The current Board didn&rsquo;t drop the eminent domain threat because they wanted to; they dropped it because they got caught.",
+          "Signing exclusive developer agreements and ordering secret &ldquo;blight studies&rdquo; on our local small businesses without public input is a dangerous, opaque way to run our village."
         ]
       }
     },
@@ -253,7 +263,7 @@
       "source_url": "https://pelhamexaminer.com/85124/showcase/paul-anzilottis-campaign-statement-the-village-has-needs-that-cannot-be-ignored-and-they-must-be-addressed-through-careful-planning-realistic-cost-estimates-and-responsible-financial-managemen/",
       "source_label": "Campaign statement — Examiner October 15, 2026",
       "profile": {
-        "background": "A lifelong Pelham resident who, in his campaign statement, says he grew up in the community and has raised two children here with his wife Ann Marie, the last 12 years in the Village. He says he is an engineer with more than 35 years of experience in the construction industry, covering plan and specification review, project cost estimating, contract negotiation, budgeting, planning, and construction project management, and that he has worked with numerous municipalities throughout the tri-state area, including the Village of Pelham, helping address their infrastructure needs. He signed the joint Neighborhood Party platform alongside Arthur Long and Rhett Speros, which faults undisciplined spending including the $3.655M Municipal Center authorization. (His years in the Village, the platform and the first quote below are from the <a href=\"https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/\" target=\"_blank\">September 14, 2026 Neighborhood Party platform statement</a>.)",
+        "background": "A lifelong Pelham resident who, in his campaign statement, says he grew up in the community and has raised two children here with his wife Ann Marie, the last 12 years in the Village. He says he is an engineer with more than 35 years of experience in the construction industry, covering plan and specification review, project cost estimating, contract negotiation, budgeting, planning, and construction project management, and that he has worked with numerous municipalities throughout the tri-state area, including the Village of Pelham, helping address their infrastructure needs. He signed the joint Neighborhood Party platform alongside Arthur Long and Everitt Speros, which faults undisciplined spending including the $3.655M Municipal Center authorization. (His years in the Village, the platform and the first quote below are from the <a href=\"https://pelhamexaminer.com/84605/showcase/neighborhood-party-candidates-describe-village-of-pelhams-current-path-as-unsustainable-announce-platform-for-getting-back-on-track/\" target=\"_blank\">September 14, 2026 Neighborhood Party platform statement</a>.)",
         "why_running": "He says he is driven by concern about the Village&rsquo;s finances and long-term planning. He cites two tax-cap overrides in five years, debt growth from about $4 million to about $18 million, and annual debt service of about $1.6 million, roughly 10% of last year&rsquo;s budget. He says inadequate advance planning and budgeting for recent projects added to that debt while aging buildings, roads and drainage need investment. He calls flood remediation essential, but says the proposed approach could add about $35 million in debt and should be evaluated, with alternatives and costs weighed, first. He also links the loss of a parking structure to shopping-district congestion. These are the candidate&rsquo;s own figures, not Village figures.",
         "prior_service": "No prior elected office.",
         "priorities": [

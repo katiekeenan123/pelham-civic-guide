@@ -427,6 +427,11 @@ const CONTESTED_ISSUES = [
         "title": "Anzilotti campaign statement — flood remediation debt estimate and fiscal concern",
         "url": "https://pelhamexaminer.com/85124/showcase/paul-anzilottis-campaign-statement-the-village-has-needs-that-cannot-be-ignored-and-they-must-be-addressed-through-careful-planning-realistic-cost-estimates-and-responsible-financial-managemen/",
         "published_at": "2026-10-15"
+      },
+      {
+        "title": "Speros campaign statement — debt growth and third tax cap override opposition",
+        "url": "https://pelhamexaminer.com/85212/showcase/everitt-speros-campaign-statement-i-promise-to-be-a-guardian-of-your-hard-earned-tax-dollars-and-i-will-work-tirelessly-to-preserve-and-maintain-the-great-village-we-call-home/",
+        "published_at": "2026-10-19"
       }
     ]
   }

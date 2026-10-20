@@ -48,6 +48,11 @@
           "url": "https://pelhamexaminer.com/85124/showcase/paul-anzilottis-campaign-statement-the-village-has-needs-that-cannot-be-ignored-and-they-must-be-addressed-through-careful-planning-realistic-cost-estimates-and-responsible-financial-managemen/",
           "label": "Anzilotti campaign statement — flood remediation debt estimate and fiscal concern",
           "date": "2026-10-15"
+        },
+        {
+          "url": "https://pelhamexaminer.com/85212/showcase/everitt-speros-campaign-statement-i-promise-to-be-a-guardian-of-your-hard-earned-tax-dollars-and-i-will-work-tirelessly-to-preserve-and-maintain-the-great-village-we-call-home/",
+          "label": "Speros campaign statement — debt growth and third tax cap override opposition",
+          "date": "2026-10-19"
         }
       ],
       "contested_keywords": [
@@ -59,7 +64,7 @@
         "fiscal stress",
         "stress score"
       ],
-      "last_updated": "2026-10-15",
+      "last_updated": "2026-10-19",
       "keywords": [
         "village budget",
         "tax cap override",
@@ -126,7 +131,7 @@
       "status_label": "Smithmeyer/Picture House discussions ongoing",
       "tag": "Development",
       "tag_style": "infrastructure",
-      "description": "MOU with PHP Partners terminated. Developer James Smithmeyer working directly with Picture House. No plan approved. Picture House continues to operate and ran a successful summer film series.",
+      "description": "MOU with PHP Partners terminated. Developer James Smithmeyer working directly with Picture House. No plan approved. Picture House continues to operate and ran a successful summer film series. <strong>Candidate Everitt Speros</strong> (Neighborhood Party, October 19 campaign statement) says that last winter the Mayor and board tried to force two longstanding local business owners to sell their land so a developer could build a large residential complex next to and including the Picture House, and that community pressure, not the board&rsquo;s choice, led them to drop the eminent domain threat. He criticizes exclusive developer agreements and secret &ldquo;blight studies&rdquo; made without public input. These are the candidate&rsquo;s own characterizations.",
       "governing_body": [
         "village-of-pelham"
       ],
@@ -135,9 +140,14 @@
           "url": "https://pelhamexaminer.com/81915/latest-news/village-trustees-terminate-mou-with-normoyles-php-partners-and-correct-blight-study-mullen-swears-in-ken-shirreffs-to-planning-board/",
           "label": "Pelham Examiner",
           "date": "2026-03-11"
+        },
+        {
+          "url": "https://pelhamexaminer.com/85212/showcase/everitt-speros-campaign-statement-i-promise-to-be-a-guardian-of-your-hard-earned-tax-dollars-and-i-will-work-tirelessly-to-preserve-and-maintain-the-great-village-we-call-home/",
+          "label": "Speros campaign statement — eminent domain and Picture House development claims",
+          "date": "2026-10-19"
         }
       ],
-      "last_updated": "2026-09-21",
+      "last_updated": "2026-10-19",
       "keywords": [
         "Picture House",
         "PHP Partners",
