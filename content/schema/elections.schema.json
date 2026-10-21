@@ -208,6 +208,64 @@
           "type": "boolean",
           "default": true,
           "description": "Whether to print the seat count in the race meta line. False for a race block covering two different offices (Town Supervisor and Town Clerk), where a combined seat count is meaningless and the page has never shown one."
+        },
+        "debate_summary": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "description": "Optional. Manually written, AI-assisted summaries of a debate for this race, shown as a Debate Summary section in the race panel below the candidate profiles, and given to the AI prompt. One entry per debate: the Town race block covers two separate debates (Town Clerk and Town Supervisor). Omit or leave null until a debate has been transcribed. The page adds the AI-generated disclaimer and the recording link itself, so they cannot be left off.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "title",
+              "date",
+              "recording_url",
+              "candidates"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Which debate, e.g. 'Town Supervisor'. Shown after 'Debate Summary'."
+              },
+              "date": {
+                "type": "string",
+                "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+                "description": "Debate date, YYYY-MM-DD."
+              },
+              "recording_url": {
+                "type": "string",
+                "description": "The full debate recording, linked from the disclaimer."
+              },
+              "candidates": {
+                "type": "array",
+                "minItems": 1,
+                "description": "DISPLAY ORDER IS ARRAY ORDER. Each candidate_id must be a candidate in this race; the build fails otherwise.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "candidate_id",
+                    "points"
+                  ],
+                  "properties": {
+                    "candidate_id": {
+                      "type": "string"
+                    },
+                    "points": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Key points, one per bullet, attributed in the candidate's voice ('Says…'). Safe HTML subset; {{fact:}} tokens allowed."
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },

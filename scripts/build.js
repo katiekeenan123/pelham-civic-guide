@@ -312,6 +312,14 @@ function buildPrompt(data, r) {
           }
           out.push(`        Source: ${c.source_label} — ${c.source_url}`);
         }
+        // Same summaries the race panel shows, flagged as AI-generated so
+        // the model passes the caveat on and points to the recording.
+        for (const entry of race.debate_summary || []) {
+          out.push(`    Debate summary — ${entry.title}, ${entry.date} (AI-generated from the debate recording; may contain errors; recording: ${entry.recording_url}):`);
+          for (const { c, points } of debateSummaryCandidates(race, entry, data)) {
+            out.push(`      - ${c.name}: ${points.map((pt) => plain(r(pt, 'elections.json'))).join(' ')}`);
+          }
+        }
       }
       const d = e.debates;
       if (d) {
@@ -689,6 +697,47 @@ function generateDebates(data, r) {
   return out.join('\n');
 }
 
+// Debate Summary, inside a race panel below the candidate profiles. Written by
+// hand from an AI transcript once a debate is over, so races carry it only
+// when there is one. The disclaimer and recording link are written here, not
+// in the data, so a summary can never appear without them. A race block can
+// hold more than one debate (Town Clerk and Town Supervisor share a block),
+// hence a list.
+const DEBATE_SUMMARY_DISCLAIMER = 'AI-generated summary from the debate recording. May contain errors. Watch the full recording:';
+
+function debateSummaryCandidates(race, entry, data) {
+  return entry.candidates.map((x) => {
+    const c = data.elections.candidates.find((k) => k.id === x.candidate_id);
+    if (!c) fail('elections.json', `debate_summary "${entry.title}": unknown candidate_id ${x.candidate_id}`);
+    else if (c.race_id !== race.id) fail('elections.json', `debate_summary "${entry.title}": ${x.candidate_id} is not in race ${race.id}`);
+    return { c, points: x.points };
+  }).filter((x) => x.c && x.c.race_id === race.id);
+}
+
+function generateDebateSummary(race, data, r) {
+  const out = [];
+  race.debate_summary.forEach((entry, n) => {
+    out.push(`      <section class="debate-summary" id="debate-summary-${esc(race.id)}-${n + 1}">`);
+    out.push('        <div class="debate-summary-head">');
+    out.push(`          <h4 class="debate-summary-title">Debate Summary · ${esc(entry.title)}</h4>`);
+    out.push(`          <span class="debate-summary-date">${longDate(entry.date)}</span>`);
+    out.push('        </div>');
+    out.push(`        <p class="debate-summary-disclaimer">${DEBATE_SUMMARY_DISCLAIMER} <a href="${esc(entry.recording_url)}" target="_blank" rel="noopener">${esc(entry.title)} debate recording →</a></p>`);
+    out.push('        <div class="debate-summary-grid">');
+    for (const { c, points } of debateSummaryCandidates(race, entry, data)) {
+      out.push('          <div class="debate-summary-candidate">');
+      out.push(`            <div class="debate-summary-name">${c.name} <span class="debate-summary-party ${c.party_style}">${c.party}</span></div>`);
+      out.push('            <ul class="debate-summary-points">');
+      for (const pt of points) out.push(`              <li>${r(pt, 'elections.json')}</li>`);
+      out.push('            </ul>');
+      out.push('          </div>');
+    }
+    out.push('        </div>');
+    out.push('      </section>');
+  });
+  return out.join('\n');
+}
+
 function generateElections(data, r) {
   const e = data.elections;
   const out = [];
@@ -790,6 +839,9 @@ function generateElections(data, r) {
       out.push('');
     }
     out.push('      </div>');
+    if (race.debate_summary && race.debate_summary.length) {
+      out.push(generateDebateSummary(race, data, r));
+    }
     out.push('      </div>');
     out.push('    </div>');
     out.push('');
@@ -2078,7 +2130,7 @@ function report() {
 
 // Exports must be assigned BEFORE main() runs: page-shell.js requires this
 // module from inside main(), and would otherwise see an empty exports object.
-module.exports = { generateNav, generateFooter, phase1, makeResolver };
+module.exports = { generateNav, generateFooter, phase1, makeResolver, generateDebateSummary, DEBATE_SUMMARY_DISCLAIMER, errors };
 
 if (require.main === module) {
   if (process.argv.includes('--verify-sources')) verifySources();

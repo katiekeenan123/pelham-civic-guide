@@ -1328,6 +1328,20 @@
     line-height: 1.6;
   }
   .race-context strong { color: var(--slate-light); }
+
+  /* ── Elections · Debate Summary (inside a race panel, below the candidates) ── */
+  .debate-summary { border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.15); padding: 20px; }
+  .debate-summary-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 6px; }
+  .debate-summary-title { font-size: 16px; font-weight: 700; color: var(--white); margin: 0; }
+  .debate-summary-date { font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-light); }
+  .debate-summary-disclaimer { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--slate-light); line-height: 1.6; margin: 0 0 16px; }
+  .debate-summary-disclaimer a { color: var(--slate-light); }
+  .debate-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .debate-summary-candidate { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 14px 16px; }
+  .debate-summary-name { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
+  .debate-summary-party { display: block; font-size: 11px; font-weight: 400; font-family: 'IBM Plex Mono', monospace; color: var(--slate-mid); margin-top: 2px; }
+  .debate-summary-points { margin: 0; padding-left: 18px; font-size: 13px; color: var(--slate-light); line-height: 1.6; }
+  .debate-summary-points li + li { margin-top: 6px; }
   @media (max-width: 768px) {
     .candidates-grid { grid-template-columns: 1fr; }
     .party-column { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }

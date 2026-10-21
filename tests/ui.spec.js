@@ -1589,3 +1589,9 @@ test('ask — ?q= fills the box with a started question and does not send it', a
   await page.waitForTimeout(300);
   expect(asked).toHaveLength(0);
 });
+
+test('elections — no Debate Summary is shown until one is written for a race', async ({ page }) => {
+  await page.goto('/elections');
+  await expect(page.locator('.race-block')).toHaveCount(3);
+  await expect(page.locator('.debate-summary')).toHaveCount(0);
+});
