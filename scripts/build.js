@@ -312,12 +312,16 @@ function buildPrompt(data, r) {
           }
           out.push(`        Source: ${c.source_label} — ${c.source_url}`);
         }
-        // Same summaries the race panel shows, flagged as AI-generated so
-        // the model passes the caveat on and points to the recording.
+        // Same summaries the Candidate Debates block shows, by topic, flagged
+        // as AI-generated so the model passes the caveat on and points to the
+        // recording.
         for (const entry of race.debate_summary || []) {
           out.push(`    Debate summary — ${entry.title}, ${entry.date} (AI-generated from the debate recording; may contain errors; recording: ${entry.recording_url}):`);
-          for (const { c, points } of debateSummaryCandidates(race, entry, data)) {
-            out.push(`      - ${c.name}: ${points.map((pt) => plain(r(pt, 'elections.json'))).join(' ')}`);
+          for (const topic of entry.topics) {
+            const rows = debateTopicPositions(race, entry, topic, data);
+            if (!rows.length) continue;
+            out.push(`      ${topic.topic}:`);
+            for (const { c, point } of rows) out.push(`        - ${c.name}: ${plain(r(point, 'elections.json'))}`);
           }
         }
       }
@@ -639,9 +643,12 @@ function profileSlots(c, r) {
 
 // Candidate Debates, at the top of the elections page. Each event's when and
 // where is a facts.json display string, not text held here, so this block, the
-// home banner and the AI prompt read the same values. The block carries
-// data-hide-after: app.js removes it once the last debate has passed, without
-// a rebuild.
+// home banner and the AI prompt read the same values.
+//
+// The block outlives the debates, because a finished debate's summary lives in
+// it. What goes stale is retired by app.js through data-hide-after, without a
+// rebuild: each card's "Help me write a question" button after that debate's
+// date, and the question-submission section after the last debate.
 //
 // Each card's button opens /ask with a draft question in the box (app.js reads
 // ?q= and fills the box without sending), so the reader adds their own concern.
@@ -658,11 +665,78 @@ function debateAskHref(ev, f) {
   return '/ask?q=' + encodeURIComponent(q);
 }
 
+// Debate summaries are written by hand from an AI transcript once a debate is
+// over, and kept on their race (races[].debate_summary). Each is shown under its
+// own debate card: matched on race and date, and on title too where one race
+// holds two debates that day (Town Clerk and Town Supervisor). A summary that
+// matches no card, or more than one, is a build error rather than a summary
+// that silently never appears.
+const DEBATE_SUMMARY_DISCLAIMER = 'AI-generated summary from the debate recording. May contain errors. Watch the full recording:';
+
+function debateSummaryFor(ev, f, data) {
+  const race = data.elections.races.find((x) => x.id === ev.race_id);
+  const sameDay = data.elections.debates.events.filter((x) => {
+    const xf = data.facts.facts.find((k) => k.id === x.fact_ref);
+    return x.race_id === ev.race_id && xf && xf.value === f.value;
+  });
+  const mine = (race.debate_summary || []).filter((s) => s.date === f.value
+    && (sameDay.length === 1 || s.title === ev.title));
+  if (mine.length > 1) fail('elections.json', `debate_summary: more than one summary for the ${ev.title} debate on ${f.value}`);
+  return mine[0] || null;
+}
+
+function checkDebateSummaries(data, r) {
+  for (const race of data.elections.races) {
+    for (const s of race.debate_summary || []) {
+      const hits = (data.elections.debates ? data.elections.debates.events : []).filter((ev) => {
+        const f = debateFact(ev, r);
+        return f && debateSummaryFor(ev, f, data) === s;
+      });
+      if (hits.length !== 1) fail('elections.json', `debate_summary "${s.title}" (${s.date}) matches ${hits.length} debates in debates.events; it needs exactly one`);
+    }
+  }
+}
+
+// Each topic lists only the candidates who spoke to it, in the order written.
+function debateTopicPositions(race, entry, topic, data) {
+  return topic.positions.map((x) => {
+    const c = data.elections.candidates.find((k) => k.id === x.candidate_id);
+    if (!c) fail('elections.json', `debate_summary "${entry.title}": unknown candidate_id ${x.candidate_id}`);
+    else if (c.race_id !== race.id) fail('elections.json', `debate_summary "${entry.title}": ${x.candidate_id} is not in race ${race.id}`);
+    return { c, point: x.point };
+  }).filter((x) => x.c && x.c.race_id === race.id);
+}
+
+// Collapsed by default; the disclaimer and recording link open with it.
+function generateDebateSummary(race, entry, data, r) {
+  const out = [];
+  out.push(`          <details class="debate-summary-fold" id="debate-summary-${esc(race.id)}-${esc(entry.date)}">`);
+  out.push('            <summary class="debate-summary-toggle">View debate summary <span aria-hidden="true">▾</span></summary>');
+  out.push('            <div class="debate-summary">');
+  out.push(`              <p class="debate-summary-disclaimer">${DEBATE_SUMMARY_DISCLAIMER} <a href="${esc(entry.recording_url)}" target="_blank" rel="noopener">${esc(entry.title)} debate, ${longDate(entry.date)} →</a></p>`);
+  for (const topic of entry.topics) {
+    const rows = debateTopicPositions(race, entry, topic, data);
+    if (!rows.length) continue;
+    out.push('              <div class="debate-topic">');
+    out.push(`                <h5 class="debate-topic-title">${esc(topic.topic)}</h5>`);
+    out.push('                <ul class="debate-topic-positions">');
+    for (const { c, point } of rows) {
+      out.push(`                  <li class="debate-position"><span class="debate-position-name">${c.name}</span> <span class="debate-position-party ${c.party_style}">${c.party}</span><span class="debate-position-point">${r(point, 'elections.json')}</span></li>`);
+    }
+    out.push('                </ul>');
+    out.push('              </div>');
+  }
+  out.push('            </div>');
+  out.push('          </details>');
+  return out.join('\n');
+}
+
 function generateDebates(data, r) {
   const d = data.elections.debates;
   const raceIds = new Set(data.elections.races.map((x) => x.id));
+  checkDebateSummaries(data, r);
   const out = [];
-  out.push(`    <section class="debates-block" id="debates" data-hide-after="${esc(d.hide_after)}">`);
+  out.push('    <section class="debates-block" id="debates">');
   out.push('      <div class="debates-head">');
   out.push(`        <h3 class="debates-title">${d.title}</h3>`);
   const org = d.organizer_url
@@ -676,15 +750,18 @@ function generateDebates(data, r) {
     if (!raceIds.has(ev.race_id)) fail('elections.json', `debates: unknown race_id ${ev.race_id}`);
     const f = debateFact(ev, r);
     if (!f) continue;
-    out.push('        <div class="debate-card">');
+    const race = data.elections.races.find((x) => x.id === ev.race_id);
+    const summary = race && debateSummaryFor(ev, f, data);
+    out.push(`        <div class="debate-card${summary ? ' has-summary' : ''}">`);
     out.push(`          <a class="debate-race" href="#race-panel-${esc(ev.race_id)}">${ev.title}</a>`);
     out.push(`          <div class="debate-time">${r(`{{fact:${ev.fact_ref}}}`, 'elections.json')}</div>`);
     if (f.qualifier) out.push(`          <div class="debate-who">${r(f.qualifier, 'facts.json')}</div>`);
-    out.push(`          <a class="debate-ask" href="${esc(debateAskHref(ev, f))}">Help me write a question →</a>`);
+    out.push(`          <a class="debate-ask" href="${esc(debateAskHref(ev, f))}" data-hide-after="${esc(f.value)}">Help me write a question →</a>`);
+    if (summary) out.push(generateDebateSummary(race, summary, data, r));
     out.push('        </div>');
   }
   out.push('      </div>');
-  out.push('      <div class="debates-submit" id="debate-questions">');
+  out.push(`      <div class="debates-submit" id="debate-questions" data-hide-after="${esc(d.hide_after)}">`);
   out.push('        <h4 class="debates-submit-title">Submit a question for the debates</h4>');
   out.push('        <p>Have a question for the candidates? The League of Women Voters is accepting questions from residents.</p>');
   out.push('        <div class="debates-submit-actions">');
@@ -694,47 +771,6 @@ function generateDebates(data, r) {
   out.push(`        <p class="debates-note">You can also scan the QR code printed in the <a href="${esc(d.source_url)}" target="_blank" rel="noopener">Examiner article</a>. Source: ${d.source_label}.</p>`);
   out.push('      </div>');
   out.push('    </section>');
-  return out.join('\n');
-}
-
-// Debate Summary, inside a race panel below the candidate profiles. Written by
-// hand from an AI transcript once a debate is over, so races carry it only
-// when there is one. The disclaimer and recording link are written here, not
-// in the data, so a summary can never appear without them. A race block can
-// hold more than one debate (Town Clerk and Town Supervisor share a block),
-// hence a list.
-const DEBATE_SUMMARY_DISCLAIMER = 'AI-generated summary from the debate recording. May contain errors. Watch the full recording:';
-
-function debateSummaryCandidates(race, entry, data) {
-  return entry.candidates.map((x) => {
-    const c = data.elections.candidates.find((k) => k.id === x.candidate_id);
-    if (!c) fail('elections.json', `debate_summary "${entry.title}": unknown candidate_id ${x.candidate_id}`);
-    else if (c.race_id !== race.id) fail('elections.json', `debate_summary "${entry.title}": ${x.candidate_id} is not in race ${race.id}`);
-    return { c, points: x.points };
-  }).filter((x) => x.c && x.c.race_id === race.id);
-}
-
-function generateDebateSummary(race, data, r) {
-  const out = [];
-  race.debate_summary.forEach((entry, n) => {
-    out.push(`      <section class="debate-summary" id="debate-summary-${esc(race.id)}-${n + 1}">`);
-    out.push('        <div class="debate-summary-head">');
-    out.push(`          <h4 class="debate-summary-title">Debate Summary · ${esc(entry.title)}</h4>`);
-    out.push(`          <span class="debate-summary-date">${longDate(entry.date)}</span>`);
-    out.push('        </div>');
-    out.push(`        <p class="debate-summary-disclaimer">${DEBATE_SUMMARY_DISCLAIMER} <a href="${esc(entry.recording_url)}" target="_blank" rel="noopener">${esc(entry.title)} debate recording →</a></p>`);
-    out.push('        <div class="debate-summary-grid">');
-    for (const { c, points } of debateSummaryCandidates(race, entry, data)) {
-      out.push('          <div class="debate-summary-candidate">');
-      out.push(`            <div class="debate-summary-name">${c.name} <span class="debate-summary-party ${c.party_style}">${c.party}</span></div>`);
-      out.push('            <ul class="debate-summary-points">');
-      for (const pt of points) out.push(`              <li>${r(pt, 'elections.json')}</li>`);
-      out.push('            </ul>');
-      out.push('          </div>');
-    }
-    out.push('        </div>');
-    out.push('      </section>');
-  });
   return out.join('\n');
 }
 
@@ -839,9 +875,6 @@ function generateElections(data, r) {
       out.push('');
     }
     out.push('      </div>');
-    if (race.debate_summary && race.debate_summary.length) {
-      out.push(generateDebateSummary(race, data, r));
-    }
     out.push('      </div>');
     out.push('    </div>');
     out.push('');

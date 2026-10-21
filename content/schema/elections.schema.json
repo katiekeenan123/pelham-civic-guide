@@ -214,7 +214,7 @@
             "array",
             "null"
           ],
-          "description": "Optional. Manually written, AI-assisted summaries of a debate for this race, shown as a Debate Summary section in the race panel below the candidate profiles, and given to the AI prompt. One entry per debate: the Town race block covers two separate debates (Town Clerk and Town Supervisor). Omit or leave null until a debate has been transcribed. The page adds the AI-generated disclaimer and the recording link itself, so they cannot be left off.",
+          "description": "Optional. Manually written, AI-assisted summaries of a debate in this race, organized by topic. Each is shown under its own debate card in the Candidate Debates block, collapsed behind 'View debate summary', and given to the AI prompt. Matched to a debates.events entry by race and date, and by title as well when this race holds two debates that day (Town Clerk and Town Supervisor share a race); the build fails if a summary matches no debate. The page adds the AI-generated disclaimer and the recording link itself, so they cannot be left off. Omit or leave null until a debate has been transcribed.",
           "items": {
             "type": "object",
             "additionalProperties": false,
@@ -222,12 +222,12 @@
               "title",
               "date",
               "recording_url",
-              "candidates"
+              "topics"
             ],
             "properties": {
               "title": {
                 "type": "string",
-                "description": "Which debate, e.g. 'Town Supervisor'. Shown after 'Debate Summary'."
+                "description": "Which debate, e.g. 'Village of Pelham Manor Board of Trustees'. Used in the recording link, and to tell apart two debates in one race on the same day (it must then equal the debates.events title)."
               },
               "date": {
                 "type": "string",
@@ -238,28 +238,43 @@
                 "type": "string",
                 "description": "The full debate recording, linked from the disclaimer."
               },
-              "candidates": {
+              "topics": {
                 "type": "array",
                 "minItems": 1,
-                "description": "DISPLAY ORDER IS ARRAY ORDER. Each candidate_id must be a candidate in this race; the build fails otherwise.",
+                "description": "DISPLAY ORDER IS ARRAY ORDER. Group what candidates said by subject. List a candidate under a topic only if they spoke to it, and keep related points from both sides under the same topic.",
                 "items": {
                   "type": "object",
                   "additionalProperties": false,
                   "required": [
-                    "candidate_id",
-                    "points"
+                    "topic",
+                    "positions"
                   ],
                   "properties": {
-                    "candidate_id": {
-                      "type": "string"
+                    "topic": {
+                      "type": "string",
+                      "description": "Subheading, e.g. 'Fiscal management and taxes'."
                     },
-                    "points": {
+                    "positions": {
                       "type": "array",
                       "minItems": 1,
+                      "description": "One entry per candidate who spoke to this topic. Each candidate_id must be in this race; the build fails otherwise.",
                       "items": {
-                        "type": "string"
-                      },
-                      "description": "Key points, one per bullet, attributed in the candidate's voice ('Says…'). Safe HTML subset; {{fact:}} tokens allowed."
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "candidate_id",
+                          "point"
+                        ],
+                        "properties": {
+                          "candidate_id": {
+                            "type": "string"
+                          },
+                          "point": {
+                            "type": "string",
+                            "description": "One sentence attributed in the candidate's voice, starting with a neutral verb ('Says', 'Argued', 'Noted', 'Proposed'). Never stated as fact, and no loaded verbs ('claimed', 'insisted', 'correctly noted'). Safe HTML subset; {{fact:}} tokens allowed."
+                          }
+                        }
+                      }
                     }
                   }
                 }

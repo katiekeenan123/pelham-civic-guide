@@ -1329,19 +1329,6 @@
   }
   .race-context strong { color: var(--slate-light); }
 
-  /* ── Elections · Debate Summary (inside a race panel, below the candidates) ── */
-  .debate-summary { border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.15); padding: 20px; }
-  .debate-summary-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 6px; }
-  .debate-summary-title { font-size: 16px; font-weight: 700; color: var(--white); margin: 0; }
-  .debate-summary-date { font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold-light); }
-  .debate-summary-disclaimer { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--slate-light); line-height: 1.6; margin: 0 0 16px; }
-  .debate-summary-disclaimer a { color: var(--slate-light); }
-  .debate-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-  .debate-summary-candidate { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 14px 16px; }
-  .debate-summary-name { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-  .debate-summary-party { display: block; font-size: 11px; font-weight: 400; font-family: 'IBM Plex Mono', monospace; color: var(--slate-mid); margin-top: 2px; }
-  .debate-summary-points { margin: 0; padding-left: 18px; font-size: 13px; color: var(--slate-light); line-height: 1.6; }
-  .debate-summary-points li + li { margin-top: 6px; }
   @media (max-width: 768px) {
     .candidates-grid { grid-template-columns: 1fr; }
     .party-column { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
@@ -1526,6 +1513,26 @@
   .debates-form-link:hover { background: var(--gold-light); }
   .debates-submit .debates-note { font-size: 12px; color: var(--slate-mid); margin: 0; }
   .debates-note a { color: var(--slate-light); }
+
+  /* ── Candidate Debates · Debate Summary (collapsed under its debate card) ── */
+  /* An open summary takes the whole row, so the topics have room to read. */
+  .debate-card:has(.debate-summary-fold[open]) { grid-column: 1 / -1; }
+  .debate-summary-fold { margin-top: 4px; }
+  .debate-summary-toggle { cursor: pointer; list-style: none; display: inline-block; font-size: 13px; color: var(--gold-light); border: 1px solid rgba(200,151,58,0.4); padding: 6px 12px; }
+  .debate-summary-toggle::-webkit-details-marker { display: none; }
+  .debate-summary-toggle:hover { background: rgba(200,151,58,0.12); }
+  .debate-summary-toggle span { display: inline-block; transition: transform 0.2s; }
+  .debate-summary-fold[open] .debate-summary-toggle span { transform: rotate(180deg); }
+  .debate-summary { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .debate-summary-disclaimer { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--slate-light); line-height: 1.6; margin: 0 0 16px; }
+  .debate-summary-disclaimer a { color: var(--slate-light); }
+  .debate-topic + .debate-topic { margin-top: 18px; }
+  .debate-topic-title { font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
+  .debate-topic-positions { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .debate-position { font-size: 13px; color: var(--slate-light); line-height: 1.6; padding-left: 12px; border-left: 2px solid rgba(255,255,255,0.12); }
+  .debate-position-name { font-weight: 700; color: var(--white); }
+  .debate-position-party { font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: var(--slate-mid); margin-left: 4px; }
+  .debate-position-point { display: block; }
 
   /* ── Ask Pelham · vetted-source chips ── */
   .source-chip { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 5px 12px; font-size: 12px; color: var(--slate-light); font-family: 'IBM Plex Mono', monospace; }

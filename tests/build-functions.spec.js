@@ -16,34 +16,42 @@ const SAMPLE = {
   title: 'Town Supervisor',
   date: '2026-10-26',
   recording_url: 'https://example.org/recording',
-  candidates: [
-    { candidate_id: 'theresa-mohan', points: ['Says point one.', 'Says point two.'] },
-    { candidate_id: 'scott-wolfgang', points: ['Says point three.'] },
+  topics: [
+    { topic: 'Taxes', positions: [
+      { candidate_id: 'theresa-mohan', point: 'Says point one.' },
+      { candidate_id: 'scott-wolfgang', point: 'Says point two.' },
+    ] },
+    { topic: 'Ambulance', positions: [
+      { candidate_id: 'scott-wolfgang', point: 'Says point three.' },
+    ] },
   ],
 };
 
-test('debate summary — candidates in order with their points, under the AI disclaimer and recording link', () => {
+test('debate summary — collapsed, disclaimer and recording link first, then topics listing only the candidates who spoke', () => {
   const { data, r, race } = setup();
-  const html = build.generateDebateSummary({ ...race, debate_summary: [SAMPLE] }, data, r);
+  const html = build.generateDebateSummary(race, SAMPLE, data, r);
 
-  expect(html).toContain('id="debate-summary-town-supervisor-and-clerk-1"');
-  expect(html).toContain('Debate Summary · Town Supervisor');
-  expect(html).toContain('October 26, 2026');
-  expect(html).toContain(build.DEBATE_SUMMARY_DISCLAIMER);
+  expect(html).toMatch(/^\s*<details class="debate-summary-fold" id="debate-summary-town-supervisor-and-clerk-2026-10-26">/);
+  expect(html).not.toMatch(/<details[^>]* open/);
+  expect(html).toContain('View debate summary <span aria-hidden="true">▾</span>');
   expect(build.DEBATE_SUMMARY_DISCLAIMER).toBe('AI-generated summary from the debate recording. May contain errors. Watch the full recording:');
-  expect(html).toMatch(/<a href="https:\/\/example\.org\/recording" target="_blank" rel="noopener">/);
+  expect(html.indexOf(build.DEBATE_SUMMARY_DISCLAIMER)).toBeLessThan(html.indexOf('debate-topic-title'));
+  expect(html).toMatch(/<a href="https:\/\/example\.org\/recording" target="_blank" rel="noopener">Town Supervisor debate, October 26, 2026 →<\/a>/);
 
-  const names = [...html.matchAll(/class="debate-summary-name">([^<]+?) </g)].map((m) => m[1]);
-  expect(names).toEqual(['Theresa Mohan', 'Scott Wolfgang']);
-  const points = [...html.matchAll(/<li>([^<]+)<\/li>/g)].map((m) => m[1]);
+  const topics = [...html.matchAll(/class="debate-topic-title">([^<]+)</g)].map((m) => m[1]);
+  expect(topics).toEqual(['Taxes', 'Ambulance']);
+  const ambulance = html.slice(html.indexOf('>Ambulance<'));
+  expect(ambulance).toContain('Scott Wolfgang');
+  expect(ambulance).not.toContain('Theresa Mohan');
+  const points = [...html.matchAll(/class="debate-position-point">([^<]+)</g)].map((m) => m[1]);
   expect(points).toEqual(['Says point one.', 'Says point two.', 'Says point three.']);
 });
 
-test('debate summary — a candidate from another race is a build error, not a silent card', () => {
+test('debate summary — a candidate from another race is a build error, not a silent entry', () => {
   const { data, r, race } = setup();
   const before = build.errors.length;
-  const bad = { ...SAMPLE, candidates: [{ candidate_id: 'arthur-long', points: ['Says something.'] }] };
-  const html = build.generateDebateSummary({ ...race, debate_summary: [bad] }, data, r);
+  const bad = { ...SAMPLE, topics: [{ topic: 'Taxes', positions: [{ candidate_id: 'arthur-long', point: 'Says something.' }] }] };
+  const html = build.generateDebateSummary(race, bad, data, r);
   expect(build.errors.slice(before).join('\n')).toContain('arthur-long is not in race town-supervisor-and-clerk');
   expect(html).not.toContain('Arthur Long');
   build.errors.length = before;

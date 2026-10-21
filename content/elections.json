@@ -81,45 +81,232 @@
           "title": "Village of Pelham Manor Board of Trustees",
           "date": "2026-10-20",
           "recording_url": "https://vimeo.com/1237775548",
-          "candidates": [
+          "topics": [
             {
-              "candidate_id": "breda-bennett",
-              "points": [
-                "Says the village is debt-free, has never exceeded the state tax cap, and receives an excellent fiscal stress score from the state.",
-                "Noted that two flood mitigation projects will break ground before the end of the year: a bioretention facility at Esplanade and Ely, 70% grant-funded, and a project of over $1 million at Monroe and Grant, 50% grant-funded.",
-                "Argued the board plans systematically, citing a 2017 sanitary sewer assessment, a 2023 stormwater study, a 2024 traffic code review that led to four local laws, and a comprehensive traffic study due in December.",
-                "Says the village manager asked outside counsel and the village&rsquo;s insurance carrier about a resident-reporting app and both raised liability concerns, and that the idea could be revisited if that changed.",
-                "Opposes merging with the Village of Pelham, citing past studies showing minimal savings, the demands on Pelham Manor&rsquo;s police, and the Village of Pelham&rsquo;s $18 million debt."
+              "topic": "Fiscal management and taxes",
+              "positions": [
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Says the village is debt-free, has never exceeded the state tax cap and has an excellent fiscal stress score, and that the average homeowner&rsquo;s village taxes rose about $100 a year over the past three years."
+                },
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Noted that about 70% of the village budget goes to salaries and benefits, and says the village has stayed within the tax cap with one of the lowest fiscal stress scores in the area."
+                },
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Argued the tax cap is a ceiling rather than a target and that projected surpluses should be disclosed in the budget and placed in a strategic reserve, citing a roughly $1 million surplus."
+                },
+                {
+                  "candidate_id": "chris-dlutkowski",
+                  "point": "Committed to not raising taxes and proposed reviewing how non-personnel spending has been allocated over the past one, three, five and ten years."
+                }
               ]
             },
             {
-              "candidate_id": "joe-liberatore",
-              "points": [
-                "Disputed that the village&rsquo;s plan is 50 years old, saying an overarching strategic plan draws on sewer and stormwater studies and a traffic study now underway.",
-                "Says the village directed about $10 million over the past three years to work such as water mitigation and traffic safety.",
-                "Argued that grants should follow a financial, operational and strategic review of each project, and that low debt gives the village cash on hand to pay costs before reimbursement.",
-                "Said an app might raise legal and financial issues given a tight budget and would not suit emergencies, but that the village would adopt one if it makes sense.",
-                "Proposed flexible hours, Saturday coffee meetings and early-morning or late-evening phone availability so residents can reach him."
+              "topic": "Stormwater and flood mitigation",
+              "positions": [
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Says the new Highbrook pipe is twice the size of the old one and that two flood mitigation projects will break ground before the end of the year: a bioretention facility at Esplanade and Ely, 70% grant-funded, and a project of over $1 million at Monroe and Grant, 50% grant-funded."
+                },
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Argued that grants should follow a financial, operational and strategic review of each project, and that low debt gives the village cash on hand to pay costs before reimbursement."
+                },
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Says the Highbrook system is designed for about a one-year storm and would be expected to fail above 2.75 inches of rain, and argued that more grant money is available for projects aiming at higher storm levels."
+                },
+                {
+                  "candidate_id": "chris-dlutkowski",
+                  "point": "Called pursuing grants a fiduciary duty of the board and said trustees should evaluate federal, state and county grants and work with officials at each level."
+                }
               ]
             },
             {
-              "candidate_id": "ryan-kurtz",
-              "points": [
-                "Says the village&rsquo;s comprehensive plan dates to 1979 and is the oldest for a village in Westchester, noting that state law encourages updates every 10 years.",
-                "Argued for public work sessions so residents can follow how the board reaches decisions, citing the traffic safety assessment and the Glover Field pipe blockage.",
-                "Proposed pressing the county on large commercial events at Memorial Field and forming a coalition with the Village and Town of Pelham on Bronx car-speaker noise.",
-                "Argued the tax cap is a ceiling rather than a target and that projected surpluses should be disclosed in the budget and placed in a strategic reserve, citing a roughly $1 million surplus.",
-                "Pledged to adopt a resident-reporting app and renewed his call for nonpartisan local elections."
+              "topic": "Traffic and pedestrian safety",
+              "positions": [
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Pointed to the Road Safety Starts With You campaign, a red-light camera at Four Corners, over 50 new stop signs, a lower village-wide speed limit, and a comprehensive traffic study due in December."
+                },
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Pointed to traffic safety work including 50 new stop signs and more crossing guards."
+                },
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Called traffic safety a priority, saying the Wolfs Lane and Iden Avenue intersection needs to be fixed and that a crossing guard alone is not enough."
+                },
+                {
+                  "candidate_id": "chris-dlutkowski",
+                  "point": "Called for reassessing the village&rsquo;s approach to traffic safety."
+                }
               ]
             },
             {
-              "candidate_id": "chris-dlutkowski",
-              "points": [
-                "Argued the village relies on a &ldquo;patchwork&rdquo; of initiatives driven by urgent issues and should take a fresh, systemic look at governance without raising taxes or taking on debt.",
-                "Called current efforts on concert and car-speaker noise not particularly effective, and proposed joint meetings with elected officials in Mount Vernon and the Bronx, followed by meetings with police.",
-                "Supports soliciting residents&rsquo; views on major initiatives in public sessions, with ground rules on speaking time.",
-                "Committed to not raising taxes and proposed reviewing how non-personnel spending has been allocated over the past one, three, five and ten years.",
-                "Supports a village app as a low-cost transparency tool that could include relevant police data such as traffic enforcement."
+              "topic": "Strategic planning",
+              "positions": [
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Says the village&rsquo;s comprehensive plan dates to 1979 and is the oldest for a village in Westchester, noting that state law encourages updates every 10 years."
+                },
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Argued the board plans systematically, citing a 2017 sanitary sewer assessment, a 2023 stormwater study, a 2024 traffic code review that led to four local laws, and the annual budget."
+                },
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Disputed that the village&rsquo;s plan is 50 years old, saying an overarching strategic plan draws on sewer, stormwater and traffic studies, and says the village directed about $10 million over three years to work such as water mitigation and traffic safety."
+                },
+                {
+                  "candidate_id": "chris-dlutkowski",
+                  "point": "Argued the village relies on a &ldquo;patchwork&rdquo; of initiatives driven by urgent issues and should take a fresh, systemic look at governance without raising taxes or taking on debt."
+                }
+              ]
+            },
+            {
+              "topic": "Public work sessions and access to the board",
+              "positions": [
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Argued for public work sessions so residents can follow how the board reaches decisions, citing the traffic safety assessment and the Glover Field pipe blockage."
+                },
+                {
+                  "candidate_id": "chris-dlutkowski",
+                  "point": "Supports soliciting residents&rsquo; views on major initiatives in public sessions, with ground rules on speaking time."
+                },
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Says the current board is among the most open, with no time limit on public comment and trustees&rsquo; email addresses and cell numbers available to residents."
+                },
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Proposed flexible hours, Saturday coffee meetings and early-morning or late-evening phone availability so residents can reach him."
+                }
+              ]
+            },
+            {
+              "topic": "Resident-reporting app",
+              "positions": [
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Pledged to adopt a resident-reporting app, saying almost every Westchester municipality has one."
+                },
+                {
+                  "candidate_id": "chris-dlutkowski",
+                  "point": "Says the benefits of an app outweigh its costs, giving residents a central way to report issues and holding the board accountable."
+                },
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Says the village manager asked outside counsel and the village&rsquo;s insurance carrier about an app and both raised liability concerns, and that the idea could be revisited if that changed."
+                },
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Said an app might raise legal and financial issues given a tight budget and would not suit emergencies, but that the village would adopt one if it makes sense."
+                }
+              ]
+            },
+            {
+              "topic": "Noise from Memorial Field and the Bronx",
+              "positions": [
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Says the village works with Mount Vernon, the county and Bronx police precincts on the noise, and that the Mayor has met with the Mount Vernon mayor and county officials."
+                },
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Noted the village is in contact with Bronx precincts and Mount Vernon officials, while saying the noise comes from outside Pelham Manor&rsquo;s jurisdiction."
+                },
+                {
+                  "candidate_id": "chris-dlutkowski",
+                  "point": "Called current efforts not particularly effective, and proposed joint meetings with elected officials in Mount Vernon and the Bronx, followed by meetings with police."
+                },
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Proposed pressing the county on large commercial events at Memorial Field and forming a coalition with the Village and Town of Pelham on Bronx car-speaker noise."
+                }
+              ]
+            },
+            {
+              "topic": "Publishing police logs",
+              "positions": [
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Noted that police records can be obtained through Freedom of Information requests, and favors keeping current practices."
+                },
+                {
+                  "candidate_id": "chris-dlutkowski",
+                  "point": "Suggested a village app could share police data relevant to quality-of-life issues such as traffic enforcement."
+                },
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Said routinely publishing police logs could invite gossip, since arrests appear without their outcomes, and favors leaving records available on request."
+                },
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Opposes publishing police logs, citing residents&rsquo; privacy, and noted the village already keeps residents informed through email and other alerts."
+                }
+              ]
+            },
+            {
+              "topic": "Housing and development",
+              "positions": [
+                {
+                  "candidate_id": "chris-dlutkowski",
+                  "point": "Says the village is near capacity for residential development and that any housing decision should protect existing residents&rsquo; property values."
+                },
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Says new building is largely academic because the village is built out, and proposed focusing on upkeep such as legible street signs and paving and sidewalk schedules."
+                },
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Says Pelham Manor is built out and that its schools, roads and infrastructure cannot absorb more development."
+                },
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Says the village has been built out since the 1960s and that affordable housing there has been studied and judged not a good idea."
+                }
+              ]
+            },
+            {
+              "topic": "Merger with the Village of Pelham",
+              "positions": [
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Opposes a merger, saying he does not believe it would save Pelham Manor money."
+                },
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Opposes a merger, citing past studies showing minimal savings, the demands on Pelham Manor&rsquo;s police, and the Village of Pelham&rsquo;s $18 million debt."
+                },
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Opposes a merger, saying it has been studied repeatedly and that Pelham Manor is built out."
+                },
+                {
+                  "candidate_id": "chris-dlutkowski",
+                  "point": "Answered simply that he opposes a merger."
+                }
+              ]
+            },
+            {
+              "topic": "Local elections and party labels",
+              "positions": [
+                {
+                  "candidate_id": "ryan-kurtz",
+                  "point": "Renewed his call for nonpartisan local elections, saying party labels do not determine who is qualified."
+                },
+                {
+                  "candidate_id": "breda-bennett",
+                  "point": "Described herself as a lifelong registered independent focused on local issues rather than national politics."
+                },
+                {
+                  "candidate_id": "joe-liberatore",
+                  "point": "Says this is a local election that should focus on local issues."
+                }
               ]
             }
           ]

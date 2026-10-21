@@ -1525,7 +1525,10 @@ test('elections — Candidate Debates sit above the races: four debates, each wi
   await page.goto('/elections');
   const block = page.locator('#debates.debates-block');
   await expect(block).toBeVisible();
-  await expect(block).toHaveAttribute('data-hide-after', '2026-10-28');
+  // The block stays after the debates (finished debates keep their summary);
+  // only the parts about asking questions expire.
+  await expect(block).not.toHaveAttribute('data-hide-after', /./);
+  await expect(block.locator('#debate-questions')).toHaveAttribute('data-hide-after', '2026-10-28');
   // Above the first race, below the nonpartisan statement.
   const blockY = (await block.boundingBox()).y;
   expect(blockY).toBeLessThan((await page.locator('.race-block').first().boundingBox()).y);
@@ -1547,6 +1550,10 @@ test('elections — Candidate Debates sit above the races: four debates, each wi
   const q = new URL(href, 'http://x').searchParams.get('q');
   expect(href.startsWith('/ask?q=')).toBe(true);
   expect(q).toBe('Help me write a question for the Town Supervisor candidate debate on October 26. My concern is: ');
+  await expect(cards.locator('a.debate-ask')).toHaveCount(4);
+  for (const [i, day] of ['2026-10-20', '2026-10-26', '2026-10-26', '2026-10-28'].entries()) {
+    await expect(cards.nth(i).locator('a.debate-ask')).toHaveAttribute('data-hide-after', day);
+  }
 
   const submit = block.locator('#debate-questions');
   await expect(submit.locator('.debates-submit-title')).toHaveText('Submit a question for the debates');
@@ -1555,13 +1562,22 @@ test('elections — Candidate Debates sit above the races: four debates, each wi
   await expect(submit.locator('a.debate-ask')).toHaveText('Help me write a debate question →');
 });
 
-test('elections — the debates block clears itself after the last debate', async ({ page }) => {
-  await page.clock.setFixedTime(new Date('2026-10-28T21:00:00'));
+test('elections — question buttons retire after each debate and the question form after the last; the debates stay', async ({ page }) => {
+  // The day after the Manor debate: its button is gone, the others remain.
+  await page.clock.setFixedTime(new Date('2026-10-21T09:00:00'));
   await page.goto('/elections');
-  await expect(page.locator('#debates')).toBeVisible();
+  const cards = page.locator('#debates .debate-card');
+  await expect(cards.nth(0).locator('a.debate-ask')).toHaveCount(0);
+  await expect(cards.nth(1).locator('a.debate-ask')).toHaveCount(1);
+  await expect(page.locator('#debate-questions')).toBeVisible();
+
   await page.clock.setFixedTime(new Date('2026-10-29T09:00:00'));
   await page.reload();
-  await expect(page.locator('#debates')).toHaveCount(0);
+  await expect(page.locator('#debates')).toBeVisible();
+  await expect(cards).toHaveCount(4);
+  await expect(page.locator('#debates a.debate-ask')).toHaveCount(0);
+  await expect(page.locator('#debate-questions')).toHaveCount(0);
+  await expect(page.locator('#debates .debate-summary-fold')).toHaveCount(1);
   await expect(page.locator('.race-block')).toHaveCount(3);
 });
 
@@ -1590,19 +1606,35 @@ test('ask — ?q= fills the box with a started question and does not send it', a
   expect(asked).toHaveLength(0);
 });
 
-test('elections — a Debate Summary shows only in races that have one, below the candidates', async ({ page }) => {
+test('elections — the Manor debate summary sits under its debate card, collapsed, organized by topic', async ({ page }) => {
   await page.goto('/elections');
-  await expect(page.locator('.race-block')).toHaveCount(3);
-  // Manor trustees debated October 20; the other races have no summary yet.
-  await expect(page.locator('.debate-summary')).toHaveCount(1);
-  const manor = page.locator('#race-panel-pelham-manor-trustees');
-  const summary = manor.locator('.debate-summary');
-  await expect(summary.locator('.debate-summary-title')).toHaveText('Debate Summary · Village of Pelham Manor Board of Trustees');
-  await expect(summary.locator('.debate-summary-disclaimer')).toContainText('AI-generated summary from the debate recording. May contain errors. Watch the full recording:');
-  await expect(summary.locator('.debate-summary-disclaimer a')).toHaveAttribute('href', 'https://vimeo.com/1237775548');
-  await expect(summary.locator('.debate-summary-name')).toHaveText([/^Breda Bennett/, /^Joe Liberatore/, /^Ryan Kurtz/, /^Chris Dlutowski/]);
-  // Below the candidate profiles, inside the collapsible race panel.
-  const gridY = (await manor.locator('.candidates-grid').boundingBox()).y;
-  expect((await summary.boundingBox()).y).toBeGreaterThan(gridY);
-  await expect(page.locator('#race-panel-village-of-pelham-trustees .debate-summary')).toHaveCount(0);
+  // Only the Manor debate has a summary so far, and none is in a race panel.
+  await expect(page.locator('.debate-summary-fold')).toHaveCount(1);
+  await expect(page.locator('.race-block .debate-summary-fold')).toHaveCount(0);
+  const card = page.locator('#debates .debate-card').nth(0);
+  await expect(card.locator('.debate-race')).toHaveText('Pelham Manor Board of Trustees');
+  const fold = card.locator('details.debate-summary-fold');
+
+  // Collapsed by default behind the toggle.
+  await expect(fold).not.toHaveAttribute('open', '');
+  await expect(fold.locator('.debate-summary-toggle')).toHaveText('View debate summary ▾');
+  await expect(fold.locator('.debate-summary-disclaimer')).toBeHidden();
+
+  await fold.locator('.debate-summary-toggle').click();
+  await expect(fold).toHaveAttribute('open', '');
+  // Disclaimer and recording link first, then the topics.
+  const disclaimer = fold.locator('.debate-summary > :first-child');
+  await expect(disclaimer).toHaveClass(/debate-summary-disclaimer/);
+  await expect(disclaimer).toContainText('AI-generated summary from the debate recording. May contain errors. Watch the full recording:');
+  await expect(disclaimer.locator('a')).toHaveAttribute('href', 'https://vimeo.com/1237775548');
+
+  const topics = fold.locator('.debate-topic-title');
+  await expect(topics.first()).toHaveText('Fiscal management and taxes');
+  await expect(topics).toContainText(['Stormwater and flood mitigation', 'Merger with the Village of Pelham']);
+  // Each position names its candidate and party; a topic lists only those who spoke to it.
+  const fiscal = fold.locator('.debate-topic').first();
+  await expect(fiscal.locator('.debate-position-name')).toHaveText(['Breda Bennett', 'Joe Liberatore', 'Ryan Kurtz', 'Chris Dlutowski']);
+  await expect(fiscal.locator('.debate-position-party').first()).toHaveText('Neighborhood Party · Republican');
+  const labels = fold.locator('.debate-topic').filter({ hasText: 'Local elections and party labels' });
+  await expect(labels.locator('.debate-position-name')).toHaveText(['Ryan Kurtz', 'Breda Bennett', 'Joe Liberatore']);
 });
