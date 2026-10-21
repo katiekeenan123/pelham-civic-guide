@@ -75,7 +75,56 @@
       "term_length": "2-year terms",
       "badge": "Contested",
       "note": null,
-      "context": "<strong>Context:</strong> Maurice Owen-Michaane is stepping down after three two-year terms. The 2025 Manor election was historically close — Lapey won the mayoral race by 20 votes, Case won by 2 after a recount. Kurtz returns for a rematch. Top two vote-getters win."
+      "context": "<strong>Context:</strong> Maurice Owen-Michaane is stepping down after three two-year terms. The 2025 Manor election was historically close — Lapey won the mayoral race by 20 votes, Case won by 2 after a recount. Kurtz returns for a rematch. Top two vote-getters win.",
+      "debate_summary": [
+        {
+          "title": "Village of Pelham Manor Board of Trustees",
+          "date": "2026-10-20",
+          "recording_url": "https://vimeo.com/1237775548",
+          "candidates": [
+            {
+              "candidate_id": "breda-bennett",
+              "points": [
+                "Says the village is debt-free, has never exceeded the state tax cap, and receives an excellent fiscal stress score from the state.",
+                "Noted that two flood mitigation projects will break ground before the end of the year: a bioretention facility at Esplanade and Ely, 70% grant-funded, and a project of over $1 million at Monroe and Grant, 50% grant-funded.",
+                "Argued the board plans systematically, citing a 2017 sanitary sewer assessment, a 2023 stormwater study, a 2024 traffic code review that led to four local laws, and a comprehensive traffic study due in December.",
+                "Says the village manager asked outside counsel and the village&rsquo;s insurance carrier about a resident-reporting app and both raised liability concerns, and that the idea could be revisited if that changed.",
+                "Opposes merging with the Village of Pelham, citing past studies showing minimal savings, the demands on Pelham Manor&rsquo;s police, and the Village of Pelham&rsquo;s $18 million debt."
+              ]
+            },
+            {
+              "candidate_id": "joe-liberatore",
+              "points": [
+                "Disputed that the village&rsquo;s plan is 50 years old, saying an overarching strategic plan draws on sewer and stormwater studies and a traffic study now underway.",
+                "Says the village directed about $10 million over the past three years to work such as water mitigation and traffic safety.",
+                "Argued that grants should follow a financial, operational and strategic review of each project, and that low debt gives the village cash on hand to pay costs before reimbursement.",
+                "Said an app might raise legal and financial issues given a tight budget and would not suit emergencies, but that the village would adopt one if it makes sense.",
+                "Proposed flexible hours, Saturday coffee meetings and early-morning or late-evening phone availability so residents can reach him."
+              ]
+            },
+            {
+              "candidate_id": "ryan-kurtz",
+              "points": [
+                "Says the village&rsquo;s comprehensive plan dates to 1979 and is the oldest for a village in Westchester, noting that state law encourages updates every 10 years.",
+                "Argued for public work sessions so residents can follow how the board reaches decisions, citing the traffic safety assessment and the Glover Field pipe blockage.",
+                "Proposed pressing the county on large commercial events at Memorial Field and forming a coalition with the Village and Town of Pelham on Bronx car-speaker noise.",
+                "Argued the tax cap is a ceiling rather than a target and that projected surpluses should be disclosed in the budget and placed in a strategic reserve, citing a roughly $1 million surplus.",
+                "Pledged to adopt a resident-reporting app and renewed his call for nonpartisan local elections."
+              ]
+            },
+            {
+              "candidate_id": "chris-dlutkowski",
+              "points": [
+                "Argued the village relies on a &ldquo;patchwork&rdquo; of initiatives driven by urgent issues and should take a fresh, systemic look at governance without raising taxes or taking on debt.",
+                "Called current efforts on concert and car-speaker noise not particularly effective, and proposed joint meetings with elected officials in Mount Vernon and the Bronx, followed by meetings with police.",
+                "Supports soliciting residents&rsquo; views on major initiatives in public sessions, with ground rules on speaking time.",
+                "Committed to not raising taxes and proposed reviewing how non-personnel spending has been allocated over the past one, three, five and ten years.",
+                "Supports a village app as a low-cost transparency tool that could include relevant police data such as traffic enforcement."
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "town-supervisor-and-clerk",

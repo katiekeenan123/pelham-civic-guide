@@ -1590,8 +1590,19 @@ test('ask — ?q= fills the box with a started question and does not send it', a
   expect(asked).toHaveLength(0);
 });
 
-test('elections — no Debate Summary is shown until one is written for a race', async ({ page }) => {
+test('elections — a Debate Summary shows only in races that have one, below the candidates', async ({ page }) => {
   await page.goto('/elections');
   await expect(page.locator('.race-block')).toHaveCount(3);
-  await expect(page.locator('.debate-summary')).toHaveCount(0);
+  // Manor trustees debated October 20; the other races have no summary yet.
+  await expect(page.locator('.debate-summary')).toHaveCount(1);
+  const manor = page.locator('#race-panel-pelham-manor-trustees');
+  const summary = manor.locator('.debate-summary');
+  await expect(summary.locator('.debate-summary-title')).toHaveText('Debate Summary · Village of Pelham Manor Board of Trustees');
+  await expect(summary.locator('.debate-summary-disclaimer')).toContainText('AI-generated summary from the debate recording. May contain errors. Watch the full recording:');
+  await expect(summary.locator('.debate-summary-disclaimer a')).toHaveAttribute('href', 'https://vimeo.com/1237775548');
+  await expect(summary.locator('.debate-summary-name')).toHaveText([/^Breda Bennett/, /^Joe Liberatore/, /^Ryan Kurtz/, /^Chris Dlutowski/]);
+  // Below the candidate profiles, inside the collapsible race panel.
+  const gridY = (await manor.locator('.candidates-grid').boundingBox()).y;
+  expect((await summary.boundingBox()).y).toBeGreaterThan(gridY);
+  await expect(page.locator('#race-panel-village-of-pelham-trustees .debate-summary')).toHaveCount(0);
 });
