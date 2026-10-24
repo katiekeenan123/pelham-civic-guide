@@ -673,9 +673,11 @@ test('elections — every candidate is rendered through the same six slots', asy
   // A slot the record does not fill is stated, not quietly dropped — that is
   // what stops a thin profile reading as a verdict on the campaign.
   // (Some empty "why running" slots carry a dated no-statement note instead;
-  // see the next test.)
-  await expect(page.locator('.profile-empty', { hasText: 'Not found in the public record' }).first())
-    .toBeVisible();
+  // see the next test.) Every slot may now be filled, so check the rule for
+  // each empty slot rather than expect one to exist.
+  for (const empty of await page.locator('.profile-empty').all()) {
+    await expect(empty).toHaveText(/Not found in the public record|No campaign statement has been published as of/);
+  }
   await expect(page.locator('.profile-methodology'))
     .toContainText('does not indicate the importance, quality, or strength');
 });
