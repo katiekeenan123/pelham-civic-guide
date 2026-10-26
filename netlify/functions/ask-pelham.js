@@ -375,6 +375,7 @@ const SITE_ANCHORS = {
   "meetings#manor-board-sep28-2026": "Meeting summary — Village of Pelham Manor · Board of Trustees · September 28, 2026",
   "meetings#manor-board-sep2026": "Meeting summary — Village of Pelham Manor · Board of Trustees · September 14, 2026",
   "meetings#manor-board-aug2026": "Meeting summary — Village of Pelham Manor · Board of Trustees · August 17, 2026",
+  "meetings#board-of-ed-oct21-2026": "Meeting summary — Board of Education · Finance Work Session · October 21, 2026",
   "meetings#board-of-ed-oct2026": "Meeting summary — Board of Education · Business Meeting · October 7, 2026",
   "meetings#board-of-ed-sep2026": "Meeting summary — Board of Education · Business Meeting · September 23, 2026",
   "meetings#board-of-ed-aug2026": "Meeting summary — Board of Education · Business Meeting · August 26, 2026",
