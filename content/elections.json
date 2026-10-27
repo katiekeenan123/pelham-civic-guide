@@ -322,7 +322,146 @@
       "badge": "Re-run required by new state law",
       "note": "A new state law shifts odd-year municipal elections to even years. As a result, Supervisor Mohan and Clerk Miller — both elected in November 2025 — must run again in 2026 to secure full two-year terms.",
       "context": "<strong>Context:</strong> Mohan defeated Republican Dan McLaughlin 2,115 to 1,456 in 2025. Miller defeated Borsella 2,108 to 1,457. Both races were decided by similar margins. Town Council seats (Burke, McLoughlin, Jenks, Curtin — 4-year terms) are not up in 2026.",
-      "show_seats": false
+      "show_seats": false,
+      "debate_summary": [
+        {
+          "title": "Town Supervisor",
+          "date": "2026-10-26",
+          "recording_url": "https://www.youtube.com/watch?v=mZ6KCysC2SI",
+          "topics": [
+            {
+              "topic": "Role of the Town Supervisor",
+              "positions": [
+                {
+                  "candidate_id": "scott-wolfgang",
+                  "point": "Says the supervisor, like a chief executive, must work within the board&rsquo;s policy while making difficult strategic decisions and being accountable for them, citing the ambulance as an example."
+                },
+                {
+                  "candidate_id": "theresa-mohan",
+                  "point": "Says that under New York law the supervisor can do little without the board&rsquo;s approval, and that the role is to understand town government, make recommendations and carry out what the board approves, collaboratively."
+                }
+              ]
+            },
+            {
+              "topic": "Budget, taxes and debt",
+              "positions": [
+                {
+                  "candidate_id": "scott-wolfgang",
+                  "point": "Says the Town should stay tax-cap compliant and debt-free, exceeding the cap only if services are imposed on it, and that once the school bond takes effect a $1 million home carries about $40,000 of municipal debt in the Village of Pelham and $32,000 in Pelham Manor."
+                },
+                {
+                  "candidate_id": "theresa-mohan",
+                  "point": "Says the Town levies $3.8 million a year and the cap limits this year&rsquo;s increase to about $97,000, less than rising insurance, health care and pension costs, and that the tentative budget due Friday will look at paying for things differently to stay within the cap."
+                }
+              ]
+            },
+            {
+              "topic": "Employee benefits and structural costs",
+              "positions": [
+                {
+                  "candidate_id": "scott-wolfgang",
+                  "point": "Says half of Town revenue comes from slow-growing non-tax sources, and proposed having employees pay more toward benefits and not replacing every departing employee, paying remaining staff more."
+                },
+                {
+                  "candidate_id": "theresa-mohan",
+                  "point": "Says the Town has been using reserves for recurring operating costs, that employees pay nothing toward medical coverage, and that the board will take that up on November 9, carefully, given how few employees the Town has."
+                }
+              ]
+            },
+            {
+              "topic": "EMS and ambulance service",
+              "positions": [
+                {
+                  "candidate_id": "scott-wolfgang",
+                  "point": "Supports keeping a dedicated Pelham ambulance and team, but criticized opening contract talks with the Eastchester Volunteer Ambulance Corps less than 90 days before the December 31 expiration, and said the service should be bid out with options put to the community."
+                },
+                {
+                  "candidate_id": "theresa-mohan",
+                  "point": "Says Pelham&rsquo;s ambulance service is considered the gold standard in New York State, that the community chose the in-house ambulance and fly car three years ago, that the only other bidder would be the former provider, Empress, and that the Town is exploring cost reductions with the Corps."
+                }
+              ]
+            },
+            {
+              "topic": "Transparency and resident engagement",
+              "positions": [
+                {
+                  "candidate_id": "theresa-mohan",
+                  "point": "Named three goals for 2027: more residents involved in Town decisions, continued transparency about what the board is considering, and facilities and long-term planning."
+                },
+                {
+                  "candidate_id": "scott-wolfgang",
+                  "point": "Credited the Supervisor with increasing transparency, but said the public has not been consulted on the ambulance&rsquo;s service level, location and cost ahead of the contract renewal."
+                }
+              ]
+            },
+            {
+              "topic": "Facilities, accessibility and the library",
+              "positions": [
+                {
+                  "candidate_id": "scott-wolfgang",
+                  "point": "Opposes adding debt for the library&rsquo;s $15&ndash;20 million transformation project, says the supervisor should set fiscal expectations for library trustees, and criticized the facilities plan for not siting the ambulance and for putting an elevator in its third phase."
+                },
+                {
+                  "candidate_id": "theresa-mohan",
+                  "point": "Says the library is an independent corporation, that the Town told its board the Town&rsquo;s priorities are fixing the Daronco Town House and Town Hall, and that any transformation should be community-led; noted the Clerk&rsquo;s office was moved to the first floor for accessibility and the facilities plan is open for comment."
+                }
+              ]
+            },
+            {
+              "topic": "Flood mitigation",
+              "positions": [
+                {
+                  "candidate_id": "scott-wolfgang",
+                  "point": "Says flood mitigation is largely the villages&rsquo; responsibility, and that the Town&rsquo;s concern is siting the ambulance where flooding has been addressed."
+                },
+                {
+                  "candidate_id": "theresa-mohan",
+                  "point": "Says the Town&rsquo;s master facilities plan, now open for comment, should help decide where the ambulance goes and how to pay for it, which will require grants."
+                }
+              ]
+            },
+            {
+              "topic": "Cooperation among the Town and villages",
+              "positions": [
+                {
+                  "candidate_id": "scott-wolfgang",
+                  "point": "Says national partisanship has hurt local cooperation, and cited founding the Friends of Pelham Neighborhood Party to move toward nonpartisan local elections."
+                },
+                {
+                  "candidate_id": "theresa-mohan",
+                  "point": "Pointed to the new Town Sustainability Board, which includes both villages, the school board, conservation groups and students, and proposed a consortium of community groups in 2027."
+                }
+              ]
+            },
+            {
+              "topic": "Village dissolution and merger",
+              "positions": [
+                {
+                  "candidate_id": "scott-wolfgang",
+                  "point": "Opposes a merger, but noted that a village could vote to dissolve and leave the Town to take on its services, so the Town should stay lean and flexible."
+                },
+                {
+                  "candidate_id": "theresa-mohan",
+                  "point": "Opposes a merger, and noted that under Town Law the Town must provide required services a village does not, such as dog licensing for the Village of Pelham."
+                }
+              ]
+            },
+            {
+              "topic": "Traffic noise",
+              "positions": [
+                {
+                  "candidate_id": "theresa-mohan",
+                  "point": "Says County Executive Ken Jenkins, asked about loud mufflers and trucks, said much of the noise originates in New York City and Mount Vernon, and that the Town would work with village trustees to press state, county and city officials."
+                },
+                {
+                  "candidate_id": "scott-wolfgang",
+                  "point": "Says the Town could take a leadership role, modeled on the Town, villages and Mount Vernon&rsquo;s collaboration on the Glover Field crossing."
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "candidates": [
