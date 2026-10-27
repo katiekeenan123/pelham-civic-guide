@@ -222,7 +222,7 @@ test('prompt — latest meeting per board, floor-based public comment, citing an
   expect(prompt).toContain('very, very lean');
   expect(prompt).toMatch(/Universal Pre-K is coming/);
   // Every board's latest summary is there.
-  for (const id of ['pelham-board-oct2026', 'manor-board-oct2026', 'town-council-oct2026', 'board-of-ed-oct21-2026']) {
+  for (const id of ['pelham-board-oct2026', 'manor-board-oct26-2026', 'town-council-oct2026', 'board-of-ed-oct21-2026']) {
     expect(prompt, id).toContain(`### `);
     expect(prompt, id).toContain(`(cite as meetings#${id})`);
   }
