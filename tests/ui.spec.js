@@ -1616,6 +1616,12 @@ test('elections — the Manor debate summary sits under its debate card, collaps
   await expect(page.locator('.race-block .debate-summary-fold')).toHaveCount(0);
   const cardsAll = page.locator('#debates .debate-card');
   await expect(cardsAll.nth(1).locator('.debate-summary-fold')).toHaveCount(0);
+  // The Town Clerk card says why there is no summary and links the recording.
+  const clerkNote = cardsAll.nth(1).locator('.debate-summary-unavailable');
+  await expect(clerkNote).toContainText('Debate summary not available — audio quality prevented automated transcription. Watch the full recording:');
+  await expect(clerkNote.locator('a')).toHaveText('Town Clerk debate recording →');
+  await expect(clerkNote.locator('a')).toHaveAttribute('href', 'https://www.youtube.com/watch?v=6C8VPRjuKIo');
+  await expect(page.locator('.debate-summary-unavailable')).toHaveCount(1);
   await expect(cardsAll.nth(2).locator('.debate-race')).toHaveText('Town Supervisor');
   await expect(cardsAll.nth(2).locator('.debate-summary-fold .debate-summary-disclaimer a')).toHaveAttribute('href', 'https://www.youtube.com/watch?v=mZ6KCysC2SI');
   await expect(cardsAll.nth(2).locator('.debate-position-name').first()).toHaveText('Scott Wolfgang');

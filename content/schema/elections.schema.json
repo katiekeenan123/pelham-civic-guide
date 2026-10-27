@@ -124,6 +124,27 @@
               "fact_ref": {
                 "type": "string",
                 "description": "facts.json id. Its display is the when-and-where line, its value (YYYY-MM-DD) the date used in the Ask Pelham question, and its qualifier the matchup."
+              },
+              "summary_unavailable": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": false,
+                "required": [
+                  "note",
+                  "recording_url"
+                ],
+                "description": "Optional. Shown under the debate card when no debate summary can be written (e.g. the recording could not be transcribed). The build fails if the debate also has a debate_summary.",
+                "properties": {
+                  "note": {
+                    "type": "string",
+                    "description": "Why there is no summary. The page adds 'Watch the full recording:' and the link."
+                  },
+                  "recording_url": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }

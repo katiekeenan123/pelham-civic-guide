@@ -42,7 +42,11 @@
       {
         "race_id": "town-supervisor-and-clerk",
         "title": "Town Clerk",
-        "fact_ref": "debate-town-clerk"
+        "fact_ref": "debate-town-clerk",
+        "summary_unavailable": {
+          "note": "Debate summary not available &mdash; audio quality prevented automated transcription.",
+          "recording_url": "https://www.youtube.com/watch?v=6C8VPRjuKIo"
+        }
       },
       {
         "race_id": "town-supervisor-and-clerk",

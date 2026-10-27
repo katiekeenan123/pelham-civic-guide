@@ -1526,6 +1526,8 @@
   .debate-summary { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.1); }
   .debate-summary-disclaimer { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--slate-light); line-height: 1.6; margin: 0 0 16px; }
   .debate-summary-disclaimer a { color: var(--slate-light); }
+  .debate-summary-unavailable { font-size: 12px; font-family: 'IBM Plex Mono', monospace; color: var(--slate-light); line-height: 1.6; margin: 4px 0 0; }
+  .debate-summary-unavailable a { color: var(--slate-light); }
   .debate-topic + .debate-topic { margin-top: 18px; }
   .debate-topic-title { font-size: 11px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
   .debate-topic-positions { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }

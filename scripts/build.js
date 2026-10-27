@@ -758,6 +758,13 @@ function generateDebates(data, r) {
     if (f.qualifier) out.push(`          <div class="debate-who">${r(f.qualifier, 'facts.json')}</div>`);
     out.push(`          <a class="debate-ask" href="${esc(debateAskHref(ev, f))}" data-hide-after="${esc(f.value)}">Help me write a question →</a>`);
     if (summary) out.push(generateDebateSummary(race, summary, data, r));
+    // No summary could be written (e.g. the recording would not transcribe):
+    // say so under the card and link the recording instead.
+    if (ev.summary_unavailable) {
+      if (summary) fail('elections.json', `debates: the ${ev.title} debate has both a debate_summary and summary_unavailable`);
+      const u = ev.summary_unavailable;
+      out.push(`          <p class="debate-summary-unavailable">${r(u.note, 'elections.json')} Watch the full recording: <a href="${esc(u.recording_url)}" target="_blank" rel="noopener">${ev.title} debate recording →</a></p>`);
+    }
     out.push('        </div>');
   }
   out.push('      </div>');
