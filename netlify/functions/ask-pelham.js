@@ -364,6 +364,7 @@ const SITE_ANCHORS = {
   "issues#con-edison-rate-hike": "Con Edison Rate Case — Settlement Cuts the Increase",
   "issues#fini-park-fireworks": "Feeney Park — Nightly Illegal Fireworks",
   "issues#amtrak-forest-road": "Amtrak Forest Road Corridor Project — Pelham Manor",
+  "meetings#pelham-board-oct27-2026": "Meeting summary — Village of Pelham · Board of Trustees · October 27, 2026",
   "meetings#pelham-board-oct2026": "Meeting summary — Village of Pelham · Board of Trustees · October 13, 2026",
   "meetings#pelham-board-sep22-2026": "Meeting summary — Village of Pelham · Board of Trustees · September 22, 2026",
   "meetings#pelham-board-sep2026": "Meeting summary — Village of Pelham · Board of Trustees · September 8, 2026",
@@ -438,6 +439,11 @@ const CONTESTED_ISSUES = [
       {
         "title": "NP candidates' alternative flood mitigation plan — Examiner October 27, 2026",
         "url": "https://pelhamexaminer.com/85421/candidate-statements/the-neighborhood-party-alternative-to-the-current-flood-mitigation-plan/",
+        "published_at": "2026-10-27"
+      },
+      {
+        "title": "Village of Pelham Board of Trustees — October 27, 2026 (recording)",
+        "url": "https://pelhamny.portal.civicclerk.com/event/2542/overview",
         "published_at": "2026-10-27"
       }
     ]
