@@ -434,6 +434,11 @@ const CONTESTED_ISSUES = [
         "title": "Speros campaign statement — debt growth and third tax cap override opposition",
         "url": "https://pelhamexaminer.com/85212/showcase/everitt-speros-campaign-statement-i-promise-to-be-a-guardian-of-your-hard-earned-tax-dollars-and-i-will-work-tirelessly-to-preserve-and-maintain-the-great-village-we-call-home/",
         "published_at": "2026-10-19"
+      },
+      {
+        "title": "NP candidates' alternative flood mitigation plan — Examiner October 27, 2026",
+        "url": "https://pelhamexaminer.com/85421/candidate-statements/the-neighborhood-party-alternative-to-the-current-flood-mitigation-plan/",
+        "published_at": "2026-10-27"
       }
     ]
   }
