@@ -1668,3 +1668,12 @@ test('elections — /elections#vop-debate-summary opens the Village of Pelham de
   const dev = fold.locator('.debate-topic').filter({ hasText: 'Development and housing' });
   await expect(dev.locator('.debate-position-name')).toHaveCount(6);
 });
+
+test('elections — the Manor and Town Supervisor debate summaries open from their own links', async ({ page }) => {
+  for (const [anchor, race] of [['manor-debate-summary', 'Pelham Manor Board of Trustees'], ['town-supervisor-debate-summary', 'Town Supervisor']]) {
+    await page.goto('/elections#' + anchor);
+    const fold = page.locator('#' + anchor);
+    await expect(fold, anchor).toHaveAttribute('open', '');
+    await expect(fold.locator('xpath=ancestor::div[contains(@class,"debate-card")]').locator('.debate-race')).toHaveText(race);
+  }
+});
