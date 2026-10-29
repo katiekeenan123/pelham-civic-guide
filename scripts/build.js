@@ -711,7 +711,8 @@ function debateTopicPositions(race, entry, topic, data) {
 // Collapsed by default; the disclaimer and recording link open with it.
 function generateDebateSummary(race, entry, data, r) {
   const out = [];
-  out.push(`          <details class="debate-summary-fold" id="debate-summary-${esc(race.id)}-${esc(entry.date)}">`);
+  const id = entry.anchor || `debate-summary-${race.id}-${entry.date}`;
+  out.push(`          <details class="debate-summary-fold" id="${esc(id)}">`);
   out.push('            <summary class="debate-summary-toggle">View debate summary <span aria-hidden="true">▾</span></summary>');
   out.push('            <div class="debate-summary">');
   // A summary can go up before the recording is public; say so rather

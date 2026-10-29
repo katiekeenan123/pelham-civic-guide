@@ -302,6 +302,11 @@
                     }
                   }
                 }
+              },
+              "anchor": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+                "description": "Optional short id for linking straight to this summary, e.g. 'vop-debate-summary' for /elections#vop-debate-summary. Opening the page at that link expands the summary. Without it the id is debate-summary-<race id>-<date>."
               }
             }
           }

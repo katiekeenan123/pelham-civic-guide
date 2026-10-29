@@ -1630,7 +1630,7 @@ test('elections — the Manor debate summary sits under its debate card, collaps
   await expect(cardsAll.nth(3).locator('.debate-race')).toHaveText('Village of Pelham Board of Trustees');
   await expect(vopFold.locator('.debate-summary-disclaimer')).toHaveText('AI-generated summary from the debate recording. May contain errors. The recording has not been published yet.');
   await expect(vopFold.locator('.debate-summary-disclaimer a')).toHaveCount(0);
-  await expect(vopFold.locator('.debate-topic-title')).toHaveCount(12);
+  await expect(vopFold.locator('.debate-topic-title')).toHaveText(['Fiscal management', 'Flood mitigation', 'Development and housing', 'Public safety and infrastructure', 'Governance and transparency']);
   const card = page.locator('#debates .debate-card').nth(0);
   await expect(card.locator('.debate-race')).toHaveText('Pelham Manor Board of Trustees');
   const fold = card.locator('details.debate-summary-fold');
@@ -1657,4 +1657,14 @@ test('elections — the Manor debate summary sits under its debate card, collaps
   await expect(fiscal.locator('.debate-position-party').first()).toHaveText('Neighborhood Party · Republican');
   const labels = fold.locator('.debate-topic').filter({ hasText: 'Local elections and party labels' });
   await expect(labels.locator('.debate-position-name')).toHaveText(['Ryan Kurtz', 'Breda Bennett', 'Joe Liberatore']);
+});
+
+test('elections — /elections#vop-debate-summary opens the Village of Pelham debate summary', async ({ page }) => {
+  await page.goto('/elections#vop-debate-summary');
+  const fold = page.locator('#vop-debate-summary');
+  await expect(fold).toHaveAttribute('open', '');
+  await expect(fold.locator('.debate-summary-disclaimer')).toBeVisible();
+  // One entry per candidate per topic.
+  const dev = fold.locator('.debate-topic').filter({ hasText: 'Development and housing' });
+  await expect(dev.locator('.debate-position-name')).toHaveCount(6);
 });

@@ -49,6 +49,19 @@
     input.setSelectionRange(input.value.length, input.value.length);
   })();
 
+  // A link straight to a debate summary (e.g. /elections#vop-debate-summary,
+  // used by the digest) opens it, rather than landing on a closed toggle.
+  function openLinkedDebateSummary() {
+    var id = decodeURIComponent(location.hash.slice(1));
+    var fold = id && document.getElementById(id);
+    if (fold && fold.matches('details.debate-summary-fold')) {
+      fold.open = true;
+      fold.scrollIntoView();
+    }
+  }
+  openLinkedDebateSummary();
+  window.addEventListener('hashchange', openLinkedDebateSummary);
+
   let feedbackCount = 0;
 
   // 👍/👎 on an answer. Like the two About forms, this used to fire and forget
