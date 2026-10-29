@@ -1579,7 +1579,7 @@ test('elections — question buttons retire after each debate and the question f
   await expect(cards).toHaveCount(4);
   await expect(page.locator('#debates a.debate-ask')).toHaveCount(0);
   await expect(page.locator('#debate-questions')).toHaveCount(0);
-  await expect(page.locator('#debates .debate-summary-fold')).toHaveCount(2);
+  await expect(page.locator('#debates .debate-summary-fold')).toHaveCount(3);
   await expect(page.locator('.race-block')).toHaveCount(3);
 });
 
@@ -1610,9 +1610,9 @@ test('ask — ?q= fills the box with a started question and does not send it', a
 
 test('elections — the Manor debate summary sits under its debate card, collapsed, organized by topic', async ({ page }) => {
   await page.goto('/elections');
-  // Manor and Town Supervisor debates have summaries; the Town Clerk debate
-  // does not, and none is in a race panel.
-  await expect(page.locator('.debate-summary-fold')).toHaveCount(2);
+  // Manor, Town Supervisor and Village of Pelham debates have summaries; the
+  // Town Clerk debate does not, and none is in a race panel.
+  await expect(page.locator('.debate-summary-fold')).toHaveCount(3);
   await expect(page.locator('.race-block .debate-summary-fold')).toHaveCount(0);
   const cardsAll = page.locator('#debates .debate-card');
   await expect(cardsAll.nth(1).locator('.debate-summary-fold')).toHaveCount(0);
@@ -1625,6 +1625,12 @@ test('elections — the Manor debate summary sits under its debate card, collaps
   await expect(cardsAll.nth(2).locator('.debate-race')).toHaveText('Town Supervisor');
   await expect(cardsAll.nth(2).locator('.debate-summary-fold .debate-summary-disclaimer a')).toHaveAttribute('href', 'https://www.youtube.com/watch?v=mZ6KCysC2SI');
   await expect(cardsAll.nth(2).locator('.debate-position-name').first()).toHaveText('Scott Wolfgang');
+  // The Village of Pelham recording is not public yet: the disclaimer says so, with no link.
+  const vopFold = cardsAll.nth(3).locator('.debate-summary-fold');
+  await expect(cardsAll.nth(3).locator('.debate-race')).toHaveText('Village of Pelham Board of Trustees');
+  await expect(vopFold.locator('.debate-summary-disclaimer')).toHaveText('AI-generated summary from the debate recording. May contain errors. The recording has not been published yet.');
+  await expect(vopFold.locator('.debate-summary-disclaimer a')).toHaveCount(0);
+  await expect(vopFold.locator('.debate-topic-title')).toHaveCount(12);
   const card = page.locator('#debates .debate-card').nth(0);
   await expect(card.locator('.debate-race')).toHaveText('Pelham Manor Board of Trustees');
   const fold = card.locator('details.debate-summary-fold');

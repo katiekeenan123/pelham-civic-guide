@@ -256,8 +256,11 @@
                 "description": "Debate date, YYYY-MM-DD."
               },
               "recording_url": {
-                "type": "string",
-                "description": "The full debate recording, linked from the disclaimer."
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "description": "The full debate recording, linked from the disclaimer. Null until the recording is published; the page then says so instead of linking."
               },
               "topics": {
                 "type": "array",

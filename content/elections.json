@@ -69,7 +69,360 @@
       "term_length": "2-year terms",
       "badge": "First contested race since 2019",
       "note": null,
-      "context": "<strong>Context:</strong> Hanan Eldahry, who has served since 2018, is not seeking reelection. Fiscal management is a major issue discussed by candidates and covered in local reporting — the village passed a {{fact:village-budget-fy2627}} budget with a {{fact:village-budget-increase-fy2627}} increase, overriding the state tax cap for the first time. Three seats are up; top three vote-getters win."
+      "context": "<strong>Context:</strong> Hanan Eldahry, who has served since 2018, is not seeking reelection. Fiscal management is a major issue discussed by candidates and covered in local reporting — the village passed a {{fact:village-budget-fy2627}} budget with a {{fact:village-budget-increase-fy2627}} increase, overriding the state tax cap for the first time. Three seats are up; top three vote-getters win.",
+      "debate_summary": [
+        {
+          "title": "Village of Pelham Board of Trustees",
+          "date": "2026-10-28",
+          "recording_url": null,
+          "topics": [
+            {
+              "topic": "Recreation and community programs",
+              "positions": [
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Says recreation is a Town function but that the Village collaborates through the Arts Council, Juneteenth events and concerts in the park."
+                },
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Called recreation largely a Town function and said any added partnership must be measured by its impact on children and on the budget."
+                },
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Noted, as a Town Council member, that Town recreation programs bring in significant revenue, and said the Village must balance police and fire with cultural programs."
+                },
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Said the Village would need to review whether it could fund recreation before adding a budget line, and would collaborate where funds allow."
+                },
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Said Village arts programs are largely funded by a county grant, and described a zero-based, line-by-line budget with six public work sessions and a contingency fund."
+                }
+              ]
+            },
+            {
+              "topic": "Picture House",
+              "positions": [
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Says the Picture House is not before the board and is working with a private developer, and wants it preserved."
+                },
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Says the board spent over $150,000 on a blight study and eminent domain process involving two businesses and a vacant lot, calling it &ldquo;a severe overstep&rdquo; that changed after the community got involved."
+                },
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Said there is now no Village participation in the project and called the Picture House &ldquo;a gem&rdquo; the Village should support."
+                },
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Said the Picture House and the developer, both private entities, should work out the project, with the Village assisting but not taking it over."
+                },
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Says there was no delay and &ldquo;there is no Pelham Picture House deal&rdquo;: a comprehensive study was done and the initial agreement did not happen."
+                },
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Argued the board&rsquo;s original approach &mdash; the business district floating zone, the threat of eminent domain and what Long called a &ldquo;trumped up&rdquo; blight study &mdash; is why the election is contested, and said it risked legal liability for the Village."
+                }
+              ]
+            },
+            {
+              "topic": "Flood mitigation",
+              "positions": [
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Disagrees with the status quo, arguing the current financing would add debt and that the project should be phased with fiscal benchmarks, and questioned whether one hydraulic simulation is enough."
+                },
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Called the status quo unacceptable, says the Village&rsquo;s plan is thorough and at least half will be grant-funded, and says only about 10% of the problem comes from New Rochelle."
+                },
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Says the engineers&rsquo; original $36 million estimate is understated, citing a comparison suggesting one pipe could cost $13.5 million against an $8.5 million estimate, and proposed revisiting Glenwood Lake for a less costly near-term fix."
+                },
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Says six studies since 1945 found the same problem, that the Village follows its experienced engineers, and that it has about $26.5 million pre-approved by the county and $1.7 million from state and congressional representatives."
+                },
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Called the status quo unacceptable but argued the board is overly optimistic about grants, that the county earmark is not yet legislated, and that the Village is already $18 million in debt on what Long called a $60 million project."
+                },
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Says standing still is not an option, that a team of specialist engineers has the design at 70%, and that a fact-based design will attract grants once the studies are complete."
+                }
+              ]
+            },
+            {
+              "topic": "Fire department staffing",
+              "positions": [
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Called the shortage the most pressing issue after flooding and said finding the money will take &ldquo;a very, very sharp pen&rdquo; in the budget."
+                },
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Agreed more firefighters are needed and said the budget should be scrutinized line by line to find the funds."
+                },
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Noted the minimum is three firefighters plus a lieutenant, and proposed a staffing study, phased hiring and reapplying for SAFER grants."
+                },
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Would start by talking with the firefighters and chief, and noted personnel is about 67% and debt service 7.85% of the budget, arguing rising debt service could otherwise pay for firefighters."
+                },
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Says the board has talked with the chief and firefighters, called the lost grant disheartening, and said it is looking for creative ways to staff the department."
+                },
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Says the Village has no long-range staffing or capital plans, and would like five more firefighters, saved for through a long-range staffing plan."
+                }
+              ]
+            },
+            {
+              "topic": "Budget and spending",
+              "positions": [
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Called the budget tight, questioned the purpose of a contingency line of about $700,000, and said long-term costs such as vehicles need dedicated funding."
+                },
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Pointed to the zero-based budget and argued for raising non-property-tax revenue by supporting downtown businesses through the Downtown Improvement Grant."
+                },
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Would cut legal fees, citing $145,000 for the Picture House RFQ and about $50,000 toward eminent domain, and questioned a $750,000 contingency line Long called the largest ever."
+                },
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Described line-by-line reviews with each department and warned, citing pandemic-era cuts such as street sweeping, that cutting services hurts the community."
+                },
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Argued for a capital reserve and life-cycle plans so equipment purchases are not surprises, citing the front loader, and said the contingency could then shrink."
+                },
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Proposed bidding out legal and insurance services, and noted the Town is moving toward employee contributions to medical insurance."
+                }
+              ]
+            },
+            {
+              "topic": "Downtown business and parking",
+              "positions": [
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Proposed working with the Chamber of Commerce, helping small businesses improve their buildings, and more festivals to bring in visitors."
+                },
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Says property taxes reached 74% of the budget, blamed lost parking on some board decisions, and called for moderate, public-purpose development that provides parking."
+                },
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Says the business district floating zone requires developers to provide parking and a public benefit, and proposed reapplying for New York Forward and a long-term plan with residents."
+                },
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Called parking the biggest barrier to business growth and urged short- and long-term solutions with the business community."
+                },
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Proposed an EV rideshare program like New Rochelle&rsquo;s, building on a Town mobility study, though a grant application for it was unsuccessful."
+                },
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Proposed a second level of parking over the Sparks Avenue lot, working with the developer of the stalled 101 Wolfs Lane project."
+                }
+              ]
+            },
+            {
+              "topic": "Working with colleagues",
+              "positions": [
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Says one trustee can do little and urged voters to elect all three Neighborhood Party candidates for a 4&ndash;3 majority, noting a tax-cap override takes five votes."
+                },
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Says board members disagree often but respectfully, then work it out and move forward."
+                },
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Says differing views are normal and can produce better plans, citing Army planning processes."
+                },
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Pointed to six years on a politically mixed Town Council and bringing EMS in-house as examples of bipartisan work."
+                },
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Says disagreements can be resolved through rational discussion because both sides want what is best for the Village."
+                },
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Described a &ldquo;respect, empathy and concern&rdquo; approach and opposed an automatic &ldquo;voting block of no&rdquo; that could jeopardize services."
+                }
+              ]
+            },
+            {
+              "topic": "Traffic and pedestrian safety",
+              "positions": [
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Pointed to school-zone speed cameras, passed with Senator Fernandez and Assemblywoman Paulin and expected by spring, and supports 25 mph limits and education."
+                },
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Says development and Fifth Avenue congestion hurt safety, applauded the speed cameras and traffic safety officer, and said easing congestion would free police for enforcement."
+                },
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Pointed to the multi-jurisdiction Glover Field safety study and plans to seek grants for traffic calming there."
+                },
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Called Fifth Avenue traffic &ldquo;unbearable&rdquo; at times and suggested revisiting a pedestrian bridge at the Glover Field crossing."
+                },
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Says paved roads are the foundation of pedestrian safety, citing a 2023 paving study, and that Fifth Avenue parking will ease as Pelham House adds spaces, 60 of them for the public."
+                },
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Spoke of losing a parent in a truck accident and argued the first step is to &ldquo;do no harm&rdquo; by stopping the density approved under the current board."
+                }
+              ]
+            },
+            {
+              "topic": "Affordable housing",
+              "positions": [
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Supports structured affordable housing, especially tied to municipal workers, so Pelham stays open to struggling families."
+                },
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Says Pelham has meaningful affordable housing and cited workforce-housing requirements for new development."
+                },
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Supports increasing affordable housing, especially for older residents and those on limited budgets."
+                },
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Pointed to the board&rsquo;s rule requiring at least 10% affordable units in buildings of 10 or more, saying it helps first responders, teachers and DPW workers live locally."
+                },
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Says affordability depends largely on state and federal subsidies, and that the Village can avoid making it worse, since tax increases get passed on to renters."
+                },
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Supports affordable housing, citing nearly 20 years in Pelham that began downtown, and five years working on senior housing."
+                }
+              ]
+            },
+            {
+              "topic": "Capital improvements and debt",
+              "positions": [
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Says Village facilities are in very good shape after investment in the municipal center and firehouse, that $18 million of debt is low for the county, and that no tax-cap override is expected next year."
+                },
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Prefers budgeting for repairs over time and bonding only for critical needs."
+                },
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Says the Pelham House deal gave the Village an annual 8% cost avoidance, and that long-deferred vehicles, including a 20-year-old aerial truck, are being replaced."
+                },
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Says $18 million of debt is about $1.6 million a year on a $20 million budget, and warned more bonding could push debt service to $4&ndash;5 million, crowding out services such as paving."
+                },
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Says the Pelham House partnership replaced a failing parking lot, firehouse, police space and village hall with a new municipal center."
+                },
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Says a $2.78 million bond partly paid for equipment that will not outlast it, and called for a capital reserve and life-cycle and procurement plans."
+                }
+              ]
+            },
+            {
+              "topic": "Transparency",
+              "positions": [
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Proposed making all meetings available to the public, online or in person."
+                },
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Pointed to the budget detail on ClearGov and six public budget work sessions."
+                },
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Says the Picture House RFQ and statements about the reasons for the tax increase were the key transparency issues, and that boards need members who exercise &ldquo;effective challenge.&rdquo;"
+                },
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Says meetings are public, recorded and back on cable, with live-streaming expected by the end of the year."
+                },
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Says meetings are public but the community still needs published flood costs and long-range plans."
+                },
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Finds the Village very transparent while acknowledging mistakes, and wants to explain the differences between Town and Village better."
+                }
+              ]
+            },
+            {
+              "topic": "Sustainability",
+              "positions": [
+                {
+                  "candidate_id": "krystal-howell",
+                  "point": "Says the Village is ahead of its 50% emissions-reduction target and has used about $1.8 million in grants for EV parking-enforcement vehicles and DPW equipment."
+                },
+                {
+                  "candidate_id": "arthur-long",
+                  "point": "Calls sustainability everyone&rsquo;s responsibility and welcomes grants, but argued it must not distract from the core focus on flood mitigation."
+                },
+                {
+                  "candidate_id": "russell-solomon",
+                  "point": "Supports the Village&rsquo;s plan, citing LEED standards for the new municipal center and grant-funded equipment."
+                },
+                {
+                  "candidate_id": "everitt-speros",
+                  "point": "Supports green-fleet steps only if vehicles keep the same operational capability and make fiscal sense."
+                },
+                {
+                  "candidate_id": "kristen-burke",
+                  "point": "Argued sustainability is an investment that should keep moving forward, funded through grants."
+                },
+                {
+                  "candidate_id": "paul-anzilotti",
+                  "point": "Supports sustainability where grants make it a net positive within the budget."
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "pelham-manor-trustees",

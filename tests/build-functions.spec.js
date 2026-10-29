@@ -56,3 +56,11 @@ test('debate summary — a candidate from another race is a build error, not a s
   expect(html).not.toContain('Arthur Long');
   build.errors.length = before;
 });
+
+test('debate summary — with no recording yet, the disclaimer says so and links nothing', () => {
+  const { data, r, race } = setup();
+  const html = build.generateDebateSummary(race, { ...SAMPLE, recording_url: null }, data, r);
+  expect(html).toContain(build.DEBATE_SUMMARY_DISCLAIMER_NO_RECORDING);
+  expect(html).not.toContain(build.DEBATE_SUMMARY_DISCLAIMER + ' <a');
+  expect(html.match(/debate-summary-disclaimer">[^<]*<\/p>/)).not.toBeNull();
+});

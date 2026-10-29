@@ -316,7 +316,7 @@ function buildPrompt(data, r) {
         // as AI-generated so the model passes the caveat on and points to the
         // recording.
         for (const entry of race.debate_summary || []) {
-          out.push(`    Debate summary — ${entry.title}, ${entry.date} (AI-generated from the debate recording; may contain errors; recording: ${entry.recording_url}):`);
+          out.push(`    Debate summary — ${entry.title}, ${entry.date} (AI-generated from the debate recording; may contain errors; recording: ${entry.recording_url || 'not yet published'}):`);
           for (const topic of entry.topics) {
             const rows = debateTopicPositions(race, entry, topic, data);
             if (!rows.length) continue;
@@ -672,6 +672,7 @@ function debateAskHref(ev, f) {
 // matches no card, or more than one, is a build error rather than a summary
 // that silently never appears.
 const DEBATE_SUMMARY_DISCLAIMER = 'AI-generated summary from the debate recording. May contain errors. Watch the full recording:';
+const DEBATE_SUMMARY_DISCLAIMER_NO_RECORDING = 'AI-generated summary from the debate recording. May contain errors. The recording has not been published yet.';
 
 function debateSummaryFor(ev, f, data) {
   const race = data.elections.races.find((x) => x.id === ev.race_id);
@@ -713,7 +714,12 @@ function generateDebateSummary(race, entry, data, r) {
   out.push(`          <details class="debate-summary-fold" id="debate-summary-${esc(race.id)}-${esc(entry.date)}">`);
   out.push('            <summary class="debate-summary-toggle">View debate summary <span aria-hidden="true">▾</span></summary>');
   out.push('            <div class="debate-summary">');
-  out.push(`              <p class="debate-summary-disclaimer">${DEBATE_SUMMARY_DISCLAIMER} <a href="${esc(entry.recording_url)}" target="_blank" rel="noopener">${esc(entry.title)} debate, ${longDate(entry.date)} →</a></p>`);
+  // A summary can go up before the recording is public; say so rather
+  // than link nowhere.
+  const recording = entry.recording_url
+    ? `${DEBATE_SUMMARY_DISCLAIMER} <a href="${esc(entry.recording_url)}" target="_blank" rel="noopener">${esc(entry.title)} debate, ${longDate(entry.date)} →</a>`
+    : DEBATE_SUMMARY_DISCLAIMER_NO_RECORDING;
+  out.push(`              <p class="debate-summary-disclaimer">${recording}</p>`);
   for (const topic of entry.topics) {
     const rows = debateTopicPositions(race, entry, topic, data);
     if (!rows.length) continue;
@@ -2170,7 +2176,7 @@ function report() {
 
 // Exports must be assigned BEFORE main() runs: page-shell.js requires this
 // module from inside main(), and would otherwise see an empty exports object.
-module.exports = { generateNav, generateFooter, phase1, makeResolver, generateDebateSummary, DEBATE_SUMMARY_DISCLAIMER, errors };
+module.exports = { generateNav, generateFooter, phase1, makeResolver, generateDebateSummary, DEBATE_SUMMARY_DISCLAIMER, DEBATE_SUMMARY_DISCLAIMER_NO_RECORDING, errors };
 
 if (require.main === module) {
   if (process.argv.includes('--verify-sources')) verifySources();
