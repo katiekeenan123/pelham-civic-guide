@@ -20,3 +20,6 @@ node_modules/
 # OS / editor cruft
 .DS_Store
 Thumbs.db
+
+# npm run blocked-log output (contains residents' questions)
+blocked-sources-log.csv

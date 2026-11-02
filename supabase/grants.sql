@@ -99,6 +99,34 @@ grant usage, select on sequence public.qa_log_id_seq to anon;
 -- The digest reads this table back; the three above are read the same way.
 grant select on table public.qa_log to service_role;
 
+-- ── blocked_sources: URLs the Ask Pelham allowlist refused ────────────────
+-- STATUS: added 2 November 2026, NOT YET RUN against production. Until it
+-- is, ask-pelham.js logs blocked URLs to the Netlify function log only (the
+-- insert fails quietly and the answer is unaffected).
+--
+-- Every URL dropped by the vetted-source gate (netlify/functions/
+-- allowed-sources.js), with the question that triggered it and the stage:
+-- 'retrieval' (an article the search returned) or 'citation' (a URL the
+-- model cited or wrote into its answer). Read it back with
+-- `npm run blocked-log`, which writes blocked-sources-log.csv.
+create table if not exists public.blocked_sources (
+  id bigserial primary key,
+  url text not null,
+  stage text not null check (stage in ('retrieval', 'citation')),
+  question text,
+  created_at timestamptz not null default now()
+);
+alter table public.blocked_sources enable row level security;
+grant insert on table public.blocked_sources to anon;
+
+drop policy if exists "anon can insert blocked_sources" on public.blocked_sources;
+create policy "anon can insert blocked_sources"
+  on public.blocked_sources for insert to anon
+  with check (true);
+
+grant usage, select on sequence public.blocked_sources_id_seq to anon;
+grant select on table public.blocked_sources to service_role;
+
 -- ── subscribers: email signup form (home and Get Involved) ────────────────
 -- STATUS: added 2 October 2026, NOT YET RUN against production. Until it is,
 -- /api/subscribe returns 502 and the form shows its error message.

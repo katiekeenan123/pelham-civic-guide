@@ -263,6 +263,18 @@ const plain = (t) => String(t)
 // =========================================================================
 // PHASE 2 — system prompt
 // =========================================================================
+// The Ask Pelham allowlist. The prompt is filtered against it at build time,
+// so the model never sees a URL it is not allowed to cite; the function
+// enforces it again at retrieval and citation time.
+const { isAllowedSource } = require(p('netlify', 'functions', 'allowed-sources.js'));
+const URL_IN_PROMPT = /https?:\/\/[^\s<>"')\]]+/g;
+// URLs removed from the prompt at build time, written to blocked-at-build.txt.
+const promptBlocked = new Map();
+function blockAtBuild(url, where) {
+  if (!promptBlocked.has(url)) promptBlocked.set(url, new Set());
+  promptBlocked.get(url).add(where);
+}
+
 function buildPrompt(data, r) {
   let t = read(p('content', 'prompt-template.md'));
 
@@ -278,7 +290,12 @@ function buildPrompt(data, r) {
       for (const i of sortedIssues(data)) {
         out.push(`- ${plain(r(i.title, 'issues.json'))} [${i.status}: ${plain(r(i.status_label, 'issues.json'))}] (cite as issues#${i.id})`);
         out.push(`    ${plain(r(i.description, 'issues.json'))}`);
+        // Vetted sources only. Campaign statements, press releases, letters
+        // and recordings stay on the card for readers but are not given to
+        // the model; it cites the card itself (issues#<id>).
         for (const s of i.sources) {
+          if (!/^https?:/.test(s.url)) continue;
+          if (!isAllowedSource(s.url)) { blockAtBuild(s.url, `issues.json ${i.id}`); continue; }
           out.push(`    Source: ${s.label}${s.date ? ` (${s.date})` : ''} ${s.url}`);
         }
         // Lets the assistant answer "what's the latest on X?" with the
@@ -310,13 +327,20 @@ function buildPrompt(data, r) {
           for (const [label, text] of profileSlots(c, r)) {
             out.push(`        ${label}: ${plain(text)}`);
           }
-          out.push(`        Source: ${c.source_label} — ${c.source_url}`);
+          if (isAllowedSource(c.source_url)) {
+            out.push(`        Source: ${c.source_label} — ${c.source_url}`);
+          } else {
+            // A campaign statement or press release: the model cites this
+            // site's Elections page, which summarizes it, not the statement.
+            blockAtBuild(c.source_url, `elections.json ${c.id}`);
+            out.push(`        Source: ${c.source_label}, as summarized on this site (cite as elections)`);
+          }
         }
         // Same summaries the Candidate Debates block shows, by topic, flagged
         // as AI-generated so the model passes the caveat on and points to the
         // recording.
         for (const entry of race.debate_summary || []) {
-          out.push(`    Debate summary — ${entry.title}, ${entry.date} (AI-generated from the debate recording; may contain errors; recording: ${entry.recording_url || 'not yet published'}):`);
+          out.push(`    Debate summary — ${entry.title}, ${entry.date} (AI-generated from the debate recording; may contain errors; cite as elections — the Elections page links the recording):`);
           for (const topic of entry.topics) {
             const rows = debateTopicPositions(race, entry, topic, data);
             if (!rows.length) continue;
@@ -328,13 +352,13 @@ function buildPrompt(data, r) {
       const d = e.debates;
       if (d) {
         out.push('');
-        out.push(`Candidate debates, organized by the League of Women Voters, ${r('{{fact:debates-2026}}', 'elections.json')} (source: ${d.source_label} — ${d.source_url}). After ${d.hide_after} they are over; say so rather than presenting them as upcoming.`);
+        out.push(`Candidate debates, organized by the League of Women Voters, ${r('{{fact:debates-2026}}', 'elections.json')} (source: ${d.source_label}${isAllowedSource(d.source_url) ? ` — ${d.source_url}` : ''}). After ${d.hide_after} they are over; say so rather than presenting them as upcoming.`);
         for (const ev of d.events) {
           const f = debateFact(ev, r);
           if (!f) continue;
           out.push(`  - ${ev.title}: ${plain(f.display)}. ${plain(r(f.qualifier || '', 'facts.json'))}`.trimEnd());
         }
-        out.push(`  Residents submit questions to the League through its online form: ${d.questions_url} (or the QR code printed in the Examiner article). The League vets the questions and selects a range covering different topics.${d.organizer_url ? ` The League's website: ${d.organizer_url}` : ''}`);
+        out.push(`  Residents submit questions to the League through its online form, linked on this site's Elections page (or the QR code printed in the Examiner article). The League vets the questions and selects a range covering different topics.${d.organizer_url ? ` The League's website: ${d.organizer_url}` : ''}`);
         out.push("  The site's Elections page lists the debates at pelhamengagementproject.org/elections#debates.");
       }
       return out.join(NL);
@@ -345,7 +369,7 @@ function buildPrompt(data, r) {
       const out = ['Meetings the site has processed and published summaries for. Point residents to the site for detail, and to the recording to verify.'];
       for (const m of pub) {
         const body = data.bodies.bodies.find((b) => b.id === m.governing_body);
-        out.push(`- ${body.name}, ${m.date}${m.chair ? ` — ${m.chair}` : ''}. Recording: ${m.recording_url} (cite as meetings#${m.id})`);
+        out.push(`- ${body.name}, ${m.date}${m.chair ? ` — ${m.chair}` : ''}. Summary and recording link on this site (cite as meetings#${m.id})`);
       }
       return out.join(NL);
     },
@@ -427,7 +451,13 @@ function buildPrompt(data, r) {
         const bits = [`${plain(q.question)} → ${plain(q.route_to)} (${bodies})`];
         if (q.phone) bits.push(`phone ${r(q.phone, 'quick-reference.json')}`);
         if (q.note) bits.push(plain(r(q.note, 'quick-reference.json')));
-        if (q.url) bits.push(q.url);
+        // An unvetted link (a form host, a non-government site) is not given to
+        // the model; the reader finds it on this site's Gov 101 or Get Involved page.
+        if (q.url && isAllowedSource(q.url)) bits.push(q.url);
+        else if (q.url) {
+          blockAtBuild(q.url, `quick-reference.json ${q.id}`);
+          bits.push('linked on this site (pelhamengagementproject.org/gov-101 and /get-involved)');
+        }
         // Schedules and dates, so "when is bulk pickup?" gets a real answer.
         const details = (q.details || []).map((d) => `    ${plain(r(d, 'quick-reference.json'))}`);
         return [`- ${bits.join(' — ')}`, ...details].join('\n');
@@ -447,7 +477,28 @@ function buildPrompt(data, r) {
   });
 
   t = r(t, 'prompt-template.md');
+  // Final sweep: any URL still not on the allowlist (hand-written in the
+  // template, or inside a description) is removed and recorded.
+  t = t.replace(URL_IN_PROMPT, (match) => {
+    const url = match.replace(/[.,;:!?]+$/, '');
+    if (isAllowedSource(url)) return match;
+    blockAtBuild(url, 'prompt text');
+    return '[link removed]' + match.slice(url.length);
+  });
   return t.replace(/\n{3,}/g, '\n\n').trim() + '\n';
+}
+
+// blocked-at-build.txt: every URL the build kept out of the AI prompt, and
+// where it came from. Regenerated on each build; review it to see what the
+// assistant cannot cite.
+function writeBlockedAtBuild() {
+  const lines = [...promptBlocked.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([url, where]) => `${url}\t${[...where].sort().join('; ')}`);
+  return '# URLs removed from the Ask Pelham system prompt because they are not on the\n'
+    + '# vetted-source allowlist (netlify/functions/allowed-sources.js). Generated by\n'
+    + '# `npm run build`; do not edit. Format: URL<TAB>where it appeared.\n'
+    + lines.join('\n') + (lines.length ? '\n' : '');
 }
 
 // ask-pelham.js gets the prompt as a required module, not a file read. Netlify's
@@ -1534,7 +1585,7 @@ function generateSiteSources(data) {
     anchor: `issues#${i.id}`,
     keywords: i.contested_keywords.map((k) => k.toLowerCase()),
     // External sources only; the card's own /meetings links are cited as anchors.
-    sources: i.sources.filter((s) => /^https?:/.test(s.url))
+    sources: i.sources.filter((s) => /^https?:/.test(s.url) && isAllowedSource(s.url))
       .map((s) => ({ title: plain(s.label), url: s.url, published_at: s.date || null })),
   }));
   return [
@@ -2126,6 +2177,7 @@ function main() {
     ...pages.map(([file, pageHtml]) => [file, pageHtml]),
     [p('netlify', 'functions', 'ask-pelham.js'), fn],
     [p('netlify', 'functions', 'system-prompt.js'), promptModule],
+    [p('blocked-at-build.txt'), writeBlockedAtBuild()],
   ];
 
   let changed = [];

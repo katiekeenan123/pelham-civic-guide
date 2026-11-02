@@ -7,6 +7,7 @@
     "build": "node scripts/build.js",
     "build:check": "node scripts/build.js --check",
     "verify:sources": "node scripts/build.js --verify-sources",
+    "blocked-log": "node scripts/blocked-log.js",
     "test": "playwright test --config=tests/playwright.config.js",
     "test:local": "npm run build && playwright test --config=tests/playwright.config.local.js",
     "test:ui": "playwright test --config=tests/playwright.config.js ui.spec.js",

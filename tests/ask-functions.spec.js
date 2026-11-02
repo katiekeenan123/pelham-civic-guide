@@ -5,6 +5,7 @@
 const { test, expect } = require('@playwright/test');
 const { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine } =
   require('../netlify/functions/ask-pelham')._test;
+const { isAllowedSource } = require('../netlify/functions/allowed-sources');
 
 const ARTICLES = [
   { title: 'First article', url: 'https://pelhamexaminer.com/1/latest-news/first-article/' },
@@ -151,8 +152,7 @@ test('prompt — site pages, sanitation links, the tax cap question and assessme
   for (const s of ['pelhamengagementproject.org/gov-101', 'pelhamengagementproject.org/taxes',
     'pelhamengagementproject.org/issues', 'pelhamengagementproject.org/meetings',
     'pelhamny.gov/164/Sanitation-Schedule-Information', 'pelhammanor.gov/242/Refuse-Recycling',
-    'ask which village before', 'pelhamengagementproject.org/issues#rising-property-taxes-village-debt',
-    'pelhamexaminer.com/66859/', 'pelhamexaminer.com/56461/']) {
+    'ask which village before', 'pelhamengagementproject.org/issues#rising-property-taxes-village-debt']) {
     expect(prompt, s).toContain(s);
   }
   // Verified figures come from facts.json, resolved, never as raw tokens.
@@ -160,7 +160,7 @@ test('prompt — site pages, sanitation links, the tax cap question and assessme
   expect(prompt).toContain('AA+ (stable outlook)');
   expect(prompt).toContain('designation of "No Designation"');
   // Claims sit under their attributions.
-  const np = prompt.indexOf('Claims by the Neighborhood Party candidates');
+  const np = prompt.indexOf('Claims by the challengers (Anzilotti, Long, Speros)');
   const inc = prompt.indexOf('Claims by the incumbent trustees');
   expect(np).toBeGreaterThan(-1);
   // Search from the section headings: both phrases also appear earlier, in the
@@ -205,8 +205,13 @@ test('contested — tax cap and debt questions use the issue card, with both sid
     expect(c, q).not.toBeNull();
     expect(c.anchor).toBe('issues#rising-property-taxes-village-debt');
     const urls = c.sources.map((x) => x.url).join(' ');
-    expect(urls, 'NP statement').toContain('pelhamexaminer.com/84905/');
-    expect(urls, 'incumbent response').toContain('pelhamexaminer.com/84941/');
+    // Only vetted sources: the challengers' statement (/announcing/) and the
+    // incumbents' response (a letter) stay on the card but are not given to
+    // the model.
+    expect(c.sources.length, q).toBeGreaterThan(0);
+    for (const x of c.sources) expect(isAllowedSource(x.url), x.url).toBe(true);
+    expect(urls).not.toContain('pelhamexaminer.com/84905/');
+    expect(urls).not.toContain('pelhamexaminer.com/84941/');
   }
   // Not contested: assessments and the school bond.
   expect(contestedIssueFor('How do I dispute my property tax assessment?')).toBeNull();
@@ -234,7 +239,7 @@ test('prompt — latest meeting per board, floor-based public comment, citing an
   expect(prompt).toContain('(cite as issues#rising-property-taxes-village-debt)');
   // The template wraps lines, so compare against whitespace-normalized text.
   const flat = prompt.replace(/\s+/g, ' ');
-  expect(flat).toContain("put that issue card's source URLs");
+  expect(flat).toContain("put that issue card's vetted source URLs");
   expect(flat).toContain('the timestamp would strengthen your comment significantly');
   expect(prompt).not.toMatch(/&ldquo;might&rdquo;|"might" receive/);
   expect(prompt).toContain('in anticipation of future revenue the Village expected to receive');
@@ -250,3 +255,35 @@ test('prompt — library governance, the corrections URL and meeting coverage sc
   expect(flat).toContain('This site launched in fall 2026 and summarizes meetings going forward from mid-2026.');
 });
 
+/* ── Vetted sources in the prompt (November 2) ──────────────────────────── */
+
+test('prompt — every URL is on the allowlist, and the neutrality rules are there', () => {
+  const prompt = require('../netlify/functions/system-prompt');
+  const urls = prompt.match(/https?:\/\/[^\s<>"')\]]+/g) || [];
+  expect(urls.length).toBeGreaterThan(0);
+  for (const u of urls) expect(isAllowedSource(u.replace(/[.,;:!?]+$/, '')), u).toBe(true);
+  expect(prompt).not.toMatch(/\/(showcase|announcing|letters-to-the-editor|opinion)\//);
+  expect(prompt).not.toMatch(/vimeo\.com|youtube\.com|swagit|civicclerk/i);
+  const flat = prompt.replace(/\s+/g, ' ');
+  expect(prompt).toContain('## Vetted sources and neutrality');
+  expect(flat).toContain('Never name private residents');
+  expect(flat).toContain('Never use national party labels');
+  expect(flat).toContain('No public response is included in our sources');
+  expect(flat).toContain('Never tell anyone how to vote');
+  expect(flat).toContain('flagged "verify at [official site]"');
+  // Private residents named in the coverage are not in the prompt.
+  for (const name of ['Argento', 'Courtien', 'Rowe']) expect(prompt, name).not.toContain(name);
+});
+
+test('build — blocked-at-build.txt lists the URLs kept out of the prompt', () => {
+  const fs = require('fs');
+  const path = require('path');
+  const txt = fs.readFileSync(path.join(__dirname, '..', 'blocked-at-build.txt'), 'utf8');
+  const rows = txt.split('\n').filter((l) => l && !l.startsWith('#'));
+  expect(rows.length).toBeGreaterThan(0);
+  for (const row of rows) {
+    const [url, where] = row.split('\t');
+    expect(isAllowedSource(url), url).toBe(false);
+    expect(where, url).toBeTruthy();
+  }
+});

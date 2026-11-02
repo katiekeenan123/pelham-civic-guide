@@ -462,41 +462,6 @@ const CONTESTED_ISSUES = [
         "title": "NYS Comptroller — Fiscal Year 2025 Municipal Data (Excel)",
         "url": "https://www.osc.ny.gov/files/local-government/fiscal-monitoring/2025/excel/2025-munis-all-data-worksheet.xlsx",
         "published_at": "2026-09-24"
-      },
-      {
-        "title": "NP candidates' statement on Village debt",
-        "url": "https://pelhamexaminer.com/84905/announcing/vop-trustee-candidates-village-debt-is-about-to-increase-further/",
-        "published_at": "2026-09-30"
-      },
-      {
-        "title": "Incumbent trustees' response on Village debt",
-        "url": "https://pelhamexaminer.com/84941/announcing/village-of-pelham-incumbent-trustees-to-challengers-our-opponents-are-counting-a-debt-that-doesnt-exist-were-counting-a-cost-our-neighbors-are-already-paying/",
-        "published_at": "2026-10-02"
-      },
-      {
-        "title": "NP candidates on NYS Comptroller fiscal stress score — Examiner October 5, 2026",
-        "url": "https://pelhamexaminer.com/84973/announcing/village-of-pelhams-fiscal-peers-are-now-yonkers-and-peekskill/",
-        "published_at": "2026-10-05"
-      },
-      {
-        "title": "Anzilotti campaign statement — flood remediation debt estimate and fiscal concern",
-        "url": "https://pelhamexaminer.com/85124/showcase/paul-anzilottis-campaign-statement-the-village-has-needs-that-cannot-be-ignored-and-they-must-be-addressed-through-careful-planning-realistic-cost-estimates-and-responsible-financial-managemen/",
-        "published_at": "2026-10-15"
-      },
-      {
-        "title": "Speros campaign statement — debt growth and third tax cap override opposition",
-        "url": "https://pelhamexaminer.com/85212/showcase/everitt-speros-campaign-statement-i-promise-to-be-a-guardian-of-your-hard-earned-tax-dollars-and-i-will-work-tirelessly-to-preserve-and-maintain-the-great-village-we-call-home/",
-        "published_at": "2026-10-19"
-      },
-      {
-        "title": "NP candidates' alternative flood mitigation plan — Examiner October 27, 2026",
-        "url": "https://pelhamexaminer.com/85421/candidate-statements/the-neighborhood-party-alternative-to-the-current-flood-mitigation-plan/",
-        "published_at": "2026-10-27"
-      },
-      {
-        "title": "Village of Pelham Board of Trustees — October 27, 2026 (recording)",
-        "url": "https://pelhamny.portal.civicclerk.com/event/2542/overview",
-        "published_at": "2026-10-27"
       }
     ]
   }
