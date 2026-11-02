@@ -1625,11 +1625,10 @@ test('elections — the Manor debate summary sits under its debate card, collaps
   await expect(cardsAll.nth(2).locator('.debate-race')).toHaveText('Town Supervisor');
   await expect(cardsAll.nth(2).locator('.debate-summary-fold .debate-summary-disclaimer a')).toHaveAttribute('href', 'https://www.youtube.com/watch?v=mZ6KCysC2SI');
   await expect(cardsAll.nth(2).locator('.debate-position-name').first()).toHaveText('Scott Wolfgang');
-  // The Village of Pelham recording is not public yet: the disclaimer says so, with no link.
+  // The Village of Pelham recording, posted by the League after the debate.
   const vopFold = cardsAll.nth(3).locator('.debate-summary-fold');
   await expect(cardsAll.nth(3).locator('.debate-race')).toHaveText('Village of Pelham Board of Trustees');
-  await expect(vopFold.locator('.debate-summary-disclaimer')).toHaveText('AI-generated summary from the debate recording. May contain errors. The recording has not been published yet.');
-  await expect(vopFold.locator('.debate-summary-disclaimer a')).toHaveCount(0);
+  await expect(vopFold.locator('.debate-summary-disclaimer a')).toHaveAttribute('href', 'https://www.youtube.com/watch?v=Wi_TWjQ-0HE');
   await expect(vopFold.locator('.debate-topic-title')).toHaveText(['Fiscal management', 'Flood mitigation', 'Development and housing', 'Public safety and infrastructure', 'Governance and transparency']);
   const card = page.locator('#debates .debate-card').nth(0);
   await expect(card.locator('.debate-race')).toHaveText('Pelham Manor Board of Trustees');
