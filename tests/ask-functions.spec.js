@@ -7,9 +7,9 @@ const { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, b
   require('../netlify/functions/ask-pelham')._test;
 
 const ARTICLES = [
-  { title: 'First article', url: 'https://pelhamexaminer.com/1/' },
-  { title: 'Second article', url: 'https://pelhamexaminer.com/2/' },
-  { title: 'Third article', url: 'https://pelhamexaminer.com/3/' },
+  { title: 'First article', url: 'https://pelhamexaminer.com/1/latest-news/first-article/' },
+  { title: 'Second article', url: 'https://pelhamexaminer.com/2/latest-news/second-article/' },
+  { title: 'Third article', url: 'https://pelhamexaminer.com/3/latest-news/third-article/' },
 ];
 
 /* ── USED_SOURCES parsing ──────────────────────────────────────────────── */
@@ -64,7 +64,7 @@ test('withSources — an "I don\'t have that" answer gets no Sources block', () 
 
 test('withSources — only the articles the model names are listed', () => {
   const out = withSources('The answer.\nUSED_SOURCES: 2', ARTICLES);
-  expect(out).toContain('Sources:\n• Second article — https://pelhamexaminer.com/2/');
+  expect(out).toContain('Sources:\n• Second article — https://pelhamexaminer.com/2/latest-news/second-article/');
   expect(out).not.toContain('First article');
   expect(out).not.toContain('Third article');
   expect(out).not.toContain('USED_SOURCES');
@@ -194,7 +194,7 @@ test('withSources — a pinned issue card comes first, and makes the bare page r
   expect(lines[0]).toBe(sitePageLine('issues#rising-property-taxes-village-debt'));
   expect(lines[0]).toContain('https://pelhamengagementproject.org/issues#rising-property-taxes-village-debt');
   expect(out).not.toMatch(/— https:\/\/pelhamengagementproject\.org\/issues$/m);
-  expect(lines[1]).toBe('• First article — https://pelhamexaminer.com/1/');
+  expect(lines[1]).toBe('• First article — https://pelhamexaminer.com/1/latest-news/first-article/');
   // Pinned even when the model cites nothing.
   expect(withSources('Answer.\nUSED_SOURCES: none', ARTICLES, ['issues#rising-property-taxes-village-debt'])).toContain('Sources:');
 });

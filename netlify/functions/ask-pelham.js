@@ -36,6 +36,14 @@
 // slow database or an empty result set all fall through to the plain answer,
 // and the reader never sees an error from it. The anon key is enough here
 // because this is a read of an already-public table.
+//
+// VETTED SOURCES ONLY: every retrieved article and every cited URL is checked
+// against the allowlist in ./allowed-sources.js (official government sites,
+// this site, and Pelham Examiner news sections only). Anything else is dropped
+// at retrieval time and again at citation time, and each blocked URL is logged
+// with the question that triggered it (see logBlocked below).
+
+const { isAllowedSource, EXAMINER_SECTION_FILTER } = require('./allowed-sources');
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const MODEL = 'claude-sonnet-4-6';   // civic Q&A; change here if you want a different model
@@ -102,10 +110,18 @@ exports.handler = async (event) => {
   // request proceeds as an ordinary prompt-only answer. A contested election
   // issue cites its issue card's own sources, which carry both sides, and
   // always lists the card first.
-  const contested = contestedIssueFor(latestQuestion(messages));
-  const articles = contested
+  const question = latestQuestion(messages);
+  const contested = contestedIssueFor(question);
+  const retrieved = contested
     ? contested.sources
-    : await findExaminerCoverage(latestQuestion(messages));
+    : await findExaminerCoverage(question);
+  // Retrieval-time gate: only vetted sources reach the model.
+  const blocked = [];
+  const articles = retrieved.filter((a) => {
+    if (a && isAllowedSource(a.url)) return true;
+    blocked.push({ url: a && a.url, stage: 'retrieval' });
+    return false;
+  });
 
   try {
     const upstream = await fetch(ANTHROPIC_URL, {
@@ -135,9 +151,15 @@ exports.handler = async (event) => {
         ? data.content[0].text
         : '';
 
-    const delivered = withSources(answer, articles, contested ? [contested.anchor] : []);
+    // Citation-time gate: withSources drops any citation, or URL written into
+    // the answer, that is not a vetted source, and reports each one here.
+    const delivered = withSources(answer, articles, contested ? [contested.anchor] : [],
+      (url) => blocked.push({ url, stage: 'citation' }));
     // Q&A logging active — review after 30 days and decide whether to keep.
-    await logQa(latestQuestion(messages), delivered, body.session_id, event.headers);
+    await Promise.all([
+      logQa(question, delivered, body.session_id, event.headers),
+      logBlocked(blocked, question, event.headers),
+    ]);
     return json(200, { answer: delivered });
   } catch (err) {
     return json(502, { error: 'Upstream request failed', detail: String(err) });
@@ -203,6 +225,36 @@ async function logQa(question, answer, sessionId, headers) {
     else if (result && result.error) console.warn('[qa_log]', result.error.message);
   } catch (err) {
     console.warn('[qa_log] write failed:', String(err));
+  }
+}
+
+// Blocked-source log. Every URL dropped by the vetted-source gate, with the
+// question that triggered it and the stage (retrieval or citation), goes to
+// the Supabase `blocked_sources` table (see supabase/grants.sql) and to the
+// Netlify function log. `npm run blocked-log` downloads the table to a CSV.
+// Bounded and best-effort, like logQa: nothing here can fail the request, and
+// test traffic (X-Test-Request) is not recorded in the table.
+async function logBlocked(entries, question, headers) {
+  if (!entries.length) return;
+  for (const e of entries) console.warn(`[blocked-source] ${e.stage} ${e.url} :: ${String(question || '').slice(0, 200)}`);
+  try {
+    const h = headers || {};
+    if (h['x-test-request'] || h['X-Test-Request']) return;
+    const supabase = getSupabase();
+    if (!supabase) return;
+    const rows = entries.map((e) => ({
+      url: String(e.url || '').slice(0, 2000),
+      stage: e.stage,
+      question: String(question || '').slice(0, 4000),
+    }));
+    const result = await Promise.race([
+      supabase.from('blocked_sources').insert(rows),
+      new Promise((resolve) => setTimeout(() => resolve({ timedOut: true }), QA_LOG_TIMEOUT_MS)),
+    ]);
+    if (result && result.timedOut) console.warn('[blocked_sources] insert timed out');
+    else if (result && result.error) console.warn('[blocked_sources]', result.error.message);
+  } catch (err) {
+    console.warn('[blocked_sources] write failed:', String(err));
   }
 }
 
@@ -736,7 +788,11 @@ async function runSearch(supabase, step, signal) {
     supabase
       .from('articles')
       .select('title, url, summary, published_at')
-      .gte('relevance_score', step.minRelevance || RAG_MIN_RELEVANCE),
+      .gte('relevance_score', step.minRelevance || RAG_MIN_RELEVANCE)
+      // Only Examiner news sections, so letters, campaign statements and press
+      // releases never take one of the RAG_LIMIT slots. Rows are still checked
+      // against the allowlist after this; see the handler.
+      .or(EXAMINER_SECTION_FILTER),
   )
     .order('published_at', { ascending: false })
     // Twice the limit: the Examiner moves articles between sections and the
@@ -901,12 +957,35 @@ function sitePageLine(key) {
  * renders answers with escapeHtml() and a newline-to-<br> pass, so a markdown
  * link would show up as literal brackets.
  */
-function withSources(rawAnswer, articles, pinnedPages = []) {
-  const { text: answer, used, pages } = parseUsedSources(rawAnswer, articles.length);
+// A URL in answer text: stops at whitespace and at characters that cannot end a
+// link in prose. Trailing punctuation is trimmed off before checking.
+const URL_IN_TEXT = /https?:\/\/[^\s<>"')\]]+/g;
+
+/**
+ * Remove any URL from the answer text that is not a vetted source. The model
+ * can still see some URLs in its instructions; this stops it repeating one.
+ */
+function stripUnvettedUrls(text, onBlocked) {
+  return text.replace(URL_IN_TEXT, (match) => {
+    const url = match.replace(/[.,;:!?]+$/, '');
+    if (isAllowedSource(url)) return match;
+    onBlocked(url);
+    return '[non-vetted link removed]' + match.slice(url.length);
+  });
+}
+
+function withSources(rawAnswer, articles, pinnedPages = [], onBlocked = () => {}) {
+  const { text: parsed, used, pages } = parseUsedSources(rawAnswer, articles.length);
+  const answer = stripUnvettedUrls(parsed, onBlocked);
   // Only the articles the model says it drew on. Retrieval returns the newest
   // matches, not the relevant ones, so citing everything retrieved listed
   // candidate statements under answers that said "I don't have that".
-  const cited = used.map((n) => articles[n - 1]);
+  // Citation-time gate: an unvetted source is never cited, however it got here.
+  const cited = used.map((n) => articles[n - 1]).filter((a) => {
+    if (a && isAllowedSource(a.url)) return true;
+    onBlocked(a && a.url);
+    return false;
+  });
   // Site pages: any pinned by the caller (a contested issue's card) first,
   // then those the model named. A page's own anchor makes the bare page
   // redundant ("issues" beside "issues#rising-…").
@@ -928,4 +1007,4 @@ function withSources(rawAnswer, articles, pinnedPages = []) {
 
 // Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
 // Netlify only calls `handler`.
-exports._test = { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };
+exports._test = { parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };
