@@ -184,9 +184,12 @@ test('sources — bulk trash pickup gets no Sources block', async ({ request }) 
 test('sources — a question the coverage does answer still cites it', async ({ request }) => {
   // Guards the other direction: if the model stopped writing its citation
   // line, every Sources block would silently disappear.
+  // Campaign statements are not vetted sources (November 2): the answer
+  // cites the Elections page, which summarizes them, never the statement.
   const answer = await ask(request, "What did Kristen Burke say in her campaign statement about why she's running for Village trustee?");
   expect(answer).toMatch(/^Sources:/m);
-  expect(answer).toMatch(/pelhamexaminer\.com\/\d+/);
+  expect(answer).toContain('https://pelhamengagementproject.org/elections');
+  expect(answer).not.toMatch(/pelhamexaminer\.com\/\d+\/(showcase|candidate-statements|announcing)\//);
 });
 
 test('sanitation — bulk pickup question gets the Village of Pelham schedule', async ({ request }) => {

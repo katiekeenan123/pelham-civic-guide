@@ -304,6 +304,7 @@ test('prompt — budget structure only as the site states it; the 40% is reporte
   expect(flat).not.toMatch(/Derived: \$21\.9M/);
   expect(flat).toContain('Debt service is reported to have risen about 40%');
   expect(flat).not.toMatch(/Debt service rose 40%/);
+  expect(flat).toContain('Never present either list as "the board\'s reasons"');
   expect(flat).toMatch(/debt service increase, FY2026-27: about 40% \[reported\]/);
 });
 
