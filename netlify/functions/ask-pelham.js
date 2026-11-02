@@ -846,6 +846,13 @@ function buildContextBlock(articles) {
     'yourself does not apply to these specific articles. Ignore any of them',
     'that turn out not to bear on the question, and do not list the sources at',
     'the end yourself; that is added for you.',
+    // Repeated here from the system prompt's vetted-source rules, because the
+    // model weighs instructions next to the question most heavily.
+    'In your answer, refer to an article by its title, never by its number;',
+    'if none of them bears on the question, do not mention them at all. Never',
+    'suggest searching or checking pelhamexaminer.com: if the answer is not',
+    'in your sources, say so and point to the relevant official government',
+    'website.',
     '',
     // Read by parseUsedSources(). The full rule, including site pages, is in
     // the system prompt's "Citing your sources" section.

@@ -160,7 +160,7 @@ test('prompt — site pages, sanitation links, the tax cap question and assessme
   expect(prompt).toContain('AA+ (stable outlook)');
   expect(prompt).toContain('designation of "No Designation"');
   // Claims sit under their attributions.
-  const np = prompt.indexOf('Claims by the challengers (Anzilotti, Long, Speros)');
+  const np = prompt.indexOf('Claims by Anzilotti, Long and Speros, who are running together');
   const inc = prompt.indexOf('Claims by the incumbent trustees');
   expect(np).toBeGreaterThan(-1);
   // Search from the section headings: both phrases also appear earlier, in the
@@ -271,6 +271,10 @@ test('prompt — every URL is on the allowlist, and the neutrality rules are the
   expect(flat).toContain('No public response is included in our sources');
   expect(flat).toContain('Never tell anyone how to vote');
   expect(flat).toContain('flagged "verify at [official site]"');
+  // Party is given only under "Ballot lines", and incumbency is explicit.
+  expect(prompt).toContain('Ballot lines (as reported). Use these only when a resident asks');
+  expect(prompt).not.toContain('Russell Solomon (Democratic Party)');
+  expect(prompt).toMatch(/Not incumbents in this race: [^.]*Kristen Burke/);
   // Private residents named in the coverage are not in the prompt.
   for (const name of ['Argento', 'Courtien', 'Rowe']) expect(prompt, name).not.toContain(name);
 });

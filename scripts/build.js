@@ -312,14 +312,23 @@ function buildPrompt(data, r) {
     elections: () => {
       const e = data.elections;
       const out = [`Election day ${r('{{fact:election-date-2026}}', 'elections.json')}. Races and candidates:`];
+      const ballotLines = e.candidates.filter((c) => c.party).map((c) => `  - ${c.name}: ${c.party}`);
       for (const race of e.races) {
         const body = data.bodies.bodies.find((b) => b.id === race.body);
         const seats = race.show_seats === false ? '' : `, ${race.seats} seat(s)`;
         out.push(`  ${body.name} — ${race.title}${seats}, ${race.term_length}${race.badge ? ` (${race.badge})` : ''}`);
         if (race.context) out.push(`    Context: ${plain(r(race.context, 'elections.json'))}`);
-        for (const c of e.candidates.filter((x) => x.race_id === race.id)) {
+        // Stated outright: candidates running together are otherwise
+        // described as a slate of incumbents even when one is not.
+        const inRace = e.candidates.filter((x) => x.race_id === race.id);
+        const incumbents = inRace.filter((x) => x.incumbent).map((x) => x.name);
+        const others = inRace.filter((x) => !x.incumbent).map((x) => x.name);
+        out.push(`    Incumbents in this race: ${incumbents.join(', ') || 'none'}. Not incumbents in this race: ${others.join(', ') || 'none'}. Never call a candidate in the second list an incumbent, even if they run alongside incumbents or hold another office.`);
+        for (const c of inRace) {
           const office = c.office ? ` for ${c.office}` : '';
-          out.push(`    - ${c.name} (${c.party})${office}${c.incumbent ? ' — INCUMBENT' : ''}: ${plain(r(c.meta, 'elections.json'))}`);
+          // Party is listed separately, under "Ballot lines", so the model
+          // does not label candidates by party unless asked.
+          out.push(`    - ${c.name}${office}${c.incumbent ? ' — INCUMBENT' : ' — NOT an incumbent in this race'}: ${plain(r(c.meta, 'elections.json'))}`);
           // The same six slots the page renders, so the model cannot describe
           // one candidate in more depth than the record supports. An unfilled
           // slot is stated as unfilled rather than omitted, otherwise the
@@ -360,6 +369,11 @@ function buildPrompt(data, r) {
         }
         out.push(`  Residents submit questions to the League through its online form, linked on this site's Elections page (or the QR code printed in the Examiner article). The League vets the questions and selects a range covering different topics.${d.organizer_url ? ` The League's website: ${d.organizer_url}` : ''}`);
         out.push("  The site's Elections page lists the debates at pelhamengagementproject.org/elections#debates.");
+      }
+      if (ballotLines.length) {
+        out.push('');
+        out.push('Ballot lines (as reported). Use these only when a resident asks about party affiliation or ballot lines; otherwise refer to candidates by name:');
+        out.push(...ballotLines);
       }
       return out.join(NL);
     },
