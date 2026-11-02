@@ -213,6 +213,8 @@ test('contested — tax cap and debt questions use the issue card, with both sid
     expect(urls).not.toContain('pelhamexaminer.com/84905/');
     expect(urls).not.toContain('pelhamexaminer.com/84941/');
   }
+  // Flood plan questions get the debt card, where both sides' flood claims are.
+  expect(contestedIssueFor("What is the Neighborhood Party's position on flood mitigation?").anchor).toBe('issues#rising-property-taxes-village-debt');
   // Not contested: assessments and the school bond.
   expect(contestedIssueFor('How do I dispute my property tax assessment?')).toBeNull();
   expect(contestedIssueFor('What did the school bond vote decide?')).toBeNull();
@@ -291,3 +293,17 @@ test('build — blocked-at-build.txt lists the URLs kept out of the prompt', () 
     expect(where, url).toBeTruthy();
   }
 });
+
+test('prompt — budget structure only as the site states it; the 40% is reported, not verified', () => {
+  const prompt = require('../netlify/functions/system-prompt');
+  const flat = prompt.replace(/\s+/g, ' ');
+  expect(flat).toContain("Never describe how a government's budget is structured");
+  expect(flat).toContain('Attribute a claim only to the people your sources name for it; never add or substitute a speaker.');
+  expect(flat).toContain('Village of Pelham FY2026–27 Budget: $20.5M general fund — no separate capital budget; capital items funded within the general fund');
+  expect(flat).toContain('$21.9M total = $19.4M operating + about $2.5M capital');
+  expect(flat).not.toMatch(/Derived: \$21\.9M/);
+  expect(flat).toContain('Debt service is reported to have risen about 40%');
+  expect(flat).not.toMatch(/Debt service rose 40%/);
+  expect(flat).toMatch(/debt service increase, FY2026-27: about 40% \[reported\]/);
+});
+

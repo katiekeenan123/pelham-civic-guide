@@ -445,6 +445,23 @@ function buildPrompt(data, r) {
         }
         out.push('');
       }
+      // Budget structure, from the same bodies.json fields as the Gov 101
+      // cards, so the model can say how a budget is organized only where the
+      // site does (prompt rule 9).
+      const structure = [];
+      for (const b of data.bodies.bodies) {
+        const bd = b.budget && b.budget.breakdown;
+        if (!bd) continue;
+        const total = r(`{{fact:${b.budget.fact_ref}}}`, 'bodies.json');
+        if (bd.single_fund) {
+          structure.push(`- ${b.name} ${b.budget.label}: ${total} general fund — ${bd.note} (source: ${bd.source.label})`);
+        } else {
+          const ops = r(`{{fact:${bd.operating_fact_ref}}}`, 'bodies.json');
+          const cap = r(`{{fact:${bd.capital_fact_ref}}}`, 'bodies.json');
+          structure.push(`- ${b.name} ${b.budget.label}: ${total} total = ${ops} operating + ${cap} capital (the capital amount is the difference between the two)`);
+        }
+      }
+      if (structure.length) out.push('BUDGET STRUCTURE (as shown on this site\'s Gov 101 page; nothing more is known about how these budgets are organized):', ...structure, '');
       return out.join('\n').trimEnd();
     },
 
@@ -1331,7 +1348,7 @@ function generateGovernanceCards(data, r) {
         return { key: b.budget.label, value: `${fact} general fund${inc} — ${bd.note}` };
       }
       const split = bd
-        ? ` (${r(`{{fact:${bd.operating_fact_ref}}}`, 'bodies.json')} ops + ${r(`{{fact:${bd.capital_fact_ref}}}`, 'bodies.json')} capital)`
+        ? ` (${r(`{{fact:${bd.operating_fact_ref}}}`, 'bodies.json')} operating + ${r(`{{fact:${bd.capital_fact_ref}}}`, 'bodies.json')} capital)`
         : '';
       const note = b.budget.note ? ` ${r(b.budget.note, 'bodies.json')}` : '';
       return { key: b.budget.label, value: `${fact}${split}${note}` };

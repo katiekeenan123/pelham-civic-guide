@@ -135,7 +135,7 @@ exports.handler = async (event) => {
         model: MODEL,
         max_tokens: MAX_TOKENS,
         system: SYSTEM_PROMPT,
-        messages: withExaminerContext(messages, articles),
+        messages: withExaminerContext(messages, articles, contested),
       }),
     });
 
@@ -439,6 +439,8 @@ const CONTESTED_ISSUES = [
   {
     "anchor": "issues#rising-property-taxes-village-debt",
     "keywords": [
+      "flood mitigation",
+      "flood plan",
       "tax cap",
       "village debt",
       "debt",
@@ -811,8 +813,8 @@ function dedupeArticles(rows) {
  * is copied rather than mutated, and anything unexpected (no user turn, a
  * non-string content block) falls through to the original conversation.
  */
-function withExaminerContext(messages, articles) {
-  if (!articles.length) return messages;
+function withExaminerContext(messages, articles, contested = null) {
+  if (!articles.length && !contested) return messages;
 
   const index = messages.map((m) => m && m.role).lastIndexOf('user');
   if (index === -1 || typeof messages[index].content !== 'string') return messages;
@@ -820,10 +822,20 @@ function withExaminerContext(messages, articles) {
   const copy = messages.slice();
   copy[index] = {
     ...messages[index],
-    content: `${buildContextBlock(articles)}\n\n${messages[index].content}`,
+    content: `${articles.length ? `${buildContextBlock(articles)}\n\n` : ''}${contested ? `${CONTESTED_REMINDER}\n\n` : ''}${messages[index].content}`,
   };
   return copy;
 }
+
+// Added next to a contested question, where the model weighs it most: the
+// system prompt's both-sides rule alone was followed in only some runs.
+const CONTESTED_REMINDER = [
+  'This question touches a contested election issue. Give each side in',
+  'comparable length and detail, attributed by name: what Anzilotti, Long and',
+  'Speros say, and the incumbent trustees\' (Solomon, Howell) response from',
+  'your sources — or say "No public response is included in our sources".',
+  'Never present one side alone, even if the question asks about one side.',
+].join('\n');
 
 function buildContextBlock(articles) {
   const entries = articles.map((a, i) => [
