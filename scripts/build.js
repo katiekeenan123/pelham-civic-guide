@@ -383,7 +383,11 @@ function buildPrompt(data, r) {
       const out = ['Meetings the site has processed and published summaries for. Point residents to the site for detail, and to the recording to verify.'];
       for (const m of pub) {
         const body = data.bodies.bodies.find((b) => b.id === m.governing_body);
-        out.push(`- ${body.name}, ${m.date}${m.chair ? ` — ${m.chair}` : ''}. Summary and recording link on this site (cite as meetings#${m.id})`);
+        // The lead paragraph of the executive summary, so the model knows
+        // what an earlier meeting covered and can send the reader to it; only
+        // the latest meeting per board is in the prompt in full.
+        const lead = (parseExec(m).summary.match(/<p>([\s\S]*?)<\/p>/) || [])[1];
+        out.push(`- ${body.name}, ${m.date}${m.chair ? ` — ${m.chair}` : ''}. Summary and recording link on this site (cite as meetings#${m.id})${lead ? `. Covered: ${plain(lead)}` : ''}`);
       }
       return out.join(NL);
     },

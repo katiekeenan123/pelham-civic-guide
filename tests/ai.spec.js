@@ -216,10 +216,15 @@ test('sanitation — with no village named, it asks which village', async ({ req
   expect(answer).toMatch(/which village|village of pelham or (the village of )?pelham manor|pelham or pelham manor/i);
 });
 
-test('schools — AI and screen time are answered from the September 23 Board of Ed summary', async ({ request }) => {
+test('schools — AI and screen time point to the October 7 Board of Ed meeting', async ({ request }) => {
+  // The October 7 business meeting centred on the district's technology and
+  // screen-time framework (October 21 noted the October 13 parent session).
+  // Only the latest meeting per board is in the prompt in full; earlier ones
+  // carry their lead paragraph, which is enough to route the reader there.
   const answer = await ask(request, 'Do Pelham elementary schools use AI? How much screen time do kids get?');
-  expect(answer).toMatch(/15 minutes/);
-  expect(answer).not.toMatch(/don't have (that|this|any) information/i);
+  expect(answer).toMatch(/October 7/);
+  expect(answer).toContain('https://pelhamengagementproject.org/meetings#board-of-ed-oct2026');
+  expect(answer).not.toMatch(/outside (what|the scope)|fall outside|not (something|a topic) I cover/i);
 });
 
 test('voting — "what should I know" cites this site\'s pages', async ({ request }) => {

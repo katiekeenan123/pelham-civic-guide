@@ -335,3 +335,8 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   expect(flat).not.toContain('Early voting period, November 2026 election');
 });
 
+test('prompt — earlier meetings carry their lead paragraph, so the model can route to them', () => {
+  const prompt = require('../netlify/functions/system-prompt');
+  const flat = prompt.replace(/\s+/g, ' ');
+  expect(flat).toContain("(cite as meetings#board-of-ed-oct2026). Covered: A long business meeting built around three presentations: the district's approach to technology and screen time");
+});
