@@ -887,9 +887,9 @@
       "qualifier": "at the Pelham Middle School gymnasium, 28 Franklin Place, 7am-9pm; any registered voter in the district may vote",
       "confidence": "verified",
       "as_of": "2026",
-      "last_updated": "2026-09-21",
+      "last_updated": "2026-11-04",
       "supersedes": null,
-      "caution": null,
+      "caution": "Never give a specific date for a future year's vote. Say it is typically held in mid-May, and to confirm the date at pelhamschools.org.",
       "in_prompt": true,
       "source": {
         "name": "Pelham Union Free School District",

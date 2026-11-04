@@ -325,6 +325,8 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   expect(flat).toContain('never speculate on the cause of the problem or its effect');
   expect(flat).toContain('those accounts have not been reconciled');
   expect(flat).toContain("never attribute the Examiner's estimates to the Board of Elections");
+  expect(flat).toContain('Do not say counting was delayed, or that the ballot problem changed the timetable, unless a source says so.');
+  expect(flat).toContain('never give a specific date for a future year. Say it is typically held in mid-May, and to confirm the date at pelhamschools.org.');
   expect(flat).toContain('point residents to elections.ny.gov and the Westchester County Board of Elections');
   expect(flat).toContain('The general election was held November 3, 2026.');
   // Pre-election logistics are out of the Key facts.
