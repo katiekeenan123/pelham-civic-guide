@@ -311,7 +311,7 @@ function buildPrompt(data, r) {
 
     elections: () => {
       const e = data.elections;
-      const out = [`Election day ${r('{{fact:election-date-2026}}', 'elections.json')}. Races and candidates:`];
+      const out = [`The general election was held ${r('{{fact:election-date-2026}}', 'elections.json')}. Races and candidates as they stood during the campaign:`];
       const ballotLines = e.candidates.filter((c) => c.party).map((c) => `  - ${c.name}: ${c.party}`);
       for (const race of e.races) {
         const body = data.bodies.bodies.find((b) => b.id === race.body);
@@ -466,7 +466,7 @@ function buildPrompt(data, r) {
     },
 
     'critical-facts': () =>
-      data.facts.facts.filter((f) => f.caution)
+      data.facts.facts.filter((f) => f.caution && f.in_prompt !== false)
         .map((f) => `- ${f.fact} — ${f.display}.\n  ${r(f.caution, 'facts.json')}`).join('\n'),
 
     'issue-cautions': () =>

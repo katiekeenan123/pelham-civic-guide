@@ -134,7 +134,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_TOKENS,
-        system: SYSTEM_PROMPT,
+        system: `${todayLine()}\n\n${SYSTEM_PROMPT}`,
         messages: withExaminerContext(messages, articles, contested),
       }),
     });
@@ -469,6 +469,18 @@ const CONTESTED_ISSUES = [
   }
 ];
 /* /BUILD:site-sources */
+
+/**
+ * "Today's date is Wednesday, November 4, 2026 (New York time)." Computed per
+ * request, so the model knows whether an election or meeting is past without
+ * the prompt being rebuilt.
+ */
+function todayLine(now = new Date()) {
+  const date = now.toLocaleDateString('en-US', {
+    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/New_York',
+  });
+  return `Today's date is ${date} (New York time).`;
+}
 
 /** The contested issue a question is about (by its card's keywords), or null. */
 function contestedIssueFor(question) {
@@ -991,4 +1003,4 @@ function withSources(rawAnswer, articles, pinnedPages = [], onBlocked = () => {}
 
 // Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
 // Netlify only calls `handler`.
-exports._test = { parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };
+exports._test = { todayLine, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };

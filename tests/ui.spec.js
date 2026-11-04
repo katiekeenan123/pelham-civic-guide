@@ -83,14 +83,47 @@ test('nav — the current page is marked on every page', async ({ page }) => {
   }
 });
 
-test('nav — Elections carries a dated badge that expires on its own', async ({ page }) => {
-  await page.goto('/');
-  const badge = page.locator('nav.nav-bar .nav-badge').first();
-  await expect(badge).toBeVisible();
-  await expect(badge).toHaveText('Nov 3');
-  // The date travels with the badge so the page can retire it without a
-  // rebuild; a build-time check alone would leave it showing into December.
-  await expect(badge).toHaveAttribute('data-hide-after', '2026-11-03');
+// Dated content is retired in the browser (app.js, data-hide-after), so these
+// tests pin the clock on each side of the cutoff instead of depending on the
+// day they run. Times are New York's: app.js compares the reader's local date.
+const ELECTION_DAY_NOON = new Date('2026-11-03T12:00:00-05:00');
+const DAY_AFTER_9AM = new Date('2026-11-04T09:00:00-05:00');
+
+test.describe('dated content, fixed clock', () => {
+  test.use({ timezoneId: 'America/New_York' });
+
+  test('nav — Elections carries a dated badge that expires on its own', async ({ page }) => {
+    // The date travels with the badge so the page can retire it without a
+    // rebuild; a build-time check alone would leave it showing into December.
+    await page.clock.setFixedTime(ELECTION_DAY_NOON);
+    await page.goto('/');
+    const badge = page.locator('nav.nav-bar .nav-badge').first();
+    await expect(badge).toBeVisible();
+    await expect(badge).toHaveText('Nov 3');
+    await expect(badge).toHaveAttribute('data-hide-after', '2026-11-03');
+
+    await page.clock.setFixedTime(DAY_AFTER_9AM);
+    await page.reload();
+    await expect(page.locator('nav.nav-bar .nav-badge')).toHaveCount(0);
+  });
+
+  test('home — Current Issues leads, elections is one section among several', async ({ page }) => {
+    await page.clock.setFixedTime(ELECTION_DAY_NOON);
+    await page.goto('/');
+    const issuesY = (await page.locator('#home-issues').boundingBox()).y;
+    const bannerY = (await page.locator('.home-banner').boundingBox()).y;
+    const meetingsY = (await page.locator('#home-meetings').boundingBox()).y;
+    expect(issuesY, 'issues should come before the election banner').toBeLessThan(bannerY);
+    expect(bannerY, 'the banner sits between issues and meetings').toBeLessThan(meetingsY);
+
+    // The day after, the election banner retires itself; issues still lead.
+    await page.clock.setFixedTime(DAY_AFTER_9AM);
+    await page.reload();
+    await expect(page.locator('#home-election')).toHaveCount(0);
+    const issuesAfter = (await page.locator('#home-issues').boundingBox()).y;
+    const meetingsAfter = (await page.locator('#home-meetings').boundingBox()).y;
+    expect(issuesAfter).toBeLessThan(meetingsAfter);
+  });
 });
 
 test('nav — mobile drawer opens from the left, lists all nine pages, and closes', async ({ page }) => {
@@ -732,15 +765,6 @@ test('elections — nonpartisan statement appears before the first race', async 
   await expect(page.locator('main')).toContainText('All candidates in each race are presented');
   // The deadline sentence was left ungrammatical when the fact became a date.
   await expect(page.locator('main')).not.toContainText('typically October');
-});
-
-test('home — Current Issues leads, elections is one section among several', async ({ page }) => {
-  await page.goto('/');
-  const issuesY = (await page.locator('#home-issues').boundingBox()).y;
-  const bannerY = (await page.locator('.home-banner').boundingBox()).y;
-  const meetingsY = (await page.locator('#home-meetings').boundingBox()).y;
-  expect(issuesY, 'issues should come before the election banner').toBeLessThan(bannerY);
-  expect(bannerY, 'the banner sits between issues and meetings').toBeLessThan(meetingsY);
 });
 
 test('branding and canonical host', async ({ page }) => {

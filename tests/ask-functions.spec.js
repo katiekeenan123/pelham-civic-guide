@@ -3,7 +3,7 @@
 // exports for testing.
 
 const { test, expect } = require('@playwright/test');
-const { parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine } =
+const { todayLine, parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine } =
   require('../netlify/functions/ask-pelham')._test;
 const { isAllowedSource } = require('../netlify/functions/allowed-sources');
 
@@ -306,5 +306,30 @@ test('prompt — budget structure only as the site states it; the 40% is reporte
   expect(flat).not.toMatch(/Debt service rose 40%/);
   expect(flat).toContain('Never present either list as "the board\'s reasons"');
   expect(flat).toMatch(/debt service increase, FY2026-27: about 40% \[reported\]/);
+});
+
+/* ── Post-election (November 4) ─────────────────────────────────────────── */
+
+test('todayLine — the date in New York, whatever the server clock zone', () => {
+  // 03:30 UTC on November 4 is still November 3 in New York.
+  expect(todayLine(new Date('2026-11-04T03:30:00Z'))).toBe("Today's date is Tuesday, November 3, 2026 (New York time).");
+  expect(todayLine(new Date('2026-11-04T15:00:00Z'))).toBe("Today's date is Wednesday, November 4, 2026 (New York time).");
+});
+
+test('prompt — the election is over: no results, no logistics, attributed ballot-problem accounts', () => {
+  const prompt = require('../netlify/functions/system-prompt');
+  const flat = prompt.replace(/\s+/g, ' ');
+  expect(prompt).toContain('### The November 3, 2026 election: results');
+  expect(flat).toContain('Never state or guess who won, who is leading, vote counts or margins');
+  expect(flat).toContain('westchestercountyny.gov/boe');
+  expect(flat).toContain('never speculate on the cause of the problem or its effect');
+  expect(flat).toContain('those accounts have not been reconciled');
+  expect(flat).toContain("never attribute the Examiner's estimates to the Board of Elections");
+  expect(flat).toContain('point residents to elections.ny.gov and the Westchester County Board of Elections');
+  expect(flat).toContain('The general election was held November 3, 2026.');
+  // Pre-election logistics are out of the Key facts.
+  expect(flat).not.toContain('Polling hours on general election day');
+  expect(flat).not.toContain('Voter registration deadline for the November 2026 election');
+  expect(flat).not.toContain('Early voting period, November 2026 election');
 });
 
