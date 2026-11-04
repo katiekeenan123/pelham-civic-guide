@@ -1277,7 +1277,7 @@ function generateOfficialsCards(data, r) {
     out.push(`      <div class="officials-card fade-in" id="officials-${esc(b.id)}">`);
     out.push(`        <h3 class="officials-card-title">${b.name}</h3>`);
     if (contested.has(b.id)) {
-      out.push('        <a class="officials-contested" href="/elections">On the ballot this November →</a>');
+      out.push('        <a class="officials-contested" href="/elections">On the November 3 ballot →</a>');
     }
     out.push('        <ul class="officials-list">');
     for (const o of people) {
@@ -1546,12 +1546,12 @@ function generateInvolvedVote(data, r) {
   ].filter(Boolean).join(NL);
   return [
     '      <div class="vote-facts">',
-    box('Next election', r('{{fact:election-date-2026}}', at),
-      'Village of Pelham, Village of Pelham Manor and Town of Pelham races are all on this ballot.'),
-    box('Register', r('{{fact:voter-registration-deadline}}', at),
-      '<a href="https://www.elections.ny.gov" target="_blank">elections.ny.gov</a> or the Westchester County Board of Elections, 914-995-5700.'),
-    box('Polls open', r('{{fact:polling-hours}}', at),
-      `School budget and Board of Education vote: ${r('{{fact:school-budget-vote-schedule}}', at)}.`),
+    box('Last election', r('{{fact:election-date-2026}}', at),
+      'Village of Pelham, Village of Pelham Manor and Town of Pelham races were all on this ballot.'),
+    box('Results', 'County Board of Elections',
+      'Results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank">Westchester County Board of Elections</a>, not this site, and are unofficial until certified.'),
+    box('Register', 'Any time',
+      'Each election has its own deadline: <a href="https://www.elections.ny.gov" target="_blank">elections.ny.gov</a> or the Westchester County Board of Elections, 914-995-5700.'),
     '      </div>',
   ].join(NL);
 }
@@ -1757,6 +1757,24 @@ function generateMeetingPreviews(data, r) {
 // would go stale, and would make the build output change every day.
 function generateElectionsBanner(data, r) {
   const date = data.elections.election_date;
+  const post = data.elections.results_banner;
+  if (post) {
+    // After the election: that it was held and where results come from —
+    // never that they are pending, which would go stale unnoticed. It
+    // retires itself after its review date, like the pre-election banner.
+    return [
+      `<section class="home-banner" id="home-election" data-hide-after="${esc(post.review_by)}">`,
+      '  <div class="content-wrap home-banner-inner">',
+      '    <div class="home-banner-body">',
+      '      <div class="home-banner-eyebrow">🗳 Election held</div>',
+      `      <h2 class="home-banner-date">${r('{{fact:election-date-2026}}', 'elections.json')}</h2>`,
+      `      <p class="home-banner-text">${data.elections.races.length} contested races · ${data.elections.candidates.length} candidates · Results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank" style="color: inherit; text-decoration: underline;">Westchester County Board of Elections</a>, not this site, and are unofficial until the Board certifies them.</p>`,
+      '    </div>',
+      '    <a class="home-banner-cta" href="/elections">See the candidates →</a>',
+      '  </div>',
+      '</section>',
+    ].join(NL);
+  }
   const races = data.elections.races.length;
   const cands = data.elections.candidates.length;
   // The debate count retires itself after the last debate, like the banner

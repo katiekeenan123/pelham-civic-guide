@@ -116,8 +116,20 @@ test.describe('dated content, fixed clock', () => {
     expect(issuesY, 'issues should come before the election banner').toBeLessThan(bannerY);
     expect(bannerY, 'the banner sits between issues and meetings').toBeLessThan(meetingsY);
 
-    // The day after, the election banner retires itself; issues still lead.
-    await page.clock.setFixedTime(DAY_AFTER_9AM);
+    // Post-election mode (elections.json results_banner): the banner says the
+    // election was held and where results come from, never that they are
+    // pending, and retires itself after its review date.
+    const banner = page.locator('#home-election');
+    await expect(banner).toContainText('Election held');
+    await expect(banner).toContainText('Westchester County Board of Elections');
+    await expect(banner).not.toContainText(/\bpending\b|polls open|see who.s running/i);
+    await expect(banner).toHaveAttribute('data-hide-after', '2026-11-18');
+
+    await page.clock.setFixedTime(new Date('2026-11-18T20:00:00-05:00'));
+    await page.reload();
+    await expect(page.locator('#home-election')).toHaveCount(1);
+
+    await page.clock.setFixedTime(new Date('2026-11-19T09:00:00-05:00'));
     await page.reload();
     await expect(page.locator('#home-election')).toHaveCount(0);
     const issuesAfter = (await page.locator('#home-issues').boundingBox()).y;
@@ -276,32 +288,26 @@ test('home — hero mission text comes from hero.json, and says "site" not "guid
   await expect(page.locator('body')).not.toContainText('This guide');
 });
 
-test('home — election banner: date headline, countdown, button through to /elections', async ({ page }) => {
-  await page.clock.setFixedTime(new Date('2026-10-02T10:00:00'));
+test('home — post-election banner: date headline, where results come from, button through to /elections', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-05T10:00:00'));
   await page.goto('/');
   const banner = page.locator('#home-election.home-banner');
   await expect(banner).toBeVisible();
-  await expect(banner).toHaveAttribute('data-hide-after', '2026-11-03');
   // The date is the headline of the notice, not a phrase inside a sentence.
   await expect(banner.locator('h2.home-banner-date')).toHaveText('November 3, 2026');
-  await expect(banner.locator('.home-banner-countdown')).toHaveText('32 days away');
-  await expect(banner.locator('.home-banner-text')).toContainText('contested races · ');
+  await expect(banner.locator('.home-banner-eyebrow')).toContainText('Election held');
+  // Where results come from, never "pending": that would go stale unnoticed.
+  const text = banner.locator('.home-banner-text');
+  await expect(text).toContainText('contested races · ');
+  await expect(text).toContainText('not this site, and are unofficial until the Board certifies them');
+  await expect(text.locator('a[href="https://www.westchestercountyny.gov/boe"]')).toHaveCount(1);
+  await expect(banner).not.toContainText(/\bpending\b|polls open|debates|days away/i);
+  // No countdown once the election is over.
+  await expect(banner.locator('.home-banner-countdown')).toHaveCount(0);
   // Sits between Current Issues and Meeting Summaries.
   await expect(page.locator('#home-issues + #home-election + #home-meetings')).toHaveCount(1);
   await banner.locator('a.home-banner-cta').click();
   await expect(page).toHaveURL(/\/elections$/);
-});
-
-test('home — election banner stays up through the evening of election day, then clears itself', async ({ page }) => {
-  // 9:30pm local on November 3 is already November 4 in UTC.
-  await page.clock.setFixedTime(new Date('2026-11-03T21:30:00'));
-  await page.goto('/');
-  await expect(page.locator('#home-election .home-banner-countdown')).toHaveText('Today');
-
-  await page.clock.setFixedTime(new Date('2026-11-04T09:00:00'));
-  await page.reload();
-  await expect(page.locator('#home-election')).toHaveCount(0);
-  await expect(page.locator('.nav-badge')).toHaveCount(0);
 });
 
 test('home — independence band sits last, above the footer, and links to About', async ({ page }) => {
@@ -648,28 +654,21 @@ test('elections — race context sits under the header, above the candidates', a
   expect(ctx.y, 'context should frame the race before the candidates').toBeLessThan(cards.y);
 });
 
-test('elections — voter info covers registration, early voting and lookup', async ({ page }) => {
+test('elections — post-election boxes: held, where results come from, registering for future elections', async ({ page }) => {
   await page.goto('/elections');
   const boxes = page.locator('.voter-info-box');
-  await expect(boxes).toHaveCount(4);
+  await expect(boxes).toHaveCount(3);
+  await expect(boxes.locator('.voter-info-label')).toHaveText(['Election Day', 'Results', 'Future elections']);
 
   const main = page.locator('main');
-  // The deadline is a date, not "25 days before" — and the mail postmark is
-  // five days earlier than the in-person cutoff, which is the part residents
-  // get wrong.
-  await expect(main).toContainText('October 24');
-  await expect(main).toContainText('postmarked by October 19');
-  await expect(main, 'the old relative deadline should be gone').not.toContainText('25 days');
-
-  await expect(main).toContainText('Early voting');
-  await expect(main).toContainText('November 1');
-
-  // Polling places move, so the page sends people to the lookup rather than
-  // naming a building that may be wrong by November.
-  await expect(main.locator('a[href*="voterlookup.elections.ny.gov"]')).toHaveCount(1);
+  await expect(boxes.nth(0)).toContainText('was held on Tuesday, November 3');
+  await expect(boxes.nth(1)).toContainText('unofficial until the Board certifies them');
+  await expect(boxes.nth(1).locator('a[href="https://www.westchestercountyny.gov/boe"]')).toHaveCount(1);
+  await expect(boxes.nth(2).locator('a[href*="elections.ny.gov"]')).toHaveCount(1);
+  // Nothing that only made sense before the vote, and no claim that results
+  // are pending.
+  await expect(main).not.toContainText(/Register to vote by|postmarked by October 19|Early voting|Polls open|\bpending\b/);
   await expect(main, 'no hard-coded polling address').not.toContainText('Fowler Ave');
-  // Absentee / mail ballots get a route too.
-  await expect(main).toContainText('absentee');
 });
 
 test('elections — Neighborhood Party candidates each have their own profile', async ({ page }) => {
@@ -1304,7 +1303,7 @@ test('about — project story card, then the lead-in to the forms', async ({ pag
   // Editorial copy uses no we/our — the signed note and the form invitation
   // are the only places first person belongs. Checked across every editorial
   // block rather than just the first, so a new section cannot slip past.
-  const FIRST_PERSON = new RegExp(String.raw`(we|our|us)`, 'i');
+  const FIRST_PERSON = new RegExp(String.raw`\b(we|our|us)\b`, 'i');
   for (const sel of ['.independence', '.works-grid', '.about-cols']) {
     const copy = await page.locator(sel).innerText();
     expect(copy, `${sel} should use no we/our`).not.toMatch(FIRST_PERSON);
@@ -1472,7 +1471,7 @@ test('feeney park — the old transcription "Fini Park" survives only in the cor
 
 /* ── Ask page questions ────────────────────────────────────────────────── */
 
-test('ask — the six questions, two drafts and two explores; no school bond questions', async ({ page }) => {
+test('ask — the seven questions, two drafts and one explore; no school bond questions', async ({ page }) => {
   await page.goto('/ask');
   const plain = page.locator('#suggestion-chips .suggestion-chip:not(.draft-chip):not(.opinion-chip)');
   await expect(plain).toHaveText([
@@ -1482,13 +1481,13 @@ test('ask — the six questions, two drafts and two explores; no school bond que
     'How do I dispute my property tax assessment?',
     "What's happening with the EMS station site?",
     'What did the Board of Education discuss at its last meeting?',
+    'Where can I find the November 3 election results?',
   ]);
   await expect(page.locator('#suggestion-chips .draft-chip')).toHaveText([
     'Help me write a letter to the editor about a local issue',
     'Help me write a public comment for an upcoming board meeting',
   ]);
   await expect(page.locator('#suggestion-chips .opinion-chip')).toHaveText([
-    'What should I know before voting on November 3?',
     'What questions should I ask at the next Board of Education meeting?',
   ]);
   await expect(page.locator('#suggestion-chips')).not.toContainText(/bond/i);
@@ -1605,17 +1604,6 @@ test('elections — question buttons retire after each debate and the question f
   await expect(page.locator('#debate-questions')).toHaveCount(0);
   await expect(page.locator('#debates .debate-summary-fold')).toHaveCount(3);
   await expect(page.locator('.race-block')).toHaveCount(3);
-});
-
-test('home — election banner adds the debates until the last one, then drops that line', async ({ page }) => {
-  await page.clock.setFixedTime(new Date('2026-10-18T10:00:00'));
-  await page.goto('/');
-  const text = page.locator('#home-election .home-banner-text');
-  await expect(text).toContainText('· 4 debates Oct 20–28');
-  await page.clock.setFixedTime(new Date('2026-10-29T09:00:00'));
-  await page.reload();
-  await expect(text).toContainText('contested races · ');
-  await expect(text).not.toContainText('debates');
 });
 
 test('ask — ?q= fills the box with a started question and does not send it', async ({ page }) => {

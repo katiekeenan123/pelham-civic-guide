@@ -2,29 +2,28 @@
   "$schema": "./schema/elections.schema.json",
   "election_date": "2026-11-03",
   "polling_hours": "6am - 9pm",
-  "editorial_note": "<strong style=\"color: var(--gold-light);\">This site does not endorse any candidate or party.</strong> Candidate profiles are drawn from candidates' own statements as published in the Pelham Examiner and other publicly available information. All candidates in each race are presented using the same template. The amount of information shown reflects the public record available at time of publishing and does not indicate the importance or strength of a candidate's campaign. Register to vote by {{fact:voter-registration-deadline}} — see <a href=\"/about\" style=\"color: var(--gold-light);\">how this site works</a>.",
+  "editorial_note": "<strong style=\"color: var(--gold-light);\">This site does not endorse any candidate or party.</strong> Candidate profiles are drawn from candidates' own statements as published in the Pelham Examiner and other publicly available information. All candidates in each race are presented using the same template. The amount of information shown reflects the public record available at time of publishing and does not indicate the importance or strength of a candidate's campaign. See <a href=\"/about\" style=\"color: var(--gold-light);\">how this site works</a>.",
   "voter_info": [
     {
       "label": "Election Day",
       "value": "{{fact:election-date-2026.short}}",
-      "note": "Polls open {{fact:polling-hours}}."
+      "note": "The general election was held on Tuesday, November 3."
     },
     {
-      "label": "Register by",
-      "value": "{{fact:voter-registration-deadline.short}}",
-      "note": "In person or online by October 24. By mail, postmarked by October 19 and received by October 24. <a href=\"https://elections.ny.gov/registration-and-voting-deadlines\" target=\"_blank\" style=\"color: var(--gold-light);\">Deadlines at elections.ny.gov</a>"
+      "label": "Results",
+      "value": "County Board of Elections",
+      "note": "Results come from the <a href=\"https://www.westchestercountyny.gov/boe\" target=\"_blank\" style=\"color: var(--gold-light);\">Westchester County Board of Elections</a>, not this site. They are unofficial until the Board certifies them."
     },
     {
-      "label": "Early voting",
-      "value": "{{fact:early-voting-2026.short}}",
-      "note": "Saturday October 24 through Sunday November 1. Hours and sites: <a href=\"https://www.westchestercountyny.gov/boe\" target=\"_blank\" style=\"color: var(--gold-light);\">Westchester County Board of Elections</a>"
-    },
-    {
-      "label": "Where to vote",
-      "value": "Look it up",
-      "note": "Polling places move between elections, so check yours rather than trusting last time: <a href=\"https://voterlookup.elections.ny.gov\" target=\"_blank\" style=\"color: var(--gold-light);\">voterlookup.elections.ny.gov</a>. Voting by mail? Apply for an absentee or early mail ballot at <a href=\"https://elections.ny.gov/registration-and-voting-deadlines\" target=\"_blank\" style=\"color: var(--gold-light);\">elections.ny.gov</a>."
+      "label": "Future elections",
+      "value": "Register any time",
+      "note": "Each election has its own registration deadline. Check yours at <a href=\"https://elections.ny.gov/registration-and-voting-deadlines\" target=\"_blank\" style=\"color: var(--gold-light);\">elections.ny.gov</a> or with the <a href=\"https://www.westchestercountyny.gov/boe\" target=\"_blank\" style=\"color: var(--gold-light);\">Westchester County Board of Elections</a>."
     }
   ],
+  "results_banner": {
+    "review_by": "2026-11-18",
+    "note": "The post-election home banner. It retires itself after review_by (app.js, data-hide-after); before then, replace it with certified results or extend the date."
+  },
   "debates": {
     "title": "Candidate Debates",
     "intro": "The League of Women Voters has scheduled four candidate debates, one for each race. The questions come from residents: the League vets those submitted and picks a range covering different topics.",
