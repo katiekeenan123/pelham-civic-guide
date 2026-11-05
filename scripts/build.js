@@ -2223,6 +2223,10 @@ function main() {
   let fn = read(p('netlify', 'functions', 'ask-pelham.js'));
   fn = splice(fn, 'known-issues', generateKnownIssues(data), 'js');
   fn = splice(fn, 'site-sources', generateSiteSources(data), 'js');
+  // The preliminary-results snapshot, from the same fact the card and the
+  // prompt read, so the three cannot drift apart.
+  fn = splice(fn, 'results-snapshot',
+    `const RESULTS_SNAPSHOT = ${JSON.stringify(plain(r('{{fact:election-results-snapshot-2026}}', 'facts.json')))};`, 'js');
 
   if (errors.length) return report();
 

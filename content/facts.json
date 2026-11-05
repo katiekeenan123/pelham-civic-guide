@@ -691,6 +691,26 @@
       "used_in": []
     },
     {
+      "id": "election-results-snapshot-2026",
+      "category": "election",
+      "fact": "When the preliminary November 2026 results were posted and reported",
+      "value": "2026-11-04",
+      "display": "posted late on November 4 and reported by the Pelham Examiner on November 5",
+      "qualifier": "preliminary and unofficial; counting continued after this snapshot",
+      "confidence": "reported",
+      "as_of": "2026-11-05",
+      "last_updated": "2026-11-05",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": false,
+      "source": {
+        "name": "Pelham Examiner — Preliminary election results, November 5, 2026",
+        "url": "https://pelhamexaminer.com/85683/latest-news/mohan-and-miller-beat-wolfgang-borsella-democrats-hold-off-challengers-in-village-manor-trustee-race-too-close-to-call/",
+        "date": "2026-11-05"
+      },
+      "used_in": []
+    },
+    {
       "id": "election-date-2026",
       "category": "election",
       "fact": "General election day, 2026",

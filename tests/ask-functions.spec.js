@@ -323,8 +323,20 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   // Preliminary totals only from the card: attributed, a snapshot, no winner
   // language, no projection, no link to the ballot problem.
   expect(flat).toContain('Preliminary, unofficial results are on the elections issue card');
-  expect(flat).toContain('counting continues, so say they may have changed');
-  expect(flat).toContain('Never use "won", "win", "lost", "lose", "defeated", "conceded" or "projected" in your own words.');
+  expect(flat).toContain('counting continued after it, so say the totals may have changed');
+  expect(flat).toContain('Never use "won", "win", "lost", "lose", "defeated", "conceded", "projected", "advance" or "elected" in your own words.');
+  expect(flat).toContain('"three seats are up, and the top three vote-getters fill them"');
+  expect(flat).toContain('never comment on which candidates the Examiner did or did not describe that way');
+  expect(flat).toContain('say plainly that you cannot predict the outcome');
+  expect(flat).toContain("Never fold Jenkins's words into the Examiner's characterization");
+  expect(flat).toContain("Arthur Long's account of Daronco Townhouse");
+  // The snapshot comes from one fact, shared with the card and the function.
+  const snap = 'posted late on November 4 and reported by the Pelham Examiner on November 5';
+  expect(flat).toContain(`totals the Westchester County Board of Elections ${snap}`);
+  const fn = require('fs').readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'ask-pelham.js'), 'utf8');
+  expect(fn).toContain(`const RESULTS_SNAPSHOT = "${snap}";`);
+  const card = require('../content/issues.json').issues.find((i) => i.id === 'november-2026-elections');
+  expect(card.description).toContain('{{fact:election-results-snapshot-2026}}');
   expect(flat).toContain('without projecting, extrapolating or explaining the totals, and without linking them to the ballot problem or the voter-registration investigation');
   expect(flat).toContain('Never state results that are not on the card');
   expect(flat).not.toContain('No results are in this prompt');
@@ -332,7 +344,7 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   expect(flat).not.toContain('preliminary results could come that afternoon');
   expect(flat).toContain('westchestercountyny.gov/boe');
   expect(flat).toContain('never speculate on the cause of the problem or its effect');
-  expect(flat).toContain('those accounts have not been reconciled');
+  expect(flat).toContain('These accounts have not been reconciled.');
   expect(flat).toContain("never attribute the Examiner's estimates to the Board of Elections");
   expect(flat).toContain('Do not say counting was delayed, or that the ballot problem changed the timetable, unless a source says so.');
   expect(flat).toContain('never give a specific date for a future year. Say it is typically held in mid-May, and to confirm the date at pelhamschools.org.');

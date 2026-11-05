@@ -853,18 +853,25 @@ const CONTESTED_REMINDER = [
 // reason: with the rule only in the system prompt, answers tied the totals to
 // the Election Day ballot problem and volunteered the Examiner's remark about
 // the voter-registration investigation.
+/* BUILD:results-snapshot */
+const RESULTS_SNAPSHOT = "posted late on November 4 and reported by the Pelham Examiner on November 5";
+/* /BUILD:results-snapshot */
 const RESULTS_REMINDER = [
   'This question is about the November 3 election results. Give only the',
   'preliminary totals on the elections issue card, attributed: "preliminary',
-  'results posted by the Westchester County Board of Elections late on',
-  'November 4, as reported by the Pelham Examiner on November 5". Say they are',
-  'preliminary and unofficial, that counting continues so they may have',
-  'changed, and point to westchestercountyny.gov/boe for the current count.',
-  'Never say "won", "win", "lost", "lose", "defeated", "conceded" or',
-  '"projected" in your own words; outcomes only in the Examiner\'s hedged',
-  'phrases, attributed to the Examiner. In this answer, do not mention the',
-  'Election Day ballot problem, orange bags, delays, or the voter-registration',
-  'investigation, unless the resident asks about them.',
+  `results the Westchester County Board of Elections ${RESULTS_SNAPSHOT}".`,
+  'Say they are preliminary and unofficial, that counting continued after',
+  'that snapshot so they may have changed, and point to',
+  'westchestercountyny.gov/boe for the current count. Never say "won", "win",',
+  '"lost", "lose", "defeated", "conceded", "projected", "advance" or "elected"',
+  'in your own words; outcomes only in the Examiner\'s hedged phrases,',
+  'attributed to the Examiner, and only for the candidates it used them for —',
+  'never comment on which candidates it did or did not describe that way. To',
+  'explain how seats are filled: "three seats are up, and the top three',
+  'vote-getters fill them" (Pelham Manor: two seats, top two). If asked whether',
+  'someone will win, say plainly that you cannot predict the outcome. In this',
+  'answer, do not mention the Election Day ballot problem, orange bags, delays,',
+  'or the voter-registration investigation, unless the resident asks about them.',
 ].join('\n');
 
 // Questions about who won, who leads or the count. Deliberately broad: the
