@@ -320,7 +320,16 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   const prompt = require('../netlify/functions/system-prompt');
   const flat = prompt.replace(/\s+/g, ' ');
   expect(prompt).toContain('### The November 3, 2026 election: results');
-  expect(flat).toContain('Never state or guess who won, who is leading, vote counts or margins');
+  // Preliminary totals only from the card: attributed, a snapshot, no winner
+  // language, no projection, no link to the ballot problem.
+  expect(flat).toContain('Preliminary, unofficial results are on the elections issue card');
+  expect(flat).toContain('counting continues, so say they may have changed');
+  expect(flat).toContain('Never use "won", "win", "lost", "lose", "defeated", "conceded" or "projected" in your own words.');
+  expect(flat).toContain('without projecting, extrapolating or explaining the totals, and without linking them to the ballot problem or the voter-registration investigation');
+  expect(flat).toContain('Never state results that are not on the card');
+  expect(flat).not.toContain('No results are in this prompt');
+  expect(flat).not.toContain('no results are in this prompt');
+  expect(flat).not.toContain('preliminary results could come that afternoon');
   expect(flat).toContain('westchestercountyny.gov/boe');
   expect(flat).toContain('never speculate on the cause of the problem or its effect');
   expect(flat).toContain('those accounts have not been reconciled');
