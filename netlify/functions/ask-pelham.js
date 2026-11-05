@@ -135,7 +135,7 @@ exports.handler = async (event) => {
         model: MODEL,
         max_tokens: MAX_TOKENS,
         system: `${todayLine()}\n\n${SYSTEM_PROMPT}`,
-        messages: withExaminerContext(messages, articles, contested),
+        messages: withExaminerContext(messages, articles, contested, isResultsQuestion(question)),
       }),
     });
 
@@ -825,8 +825,8 @@ function dedupeArticles(rows) {
  * is copied rather than mutated, and anything unexpected (no user turn, a
  * non-string content block) falls through to the original conversation.
  */
-function withExaminerContext(messages, articles, contested = null) {
-  if (!articles.length && !contested) return messages;
+function withExaminerContext(messages, articles, contested = null, results = false) {
+  if (!articles.length && !contested && !results) return messages;
 
   const index = messages.map((m) => m && m.role).lastIndexOf('user');
   if (index === -1 || typeof messages[index].content !== 'string') return messages;
@@ -834,7 +834,7 @@ function withExaminerContext(messages, articles, contested = null) {
   const copy = messages.slice();
   copy[index] = {
     ...messages[index],
-    content: `${articles.length ? `${buildContextBlock(articles)}\n\n` : ''}${contested ? `${CONTESTED_REMINDER}\n\n` : ''}${messages[index].content}`,
+    content: `${articles.length ? `${buildContextBlock(articles)}\n\n` : ''}${contested ? `${CONTESTED_REMINDER}\n\n` : ''}${results ? `${RESULTS_REMINDER}\n\n` : ''}${messages[index].content}`,
   };
   return copy;
 }
@@ -848,6 +848,36 @@ const CONTESTED_REMINDER = [
   'your sources — or say "No public response is included in our sources".',
   'Never present one side alone, even if the question asks about one side.',
 ].join('\n');
+
+// Added next to a question about the November 3 results, for the same
+// reason: with the rule only in the system prompt, answers tied the totals to
+// the Election Day ballot problem and volunteered the Examiner's remark about
+// the voter-registration investigation.
+const RESULTS_REMINDER = [
+  'This question is about the November 3 election results. Give only the',
+  'preliminary totals on the elections issue card, attributed: "preliminary',
+  'results posted by the Westchester County Board of Elections late on',
+  'November 4, as reported by the Pelham Examiner on November 5". Say they are',
+  'preliminary and unofficial, that counting continues so they may have',
+  'changed, and point to westchestercountyny.gov/boe for the current count.',
+  'Never say "won", "win", "lost", "lose", "defeated", "conceded" or',
+  '"projected" in your own words; outcomes only in the Examiner\'s hedged',
+  'phrases, attributed to the Examiner. In this answer, do not mention the',
+  'Election Day ballot problem, orange bags, delays, or the voter-registration',
+  'investigation, unless the resident asks about them.',
+].join('\n');
+
+// Questions about who won, who leads or the count. Deliberately broad: the
+// reminder only narrows what the answer may say.
+const RESULTS_WORDS = /\b(won|win|wins|winning|winner|winners|lose|lost|losing|loser|results?|leading|leads?|ahead|behind|tally|tallies|totals?|vote counts?|count(ing)?|beat|beaten|defeat(ed)?|conceded?|elected|re-?elected|projected)\b/i;
+const RESULTS_CONTEXT = /\b(election|race|trustee|supervisor|clerk|candidate|ballot|vote|votes|seat|manor|village|town)\b/i;
+
+function isResultsQuestion(question) {
+  const q = typeof question === 'string' ? question : '';
+  const names = KNOWN_CANDIDATES.concat(['Breda', 'Ryan', 'Chris', 'Dlutowski', 'Rhett']);
+  const namesCandidate = names.some((n) => new RegExp(`\\b${n}\\b`, 'i').test(q));
+  return RESULTS_WORDS.test(q) && (RESULTS_CONTEXT.test(q) || namesCandidate);
+}
 
 function buildContextBlock(articles) {
   const entries = articles.map((a, i) => [
@@ -1003,4 +1033,4 @@ function withSources(rawAnswer, articles, pinnedPages = [], onBlocked = () => {}
 
 // Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
 // Netlify only calls `handler`.
-exports._test = { todayLine, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };
+exports._test = { todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };

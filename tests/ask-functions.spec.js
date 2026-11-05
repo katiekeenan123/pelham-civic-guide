@@ -3,7 +3,7 @@
 // exports for testing.
 
 const { test, expect } = require('@playwright/test');
-const { todayLine, parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine } =
+const { todayLine, isResultsQuestion, parseUsedSources, withSources, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine } =
   require('../netlify/functions/ask-pelham')._test;
 const { isAllowedSource } = require('../netlify/functions/allowed-sources');
 
@@ -348,4 +348,16 @@ test('prompt — earlier meetings carry their lead paragraph, so the model can r
   const prompt = require('../netlify/functions/system-prompt');
   const flat = prompt.replace(/\s+/g, ' ');
   expect(flat).toContain("(cite as meetings#board-of-ed-oct2026). Covered: A long business meeting built around three presentations: the district's approach to technology and screen time");
+});
+
+test('isResultsQuestion — results questions get the results reminder; others do not', () => {
+  for (const q of ['Who won the Village of Pelham trustee race?', 'Who is leading in the Town Supervisor race?',
+    'What are the Pelham Manor results?', 'Did Breda Bennett lose?', 'Is Ryan Kurtz going to win?',
+    'I heard Arthur Long won. Is that right?', 'What were the vote totals?']) {
+    expect(isResultsQuestion(q), q).toBe(true);
+  }
+  for (const q of ['When is bulk trash pickup in Pelham Manor?', 'What happened with the voting machines on Election Day?',
+    'Can I still register to vote?', 'How do I dispute my property tax assessment?', 'What did the Board of Education discuss at its last meeting?']) {
+    expect(isResultsQuestion(q), q).toBe(false);
+  }
 });
