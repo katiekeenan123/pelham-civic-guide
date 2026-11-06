@@ -354,7 +354,11 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   expect(flat).toContain('never speculate on the cause of the problem or its effect');
   expect(flat).toContain('These accounts have not been reconciled.');
   expect(flat).toContain("never attribute the Examiner's estimates to the Board of Elections");
-  expect(flat).toContain('Do not say counting was delayed, or that the ballot problem changed the timetable, unless a source says so.');
+  expect(flat).toContain('Do not say counting was delayed, or that the ballot problem changed the timetable, unless a source says so');
+  // The election-week timing estimates are overtaken: point to the reported results instead.
+  expect(flat).toContain('Do not repeat the earlier timing estimates');
+  expect(flat).toContain('say that unofficial results have since been reported, not yet certified, and point to the elections issue card and westchestercountyny.gov/boe');
+  expect(flat).toContain('"the Examiner reported long lines early that morning, citing social media posts"');
   expect(flat).toContain('never give a specific date for a future year. Say it is typically held in mid-May, and to confirm the date at pelhamschools.org.');
   expect(flat).toContain('point residents to elections.ny.gov and the Westchester County Board of Elections');
   expect(flat).toContain('The general election was held November 3, 2026.');
@@ -390,3 +394,45 @@ test('qa_log — logging has no end date, and test traffic is still never logged
   expect(logQa).toContain("if (headers && headers['x-test-request']) return;");
   expect(logQa).toContain("supabase.from('qa_log').insert(row)");
 });
+
+test('sources — 85683 has a neutral label; loaded or partisan stored headlines fall back to a generic one', () => {
+  const { sourceLabelFor } = require('../netlify/functions/ask-pelham')._test;
+  const base = 'https://pelhamexaminer.com/85683/latest-news/mohan-and-miller-beat-wolfgang-borsella-democrats-hold-off-challengers-in-village-manor-trustee-race-too-close-to-call/';
+  const label = 'Pelham Examiner — election results report, November 5, 2026';
+  // Keyed by Examiner article id, whatever the stored headline or section.
+  expect(sourceLabelFor({ url: base, title: 'Mohan and Miller beat Wolfgang, Borsella; Democrats hold off challengers', published_at: '2026-11-05T05:17:09+00:00' })).toBe(label);
+  expect(sourceLabelFor({ url: base.replace('latest-news', 'election-2026'), title: 'Pelham’s blue wave reaches the Manor', published_at: '2026-11-05T22:00:09+00:00' })).toBe(label);
+  // Party names or loaded words: a generic label with the New York date.
+  const at = (title, published_at = '2026-11-04T03:00:00Z') => sourceLabelFor({ url: 'https://pelhamexaminer.com/99999/latest-news/x/', title, published_at });
+  expect(at('Democrats sweep the Village')).toBe('Pelham Examiner report, November 3, 2026');
+  expect(at('Republican slate announced')).toBe('Pelham Examiner report, November 3, 2026');
+  expect(at('Neighborhood Party unveils platform')).toBe('Pelham Examiner report, November 3, 2026');
+  expect(at('County-wide election turns into ‘debacle’')).toBe('Pelham Examiner report, November 3, 2026');
+  expect(at('A red wave? Not here', null)).toBe('Pelham Examiner report');
+  // Ordinary headlines are left alone.
+  expect(at('Wild day at polling places ends with Pelham Police taking 10 cases of paper ballots to Ardsley')).toBe('Wild day at polling places ends with Pelham Police taking 10 cases of paper ballots to Ardsley');
+});
+
+test('sources — the label replaces the headline before the model sees it, so it cannot be quoted', () => {
+  const fn = require('fs').readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'ask-pelham.js'), 'utf8');
+  // Applied to retrieved rows, which feed both the context block and the Sources line.
+  expect(fn).toContain('if (rows.length) return rows.map(withSourceLabel);');
+  const { withSources } = require('../netlify/functions/ask-pelham')._test;
+  const row = { url: 'https://pelhamexaminer.com/85683/latest-news/x/', title: 'Pelham Examiner — election results report, November 5, 2026' };
+  const out = withSources('Totals are on the card.\nUSED_SOURCES: 1', [row]);
+  expect(out).toContain('• Pelham Examiner — election results report, November 5, 2026 — https://pelhamexaminer.com/85683/latest-news/x/');
+  expect(out).not.toMatch(/blue wave|Democrats hold off/i);
+});
+
+test('prompt — each board\'s meeting schedule, from the site, with "confirm on the calendar"', () => {
+  const prompt = require('../netlify/functions/system-prompt');
+  const flat = prompt.replace(/\s+/g, ' ');
+  expect(prompt).toContain('## When the boards meet');
+  expect(flat).toContain('always add that meetings can move');
+  expect(flat).toContain('- Village of Pelham Board of Trustees: 2nd & 4th Tuesday of each month (Regular at 8pm');
+  expect(flat).toContain('Location: Village Hall, 200 Fifth Ave, 1st floor Meeting Room.');
+  expect(flat).toContain('- Village of Pelham Manor Board of Trustees: 2nd and 4th Monday of each month at 8:15pm.');
+  expect(flat).toContain('- Town of Pelham Town Board: Monthly.');
+  expect(flat).toContain('- Pelham Board of Education: Monthly + special budget sessions');
+});
+

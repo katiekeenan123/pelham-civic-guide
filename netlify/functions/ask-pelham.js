@@ -669,7 +669,7 @@ async function findExaminerCoverage(question) {
         // runSearch over-fetches, so removing a duplicate cannot leave the
         // reader with fewer than RAG_LIMIT distinct articles.
         const rows = dedupeArticles(await runSearch(supabase, step, controller.signal)).slice(0, RAG_LIMIT);
-        if (rows.length) return rows;
+        if (rows.length) return rows.map(withSourceLabel);
       }
       return [];
     } finally {
@@ -786,6 +786,39 @@ function examinerArticleKey(url) {
   const m = /pelhamexaminer\.com\/(\d+)(?:\/|$)/i.exec(String(url || ''));
   return m ? `examiner:${m[1]}` : String(url || '').replace(/\/+$/, '').toLowerCase();
 }
+/**
+ * The label a retrieved article is shown under, both in the model's context
+ * and in the reader's "Sources:" line. The stored title is the Examiner's
+ * headline, which the pipeline overwrites when the Examiner edits a story,
+ * and a headline can carry framing the site does not repeat. The label
+ * replaces the title before the model sees it, so the headline cannot be
+ * quoted into an answer either.
+ *
+ * SOURCE_LABEL_OVERRIDES is keyed by Examiner article id (the number in the
+ * URL), so it covers every stored URL for that article, including section
+ * moves. Any other stored title naming a party, or using a loaded word, gets
+ * a neutral generic label with the publication date.
+ */
+const SOURCE_LABEL_OVERRIDES = {
+  'examiner:85683': 'Pelham Examiner — election results report, November 5, 2026',
+};
+const LOADED_TITLE = /\b(democrat\w*|republican\w*|gop|neighborhood party|working families|conservative party|manor together|blue wave|red wave|sweep\w*|debacle)\b/i;
+
+function sourceLabelFor(row) {
+  const override = SOURCE_LABEL_OVERRIDES[examinerArticleKey(row && row.url)];
+  if (override) return override;
+  const title = String((row && row.title) || '');
+  if (!LOADED_TITLE.test(title)) return title;
+  const date = new Date((row && row.published_at) || '');
+  return Number.isNaN(date.getTime())
+    ? 'Pelham Examiner report'
+    : `Pelham Examiner report, ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' })}`;
+}
+
+function withSourceLabel(row) {
+  return { ...row, title: sourceLabelFor(row) };
+}
+
 function dedupeArticles(rows) {
   const seen = new Set();
   return rows.filter((row) => {
@@ -1017,4 +1050,4 @@ function withSources(rawAnswer, articles, pinnedPages = [], onBlocked = () => {}
 
 // Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
 // Netlify only calls `handler`.
-exports._test = { todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };
+exports._test = { sourceLabelFor, todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };

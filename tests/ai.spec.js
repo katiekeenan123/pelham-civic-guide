@@ -174,10 +174,14 @@ test('sources — the Community Church question never cites unrelated campaign s
   }
 });
 
-test('sources — bulk trash pickup gets no Sources block', async ({ request }) => {
-  // "VOP" used to title-match a Neighborhood Party press release.
+test('sources — bulk trash pickup cites no Examiner article or press release', async ({ request }) => {
+  // "VOP" used to title-match a Neighborhood Party press release. A Sources
+  // line pointing at this site's own pages (Gov 101) is fine; Examiner
+  // coverage or a press release is not.
   const answer = await ask(request, 'What date is bulk trash pick up in VOP?');
-  expect(answer).not.toMatch(/^Sources:/m);
+  const sources = answer.split(/^Sources:\n/m)[1] || '';
+  expect(sources, 'no Examiner citation').not.toMatch(/pelhamexaminer\.com/i);
+  expect(sources, 'no press-release citation').not.toMatch(/press release|\/announcing\//i);
   expect(answer).not.toMatch(/Village debt is about to increase/i);
 });
 

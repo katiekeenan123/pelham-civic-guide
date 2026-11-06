@@ -498,6 +498,22 @@ function buildPrompt(data, r) {
         return [`- ${bits.join(' — ')}`, ...details].join('\n');
       }).join('\n'),
 
+    // The same schedules Get Involved shows (generateMeetingChips), with the
+    // detail line and the board's website so the model can say where to
+    // confirm. Participation notes are left out: the public comment section
+    // of the prompt covers that.
+    'meeting-schedules': () =>
+      data.bodies.bodies.filter((b) => b.meeting_schedule && b.board_name)
+        .map((b) => {
+          const ms = b.meeting_schedule;
+          const display = ms.address_display || ms.address || '';
+          const name = ms.location_name || '';
+          const where = name && !display.toLowerCase().includes(name.toLowerCase())
+            ? [name, display].filter(Boolean).join(', ')
+            : display;
+          const when = plain(ms.cadence_detail || ms.cadence).replace(/([^.])$/, '$1.');
+          return `- ${b.board_name}: ${when}${where ? ` Location: ${where}.` : ''}${b.website ? ` Calendar: ${b.website}` : ''}`;
+        }).join('\n'),
     'public-comment-by-body': () =>
       data.bodies.bodies.filter((b) => b.public_comment_process)
         .map((b) => `- ${b.name}: ${b.public_comment_process}`).join('\n'),
