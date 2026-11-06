@@ -490,4 +490,5 @@ test('prompt — full titles, and each body\'s official pages from bodies.json',
   expect(flat).toContain('Meeting Agendas: https://www.pelhammanor.gov/AgendaCenter');
   expect(flat).toContain('- Westchester County: website https://www.westchestercountyny.gov.');
   expect(flat).toContain("never guess a page address");
+  expect(flat).toContain('Describe each link only by its label: never say a page posts agendas or minutes unless its label says "Agendas".');
 });

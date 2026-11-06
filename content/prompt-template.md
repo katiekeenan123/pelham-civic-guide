@@ -268,7 +268,11 @@ Where each body posts its agendas, budgets and notices, from this site's
 own data. Give these links when a resident asks where to find agendas,
 minutes, budgets or notices. If the body or the record they ask about is
 not listed, say you don't have it and point to that body's website; never
-guess a page address.
+guess a page address. Describe each link only by its label: never say a
+page posts agendas or minutes unless its label says "Agendas". Only the two
+villages have an agendas link here; for the Town and the school district,
+say you don't have a link to their agendas or minutes and point to the
+website.
 
 {{generated:official-pages}}
 
