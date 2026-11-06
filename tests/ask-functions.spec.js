@@ -490,7 +490,7 @@ test('prompt — full titles, and each body\'s official pages from bodies.json',
   expect(flat).toContain('Meeting Agendas: https://www.pelhammanor.gov/AgendaCenter');
   expect(flat).toContain('- Westchester County: website https://www.westchestercountyny.gov.');
   expect(flat).toContain("never guess a page address");
-  expect(flat).toContain('Describe each link only by its label: never say a page posts agendas or minutes unless its label says "Agendas".');
+  expect(flat).toContain('never say a page posts agendas or minutes unless its label says "Agendas".');
 });
 
 test('results — one data block; the card paragraph and the prompt carry exactly its totals', () => {
@@ -522,4 +522,32 @@ test('results — one data block; the card paragraph and the prompt carry exactl
     'kristen-burke': 1765, 'krystal-howell': 1718, 'russell-solomon': 1677, 'paul-anzilotti': 850, 'arthur-long': 822, 'everitt-speros': 813,
     'ryan-kurtz': 1450, 'chris-dlutkowski': 1436, 'breda-bennett': 1331, 'joe-liberatore': 1264,
   });
+});
+
+test('answers — bracketed source markers never reach the reader; quotes exact; cable attributed to the Oct 27 meeting', () => {
+  const { stripSourceMarkers } = require('../netlify/functions/ask-pelham')._test;
+  expect(stripSourceMarkers('Police Chief Sanzo [name unconfirmed in the record] said so.')).toBe('Police Chief Sanzo said so.');
+  expect(stripSourceMarkers('A parade on October 30 [VERIFY]; and a 10K [verify] on Sunday.')).toBe('A parade on October 30; and a 10K on Sunday.');
+  expect(stripSourceMarkers('See [the card] for details.')).toBe('See [the card] for details.');
+  const flat = require('../netlify/functions/system-prompt').replace(/\s+/g, ' ');
+  expect(flat).toContain('Never print [VERIFY] or any other bracketed note from a source in an answer.');
+  expect(flat).toContain('For a person marked [VERIFY], leave the name out and use the title alone ("the Police Chief").');
+  expect(flat).toContain('quote a statement exactly as your source gives it, in quotation marks, or leave it out.');
+  expect(flat).toContain('say it was reported at the October 27 meeting (cite as meetings#pelham-board-oct27-2026), never as a current listing.');
+  expect(flat).not.toContain('names marked [VERIFY] are unconfirmed, so say so');
+});
+
+test('results — a results question always cites elections#results; BOE calendar link from bodies.json', () => {
+  const fn = require('fs').readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'ask-pelham.js'), 'utf8');
+  expect(fn).toContain("...(isResultsQuestion(question) ? ['elections#results'] : []),");
+  const { withSources } = require('../netlify/functions/ask-pelham')._test;
+  const out = withSources('Totals are on the card.\nUSED_SOURCES: issues#november-2026-elections', [], ['elections#results']);
+  expect(out).toContain('• Pelham Engagement Project — Election results (unofficial, not certified) — https://pelhamengagementproject.org/elections#results');
+  const cal = 'https://www.pelhamschools.org/board-of-education/meetings-and-coffee/board-of-education-calendar';
+  const schools = require('../content/bodies.json').bodies.find((b) => b.id === 'pelham-schools');
+  expect(schools.source_links.map((s) => s.url)).toContain(cal);
+  const flat = require('../netlify/functions/system-prompt').replace(/\s+/g, ' ');
+  expect(flat).toContain(`Board of Education Calendar: ${cal}`);
+  expect(flat).toContain(`Location: District offices / Pelham Middle School. Calendar: ${cal}`);
+  expect(flat).toContain('never say what a page contains or links to beyond that label');
 });

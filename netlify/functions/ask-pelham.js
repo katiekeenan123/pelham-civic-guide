@@ -152,7 +152,13 @@ exports.handler = async (event) => {
 
     // Citation-time gate: withSources drops any citation, or URL written into
     // the answer, that is not a vetted source, and reports each one here.
-    const delivered = withSources(answer, articles, contested ? [contested.anchor] : [],
+    // A results question always cites the Elections page results section,
+    // and a contested issue its card, whatever the model listed.
+    const pinned = [
+      ...(contested ? [contested.anchor] : []),
+      ...(isResultsQuestion(question) ? ['elections#results'] : []),
+    ];
+    const delivered = withSources(answer, articles, pinned,
       (url) => blocked.push({ url, stage: 'citation' }));
     await Promise.all([
       logQa(question, delivered, body.session_id, event.headers),
@@ -886,7 +892,9 @@ const RESULTS_REMINDER = [
   'results from the Westchester County Board of Elections, as reported',
   `${RESULTS_SNAPSHOT}". In every answer say the results are unofficial, not`,
   'yet certified, and that counting may not be complete, and point to',
-  'westchestercountyny.gov/boe. Outcomes only attributed, in this form: "The',
+  'westchestercountyny.gov/boe. Point to the full results tables on this',
+  'site: pelhamengagementproject.org/elections#results (cite elections#results).',
+  'Outcomes only attributed, in this form: "The',
   'Pelham Examiner reported that [candidates] defeated [candidates], based on',
   'unofficial Board of Elections results", and only the outcomes on the card.',
   'Never say "won", "lost", "defeated", "conceded" or "elected" in your own',
@@ -1049,9 +1057,17 @@ function stripUnvettedUrls(text, onBlocked) {
   });
 }
 
+// Editorial markers in the meeting summaries ([VERIFY], "[name unconfirmed
+// …]") are for reviewers. The prompt says never to print them; this removes
+// any that slip through anyway.
+const SOURCE_MARKER = /[ \t]*\[(?:VERIFY|[^\]\n]{0,60}\b(?:unconfirmed|unverified)\b[^\]\n]{0,60})\]/gi;
+function stripSourceMarkers(text) {
+  return String(text || '').replace(SOURCE_MARKER, '');
+}
+
 function withSources(rawAnswer, articles, pinnedPages = [], onBlocked = () => {}) {
   const { text: parsed, used, pages } = parseUsedSources(rawAnswer, articles.length);
-  const answer = stripUnvettedUrls(parsed, onBlocked);
+  const answer = stripSourceMarkers(stripUnvettedUrls(parsed, onBlocked));
   // Only the articles the model says it drew on. Retrieval returns the newest
   // matches, not the relevant ones, so citing everything retrieved listed
   // candidate statements under answers that said "I don't have that".
@@ -1082,4 +1098,4 @@ function withSources(rawAnswer, articles, pinnedPages = [], onBlocked = () => {}
 
 // Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
 // Netlify only calls `handler`.
-exports._test = { sourceLabelFor, summaryFor, isScheduleQuestion, withExaminerContext, todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };
+exports._test = { stripSourceMarkers, sourceLabelFor, summaryFor, isScheduleQuestion, withExaminerContext, todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };

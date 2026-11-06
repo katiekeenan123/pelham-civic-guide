@@ -512,7 +512,9 @@ function buildPrompt(data, r) {
             ? [name, display].filter(Boolean).join(', ')
             : display;
           const when = plain(ms.cadence_detail || ms.cadence).replace(/([^.])$/, '$1.');
-          return `- ${b.board_name}: ${when}${where ? ` Location: ${where}.` : ''}${b.website ? ` Calendar: ${b.website}` : ''}`;
+          const cal = (b.source_links || []).find((s) => /calendar/i.test(s.label || ''));
+          const calendar = (cal && cal.url) || b.website;
+          return `- ${b.board_name}: ${when}${where ? ` Location: ${where}.` : ''}${calendar ? ` Calendar: ${calendar}` : ''}`;
         }).join('\n'),
     // The unofficial totals, from the same elections.json block as the
     // Elections page #results section.
@@ -1637,7 +1639,7 @@ function generateInvolvedVote(data, r) {
     box('Results', 'Unofficial results reported',
       `<a href="/elections#results">Unofficial results reported</a>; not certified (${r('{{fact:election-results-snapshot-2026}}', at)}). Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank">Westchester County Board of Elections</a>, not this site.`),
     box('Register', 'Any time',
-      'Each election has its own deadline: <a href="https://www.elections.ny.gov" target="_blank">elections.ny.gov</a> or the Westchester County Board of Elections, 914-995-5700.'),
+      'Each election has its own deadline: <a href="https://www.elections.ny.gov" target="_blank">elections.ny.gov</a> or the <a href="https://www.westchestercountyny.gov/boe" target="_blank">Westchester County Board of Elections</a>.'),
     '      </div>',
   ].join(NL);
 }

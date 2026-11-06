@@ -1757,3 +1757,11 @@ test('issues — the elections card leads with the results, then Election Day, t
   // First among the active issues on the page.
   await expect(page.locator('.issue-card').first()).toHaveAttribute('id', 'november-2026-elections');
 });
+
+test('get involved and elections — no unconfirmed Board of Elections phone; post-election intro', async ({ page }) => {
+  await page.goto('/get-involved');
+  await expect(page.locator('main')).not.toContainText('995-5700');
+  await page.goto('/elections');
+  await expect(page.locator('#elections .section-intro')).toContainText("Here's who ran and what they said during the campaign. Results are above; profiles and debate summaries are kept below as a record.");
+  await expect(page.locator('#elections .section-intro')).not.toContainText("Here's who's running");
+});
