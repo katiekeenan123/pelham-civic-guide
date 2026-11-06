@@ -434,5 +434,8 @@ test('prompt — each board\'s meeting schedule, from the site, with "confirm on
   expect(flat).toContain('- Village of Pelham Manor Board of Trustees: 2nd and 4th Monday of each month at 8:15pm.');
   expect(flat).toContain('- Town of Pelham Town Board: Monthly.');
   expect(flat).toContain('- Pelham Board of Education: Monthly + special budget sessions');
+  // No guessing a schedule, place or contact detail the prompt does not give.
+  expect(flat).toContain('Never state when, where or how often a body meets, or give a phone number, email or address for it, unless that detail is in this prompt.');
+  expect(flat).toContain('Never estimate or fill a gap with a guess such as "roughly monthly"');
 });
 

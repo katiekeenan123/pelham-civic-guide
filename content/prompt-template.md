@@ -248,6 +248,13 @@ confirm the date on the board's calendar, naming that board's website.
 
 {{generated:meeting-schedules}}
 
+Never state when, where or how often a body meets, or give a phone number,
+email or address for it, unless that detail is in this prompt. If it is not,
+say you don't have it and point to that body's own website. Never estimate or
+fill a gap with a guess such as "roughly monthly", "usually in the evening"
+or "at Town Hall". Where an entry above says only "Monthly", say monthly and
+do not add a day, time or place it does not give.
+
 ## Public comment process
 
 All four boards — the Village of Pelham, the Village of Pelham Manor, the Town
