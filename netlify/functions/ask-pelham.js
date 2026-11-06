@@ -134,7 +134,7 @@ exports.handler = async (event) => {
         model: MODEL,
         max_tokens: MAX_TOKENS,
         system: `${todayLine()}\n\n${SYSTEM_PROMPT}`,
-        messages: withExaminerContext(messages, articles, contested, isResultsQuestion(question)),
+        messages: withExaminerContext(messages, articles, contested, isResultsQuestion(question), isScheduleQuestion(question)),
       }),
     });
 
@@ -801,6 +801,13 @@ function examinerArticleKey(url) {
  */
 const SOURCE_LABEL_OVERRIDES = {
   'examiner:85683': 'Pelham Examiner — election results report, November 5, 2026',
+  'examiner:85639': 'Pelham Examiner report, November 4, 2026',
+};
+// The stored summary is written by the pipeline from the article's own
+// framing, and is rewritten when the Examiner edits the story. An override
+// here replaces it, whatever the pipeline stores.
+const SUMMARY_OVERRIDES = {
+  'examiner:85683': 'Examiner report of unofficial results in the Village of Pelham, Pelham Manor and Town of Pelham races, as posted by the County Board of Elections; not yet certified.',
 };
 const LOADED_TITLE = /\b(democrat\w*|republican\w*|gop|neighborhood party|working families|conservative party|manor together|blue wave|red wave|sweep\w*|debacle)\b/i;
 
@@ -815,8 +822,13 @@ function sourceLabelFor(row) {
     : `Pelham Examiner report, ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' })}`;
 }
 
+function summaryFor(row) {
+  const override = SUMMARY_OVERRIDES[examinerArticleKey(row && row.url)];
+  return override || (row && row.summary);
+}
+
 function withSourceLabel(row) {
-  return { ...row, title: sourceLabelFor(row) };
+  return { ...row, title: sourceLabelFor(row), summary: summaryFor(row) };
 }
 
 function dedupeArticles(rows) {
@@ -836,8 +848,8 @@ function dedupeArticles(rows) {
  * is copied rather than mutated, and anything unexpected (no user turn, a
  * non-string content block) falls through to the original conversation.
  */
-function withExaminerContext(messages, articles, contested = null, results = false) {
-  if (!articles.length && !contested && !results) return messages;
+function withExaminerContext(messages, articles, contested = null, results = false, schedule = false) {
+  if (!articles.length && !contested && !results && !schedule) return messages;
 
   const index = messages.map((m) => m && m.role).lastIndexOf('user');
   if (index === -1 || typeof messages[index].content !== 'string') return messages;
@@ -845,7 +857,7 @@ function withExaminerContext(messages, articles, contested = null, results = fal
   const copy = messages.slice();
   copy[index] = {
     ...messages[index],
-    content: `${articles.length ? `${buildContextBlock(articles)}\n\n` : ''}${contested ? `${CONTESTED_REMINDER}\n\n` : ''}${results ? `${RESULTS_REMINDER}\n\n` : ''}${messages[index].content}`,
+    content: `${articles.length ? `${buildContextBlock(articles)}\n\n` : ''}${contested ? `${CONTESTED_REMINDER}\n\n` : ''}${results ? `${RESULTS_REMINDER}\n\n` : ''}${schedule ? `${SCHEDULE_REMINDER}\n\n` : ''}${messages[index].content}`,
   };
   return copy;
 }
@@ -888,6 +900,25 @@ const RESULTS_REMINDER = [
 // reminder only narrows what the answer may say.
 const RESULTS_WORDS = /\b(won|win|wins|winning|winner|winners|lose|lost|losing|loser|results?|leading|leads?|ahead|behind|tally|tallies|totals?|vote counts?|count(ing)?|beat|beaten|defeat(ed)?|conceded?|elected|re-?elected|projected)\b/i;
 const RESULTS_CONTEXT = /\b(election|race|trustee|supervisor|clerk|candidate|ballot|vote|votes|seat|manor|village|town)\b/i;
+
+// Added next to a question about when or where a board meets, for the same
+// reason as the results reminder: with the rule only in the system prompt,
+// answers gave the schedule but not always the reminder that it can move.
+const SCHEDULE_REMINDER = [
+  'This question is about when or where a board meets. Give only the schedule',
+  'and place listed under "When the boards meet"; never guess a day, time,',
+  'place or frequency that is not listed. End the answer with this sentence,',
+  'in these words, naming that board\'s website: "Meetings can move; confirm on',
+  'the board\'s calendar at <website>."',
+].join('\n');
+
+const SCHEDULE_WORDS = /\b(meet|meets|meeting|meetings|schedule|calendar)\b/i;
+const SCHEDULE_CONTEXT = /\b(board|trustees?|council|town|village|manor|education|school)\b/i;
+
+function isScheduleQuestion(question) {
+  const q = typeof question === 'string' ? question : '';
+  return SCHEDULE_WORDS.test(q) && SCHEDULE_CONTEXT.test(q);
+}
 
 function isResultsQuestion(question) {
   const q = typeof question === 'string' ? question : '';
@@ -1050,4 +1081,4 @@ function withSources(rawAnswer, articles, pinnedPages = [], onBlocked = () => {}
 
 // Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
 // Netlify only calls `handler`.
-exports._test = { sourceLabelFor, todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };
+exports._test = { sourceLabelFor, summaryFor, isScheduleQuestion, withExaminerContext, todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };

@@ -60,3 +60,35 @@ candidate contacts the site with a correction:
 
 Never update a candidate profile based solely on direct outreach without a
 published source.
+
+## Election results update standard
+
+Applies whenever results are added or changed, whatever the source article
+says or how it frames the outcome. (The same list is `RESULTS_STANDARDS` in
+`pelham-civic/check_examiner.py`, which appends it to every suggested
+results update; keep the two in step.)
+
+- **Replace** the existing results paragraph on the November 2026 elections
+  issue card (`issues.json`, id `november-2026-elections`); never append a
+  second one.
+- **Results only:** every total in the article, for every contest, with
+  outcomes attributed to the Examiner ("the Examiner reported that X
+  defeated Y"), labeled unofficial and not certified.
+- **Never include** party labels, "sweep", "blue wave", national-politics
+  framing, candidate quotes, or remarks explaining why the results came out
+  as they did (voter motivation, political commentary, the
+  voter-registration investigation), even when the article has them.
+  Factual caveats attributed to the Examiner, such as outstanding absentee
+  ballots, and direct consequences such as the Town Council vacancy, stay.
+- **Status label stays neutral:** "Unofficial results reported in all races —
+  not yet certified by the County Board of Elections".
+- **One commit updates everything that carries the results:** the AI results
+  rule (`content/prompt-template.md`, and `RESULTS_REMINDER` in
+  `netlify/functions/ask-pelham.js`); the single snapshot date
+  (`facts.json` `election-results-snapshot-2026`, read by the card, the AI
+  rule, the home banner and the Elections page); the home banner
+  (`elections.json` `results_banner`, `scripts/build.js`
+  `generateElectionsBanner`); the Elections page Results box
+  (`elections.json` `voter_info`); and the tests (`tests/ask-functions.spec.js`,
+  `tests/ui.spec.js`).
+- **Verify every number** against the article's tables before committing.

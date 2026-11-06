@@ -452,3 +452,42 @@ test('prompt — each board\'s meeting schedule, from the site, with "confirm on
   expect(flat).toContain('Never estimate or fill a gap with a guess such as "roughly monthly"');
 });
 
+
+test('sources — 85683 summary and 85639 label overrides win over whatever the pipeline stores', () => {
+  const { sourceLabelFor, summaryFor } = require('../netlify/functions/ask-pelham')._test;
+  const u83 = 'https://pelhamexaminer.com/85683/latest-news/anything/';
+  const neutral = 'Examiner report of unofficial results in the Village of Pelham, Pelham Manor and Town of Pelham races, as posted by the County Board of Elections; not yet certified.';
+  expect(summaryFor({ url: u83, summary: 'Democrats swept all contested races in Pelham.' })).toBe(neutral);
+  expect(summaryFor({ url: u83.replace('latest-news', 'election-2026'), summary: 'Preliminary results.' })).toBe(neutral);
+  expect(summaryFor({ url: 'https://pelhamexaminer.com/85639/latest-news/x/', summary: 'Ballots went to Ardsley.' })).toBe('Ballots went to Ardsley.');
+  expect(sourceLabelFor({ url: 'https://pelhamexaminer.com/85639/latest-news/wild-day/', title: 'Wild day at polling places ends with Pelham Police taking 10 cases of paper ballots to Ardsley; counting to begin Wednesday morning' }))
+    .toBe('Pelham Examiner report, November 4, 2026');
+});
+
+test('schedule reminder — added next to meeting questions, with the confirm-on-the-calendar line', () => {
+  const { isScheduleQuestion, withExaminerContext } = require('../netlify/functions/ask-pelham')._test;
+  for (const q of ['When does the Village of Pelham Board of Trustees meet?', 'When is the next Pelham Manor board meeting?',
+    'What is the Board of Education meeting schedule?', 'Where does the Town Council meet?']) {
+    expect(isScheduleQuestion(q), q).toBe(true);
+  }
+  for (const q of ['Who won the Village of Pelham trustee race?', 'What happened with the voting machines?', 'When is bulk trash pickup?']) {
+    expect(isScheduleQuestion(q), q).toBe(false);
+  }
+  const msgs = [{ role: 'user', content: 'When does the Town board meet?' }];
+  const out = withExaminerContext(msgs, [], null, false, true)[0].content;
+  expect(out.replace(/\s+/g, ' ')).toContain('"Meetings can move; confirm on the board\'s calendar at <website>."');
+  expect(out.endsWith('When does the Town board meet?')).toBe(true);
+  expect(withExaminerContext(msgs, [], null, false, false)).toBe(msgs);
+});
+
+test('prompt — full titles, and each body\'s official pages from bodies.json', () => {
+  const prompt = require('../netlify/functions/system-prompt');
+  const flat = prompt.replace(/\s+/g, ' ');
+  expect(flat).toContain('Lindsey Luft is the Village Manager/Clerk of Pelham Manor, not "Village Clerk". Never shorten, merge or paraphrase a title.');
+  expect(prompt).toContain("## Each body's official pages");
+  expect(flat).toContain('- Village of Pelham: website https://www.pelhamny.gov.');
+  expect(flat).toContain('Meeting Agendas: https://www.pelhamny.gov/AgendaCenter');
+  expect(flat).toContain('Meeting Agendas: https://www.pelhammanor.gov/AgendaCenter');
+  expect(flat).toContain('- Westchester County: website https://www.westchestercountyny.gov.');
+  expect(flat).toContain("never guess a page address");
+});

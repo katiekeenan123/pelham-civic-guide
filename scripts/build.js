@@ -514,6 +514,17 @@ function buildPrompt(data, r) {
           const when = plain(ms.cadence_detail || ms.cadence).replace(/([^.])$/, '$1.');
           return `- ${b.board_name}: ${when}${where ? ` Location: ${where}.` : ''}${b.website ? ` Calendar: ${b.website}` : ''}`;
         }).join('\n'),
+    // Each body's website and the links Gov 101 shows for it (agendas,
+    // budgets, notices), so the model can say where records are posted
+    // instead of guessing a page. Allowlist-checked like any prompt URL.
+    'official-pages': () =>
+      data.bodies.bodies.filter((b) => b.website)
+        .map((b) => {
+          const links = (b.source_links || [])
+            .filter((s) => s && s.url && isAllowedSource(s.url))
+            .map((s) => `${s.label}: ${s.url}`);
+          return `- ${b.name}: website ${b.website}${links.length ? `. ${links.join('; ')}` : ''}`;
+        }).join('\n'),
     'public-comment-by-body': () =>
       data.bodies.bodies.filter((b) => b.public_comment_process)
         .map((b) => `- ${b.name}: ${b.public_comment_process}`).join('\n'),
