@@ -1552,8 +1552,8 @@ function generateInvolvedVote(data, r) {
     '      <div class="vote-facts">',
     box('Last election', r('{{fact:election-date-2026}}', at),
       'Village of Pelham, Village of Pelham Manor and Town of Pelham races were all on this ballot.'),
-    box('Results', 'County Board of Elections',
-      'Results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank">Westchester County Board of Elections</a>, not this site, and are unofficial until certified.'),
+    box('Results', 'Unofficial results reported',
+      `Unofficial results reported; not certified (${r('{{fact:election-results-snapshot-2026}}', at)}). Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank">Westchester County Board of Elections</a>, not this site.`),
     box('Register', 'Any time',
       'Each election has its own deadline: <a href="https://www.elections.ny.gov" target="_blank">elections.ny.gov</a> or the Westchester County Board of Elections, 914-995-5700.'),
     '      </div>',
@@ -1763,16 +1763,18 @@ function generateElectionsBanner(data, r) {
   const date = data.elections.election_date;
   const post = data.elections.results_banner;
   if (post) {
-    // After the election: that it was held and where results come from —
-    // never that they are pending, which would go stale unnoticed. It
-    // retires itself after its review date, like the pre-election banner.
+    // After the election: that it was held, that unofficial results were
+    // reported (dated by the same snapshot fact as the card and the AI rule)
+    // and where certified results come from — never that they are pending,
+    // which would go stale unnoticed. It retires itself after its review
+    // date, like the pre-election banner.
     return [
       `<section class="home-banner" id="home-election" data-hide-after="${esc(post.review_by)}">`,
       '  <div class="content-wrap home-banner-inner">',
       '    <div class="home-banner-body">',
       '      <div class="home-banner-eyebrow">🗳 Election held</div>',
       `      <h2 class="home-banner-date">${r('{{fact:election-date-2026}}', 'elections.json')}</h2>`,
-      `      <p class="home-banner-text">${data.elections.races.length} contested races · ${data.elections.candidates.length} candidates · Results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank" style="color: inherit; text-decoration: underline;">Westchester County Board of Elections</a>, not this site, and are unofficial until the Board certifies them.</p>`,
+      `      <p class="home-banner-text">${data.elections.races.length} contested races · ${data.elections.candidates.length} candidates · Unofficial results reported; not certified (${r('{{fact:election-results-snapshot-2026}}', 'elections.json')}). Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank" style="color: inherit; text-decoration: underline;">Westchester County Board of Elections</a>, not this site.</p>`,
       '    </div>',
       '    <a class="home-banner-cta" href="/elections">See the candidates →</a>',
       '  </div>',
@@ -2223,7 +2225,7 @@ function main() {
   let fn = read(p('netlify', 'functions', 'ask-pelham.js'));
   fn = splice(fn, 'known-issues', generateKnownIssues(data), 'js');
   fn = splice(fn, 'site-sources', generateSiteSources(data), 'js');
-  // The preliminary-results snapshot, from the same fact the card and the
+  // The results snapshot, from the same fact the card and the
   // prompt read, so the three cannot drift apart.
   fn = splice(fn, 'results-snapshot',
     `const RESULTS_SNAPSHOT = ${JSON.stringify(plain(r('{{fact:election-results-snapshot-2026}}', 'facts.json')))};`, 'js');

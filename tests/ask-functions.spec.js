@@ -320,19 +320,27 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   const prompt = require('../netlify/functions/system-prompt');
   const flat = prompt.replace(/\s+/g, ' ');
   expect(prompt).toContain('### The November 3, 2026 election: results');
-  // Preliminary totals only from the card: attributed, a snapshot, no winner
-  // language, no projection, no link to the ballot problem.
-  expect(flat).toContain('Preliminary, unofficial results are on the elections issue card');
-  expect(flat).toContain('counting continued after it, so say the totals may have changed');
-  expect(flat).toContain('Never use "won", "win", "lost", "lose", "defeated", "conceded", "projected", "advance" or "elected" in your own words.');
-  expect(flat).toContain('"three seats are up, and the top three vote-getters fill them"');
-  expect(flat).toContain('never comment on which candidates the Examiner did or did not describe that way');
-  expect(flat).toContain('say plainly that you cannot predict the outcome');
+  // Unofficial totals only from the card: attributed, never certified, outcomes
+  // only as the Examiner reported them, no link to the ballot problem.
+  expect(flat).toContain('Unofficial results are on the elections issue card');
+  expect(flat).toContain('that they are unofficial, not yet certified, and that counting may not be complete');
+  expect(flat).toContain('"The Pelham Examiner reported that [candidates] defeated [candidates], based on unofficial Board of Elections results"');
+  expect(flat).toContain('that Burke, Howell and Solomon defeated challengers Anzilotti, Long and Speros in the Village of Pelham');
+  expect(flat).toContain('Kurtz and Dlutowski defeated Breda Bennett and Joe Liberatore in Pelham Manor');
+  expect(flat).toContain('never in your own voice');
+  expect(flat).toContain('Never use party framing, "sweep" or "blue wave".');
+  expect(flat).toContain('Never call a result final or official.');
+  // The superseded November 4 snapshot wording is gone.
+  expect(flat).not.toContain('far from over');
+  expect(flat).not.toMatch(/Manor race is undecided/i);
+  expect(flat).not.toContain('appear poised to win');
+  expect(flat).not.toContain('counting continued after it');
+  expect(flat).toContain('held; unofficial results reported Nov 5; not certified');
   expect(flat).toContain("Never fold Jenkins's words into the Examiner's characterization");
   expect(flat).toContain("Arthur Long's account of Daronco Townhouse");
   // The snapshot comes from one fact, shared with the card and the function.
-  const snap = 'posted late on November 4 and reported by the Pelham Examiner on November 5';
-  expect(flat).toContain(`totals the Westchester County Board of Elections ${snap}`);
+  const snap = 'Nov 5, 2026, updated throughout the day, per the Pelham Examiner';
+  expect(flat).toContain(`as reported by the Pelham Examiner (${snap})`);
   const fn = require('fs').readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'ask-pelham.js'), 'utf8');
   expect(fn).toContain(`const RESULTS_SNAPSHOT = "${snap}";`);
   const card = require('../content/issues.json').issues.find((i) => i.id === 'november-2026-elections');

@@ -11,8 +11,8 @@
     },
     {
       "label": "Results",
-      "value": "County Board of Elections",
-      "note": "Results come from the <a href=\"https://www.westchestercountyny.gov/boe\" target=\"_blank\" style=\"color: var(--gold-light);\">Westchester County Board of Elections</a>, not this site. They are unofficial until the Board certifies them."
+      "value": "Unofficial results reported",
+      "note": "Unofficial results reported; not certified. The totals ({{fact:election-results-snapshot-2026}}) are on the <a href=\"/issues#november-2026-elections\" style=\"color: var(--gold-light);\">elections issue card</a>. Certified results come from the <a href=\"https://www.westchestercountyny.gov/boe\" target=\"_blank\" style=\"color: var(--gold-light);\">Westchester County Board of Elections</a>, not this site."
     },
     {
       "label": "Future elections",
@@ -22,7 +22,7 @@
   ],
   "results_banner": {
     "review_by": "2026-11-18",
-    "note": "The post-election home banner. It retires itself after review_by (app.js, data-hide-after); before then, replace it with certified results or extend the date."
+    "note": "The post-election home banner. It retires itself after review_by (app.js, data-hide-after); before then, replace it with certified results or extend the date. It reports unofficial results (not certified) with the shared snapshot date, election-results-snapshot-2026."
   },
   "debates": {
     "title": "Candidate Debates",

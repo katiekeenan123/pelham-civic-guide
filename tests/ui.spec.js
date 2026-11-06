@@ -299,7 +299,8 @@ test('home — post-election banner: date headline, where results come from, but
   // Where results come from, never "pending": that would go stale unnoticed.
   const text = banner.locator('.home-banner-text');
   await expect(text).toContainText('contested races · ');
-  await expect(text).toContainText('not this site, and are unofficial until the Board certifies them');
+  await expect(text).toContainText('Unofficial results reported; not certified (Nov 5, 2026, updated throughout the day, per the Pelham Examiner)');
+  await expect(text).toContainText('Certified results come from the Westchester County Board of Elections, not this site');
   await expect(text.locator('a[href="https://www.westchestercountyny.gov/boe"]')).toHaveCount(1);
   await expect(banner).not.toContainText(/\bpending\b|polls open|debates|days away/i);
   // No countdown once the election is over.
@@ -662,7 +663,9 @@ test('elections — post-election boxes: held, where results come from, register
 
   const main = page.locator('main');
   await expect(boxes.nth(0)).toContainText('was held on Tuesday, November 3');
-  await expect(boxes.nth(1)).toContainText('unofficial until the Board certifies them');
+  await expect(boxes.nth(1)).toContainText('Unofficial results reported; not certified');
+  await expect(boxes.nth(1)).toContainText('Nov 5, 2026, updated throughout the day, per the Pelham Examiner');
+  await expect(boxes.nth(1).locator('a[href="/issues#november-2026-elections"]')).toHaveCount(1);
   await expect(boxes.nth(1).locator('a[href="https://www.westchestercountyny.gov/boe"]')).toHaveCount(1);
   await expect(boxes.nth(2).locator('a[href*="elections.ny.gov"]')).toHaveCount(1);
   // Nothing that only made sense before the vote, and no claim that results
