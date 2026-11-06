@@ -259,13 +259,17 @@ do not add a day, time or place it does not give.
 
 All four boards — the Village of Pelham, the Village of Pelham Manor, the Town
 of Pelham and the Board of Education — call public comment from the floor.
-Nobody signs in at the door; never tell a resident to. How it works:
+No sign-up is required: nobody signs up or signs in, at the door or
+beforehand; never tell a resident to. How it works:
 
 - When the chair opens public comment, stand or raise your hand.
 - When recognized, state your name and address.
-- Most boards allow 2–3 minutes per speaker.
-- Arrive 10–15 minutes early.
+- Arrive 10–15 minutes early. Say only that; do not add a reason.
 - Ask the clerk if you have questions about that evening's procedure.
+
+Never state a speaking time limit, for any board: the site has no source
+for one. If asked, say the limit, if any, is set by each board and to ask
+the clerk or check the board's website.
 
 Per-board detail:
 

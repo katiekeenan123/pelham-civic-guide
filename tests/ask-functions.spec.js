@@ -235,7 +235,20 @@ test('prompt — latest meeting per board, floor-based public comment, citing an
   }
   // Public comment: floor-based everywhere, never "sign in at the door".
   expect(prompt).not.toMatch(/sign in at the door before/i);
-  expect(prompt).toContain('Nobody signs in at the door');
+  const pc = prompt.replace(/\s+/g, ' ');
+  expect(pc).toContain('No sign-up is required: nobody signs up or signs in, at the door or beforehand; never tell a resident to.');
+  // No speaking time limit: the site has no source for one (the Manor has
+  // been described as having none).
+  expect(pc).not.toMatch(/2[–-]3 minutes/);
+  expect(pc).toContain('Never state a speaking time limit, for any board');
+  // Arrive early, with no invented reason.
+  expect(pc).toContain('Arrive 10–15 minutes early. Say only that; do not add a reason.');
+  // The Meetings page table agrees: floor-based, no sign-up.
+  for (const b of require('../content/bodies.json').bodies) {
+    const part = (b.meeting_schedule || {}).participation || '';
+    expect(part, b.id).not.toMatch(/sign ?up for public comment|sign in/i);
+    expect(b.public_comment_process || '', b.id).not.toMatch(/minutes per speaker/);
+  }
   // Citing and drafting.
   expect(prompt).toContain('## Citing your sources');
   expect(prompt).toContain('(cite as issues#rising-property-taxes-village-debt)');
