@@ -492,3 +492,34 @@ test('prompt — full titles, and each body\'s official pages from bodies.json',
   expect(flat).toContain("never guess a page address");
   expect(flat).toContain('Describe each link only by its label: never say a page posts agendas or minutes unless its label says "Agendas".');
 });
+
+test('results — one data block; the card paragraph and the prompt carry exactly its totals', () => {
+  const e = require('../content/elections.json');
+  const res = e.results;
+  const name = (id) => e.candidates.find((c) => c.id === id).name;
+  const card = require('../content/issues.json').issues.find((i) => i.id === 'november-2026-elections').description;
+  const para = card.split('<br><br>')[0];
+  expect(para.startsWith('<strong>Results reported by the Pelham Examiner')).toBe(true);
+  const prompt = require('../netlify/functions/system-prompt').replace(/\s+/g, ' ');
+  let pairs = 0;
+  for (const race of res.races) {
+    for (const t of race.totals) {
+      const n = name(t.candidate_id);
+      const v = t.votes.toLocaleString('en-US');
+      expect(para, `${n} on the card`).toContain(`${n} ${v}`);
+      expect(prompt, `${n} in the prompt`).toContain(`${n} ${v}`);
+      pairs += 1;
+    }
+  }
+  // Every "Name 1,234" pair on the card is one from the block, and no others.
+  const onCard = para.match(/[A-Z][a-z]+ [A-Z][a-z]+ \d{1,3}(,\d{3})*/g) || [];
+  expect(onCard.length).toBe(pairs);
+  expect(prompt).toContain('cite as elections#results');
+  // The verified totals, digit for digit.
+  const flat = Object.fromEntries(res.races.flatMap((r) => r.totals.map((t) => [t.candidate_id, t.votes])));
+  expect(flat).toEqual({
+    'theresa-mohan': 3549, 'scott-wolfgang': 1406, 'eileen-miller': 3436, 'maureen-borsella': 1526,
+    'kristen-burke': 1765, 'krystal-howell': 1718, 'russell-solomon': 1677, 'paul-anzilotti': 850, 'arthur-long': 822, 'everitt-speros': 813,
+    'ryan-kurtz': 1450, 'chris-dlutkowski': 1436, 'breda-bennett': 1331, 'joe-liberatore': 1264,
+  });
+});

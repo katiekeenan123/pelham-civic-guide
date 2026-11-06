@@ -1691,3 +1691,69 @@ test('elections — the Manor and Town Supervisor debate summaries open from the
     await expect(fold.locator('xpath=ancestor::div[contains(@class,"debate-card")]').locator('.debate-race')).toHaveText(race);
   }
 });
+
+test('elections — #results comes first: unofficial heading, plain tables by votes, attributed lines, links', async ({ page }) => {
+  await page.goto('/elections');
+  const res = page.locator('section#results.results-section');
+  await expect(res).toBeVisible();
+  await expect(res).toHaveAttribute('data-review-by', '2026-11-20');
+  await expect(res.locator('h3')).toHaveText('Election results (unofficial, not certified)');
+  await expect(res.locator('.results-intro')).toHaveText('Unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner, Nov 5, 2026, updated throughout the day. Counting may not be complete. Not certified.');
+  // Above the debates and the races.
+  const y = async (sel) => (await page.locator(sel).first().boundingBox()).y;
+  expect(await y('#results')).toBeLessThan(await y('#debates'));
+  expect(await y('#results')).toBeLessThan(await y('.race-block'));
+  // One captioned table per race, ordered by total votes.
+  await expect(res.locator('table.results-table caption')).toHaveText([
+    'Town Supervisor', 'Town Clerk', 'Village of Pelham Board of Trustees (3 seats)', 'Village of Pelham Manor Board of Trustees (2 seats)',
+  ]);
+  const rows = (race) => res.locator(`#results-${race} tbody tr`);
+  await expect(rows('village-of-pelham-trustees')).toHaveText([
+    'Kristen Burke1,765', 'Krystal Howell1,718', 'Russell Solomon1,677', 'Paul Anzilotti850', 'Arthur Long822', 'Everitt Speros813',
+  ]);
+  await expect(rows('pelham-manor-trustees')).toHaveText(['Ryan Kurtz1,450', 'Chris Dlutowski1,436', 'Breda Bennett1,331', 'Joe Liberatore1,264']);
+  await expect(rows('town-supervisor')).toHaveText(['Theresa Mohan3,549', 'Scott Wolfgang1,406']);
+  await expect(rows('town-clerk')).toHaveText(['Eileen Miller3,436', 'Maureen Borsella1,526']);
+  // Plain: no bold, marks, icons or party labels on any candidate.
+  await expect(res.locator('table strong, table b, table img, table svg')).toHaveCount(0);
+  await expect(res.locator('.results-grid')).not.toContainText(/✓|✔|Democrat|Republican|Neighborhood|Party/);
+  const weights = await res.locator('tbody th').evaluateAll((els) => els.map((e) => getComputedStyle(e).fontWeight));
+  expect(new Set(weights)).toEqual(new Set(['400']));
+  // Attributed lines.
+  await expect(res.locator('#results-pelham-manor-trustees .results-outcome')).toHaveText('The Pelham Examiner reported that Kurtz and Dlutowski defeated Bennett and Liberatore, based on unofficial results.');
+  await expect(res.locator('#results-village-of-pelham-trustees .results-note')).toContainText('Burke’s election will create a vacancy on the Town Council');
+  await expect(res.locator('#results-pelham-manor-trustees .results-note')).toContainText('not all of the outstanding absentee ballots have arrived');
+  // Links.
+  await expect(res.locator('.results-links a[href="https://www.westchestercountyny.gov/boe"]')).toHaveCount(1);
+  await expect(res.locator('.results-links a', { hasText: 'Pelham Examiner — election results report, November 5, 2026' })).toHaveAttribute('href', /pelhamexaminer\.com\/85683\//);
+});
+
+test('elections — #results tables stack in one column on a phone', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/elections#results');
+  const xs = await page.locator('#results .results-race').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().left)));
+  expect(new Set(xs).size).toBe(1);
+  const overflow = await page.locator('#results').evaluate((e) => e.scrollWidth > e.clientWidth + 1);
+  expect(overflow).toBe(false);
+});
+
+test('home banner and Get Involved — the results line links to /elections#results', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-11-06T10:00:00'));
+  await page.goto('/');
+  await expect(page.locator('#home-election .home-banner-text a[href="/elections#results"]')).toHaveText('Unofficial results reported');
+  await page.goto('/get-involved');
+  await expect(page.locator('.vote-fact-note a[href="/elections#results"]')).toHaveText('Unofficial results reported');
+});
+
+test('issues — the elections card leads with the results, then Election Day, then the earlier items', async ({ page }) => {
+  await page.goto('/issues');
+  const text = await page.locator('#november-2026-elections p').first().innerText();
+  const at = (s) => text.indexOf(s);
+  expect(at('Results reported by the Pelham Examiner')).toBe(0);
+  expect(at('Results reported by the Pelham Examiner')).toBeLessThan(at('Election Day ballot-scanning failure'));
+  expect(at('Election Day ballot-scanning failure')).toBeLessThan(at('Election night'));
+  expect(at('Election night')).toBeLessThan(at('Three contested races'));
+  expect(at('Three contested races')).toBeLessThan(at('An earlier voter-roll challenge'));
+  // First among the active issues on the page.
+  await expect(page.locator('.issue-card').first()).toHaveAttribute('id', 'november-2026-elections');
+});

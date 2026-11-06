@@ -514,6 +514,18 @@ function buildPrompt(data, r) {
           const when = plain(ms.cadence_detail || ms.cadence).replace(/([^.])$/, '$1.');
           return `- ${b.board_name}: ${when}${where ? ` Location: ${where}.` : ''}${b.website ? ` Calendar: ${b.website}` : ''}`;
         }).join('\n'),
+    // The unofficial totals, from the same elections.json block as the
+    // Elections page #results section.
+    'election-results': () => {
+      const res = data.elections.results;
+      if (!res) return '(No results block.)';
+      return res.races.map((race) => {
+        const totals = race.totals.slice().sort((a, b) => b.votes - a.votes)
+          .map((t) => `${resultsCandidateName(data, t.candidate_id)} ${t.votes.toLocaleString('en-US')}`).join('; ');
+        const notes = race.notes.map((n) => ` ${plain(r(n, 'elections.json'))}`).join('');
+        return `- ${race.caption}: ${totals}. ${plain(r(race.examiner_outcome, 'elections.json'))}${notes}`;
+      }).join('\n');
+    },
     // Each body's website and the links Gov 101 shows for it (agendas,
     // budgets, notices), so the model can say where records are posted
     // instead of guessing a page. Allowlist-checked like any prompt URL.
@@ -901,9 +913,52 @@ function generateDebates(data, r) {
   return out.join('\n');
 }
 
+// The unofficial results section (#results), from the one results block in
+// elections.json. Plain tables: no bold, colour, icon or mark on any
+// candidate, no party labels, ordered by total votes. Each race gets a
+// caption, the Examiner's attributed outcome and any attributed notes.
+function resultsCandidateName(data, id) {
+  const c = data.elections.candidates.find((x) => x.id === id);
+  if (!c) fail('elections.json', `results: unknown candidate_id ${id}`);
+  return c ? c.name : id;
+}
+
+function generateElectionResults(data, r) {
+  const res = data.elections.results;
+  if (!res) return '';
+  const at = 'elections.json';
+  const out = [];
+  out.push(`    <section class="results-section" id="results" aria-labelledby="results-heading" data-review-by="${esc(res.review_by)}">`);
+  out.push('      <h3 class="results-heading" id="results-heading">Election results (unofficial, not certified)</h3>');
+  out.push(`      <p class="results-intro">Unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner, ${r(`{{fact:${res.snapshot_fact}.short}}`, at)}. Counting may not be complete. Not certified.</p>`);
+  out.push('      <div class="results-grid">');
+  for (const race of res.races) {
+    const sorted = race.totals.slice().sort((a, b) => b.votes - a.votes);
+    out.push(`        <div class="results-race" id="results-${esc(race.id)}">`);
+    out.push('          <table class="results-table">');
+    out.push(`            <caption>${esc(race.caption)}</caption>`);
+    out.push('            <thead><tr><th scope="col">Candidate</th><th scope="col">Votes</th></tr></thead>');
+    out.push('            <tbody>');
+    for (const t of sorted) {
+      out.push(`              <tr><th scope="row">${esc(resultsCandidateName(data, t.candidate_id))}</th><td>${t.votes.toLocaleString('en-US')}</td></tr>`);
+    }
+    out.push('            </tbody>');
+    out.push('          </table>');
+    out.push(`          <p class="results-outcome">${r(race.examiner_outcome, at)}</p>`);
+    for (const n of race.notes) out.push(`          <p class="results-note">${r(n, at)}</p>`);
+    out.push('        </div>');
+  }
+  out.push('      </div>');
+  out.push(`      <p class="results-links"><a href="${esc(res.official_count.url)}" target="_blank">${esc(res.official_count.label)}</a> · <a href="${esc(res.source.url)}" target="_blank">${esc(res.source.label)}</a></p>`);
+  out.push('    </section>');
+  return out.join(NL);
+}
+
 function generateElections(data, r) {
   const e = data.elections;
   const out = [];
+  // Results first, above the editorial note, the debates and the races.
+  if (e.results) out.push(generateElectionResults(data, r));
   out.push('    <div style="background: rgba(200,151,58,0.12); border: 1px solid rgba(200,151,58,0.3); border-left: 4px solid var(--gold); padding: 14px 18px; margin-bottom: 36px; font-size: 13px; color: #c8aa70; font-family: \'IBM Plex Sans\', sans-serif; line-height: 1.6;">');
   out.push(`      ${r(e.editorial_note, 'elections.json')}`);
   out.push('    </div>');
@@ -1580,7 +1635,7 @@ function generateInvolvedVote(data, r) {
     box('Last election', r('{{fact:election-date-2026}}', at),
       'Village of Pelham, Village of Pelham Manor and Town of Pelham races were all on this ballot.'),
     box('Results', 'Unofficial results reported',
-      `Unofficial results reported; not certified (${r('{{fact:election-results-snapshot-2026}}', at)}). Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank">Westchester County Board of Elections</a>, not this site.`),
+      `<a href="/elections#results">Unofficial results reported</a>; not certified (${r('{{fact:election-results-snapshot-2026}}', at)}). Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank">Westchester County Board of Elections</a>, not this site.`),
     box('Register', 'Any time',
       'Each election has its own deadline: <a href="https://www.elections.ny.gov" target="_blank">elections.ny.gov</a> or the Westchester County Board of Elections, 914-995-5700.'),
     '      </div>',
@@ -1640,6 +1695,7 @@ function generateSiteSources(data) {
   }
   const anchors = {};
   for (const i of data.issues.issues) anchors[`issues#${i.id}`] = plain(i.title.replace(/\{\{[^}]+\}\}/g, '').trim());
+  if (data.elections.results) anchors['elections#results'] = 'Election results (unofficial, not certified)';
   for (const m of data.meetings.meetings.filter((x) => x.status === 'published')) {
     anchors[`meetings#${m.id}`] = `Meeting summary — ${m.title}`;
   }
@@ -1801,7 +1857,7 @@ function generateElectionsBanner(data, r) {
       '    <div class="home-banner-body">',
       '      <div class="home-banner-eyebrow">🗳 Election held</div>',
       `      <h2 class="home-banner-date">${r('{{fact:election-date-2026}}', 'elections.json')}</h2>`,
-      `      <p class="home-banner-text">${data.elections.races.length} contested races · ${data.elections.candidates.length} candidates · Unofficial results reported; not certified (${r('{{fact:election-results-snapshot-2026}}', 'elections.json')}). Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank" style="color: inherit; text-decoration: underline;">Westchester County Board of Elections</a>, not this site.</p>`,
+      `      <p class="home-banner-text">${data.elections.races.length} contested races · ${data.elections.candidates.length} candidates · <a href="/elections#results" style="color: inherit; text-decoration: underline;">Unofficial results reported</a>; not certified (${r('{{fact:election-results-snapshot-2026}}', 'elections.json')}). Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank" style="color: inherit; text-decoration: underline;">Westchester County Board of Elections</a>, not this site.</p>`,
       '    </div>',
       '    <a class="home-banner-cta" href="/elections">See the candidates →</a>',
       '  </div>',
@@ -2300,6 +2356,13 @@ function main() {
     console.log(`  ⚠ ${s.file} contained a BUILD comment; stripped, but that would have broken the splice`);
   }
   for (const g of villageGaps) console.log(`  ⚠ village gap       ${g}`);
+  const res = data.elections && data.elections.results;
+  if (res) {
+    const today = new Date().toISOString().slice(0, 10);
+    console.log(today >= res.review_by
+      ? `  ⚠ REVIEW DUE       election results (elections.json results.review_by ${res.review_by}): replace with certified results or extend the date`
+      : `  election results   unofficial; review by ${res.review_by}`);
+  }
   console.log(`  system prompt      ${promptText.length.toLocaleString()} chars → netlify/functions/system-prompt.js`);
   console.log(`  KNOWN_ISSUES       ${stats.ragKeys} canonical keys → netlify/functions/ask-pelham.js`);
   console.log(`  output             ${changed.length ? changed.join(', ') : 'unchanged (idempotent)'}`);

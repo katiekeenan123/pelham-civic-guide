@@ -2488,3 +2488,20 @@
 /* Meetings: where to find meetings older than the summaries here. */
 .mtg-coverage-note { margin: -34px 0 32px; max-width: 620px; font-size: 13px; line-height: 1.55; color: var(--slate); }
 .mtg-coverage-note a { color: var(--navy); }
+
+/* Elections page #results: unofficial results, plain tables. No bold,
+   colour or mark on any candidate; the row header is normal weight. */
+.results-section { margin: 0 0 40px; padding: 24px; border: 1px solid rgba(255,255,255,0.18); border-radius: 6px; }
+.results-heading { margin: 0 0 8px; font-size: 22px; color: var(--white); }
+.results-intro { margin: 0 0 20px; font-size: 14px; line-height: 1.6; color: var(--slate-light); }
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px 32px; }
+.results-table { width: 100%; border-collapse: collapse; font-size: 14px; color: var(--white); }
+.results-table caption { text-align: left; font-size: 15px; padding-bottom: 8px; color: var(--white); }
+.results-table th, .results-table td { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.14); font-weight: normal; text-align: left; }
+.results-table thead th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--slate-light); }
+.results-table td { text-align: right; font-variant-numeric: tabular-nums; }
+.results-table thead th:last-child { text-align: right; }
+.results-outcome, .results-note { margin: 10px 0 0; font-size: 13px; line-height: 1.55; color: var(--slate-light); }
+.results-links { margin: 20px 0 0; font-size: 13px; }
+.results-links a { color: var(--gold-light); }
+@media (max-width: 600px) { .results-section { padding: 16px; } .results-grid { grid-template-columns: 1fr; } }

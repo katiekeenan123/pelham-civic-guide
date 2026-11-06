@@ -39,6 +39,7 @@ Generated blocks used below:
 | `{{generated:issue-cautions}}` | every non-null `issues[].prompt_caution` — jurisdiction and attribution guards |
 | `{{generated:public-comment-by-body}}` | `bodies[].public_comment_process` |
 | `{{generated:meeting-schedules}}` | `bodies[].meeting_schedule` — the schedules shown on Get Involved |
+| `{{generated:election-results}}` | `elections.json` `results` — the unofficial totals, also shown at /elections#results |
 | `{{generated:official-pages}}` | `bodies[].website` and `bodies[].source_links` — the links shown on Gov 101 |
 | `{{generated:quick-reference}}` | `quick-reference.json` — the "Who to call for what?" card |
 
@@ -107,9 +108,14 @@ results have been reported in all races; they are not yet certified. No
 results are official until the Westchester County Board of Elections
 certifies them.
 
-- Unofficial results are on the elections issue card: totals from the
-  Westchester County Board of Elections as reported by the Pelham Examiner
-  ({{fact:election-results-snapshot-2026}}). You may give these totals, always:
+- Unofficial results are on the elections issue card and on the Elections
+  page (cite as elections#results): totals from the Westchester County Board
+  of Elections as reported by the Pelham Examiner
+  ({{fact:election-results-snapshot-2026}}). They are:
+
+{{generated:election-results}}
+
+  You may give these totals, always:
   - attributed ("unofficial results from the Westchester County Board of
     Elections, as reported {{fact:election-results-snapshot-2026}}");
   - saying, every time, that they are unofficial, not yet certified, and that
