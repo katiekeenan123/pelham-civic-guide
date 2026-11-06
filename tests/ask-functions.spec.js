@@ -551,3 +551,21 @@ test('results — a results question always cites elections#results; BOE calenda
   expect(flat).toContain(`Location: District offices / Pelham Middle School. Calendar: ${cal}`);
   expect(flat).toContain('never say what a page contains or links to beyond that label');
 });
+
+test('lookup reminder — added next to "where do I find" and "how do I contact" questions', () => {
+  const { isLookupQuestion, withExaminerContext } = require('../netlify/functions/ask-pelham')._test;
+  for (const q of ['Where do I find Board of Education agendas?', 'How do I contact the Board of Elections?',
+    'Where can I find the Village budget?', 'What are the Town Clerk\'s hours?', 'Where are the minutes for the Manor board?',
+    'What is the phone number for the Village Clerk?']) {
+    expect(isLookupQuestion(q), q).toBe(true);
+  }
+  for (const q of ['Who won the Village of Pelham trustee race?', 'What happened with the voting machines?',
+    'Why is the Village budget so much higher?', 'When does the Town board meet?']) {
+    expect(isLookupQuestion(q), q).toBe(false);
+  }
+  const msgs = [{ role: 'user', content: 'How do I contact the Board of Elections?' }];
+  const out = withExaminerContext(msgs, [], null, false, false, true)[0].content.replace(/\s+/g, ' ');
+  expect(out).toContain('Describe each link only by its label: never say what a page contains, will have or links to, or where something is "typically posted".');
+  expect(out).toContain("If a detail is not in the site's data, say so plainly and give the link to that body's website.");
+  expect(out.endsWith('How do I contact the Board of Elections?')).toBe(true);
+});

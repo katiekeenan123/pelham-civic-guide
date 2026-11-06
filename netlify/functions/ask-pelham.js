@@ -134,7 +134,7 @@ exports.handler = async (event) => {
         model: MODEL,
         max_tokens: MAX_TOKENS,
         system: `${todayLine()}\n\n${SYSTEM_PROMPT}`,
-        messages: withExaminerContext(messages, articles, contested, isResultsQuestion(question), isScheduleQuestion(question)),
+        messages: withExaminerContext(messages, articles, contested, isResultsQuestion(question), isScheduleQuestion(question), isLookupQuestion(question)),
       }),
     });
 
@@ -855,8 +855,8 @@ function dedupeArticles(rows) {
  * is copied rather than mutated, and anything unexpected (no user turn, a
  * non-string content block) falls through to the original conversation.
  */
-function withExaminerContext(messages, articles, contested = null, results = false, schedule = false) {
-  if (!articles.length && !contested && !results && !schedule) return messages;
+function withExaminerContext(messages, articles, contested = null, results = false, schedule = false, lookup = false) {
+  if (!articles.length && !contested && !results && !schedule && !lookup) return messages;
 
   const index = messages.map((m) => m && m.role).lastIndexOf('user');
   if (index === -1 || typeof messages[index].content !== 'string') return messages;
@@ -864,7 +864,7 @@ function withExaminerContext(messages, articles, contested = null, results = fal
   const copy = messages.slice();
   copy[index] = {
     ...messages[index],
-    content: `${articles.length ? `${buildContextBlock(articles)}\n\n` : ''}${contested ? `${CONTESTED_REMINDER}\n\n` : ''}${results ? `${RESULTS_REMINDER}\n\n` : ''}${schedule ? `${SCHEDULE_REMINDER}\n\n` : ''}${messages[index].content}`,
+    content: `${articles.length ? `${buildContextBlock(articles)}\n\n` : ''}${contested ? `${CONTESTED_REMINDER}\n\n` : ''}${results ? `${RESULTS_REMINDER}\n\n` : ''}${schedule ? `${SCHEDULE_REMINDER}\n\n` : ''}${lookup ? `${LOOKUP_REMINDER}\n\n` : ''}${messages[index].content}`,
   };
   return copy;
 }
@@ -927,6 +927,25 @@ const SCHEDULE_CONTEXT = /\b(board|trustees?|council|town|village|manor|educatio
 function isScheduleQuestion(question) {
   const q = typeof question === 'string' ? question : '';
   return SCHEDULE_WORDS.test(q) && SCHEDULE_CONTEXT.test(q);
+}
+
+// Added next to "where do I find" and "how do I contact" questions: with
+// the rule only in the system prompt, answers gave the right link and then
+// guessed what the page holds ("typically posted on the district's site").
+const LOOKUP_REMINDER = [
+  'This question asks where to find something or how to contact someone. Give',
+  'only the links, phone numbers, emails, addresses and hours that are in this',
+  'prompt. Describe each link only by its label: never say what a page',
+  'contains, will have or links to, or where something is "typically posted".',
+  'If a detail is not in the site\'s data, say so plainly and give the link to',
+  'that body\'s website.',
+].join('\n');
+
+const LOOKUP_QUESTION = /\b(where (do|can|would|should) (i|we|you|one) (find|get|see|look|read|access)|where (is|are) (the )?(agendas?|minutes|calendar|records?|budgets?|notices?)|how (do|can|would|should) (i|we) (contact|reach|email|call|get in touch with)|contact (info|information|details)|phone number|email address|office hours|hours (of|for)|what are the [\w' ]*hours)\b/i;
+
+function isLookupQuestion(question) {
+  const q = typeof question === 'string' ? question : '';
+  return LOOKUP_QUESTION.test(q);
 }
 
 function isResultsQuestion(question) {
@@ -1098,4 +1117,4 @@ function withSources(rawAnswer, articles, pinnedPages = [], onBlocked = () => {}
 
 // Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
 // Netlify only calls `handler`.
-exports._test = { stripSourceMarkers, sourceLabelFor, summaryFor, isScheduleQuestion, withExaminerContext, todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };
+exports._test = { isLookupQuestion, stripSourceMarkers, sourceLabelFor, summaryFor, isScheduleQuestion, withExaminerContext, todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };
