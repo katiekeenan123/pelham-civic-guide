@@ -63,19 +63,13 @@ create policy "anon can insert civic_engagement"
   with check (true);
 
 -- ── qa_log: every question asked and the full answer given ────────────────
--- Q&A logging active — review after 30 days and decide whether to keep.
---
 -- Added for the launch period to find out what residents actually ask, and
 -- where the content does not answer them. Unlike the three tables above this
--- records something the reader did not choose to submit, so it carries an
--- expiry by intention rather than by neglect, and the expiry is enforced in
--- code: logQa() in ask-pelham.js holds a hard cutoff of November 15, 2026 and
--- writes nothing after it, so the table stops growing whether or not anyone
--- remembers. Restarting it takes a deliberate edit. On or before that date,
--- either drop this table and the logQa() call, or move the cutoff and write
--- down why it is staying. The cutoff was first October 24, 2026; it was moved
--- in October 2026 to capture resident questions after the November 3
--- election. `session_id` is a random per-page-load value
+-- records something the reader did not choose to submit. It first carried a
+-- hard cutoff in logQa() (October 24, 2026, later moved to November 15,
+-- 2026). In November 2026 the cutoff was removed: logging continues with no
+-- end date, because the questions keep showing where the content falls
+-- short. Test traffic (X-Test-Request) is still never logged. `session_id` is a random per-page-load value
 -- generated in the browser -- not a cookie, not stored, tied to no person.
 create table if not exists public.qa_log (
   id bigserial primary key,

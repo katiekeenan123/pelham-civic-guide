@@ -381,3 +381,12 @@ test('isResultsQuestion — results questions get the results reminder; others d
     expect(isResultsQuestion(q), q).toBe(false);
   }
 });
+
+test('qa_log — logging has no end date, and test traffic is still never logged', () => {
+  const fn = require('fs').readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'ask-pelham.js'), 'utf8');
+  const logQa = fn.slice(fn.indexOf('async function logQa('), fn.indexOf('async function logBlocked('));
+  expect(fn).not.toContain('QA_LOG_UNTIL');
+  expect(logQa).not.toMatch(/Date\.now\(\)/);
+  expect(logQa).toContain("if (headers && headers['x-test-request']) return;");
+  expect(logQa).toContain("supabase.from('qa_log').insert(row)");
+});

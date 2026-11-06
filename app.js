@@ -9,7 +9,7 @@
 
   let conversationHistory = [];
 
-  // Q&A logging active — review after 30 days and decide whether to keep.
+  // Q&A logging (qa_log, no end date; see netlify/functions/ask-pelham.js).
   //
   // One id per page load, so the log can tell "one person asked six follow-up
   // questions" from "six people each asked one". Deliberately not a cookie and

@@ -18,15 +18,14 @@
 //   SUPABASE_ANON_KEY  - the project "anon"/public API key
 // If those are absent the chat path still works; only feedback writes fail.
 //
-// Q&A logging active — review after 30 days and decide whether to keep.
-// Every answered question is also written to the Supabase `qa_log` table with
-// the full answer and the caller's per-page-load session_id, so the first
-// month of real traffic can be read back and used to find gaps in the
-// content. This is a launch-period diagnostic, not a permanent feature: it is
-// the one table here that records what residents asked rather than what they
-// chose to submit, so it should be switched off or justified once the thirty
-// days are up. It stops on its own: logQa() holds a hard cutoff of November
-// 15, 2026 and writes nothing after it. See logQa() below.
+// Q&A logging. Every answered question is also written to the Supabase
+// `qa_log` table with the full answer and the caller's per-page-load
+// session_id, so real traffic can be read back and used to find gaps in the
+// content. It is the one table here that records what residents asked rather
+// than what they chose to submit. It began as a launch-period diagnostic with
+// a hard end date; in November 2026 the end date was removed and logging
+// continues with no cutoff. Test traffic (X-Test-Request) is never logged.
+// See logQa() below.
 //
 // RETRIEVAL (RAG): before calling Anthropic, the newest user question is
 // matched against the Supabase `articles` table -- Pelham Examiner coverage
@@ -155,7 +154,6 @@ exports.handler = async (event) => {
     // the answer, that is not a vetted source, and reports each one here.
     const delivered = withSources(answer, articles, contested ? [contested.anchor] : [],
       (url) => blocked.push({ url, stage: 'citation' }));
-    // Q&A logging active — review after 30 days and decide whether to keep.
     await Promise.all([
       logQa(question, delivered, body.session_id, event.headers),
       logBlocked(blocked, question, event.headers),
@@ -166,7 +164,7 @@ exports.handler = async (event) => {
   }
 };
 
-// Q&A logging active — review after 30 days and decide whether to keep.
+// Q&A logging (no end date; see the header comment).
 //
 // Records the question and the answer exactly as delivered to the reader,
 // including the "Sources:" block, so the log shows what was actually said
@@ -181,28 +179,8 @@ exports.handler = async (event) => {
 // round. Nothing in here can fail the request.
 const QA_LOG_TIMEOUT_MS = 1500;
 
-// Q&A logging period ends November 15, 2026 — review qa_log table and
-// decide whether to extend or make permanent. Originally October 24; extended
-// to capture resident questions after the November 3 election.
-//
-// A hard stop rather than a reminder. A comment asking someone to switch this
-// off in a month only works if someone reads it in a month, and this is the
-// one table that records what residents asked rather than what they chose to
-// submit — so it should stop on its own and require a deliberate act to
-// restart. Past the cutoff logQa returns before it builds a row; answers are
-// unaffected, and the table simply stops growing.
-//
-// To extend, move this date. To make it permanent, delete the constant and
-// the guard below, and say so in supabase/grants.sql.
-//
-// End of November 15 in Pelham's own timezone rather than UTC midnight, which
-// would cut hours off the final day. Daylight saving ends November 1, so that
-// is EST (UTC-5), not EDT.
-const QA_LOG_UNTIL = Date.parse('2026-11-16T05:00:00Z');
-
 async function logQa(question, answer, sessionId, headers) {
   try {
-    if (Date.now() >= QA_LOG_UNTIL) return;
     // tests/ai.spec.js sends X-Test-Request so its synthetic questions stay
     // out of the log. Netlify lowercases incoming header names.
     if (headers && headers['x-test-request']) return;
