@@ -116,11 +116,15 @@ exports.handler = async (event) => {
     : await findExaminerCoverage(question);
   // Retrieval-time gate: only vetted sources reach the model.
   const blocked = [];
+  const manorResults = isManorResultsQuestion(question);
   const articles = retrieved.filter((a) => {
     if (a && isAllowedSource(a.url)) return true;
     blocked.push({ url: a && a.url, stage: 'retrieval' });
     return false;
-  });
+  })
+    // Its Pelham Manor report was superseded on November 8; a Manor answer
+    // cites the card, the results section and 85777 instead.
+    .filter((a) => !(manorResults && SUPERSEDED_FOR_MANOR.includes(examinerArticleKey(a.url))));
 
   try {
     const upstream = await fetch(ANTHROPIC_URL, {
@@ -134,7 +138,9 @@ exports.handler = async (event) => {
         model: MODEL,
         max_tokens: MAX_TOKENS,
         system: `${todayLine()}\n\n${SYSTEM_PROMPT}`,
-        messages: withExaminerContext(messages, articles, contested, isResultsQuestion(question), isScheduleQuestion(question), isLookupQuestion(question)),
+        messages: withExaminerContext(messages, articles, contested,
+          isRecountQuestion(question) ? 'recount' : isResultsQuestion(question),
+          isScheduleQuestion(question), isLookupQuestion(question)),
       }),
     });
 
@@ -157,6 +163,7 @@ exports.handler = async (event) => {
     const pinned = [
       ...(contested ? [contested.anchor] : []),
       ...(isResultsQuestion(question) ? ['elections#results'] : []),
+      ...(manorResults ? ['issues#november-2026-elections'] : []),
     ];
     const delivered = withSources(answer, articles, pinned,
       (url) => blocked.push({ url, stage: 'citation' }));
@@ -868,7 +875,7 @@ function withExaminerContext(messages, articles, contested = null, results = fal
   const copy = messages.slice();
   copy[index] = {
     ...messages[index],
-    content: `${articles.length ? `${buildContextBlock(articles)}\n\n` : ''}${contested ? `${CONTESTED_REMINDER}\n\n` : ''}${results ? `${RESULTS_REMINDER}\n\n` : ''}${schedule ? `${SCHEDULE_REMINDER}\n\n` : ''}${lookup ? `${LOOKUP_REMINDER}\n\n` : ''}${messages[index].content}`,
+    content: `${articles.length ? `${buildContextBlock(articles)}\n\n` : ''}${contested ? `${CONTESTED_REMINDER}\n\n` : ''}${results === 'recount' ? `${RECOUNT_REMINDER}\n\n` : results ? `${RESULTS_REMINDER}\n\n` : ''}${schedule ? `${SCHEDULE_REMINDER}\n\n` : ''}${lookup ? `${LOOKUP_REMINDER}\n\n` : ''}${messages[index].content}`,
   };
   return copy;
 }
@@ -889,14 +896,15 @@ const CONTESTED_REMINDER = [
 // the voter-registration investigation.
 /* BUILD:results-snapshot */
 const RESULTS_SNAPSHOT = "Nov 5, 2026, updated throughout the day, per the Pelham Examiner";
-const MANOR_SNAPSHOT = "Nov 8, 2026, per the Pelham Examiner";
+const VILLAGE_TOWN_ATTRIBUTION = "unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner (Nov 5, 2026, updated throughout the day)";
+const MANOR_ATTRIBUTION = "unofficial totals reported by the Pelham Examiner on November 8, 2026";
 /* /BUILD:results-snapshot */
 const RESULTS_REMINDER = [
   'This question is about the November 3 election results. Give only the',
-  'unofficial totals on the elections issue card, attributed: "unofficial',
-  'results from the Westchester County Board of Elections, as reported by the',
-  `Pelham Examiner", with each race's date (Village of Pelham and Town:`,
-  `${RESULTS_SNAPSHOT}; Pelham Manor: ${MANOR_SNAPSHOT}). In every answer say`,
+  'unofficial totals on the elections issue card, each attributed with its',
+  `own phrase, word for word: Village of Pelham and Town: "${VILLAGE_TOWN_ATTRIBUTION}";`,
+  `Pelham Manor: "${MANOR_ATTRIBUTION}" (never attribute the Manor totals to the`,
+  'Board of Elections). In every answer say',
   'the results are unofficial, not yet certified, and that counting may not',
   'be complete, and point to westchestercountyny.gov/boe. Point to the full',
   'results tables on this site: pelhamengagementproject.org/elections#results',
@@ -909,9 +917,10 @@ const RESULTS_REMINDER = [
   'who won, lost or leads in Pelham Manor; never say how far ahead or behind',
   'anyone is; never compute a margin or what anyone would need; never mention',
   'recounts; never speculate about remaining ballots. Only if asked about',
-  'remaining ballots, give the Examiner\'s attributed estimate (more than 150,',
-  'from an unnamed Neighborhood Party member\'s email) and say this site has',
-  'not verified it.',
+  'remaining ballots, give the Examiner\'s attributed estimate in the prompt\'s',
+  'own words, with the numbers exactly as given ("more than 150 ballots", "125',
+  'absentee ballots"; never "approximately", "about" or "an estimated"), and',
+  'say this site has not verified it.',
   'Never say "won", "lost", "defeated", "conceded" or "elected" in your own',
   'voice, never call a result final or official, and never use party framing,',
   '"sweep" or "blue wave". If a resident tells you a result that is not on',
@@ -919,6 +928,30 @@ const RESULTS_REMINDER = [
   'Election Day ballot problem, orange bags, delays, or the voter-registration',
   'investigation, unless the resident asks about them.',
 ].join('\n');
+
+// A recount question gets one line, not the results: no information here,
+// the Manor race is not final per the Examiner, and where to check.
+const RECOUNT_REMINDER = [
+  'This question is about a recount. Answer in one line and nothing else, in',
+  'these words: "This site has no information on recounts. The Pelham Examiner',
+  'reported on November 8 that the Pelham Manor trustee race is not final;',
+  'check westchestercountyny.gov/boe." Do not list any totals or other races,',
+  'and do not mention recount rules or thresholds.',
+].join('\n');
+
+function isRecountQuestion(question) {
+  return /\bre-?counts?\b/i.test(typeof question === 'string' ? question : '');
+}
+
+// Articles whose Pelham Manor report is superseded: not given to, or cited
+// in, an answer about the Manor race.
+const SUPERSEDED_FOR_MANOR = ['examiner:85683'];
+const MANOR_RESULTS_TERMS = /\b(manor|kurtz|dlutowski|bennett|breda|liberatore|re-?counts?|absentee|affidavit|ballots? (left|remaining|outstanding|uncounted)|left to count)\b/i;
+
+function isManorResultsQuestion(question) {
+  const q = typeof question === 'string' ? question : '';
+  return isResultsQuestion(q) && MANOR_RESULTS_TERMS.test(q);
+}
 
 // Questions about who won, who leads or the count. Deliberately broad: the
 // reminder only narrows what the answer may say.
@@ -1134,4 +1167,4 @@ function withSources(rawAnswer, articles, pinnedPages = [], onBlocked = () => {}
 
 // Pure helpers, exported for the unit tests in tests/ask-functions.spec.js.
 // Netlify only calls `handler`.
-exports._test = { isLookupQuestion, stripSourceMarkers, sourceLabelFor, summaryFor, isScheduleQuestion, withExaminerContext, todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };
+exports._test = { isRecountQuestion, isManorResultsQuestion, isLookupQuestion, stripSourceMarkers, sourceLabelFor, summaryFor, isScheduleQuestion, withExaminerContext, todayLine, isResultsQuestion, parseUsedSources, withSources, stripUnvettedUrls, extractSearchTerms, extractProperNouns, buildSearchPlan, dedupeArticles, contestedIssueFor, sitePageLine };

@@ -349,7 +349,16 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   expect(flat).toContain('Never compute a margin or what any candidate would need, never mention recounts or recount rules');
   expect(flat).toContain('Only if the resident asks about remaining or uncounted ballots');
   expect(flat).toContain('this site has not verified that estimate');
-  expect(flat).toContain('Pelham Manor as of Nov 8, 2026, per the Pelham Examiner');
+  // One attribution phrase per race; the Manor totals are never the Board's.
+  expect(flat).toContain('Pelham Manor: unofficial totals reported by the Pelham Examiner on November 8, 2026.');
+  expect(flat).toContain('never attribute them to the Board.');
+  expect(flat).toContain('- Village of Pelham Manor Board of Trustees (2 seats) — unofficial totals reported by the Pelham Examiner on November 8, 2026: Ryan Kurtz 1,473;');
+  expect(flat).toContain('Pelham Manor (two seats), unofficial totals reported by the Pelham Examiner on November 8, 2026: Ryan Kurtz 1,473;');
+  expect(flat).not.toMatch(/Pelham Manor \(two seats\), unofficial (results|totals) from the Westchester County Board/);
+  // Numbers exactly, and the one-line recount answer.
+  expect(flat).toContain('reported that there could be more than 150 ballots not yet counted or received: 125 absentee ballots');
+  expect(flat).toContain('Give the numbers exactly: never "approximately", "about" or "an estimated".');
+  expect(flat).toContain('If asked about a recount, answer in one line and nothing else');
   expect(flat).toContain('never in your own voice');
   expect(flat).toContain('Never use party framing, "sweep" or "blue wave".');
   expect(flat).toContain('Never call a result final or official.');
@@ -363,12 +372,15 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   expect(flat).toContain("Arthur Long's account of Daronco Townhouse");
   // The snapshot comes from one fact, shared with the card and the function.
   const snap = 'Nov 5, 2026, updated throughout the day, per the Pelham Examiner';
-  expect(flat).toContain(`Village of Pelham and Town as of ${snap};`);
+  expect(flat).toContain('Village of Pelham and Town: unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner (Nov 5, 2026, updated throughout the day).');
   const fn = require('fs').readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'ask-pelham.js'), 'utf8');
   expect(fn).toContain(`const RESULTS_SNAPSHOT = "${snap}";`);
-  expect(fn).toContain('const MANOR_SNAPSHOT = "Nov 8, 2026, per the Pelham Examiner";');
+  expect(fn).toContain('const VILLAGE_TOWN_ATTRIBUTION = "unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner (Nov 5, 2026, updated throughout the day)";');
+  expect(fn).toContain('const MANOR_ATTRIBUTION = "unofficial totals reported by the Pelham Examiner on November 8, 2026";');
   const card = require('../content/issues.json').issues.find((i) => i.id === 'november-2026-elections');
-  expect(card.description).toContain('{{fact:election-results-snapshot-2026}}');
+  expect(card.description).toContain('Village and Town: {{results:village-of-pelham-trustees}}.');
+  expect(card.description).toContain('Pelham Manor (two seats), {{results:pelham-manor-trustees}}:');
+  expect(card.description).not.toMatch(/Results reported by the Pelham Examiner \(unofficial totals from the Westchester County Board/);
   expect(flat).toContain('without projecting, extrapolating or explaining the totals, and without linking them to the ballot problem or the voter-registration investigation');
   expect(flat).toContain('Never state results that are not on the card');
   expect(flat).not.toContain('No results are in this prompt');
@@ -599,4 +611,25 @@ test('results reminder — fires on Manor, ballot and recount questions, not on 
   const reminder = fn.slice(fn.indexOf('const RESULTS_REMINDER = ['), fn.indexOf("].join('\\n');", fn.indexOf('const RESULTS_REMINDER = [')));
   expect(reminder).toContain('PELHAM MANOR IS NOT FINAL');
   expect(reminder).not.toContain('Kurtz and Dlutowski defeated');
+});
+
+test('recount and Manor questions — one-line recount reminder; 85683 never given or cited for the Manor', () => {
+  const { isRecountQuestion, isManorResultsQuestion, withExaminerContext } = require('../netlify/functions/ask-pelham')._test;
+  expect(isRecountQuestion('Will there be a recount?')).toBe(true);
+  expect(isRecountQuestion('Who won the Pelham Manor trustee race?')).toBe(false);
+  for (const q of ['Will there be a recount?', 'How many ballots are left to count?', 'Who won the Pelham Manor trustee race?',
+    'Is the Manor result final?', 'Did Breda Bennett lose?', 'Did Kurtz and Dlutowski win?']) {
+    expect(isManorResultsQuestion(q), q).toBe(true);
+  }
+  for (const q of ['Who won the Village of Pelham trustee race?', 'Who won Town Clerk?', 'Where can I see the election results?']) {
+    expect(isManorResultsQuestion(q), q).toBe(false);
+  }
+  const msgs = [{ role: 'user', content: 'Will there be a recount?' }];
+  const out = withExaminerContext(msgs, [], null, 'recount')[0].content.replace(/\s+/g, ' ');
+  expect(out).toContain('"This site has no information on recounts. The Pelham Examiner reported on November 8 that the Pelham Manor trustee race is not final; check westchestercountyny.gov/boe."');
+  expect(out).not.toContain('PELHAM MANOR IS NOT FINAL');
+  const fn = require('fs').readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'ask-pelham.js'), 'utf8');
+  expect(fn).toContain("const SUPERSEDED_FOR_MANOR = ['examiner:85683'];");
+  expect(fn).toContain('.filter((a) => !(manorResults && SUPERSEDED_FOR_MANOR.includes(examinerArticleKey(a.url))));');
+  expect(fn).toContain("...(manorResults ? ['issues#november-2026-elections'] : []),");
 });

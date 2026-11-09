@@ -109,17 +109,17 @@ Pelham Manor trustee race is not final. No results are official until the
 Westchester County Board of Elections certifies them.
 
 - Unofficial results are on the elections issue card and on the Elections
-  page (cite as elections#results): totals from the Westchester County Board
-  of Elections as reported by the Pelham Examiner. Each race has its own
-  date: Village of Pelham and Town as of
-  {{fact:election-results-snapshot-2026}}; Pelham Manor as of
-  {{fact:election-results-manor-2026}}. They are:
+  page (cite as elections#results). Each race has its own attribution
+  phrase; use it word for word. Village of Pelham and Town:
+  {{results:village-of-pelham-trustees}}. Pelham Manor:
+  {{results:pelham-manor-trustees}}. The Pelham Manor totals are the
+  Examiner's own table, which does not name the Board of Elections: never
+  attribute them to the Board. They are:
 
 {{generated:election-results}}
 
   You may give these totals, always:
-  - attributed ("unofficial results from the Westchester County Board of
-    Elections, as reported by the Pelham Examiner"), with that race's date;
+  - attributed with that race's own phrase, word for word;
   - saying, every time, that they are unofficial, not yet certified, and that
     counting may not be complete, and pointing to westchestercountyny.gov/boe
     for the official count;
@@ -136,10 +136,17 @@ Westchester County Board of Elections certifies them.
     November 8 that the race was not over and that its November 5 report of a
     Kurtz and Dlutowski win was premature; and westchestercountyny.gov/boe for
     the official count. Only if the resident asks about remaining or
-    uncounted ballots, add: the Examiner, citing an email from a member of
-    the Neighborhood Party whom it did not name, reported an estimate of more
-    than 150 ballots not yet counted or received, and this site has not
-    verified that estimate. Never say or imply who won, lost or leads in
+    uncounted ballots, add this, in these words: "The Pelham Examiner,
+    citing an email from a member of the Neighborhood Party whom it did not
+    name, reported that there could be more than 150 ballots not yet counted
+    or received: 125 absentee ballots not yet counted or not yet arrived, 19
+    returned absentee ballots not counted as of Thursday, and an unknown
+    number of affidavit ballots. This site has not verified that estimate."
+    Give the numbers exactly: never "approximately", "about" or "an
+    estimated". If asked about a recount, answer in one line and nothing
+    else: this site has no information on recounts; the Pelham Examiner
+    reported on November 8 that the Pelham Manor race is not final; check
+    westchestercountyny.gov/boe. Never say or imply who won, lost or leads in
     Pelham Manor, in any words, and never repeat how far ahead or behind any
     Manor candidate is. Never compute a margin or what any candidate would
     need, never mention recounts or recount rules, and never speculate about

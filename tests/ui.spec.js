@@ -1698,21 +1698,21 @@ test('elections — #results comes first: unofficial heading, plain tables by vo
   await expect(res).toBeVisible();
   await expect(res).toHaveAttribute('data-review-by', '2026-11-13');
   await expect(res.locator('h3')).toHaveText('Election results (unofficial, not certified)');
-  await expect(res.locator('.results-intro')).toHaveText('Unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner. Each race shows the date of its latest report. Counting may not be complete. Not certified.');
+  await expect(res.locator('.results-intro')).toHaveText('Unofficial results as reported by the Pelham Examiner. Each race shows its source and the date of its latest report. Counting may not be complete. Not certified.');
   // Each race carries its own as-of date: Village and Town Nov 5, Manor Nov 8.
-  await expect(res.locator('#results-village-of-pelham-trustees .results-asof')).toHaveText('As of Nov 5, 2026, updated throughout the day');
-  await expect(res.locator('#results-town-clerk .results-asof')).toHaveText('As of Nov 5, 2026, updated throughout the day');
-  await expect(res.locator('#results-pelham-manor-trustees .results-asof')).toHaveText('As of Nov 8, 2026');
+  // One attribution per race: the Board for Village and Town; the Examiner's own table for the Manor.
+  const board = 'Unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner (Nov 5, 2026, updated throughout the day)';
+  await expect(res.locator('#results-village-of-pelham-trustees .results-asof')).toHaveText(board);
+  await expect(res.locator('#results-town-clerk .results-asof')).toHaveText(board);
+  await expect(res.locator('#results-pelham-manor-trustees .results-asof')).toHaveText('Unofficial totals reported by the Pelham Examiner on November 8, 2026');
+  await expect(res.locator('#results-pelham-manor-trustees')).not.toContainText('Board of Elections');
   // Above the debates and the races.
   const y = async (sel) => (await page.locator(sel).first().boundingBox()).y;
   expect(await y('#results')).toBeLessThan(await y('#debates'));
   expect(await y('#results')).toBeLessThan(await y('.race-block'));
   // One captioned table per race, ordered by total votes.
   await expect(res.locator('table.results-table caption')).toHaveText([
-    'Town SupervisorAs of Nov 5, 2026, updated throughout the day',
-    'Town ClerkAs of Nov 5, 2026, updated throughout the day',
-    'Village of Pelham Board of Trustees (3 seats)As of Nov 5, 2026, updated throughout the day',
-    'Village of Pelham Manor Board of Trustees (2 seats)As of Nov 8, 2026',
+    /^Town Supervisor/, /^Town Clerk/, /^Village of Pelham Board of Trustees \(3 seats\)/, /^Village of Pelham Manor Board of Trustees \(2 seats\)/,
   ]);
   const rows = (race) => res.locator(`#results-${race} tbody tr`);
   await expect(rows('village-of-pelham-trustees')).toHaveText([
@@ -1775,6 +1775,6 @@ test('get involved and elections — no unconfirmed Board of Elections phone; po
   await page.goto('/get-involved');
   await expect(page.locator('main')).not.toContainText('995-5700');
   await page.goto('/elections');
-  await expect(page.locator('#elections .section-intro')).toContainText("Here's who ran and what they said during the campaign. Results are above; profiles and debate summaries are kept below as a record.");
+  await expect(page.locator('#elections .section-intro')).toContainText("The Village of Pelham race was the first contested Village trustee election since 2019, and all six candidates published platforms. Here's who ran and what they said during the campaign. Unofficial results are above; profiles and debate summaries are kept below as a record.");
   await expect(page.locator('#elections .section-intro')).not.toContainText("Here's who's running");
 });

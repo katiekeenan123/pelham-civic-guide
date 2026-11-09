@@ -223,9 +223,10 @@ function phase1() {
 // ── token resolution ───────────────────────────────────────────────────────
 // {{fact:<id>}} resolves to that fact's `display`. Unknown tokens are a build
 // error naming the token and where it came from, never a silent passthrough.
-function makeResolver(facts) {
+function makeResolver(facts, results) {
   const byId = new Map(facts.facts.map((f) => [f.id, f]));
   const used = new Map();
+  const races = new Map(((results && results.races) || []).map((x) => [x.id, x]));
 
   // {{fact:id}} → display, {{fact:id.short}} → display_short (falling back to
   // display). The short form exists because the same fact is legitimately
@@ -233,6 +234,16 @@ function makeResolver(facts) {
   // voter-info box.
   const resolve = (text, where) => {
     if (typeof text !== 'string') return text;
+    // {{results:<race id>}} -> the race's one attribution phrase from the
+    // elections.json results block (which may itself carry fact tokens).
+    text = text.replace(/\{\{results:([a-z0-9-]+)\}\}/g, (whole, id) => {
+      const race = races.get(id);
+      if (!race) {
+        fail(where, `unresolved token ${whole}`);
+        return whole;
+      }
+      return race.attribution;
+    });
     return text.replace(/\{\{fact:([a-z0-9-]+)(\.short)?\}\}/g, (whole, id, short) => {
       const f = byId.get(id);
       if (!f) {
@@ -525,8 +536,8 @@ function buildPrompt(data, r) {
         const totals = race.totals.slice().sort((a, b) => b.votes - a.votes)
           .map((t) => `${resultsCandidateName(data, t.candidate_id)} ${t.votes.toLocaleString('en-US')}`).join('; ');
         const notes = race.notes.map((n) => ` ${plain(r(n, 'elections.json'))}`).join('');
-        const asOf = plain(r(`{{fact:${race.as_of_fact}}}`, 'elections.json'));
-        return `- ${race.caption} (as of ${asOf}): ${totals}. ${plain(r(race.examiner_outcome, 'elections.json'))}${notes}`;
+        const attribution = plain(r(`{{results:${race.id}}}`, 'elections.json'));
+        return `- ${race.caption} — ${attribution}: ${totals}. ${plain(r(race.examiner_outcome, 'elections.json'))}${notes}`;
       }).join('\n');
     },
     // Each body's website and the links Gov 101 shows for it (agendas,
@@ -933,13 +944,14 @@ function generateElectionResults(data, r) {
   const out = [];
   out.push(`    <section class="results-section" id="results" aria-labelledby="results-heading" data-review-by="${esc(res.review_by)}">`);
   out.push('      <h3 class="results-heading" id="results-heading">Election results (unofficial, not certified)</h3>');
-  out.push('      <p class="results-intro">Unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner. Each race shows the date of its latest report. Counting may not be complete. Not certified.</p>');
+  out.push('      <p class="results-intro">Unofficial results as reported by the Pelham Examiner. Each race shows its source and the date of its latest report. Counting may not be complete. Not certified.</p>');
   out.push('      <div class="results-grid">');
   for (const race of res.races) {
     const sorted = race.totals.slice().sort((a, b) => b.votes - a.votes);
     out.push(`        <div class="results-race" id="results-${esc(race.id)}">`);
     out.push('          <table class="results-table">');
-    out.push(`            <caption>${esc(race.caption)}<span class="results-asof">As of ${r(`{{fact:${race.as_of_fact}.short}}`, at)}</span></caption>`);
+    const attribution = r(`{{results:${race.id}}}`, at);
+    out.push(`            <caption>${esc(race.caption)}<span class="results-asof">${attribution.charAt(0).toUpperCase()}${attribution.slice(1)}</span></caption>`);
     out.push('            <thead><tr><th scope="col">Candidate</th><th scope="col">Votes</th></tr></thead>');
     out.push('            <tbody>');
     for (const t of sorted) {
@@ -2290,7 +2302,7 @@ function main() {
   const data = phase1();
   if (errors.length) return report();
 
-  const r = makeResolver(data.facts);
+  const r = makeResolver(data.facts, data.elections.results);
 
   const promptText = buildPrompt(data, r);
   const promptModule = writePromptModule(promptText);
@@ -2317,7 +2329,8 @@ function main() {
   // prompt read, so the three cannot drift apart.
   fn = splice(fn, 'results-snapshot',
     [`const RESULTS_SNAPSHOT = ${JSON.stringify(plain(r('{{fact:election-results-snapshot-2026}}', 'facts.json')))};`,
-      `const MANOR_SNAPSHOT = ${JSON.stringify(plain(r('{{fact:election-results-manor-2026}}', 'facts.json')))};`].join(NL), 'js');
+      `const VILLAGE_TOWN_ATTRIBUTION = ${JSON.stringify(plain(r('{{results:village-of-pelham-trustees}}', 'elections.json')))};`,
+      `const MANOR_ATTRIBUTION = ${JSON.stringify(plain(r('{{results:pelham-manor-trustees}}', 'elections.json')))};`].join(NL), 'js');
 
   if (errors.length) return report();
 

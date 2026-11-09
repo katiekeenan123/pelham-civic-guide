@@ -76,11 +76,11 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "caption", "as_of_fact", "totals", "examiner_outcome", "notes"],
+            "required": ["id", "caption", "attribution", "totals", "examiner_outcome", "notes"],
             "properties": {
               "id": {"type": "string"},
               "caption": {"type": "string"},
-              "as_of_fact": {"type": "string", "description": "facts.json id of this race's as-of date."},
+              "attribution": {"type": "string", "description": "The one attribution phrase for this race's totals, lower-case, with its date (fact tokens allowed). Read by the page, the issue card via {{results:<race id>}}, and the AI prompt."},
               "update_note": {"type": "string", "description": "A visible note under the table, e.g. that an earlier report was superseded."},
               "source": {"type": "object", "additionalProperties": false, "required": ["label", "url"],
                 "properties": {"label": {"type": "string"}, "url": {"type": "string"}, "date": {"type": "string"}}},
