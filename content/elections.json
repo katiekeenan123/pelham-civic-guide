@@ -12,7 +12,7 @@
     {
       "label": "Results",
       "value": "Unofficial results reported",
-      "note": "Unofficial results reported; not certified. The totals ({{fact:election-results-snapshot-2026}}) are on the <a href=\"/issues#november-2026-elections\" style=\"color: var(--gold-light);\">elections issue card</a>. Certified results come from the <a href=\"https://www.westchestercountyny.gov/boe\" target=\"_blank\" style=\"color: var(--gold-light);\">Westchester County Board of Elections</a>, not this site."
+      "note": "Unofficial results reported; Pelham Manor trustee race not final. The totals are in the <a href=\"#results\" style=\"color: var(--gold-light);\">results section</a> and on the <a href=\"/issues#november-2026-elections\" style=\"color: var(--gold-light);\">elections issue card</a>. Certified results come from the <a href=\"https://www.westchestercountyny.gov/boe\" target=\"_blank\" style=\"color: var(--gold-light);\">Westchester County Board of Elections</a>, not this site."
     },
     {
       "label": "Future elections",
@@ -25,9 +25,8 @@
     "note": "The post-election home banner. It retires itself after review_by (app.js, data-hide-after); before then, replace it with certified results or extend the date. It reports unofficial results (not certified) with the shared snapshot date, election-results-snapshot-2026."
   },
   "results": {
-    "review_by": "2026-11-20",
-    "note": "Unofficial results as reported by the Examiner. The Elections page section, the AI prompt and a test against the issue card's results paragraph all read this block. Review by review_by: replace with certified results or extend the date.",
-    "snapshot_fact": "election-results-snapshot-2026",
+    "review_by": "2026-11-13",
+    "note": "Unofficial results as reported by the Examiner. Each race carries its own as-of fact (Village and Town Nov 5; Pelham Manor Nov 8). The Elections page section, the AI prompt and a test against the issue card's results paragraph all read this block. Review by review_by.",
     "official_count": {
       "label": "Westchester County Board of Elections — official count",
       "url": "https://www.westchestercountyny.gov/boe"
@@ -41,6 +40,7 @@
       {
         "id": "town-supervisor",
         "caption": "Town Supervisor",
+        "as_of_fact": "election-results-snapshot-2026",
         "totals": [
           {
             "candidate_id": "theresa-mohan",
@@ -57,6 +57,7 @@
       {
         "id": "town-clerk",
         "caption": "Town Clerk",
+        "as_of_fact": "election-results-snapshot-2026",
         "totals": [
           {
             "candidate_id": "eileen-miller",
@@ -73,6 +74,7 @@
       {
         "id": "village-of-pelham-trustees",
         "caption": "Village of Pelham Board of Trustees (3 seats)",
+        "as_of_fact": "election-results-snapshot-2026",
         "totals": [
           {
             "candidate_id": "kristen-burke",
@@ -107,28 +109,35 @@
       {
         "id": "pelham-manor-trustees",
         "caption": "Village of Pelham Manor Board of Trustees (2 seats)",
+        "as_of_fact": "election-results-manor-2026",
         "totals": [
           {
             "candidate_id": "ryan-kurtz",
-            "votes": 1450
+            "votes": 1473
           },
           {
             "candidate_id": "chris-dlutkowski",
-            "votes": 1436
+            "votes": 1460
           },
           {
             "candidate_id": "breda-bennett",
-            "votes": 1331
+            "votes": 1348
           },
           {
             "candidate_id": "joe-liberatore",
-            "votes": 1264
+            "votes": 1280
           }
         ],
-        "examiner_outcome": "The Pelham Examiner reported that Kurtz and Dlutowski defeated Bennett and Liberatore, based on unofficial results.",
+        "examiner_outcome": "The Pelham Examiner reported on November 8 that the race was not over and that its November 5 report of a Kurtz and Dlutowski win was premature.",
+        "update_note": "Updated November 8: the Examiner&rsquo;s earlier November 5 report that Kurtz and Dlutowski had won was premature. The race is not final.",
         "notes": [
-          "According to the Pelham Examiner, not all of the outstanding absentee ballots have arrived, but there don&rsquo;t appear to be enough remaining to alter the final result."
-        ]
+          "Unverified: the Pelham Examiner, citing an email from a member of the Neighborhood Party whom it did not name, reported an estimate of more than 150 ballots not yet counted or received (125 absentee ballots, 19 returned absentee ballots not counted as of Thursday, and an unknown number of affidavit ballots). This site has not verified that estimate."
+        ],
+        "source": {
+          "label": "Pelham Examiner — Pelham Manor update, November 8, 2026",
+          "url": "https://pelhamexaminer.com/85777/latest-news/breda-and-joe-the-election-in-pelham-manor-aint-over-til-its-over/",
+          "date": "2026-11-08"
+        }
       }
     ]
   },

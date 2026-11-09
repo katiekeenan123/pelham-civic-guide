@@ -693,7 +693,7 @@
     {
       "id": "election-results-snapshot-2026",
       "category": "election",
-      "fact": "When the unofficial November 2026 results were reported",
+      "fact": "When the unofficial November 2026 Village of Pelham and Town results were reported",
       "value": "2026-11-05",
       "display": "Nov 5, 2026, updated throughout the day, per the Pelham Examiner",
       "qualifier": "unofficial and not certified by the Westchester County Board of Elections; counting may not be complete",
@@ -712,15 +712,36 @@
       "display_short": "Nov 5, 2026, updated throughout the day"
     },
     {
+      "id": "election-results-manor-2026",
+      "category": "election",
+      "fact": "When the latest unofficial Pelham Manor trustee totals were reported",
+      "value": "2026-11-08",
+      "display": "Nov 8, 2026, per the Pelham Examiner",
+      "qualifier": "unofficial and not certified; the Examiner reported the Pelham Manor race was not over",
+      "confidence": "reported",
+      "as_of": "2026-11-08",
+      "last_updated": "2026-11-08",
+      "supersedes": null,
+      "caution": null,
+      "in_prompt": false,
+      "source": {
+        "name": "Pelham Examiner — Pelham Manor update, November 8, 2026",
+        "url": "https://pelhamexaminer.com/85777/latest-news/breda-and-joe-the-election-in-pelham-manor-aint-over-til-its-over/",
+        "date": "2026-11-08"
+      },
+      "used_in": [],
+      "display_short": "Nov 8, 2026"
+    },
+    {
       "id": "election-date-2026",
       "category": "election",
       "fact": "General election day, 2026",
       "value": "2026-11-03",
       "display": "November 3, 2026",
-      "qualifier": "held; unofficial results reported Nov 5; not certified. Village of Pelham, Village of Pelham Manor and Town of Pelham races were all on this ballot. The unofficial totals are on the elections issue card",
+      "qualifier": "held; unofficial results reported; Pelham Manor trustee race not final per the Examiner (Nov 8); not certified. Village of Pelham, Village of Pelham Manor and Town of Pelham races were all on this ballot. The unofficial totals are on the elections issue card",
       "confidence": "verified",
       "as_of": "2026",
-      "last_updated": "2026-11-05",
+      "last_updated": "2026-11-08",
       "supersedes": null,
       "caution": "NEVER say Pelham village elections are held in March — that has not been true since 2020. Village of Pelham, Village of Pelham Manor and Town of Pelham elections are all held in NOVEMBER. The Board of Education election is held in MAY. Pelham Manor moved from March to November after a 2024 voter referendum, first applying in 2025.",
       "in_prompt": true,

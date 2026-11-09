@@ -299,7 +299,7 @@ test('home — post-election banner: date headline, where results come from, but
   // Where results come from, never "pending": that would go stale unnoticed.
   const text = banner.locator('.home-banner-text');
   await expect(text).toContainText('contested races · ');
-  await expect(text).toContainText('Unofficial results reported; not certified (Nov 5, 2026, updated throughout the day, per the Pelham Examiner)');
+  await expect(text).toContainText('Unofficial results reported; Pelham Manor trustee race not final.');
   await expect(text).toContainText('Certified results come from the Westchester County Board of Elections, not this site');
   await expect(text.locator('a[href="https://www.westchestercountyny.gov/boe"]')).toHaveCount(1);
   await expect(banner).not.toContainText(/\bpending\b|polls open|debates|days away/i);
@@ -663,8 +663,8 @@ test('elections — post-election boxes: held, where results come from, register
 
   const main = page.locator('main');
   await expect(boxes.nth(0)).toContainText('was held on Tuesday, November 3');
-  await expect(boxes.nth(1)).toContainText('Unofficial results reported; not certified');
-  await expect(boxes.nth(1)).toContainText('Nov 5, 2026, updated throughout the day, per the Pelham Examiner');
+  await expect(boxes.nth(1)).toContainText('Unofficial results reported; Pelham Manor trustee race not final.');
+  await expect(boxes.nth(1).locator('a[href="#results"]')).toHaveCount(1);
   await expect(boxes.nth(1).locator('a[href="/issues#november-2026-elections"]')).toHaveCount(1);
   await expect(boxes.nth(1).locator('a[href="https://www.westchestercountyny.gov/boe"]')).toHaveCount(1);
   await expect(boxes.nth(2).locator('a[href*="elections.ny.gov"]')).toHaveCount(1);
@@ -1696,33 +1696,46 @@ test('elections — #results comes first: unofficial heading, plain tables by vo
   await page.goto('/elections');
   const res = page.locator('section#results.results-section');
   await expect(res).toBeVisible();
-  await expect(res).toHaveAttribute('data-review-by', '2026-11-20');
+  await expect(res).toHaveAttribute('data-review-by', '2026-11-13');
   await expect(res.locator('h3')).toHaveText('Election results (unofficial, not certified)');
-  await expect(res.locator('.results-intro')).toHaveText('Unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner, Nov 5, 2026, updated throughout the day. Counting may not be complete. Not certified.');
+  await expect(res.locator('.results-intro')).toHaveText('Unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner. Each race shows the date of its latest report. Counting may not be complete. Not certified.');
+  // Each race carries its own as-of date: Village and Town Nov 5, Manor Nov 8.
+  await expect(res.locator('#results-village-of-pelham-trustees .results-asof')).toHaveText('As of Nov 5, 2026, updated throughout the day');
+  await expect(res.locator('#results-town-clerk .results-asof')).toHaveText('As of Nov 5, 2026, updated throughout the day');
+  await expect(res.locator('#results-pelham-manor-trustees .results-asof')).toHaveText('As of Nov 8, 2026');
   // Above the debates and the races.
   const y = async (sel) => (await page.locator(sel).first().boundingBox()).y;
   expect(await y('#results')).toBeLessThan(await y('#debates'));
   expect(await y('#results')).toBeLessThan(await y('.race-block'));
   // One captioned table per race, ordered by total votes.
   await expect(res.locator('table.results-table caption')).toHaveText([
-    'Town Supervisor', 'Town Clerk', 'Village of Pelham Board of Trustees (3 seats)', 'Village of Pelham Manor Board of Trustees (2 seats)',
+    'Town SupervisorAs of Nov 5, 2026, updated throughout the day',
+    'Town ClerkAs of Nov 5, 2026, updated throughout the day',
+    'Village of Pelham Board of Trustees (3 seats)As of Nov 5, 2026, updated throughout the day',
+    'Village of Pelham Manor Board of Trustees (2 seats)As of Nov 8, 2026',
   ]);
   const rows = (race) => res.locator(`#results-${race} tbody tr`);
   await expect(rows('village-of-pelham-trustees')).toHaveText([
     'Kristen Burke1,765', 'Krystal Howell1,718', 'Russell Solomon1,677', 'Paul Anzilotti850', 'Arthur Long822', 'Everitt Speros813',
   ]);
-  await expect(rows('pelham-manor-trustees')).toHaveText(['Ryan Kurtz1,450', 'Chris Dlutowski1,436', 'Breda Bennett1,331', 'Joe Liberatore1,264']);
+  await expect(rows('pelham-manor-trustees')).toHaveText(['Ryan Kurtz1,473', 'Chris Dlutowski1,460', 'Breda Bennett1,348', 'Joe Liberatore1,280']);
   await expect(rows('town-supervisor')).toHaveText(['Theresa Mohan3,549', 'Scott Wolfgang1,406']);
   await expect(rows('town-clerk')).toHaveText(['Eileen Miller3,436', 'Maureen Borsella1,526']);
   // Plain: no bold, marks, icons or party labels on any candidate.
   await expect(res.locator('table strong, table b, table img, table svg')).toHaveCount(0);
-  await expect(res.locator('.results-grid')).not.toContainText(/✓|✔|Democrat|Republican|Neighborhood|Party/);
+  // No marks or party labels on any candidate (the tables themselves; the
+  // Manor note names the Examiner's unnamed source as a party member).
+  expect((await res.locator('table').allInnerTexts()).join(' ')).not.toMatch(/✓|✔|Democrat|Republican|Neighborhood|Party/);
   const weights = await res.locator('tbody th').evaluateAll((els) => els.map((e) => getComputedStyle(e).fontWeight));
   expect(new Set(weights)).toEqual(new Set(['400']));
   // Attributed lines.
-  await expect(res.locator('#results-pelham-manor-trustees .results-outcome')).toHaveText('The Pelham Examiner reported that Kurtz and Dlutowski defeated Bennett and Liberatore, based on unofficial results.');
+  await expect(res.locator('#results-pelham-manor-trustees .results-outcome')).toHaveText('The Pelham Examiner reported on November 8 that the race was not over and that its November 5 report of a Kurtz and Dlutowski win was premature.');
+  await expect(res.locator('#results-pelham-manor-trustees .results-update')).toHaveText('Updated November 8: the Examiner’s earlier November 5 report that Kurtz and Dlutowski had won was premature. The race is not final.');
+  await expect(res.locator('#results-pelham-manor-trustees')).not.toContainText(/defeated|don.t appear to be enough remaining/);
   await expect(res.locator('#results-village-of-pelham-trustees .results-note')).toContainText('Burke’s election will create a vacancy on the Town Council');
-  await expect(res.locator('#results-pelham-manor-trustees .results-note')).toContainText('not all of the outstanding absentee ballots have arrived');
+  await expect(res.locator('#results-pelham-manor-trustees .results-note')).toContainText('Unverified: the Pelham Examiner, citing an email from a member of the Neighborhood Party whom it did not name');
+  await expect(res.locator('#results-pelham-manor-trustees .results-note')).toContainText('This site has not verified that estimate.');
+  await expect(res.locator('.results-links a', { hasText: 'Pelham Examiner — Pelham Manor update, November 8, 2026' })).toHaveAttribute('href', /pelhamexaminer\.com\/85777\//);
   // Links.
   await expect(res.locator('.results-links a[href="https://www.westchestercountyny.gov/boe"]')).toHaveCount(1);
   await expect(res.locator('.results-links a', { hasText: 'Pelham Examiner — election results report, November 5, 2026' })).toHaveAttribute('href', /pelhamexaminer\.com\/85683\//);

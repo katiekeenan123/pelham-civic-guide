@@ -2505,3 +2505,5 @@
 .results-links { margin: 20px 0 0; font-size: 13px; }
 .results-links a { color: var(--gold-light); }
 @media (max-width: 600px) { .results-section { padding: 16px; } .results-grid { grid-template-columns: 1fr; } }
+.results-asof { display: block; font-size: 12px; color: var(--slate-light); margin-top: 2px; }
+.results-update { margin: 10px 0 0; padding: 8px 10px; font-size: 13px; line-height: 1.55; color: var(--white); border-left: 3px solid var(--gold-light); background: rgba(255,255,255,0.06); }

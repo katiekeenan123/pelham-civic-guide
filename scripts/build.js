@@ -525,7 +525,8 @@ function buildPrompt(data, r) {
         const totals = race.totals.slice().sort((a, b) => b.votes - a.votes)
           .map((t) => `${resultsCandidateName(data, t.candidate_id)} ${t.votes.toLocaleString('en-US')}`).join('; ');
         const notes = race.notes.map((n) => ` ${plain(r(n, 'elections.json'))}`).join('');
-        return `- ${race.caption}: ${totals}. ${plain(r(race.examiner_outcome, 'elections.json'))}${notes}`;
+        const asOf = plain(r(`{{fact:${race.as_of_fact}}}`, 'elections.json'));
+        return `- ${race.caption} (as of ${asOf}): ${totals}. ${plain(r(race.examiner_outcome, 'elections.json'))}${notes}`;
       }).join('\n');
     },
     // Each body's website and the links Gov 101 shows for it (agendas,
@@ -932,13 +933,13 @@ function generateElectionResults(data, r) {
   const out = [];
   out.push(`    <section class="results-section" id="results" aria-labelledby="results-heading" data-review-by="${esc(res.review_by)}">`);
   out.push('      <h3 class="results-heading" id="results-heading">Election results (unofficial, not certified)</h3>');
-  out.push(`      <p class="results-intro">Unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner, ${r(`{{fact:${res.snapshot_fact}.short}}`, at)}. Counting may not be complete. Not certified.</p>`);
+  out.push('      <p class="results-intro">Unofficial results from the Westchester County Board of Elections, as reported by the Pelham Examiner. Each race shows the date of its latest report. Counting may not be complete. Not certified.</p>');
   out.push('      <div class="results-grid">');
   for (const race of res.races) {
     const sorted = race.totals.slice().sort((a, b) => b.votes - a.votes);
     out.push(`        <div class="results-race" id="results-${esc(race.id)}">`);
     out.push('          <table class="results-table">');
-    out.push(`            <caption>${esc(race.caption)}</caption>`);
+    out.push(`            <caption>${esc(race.caption)}<span class="results-asof">As of ${r(`{{fact:${race.as_of_fact}.short}}`, at)}</span></caption>`);
     out.push('            <thead><tr><th scope="col">Candidate</th><th scope="col">Votes</th></tr></thead>');
     out.push('            <tbody>');
     for (const t of sorted) {
@@ -946,12 +947,14 @@ function generateElectionResults(data, r) {
     }
     out.push('            </tbody>');
     out.push('          </table>');
+    if (race.update_note) out.push(`          <p class="results-update">${r(race.update_note, at)}</p>`);
     out.push(`          <p class="results-outcome">${r(race.examiner_outcome, at)}</p>`);
     for (const n of race.notes) out.push(`          <p class="results-note">${r(n, at)}</p>`);
     out.push('        </div>');
   }
   out.push('      </div>');
-  out.push(`      <p class="results-links"><a href="${esc(res.official_count.url)}" target="_blank">${esc(res.official_count.label)}</a> · <a href="${esc(res.source.url)}" target="_blank">${esc(res.source.label)}</a></p>`);
+  const raceSources = res.races.filter((x) => x.source).map((x) => ` · <a href="${esc(x.source.url)}" target="_blank">${esc(x.source.label)}</a>`).join('');
+  out.push(`      <p class="results-links"><a href="${esc(res.official_count.url)}" target="_blank">${esc(res.official_count.label)}</a> · <a href="${esc(res.source.url)}" target="_blank">${esc(res.source.label)}</a>${raceSources}</p>`);
   out.push('    </section>');
   return out.join(NL);
 }
@@ -1637,7 +1640,7 @@ function generateInvolvedVote(data, r) {
     box('Last election', r('{{fact:election-date-2026}}', at),
       'Village of Pelham, Village of Pelham Manor and Town of Pelham races were all on this ballot.'),
     box('Results', 'Unofficial results reported',
-      `<a href="/elections#results">Unofficial results reported</a>; not certified (${r('{{fact:election-results-snapshot-2026}}', at)}). Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank">Westchester County Board of Elections</a>, not this site.`),
+      `<a href="/elections#results">Unofficial results reported</a>; Pelham Manor trustee race not final. Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank">Westchester County Board of Elections</a>, not this site.`),
     box('Register', 'Any time',
       'Each election has its own deadline: <a href="https://www.elections.ny.gov" target="_blank">elections.ny.gov</a> or the <a href="https://www.westchestercountyny.gov/boe" target="_blank">Westchester County Board of Elections</a>.'),
     '      </div>',
@@ -1859,7 +1862,7 @@ function generateElectionsBanner(data, r) {
       '    <div class="home-banner-body">',
       '      <div class="home-banner-eyebrow">🗳 Election held</div>',
       `      <h2 class="home-banner-date">${r('{{fact:election-date-2026}}', 'elections.json')}</h2>`,
-      `      <p class="home-banner-text">${data.elections.races.length} contested races · ${data.elections.candidates.length} candidates · <a href="/elections#results" style="color: inherit; text-decoration: underline;">Unofficial results reported</a>; not certified (${r('{{fact:election-results-snapshot-2026}}', 'elections.json')}). Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank" style="color: inherit; text-decoration: underline;">Westchester County Board of Elections</a>, not this site.</p>`,
+      `      <p class="home-banner-text">${data.elections.races.length} contested races · ${data.elections.candidates.length} candidates · <a href="/elections#results" style="color: inherit; text-decoration: underline;">Unofficial results reported</a>; Pelham Manor trustee race not final. Certified results come from the <a href="https://www.westchestercountyny.gov/boe" target="_blank" style="color: inherit; text-decoration: underline;">Westchester County Board of Elections</a>, not this site.</p>`,
       '    </div>',
       '    <a class="home-banner-cta" href="/elections">See the candidates →</a>',
       '  </div>',
@@ -2313,7 +2316,8 @@ function main() {
   // The results snapshot, from the same fact the card and the
   // prompt read, so the three cannot drift apart.
   fn = splice(fn, 'results-snapshot',
-    `const RESULTS_SNAPSHOT = ${JSON.stringify(plain(r('{{fact:election-results-snapshot-2026}}', 'facts.json')))};`, 'js');
+    [`const RESULTS_SNAPSHOT = ${JSON.stringify(plain(r('{{fact:election-results-snapshot-2026}}', 'facts.json')))};`,
+      `const MANOR_SNAPSHOT = ${JSON.stringify(plain(r('{{fact:election-results-manor-2026}}', 'facts.json')))};`].join(NL), 'js');
 
   if (errors.length) return report();
 

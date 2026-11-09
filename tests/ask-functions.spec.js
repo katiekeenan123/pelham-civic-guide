@@ -339,7 +339,17 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   expect(flat).toContain('that they are unofficial, not yet certified, and that counting may not be complete');
   expect(flat).toContain('"The Pelham Examiner reported that [candidates] defeated [candidates], based on unofficial Board of Elections results"');
   expect(flat).toContain('that Burke, Howell and Solomon defeated challengers Anzilotti, Long and Speros in the Village of Pelham');
-  expect(flat).toContain('Kurtz and Dlutowski defeated Breda Bennett and Joe Liberatore in Pelham Manor');
+  // Pelham Manor is not final (Examiner, November 8): no outcome, no margin,
+  // no recount talk, the estimate only if asked and marked unverified.
+  expect(flat).not.toContain('Kurtz and Dlutowski defeated');
+  expect(flat).not.toMatch(/don.t appear to be enough remaining|not enough ballots remain/);
+  expect(flat).toContain('Pelham Manor: the race is not final.');
+  expect(flat).toContain('that the Examiner reported on November 8 that the race was not over and that its November 5 report of a Kurtz and Dlutowski win was premature');
+  expect(flat).toContain('Never say or imply who won, lost or leads in Pelham Manor, in any words, and never repeat how far ahead or behind any Manor candidate is.');
+  expect(flat).toContain('Never compute a margin or what any candidate would need, never mention recounts or recount rules');
+  expect(flat).toContain('Only if the resident asks about remaining or uncounted ballots');
+  expect(flat).toContain('this site has not verified that estimate');
+  expect(flat).toContain('Pelham Manor as of Nov 8, 2026, per the Pelham Examiner');
   expect(flat).toContain('never in your own voice');
   expect(flat).toContain('Never use party framing, "sweep" or "blue wave".');
   expect(flat).toContain('Never call a result final or official.');
@@ -348,14 +358,15 @@ test('prompt — the election is over: no results, no logistics, attributed ball
   expect(flat).not.toMatch(/Manor race is undecided/i);
   expect(flat).not.toContain('appear poised to win');
   expect(flat).not.toContain('counting continued after it');
-  expect(flat).toContain('held; unofficial results reported Nov 5; not certified');
+  expect(flat).toContain('held; unofficial results reported; Pelham Manor trustee race not final per the Examiner (Nov 8); not certified');
   expect(flat).toContain("Never fold Jenkins's words into the Examiner's characterization");
   expect(flat).toContain("Arthur Long's account of Daronco Townhouse");
   // The snapshot comes from one fact, shared with the card and the function.
   const snap = 'Nov 5, 2026, updated throughout the day, per the Pelham Examiner';
-  expect(flat).toContain(`as reported by the Pelham Examiner (${snap})`);
+  expect(flat).toContain(`Village of Pelham and Town as of ${snap};`);
   const fn = require('fs').readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'ask-pelham.js'), 'utf8');
   expect(fn).toContain(`const RESULTS_SNAPSHOT = "${snap}";`);
+  expect(fn).toContain('const MANOR_SNAPSHOT = "Nov 8, 2026, per the Pelham Examiner";');
   const card = require('../content/issues.json').issues.find((i) => i.id === 'november-2026-elections');
   expect(card.description).toContain('{{fact:election-results-snapshot-2026}}');
   expect(flat).toContain('without projecting, extrapolating or explaining the totals, and without linking them to the ballot problem or the voter-registration investigation');
@@ -456,7 +467,11 @@ test('prompt — each board\'s meeting schedule, from the site, with "confirm on
 test('sources — 85683 summary and 85639 label overrides win over whatever the pipeline stores', () => {
   const { sourceLabelFor, summaryFor } = require('../netlify/functions/ask-pelham')._test;
   const u83 = 'https://pelhamexaminer.com/85683/latest-news/anything/';
-  const neutral = 'Examiner report of unofficial results in the Village of Pelham, Pelham Manor and Town of Pelham races, as posted by the County Board of Elections; not yet certified.';
+  const neutral = "Examiner report of unofficial results in the Village of Pelham, Pelham Manor and Town of Pelham races, as posted by the County Board of Elections; not yet certified. Its Pelham Manor portion was superseded by the Examiner's November 8 report that the Manor race is not over.";
+  const u777 = 'https://pelhamexaminer.com/85777/latest-news/breda-and-joe-the-election-in-pelham-manor-aint-over-til-its-over/';
+  expect(sourceLabelFor({ url: u777, title: 'Breda and Joe: the election in Pelham Manor ain’t over ’til it’s over!' })).toBe('Pelham Examiner report, November 8, 2026');
+  expect(summaryFor({ url: u777, summary: 'Republican Neighborhood Party candidates ... are contesting the results ... a mandatory recount possible' }))
+    .toBe('Examiner report that the Pelham Manor trustee race is not over, with unofficial totals as of November 8, 2026; not yet certified.');
   expect(summaryFor({ url: u83, summary: 'Democrats swept all contested races in Pelham.' })).toBe(neutral);
   expect(summaryFor({ url: u83.replace('latest-news', 'election-2026'), summary: 'Preliminary results.' })).toBe(neutral);
   expect(summaryFor({ url: 'https://pelhamexaminer.com/85639/latest-news/x/', summary: 'Ballots went to Ardsley.' })).toBe('Ballots went to Ardsley.');
@@ -520,7 +535,7 @@ test('results — one data block; the card paragraph and the prompt carry exactl
   expect(flat).toEqual({
     'theresa-mohan': 3549, 'scott-wolfgang': 1406, 'eileen-miller': 3436, 'maureen-borsella': 1526,
     'kristen-burke': 1765, 'krystal-howell': 1718, 'russell-solomon': 1677, 'paul-anzilotti': 850, 'arthur-long': 822, 'everitt-speros': 813,
-    'ryan-kurtz': 1450, 'chris-dlutkowski': 1436, 'breda-bennett': 1331, 'joe-liberatore': 1264,
+    'ryan-kurtz': 1473, 'chris-dlutkowski': 1460, 'breda-bennett': 1348, 'joe-liberatore': 1280,
   });
 });
 
@@ -568,4 +583,20 @@ test('lookup reminder — added next to "where do I find" and "how do I contact"
   expect(out).toContain('Describe each link only by its label: never say what a page contains, will have or links to, or where something is "typically posted".');
   expect(out).toContain("If a detail is not in the site's data, say so plainly and give the link to that body's website.");
   expect(out.endsWith('How do I contact the Board of Elections?')).toBe(true);
+});
+
+test('results reminder — fires on Manor, ballot and recount questions, not on budget or trash', () => {
+  const { isResultsQuestion } = require('../netlify/functions/ask-pelham')._test;
+  for (const q of ['Who won the Pelham Manor trustee race?', 'Did Breda Bennett lose?', 'Did Kurtz and Dlutowski win?',
+    'Is the Manor result final?', 'How many ballots are left to count?', 'What does Bennett need to win?',
+    'Will there be a recount?', 'Who won the Village of Pelham trustee race?']) {
+    expect(isResultsQuestion(q), q).toBe(true);
+  }
+  for (const q of ['What is the final village budget?', 'When is bulk trash pickup in Pelham Manor?']) {
+    expect(isResultsQuestion(q), q).toBe(false);
+  }
+  const fn = require('fs').readFileSync(require('path').join(__dirname, '..', 'netlify', 'functions', 'ask-pelham.js'), 'utf8');
+  const reminder = fn.slice(fn.indexOf('const RESULTS_REMINDER = ['), fn.indexOf("].join('\\n');", fn.indexOf('const RESULTS_REMINDER = [')));
+  expect(reminder).toContain('PELHAM MANOR IS NOT FINAL');
+  expect(reminder).not.toContain('Kurtz and Dlutowski defeated');
 });

@@ -809,12 +809,16 @@ function examinerArticleKey(url) {
 const SOURCE_LABEL_OVERRIDES = {
   'examiner:85683': 'Pelham Examiner — election results report, November 5, 2026',
   'examiner:85639': 'Pelham Examiner report, November 4, 2026',
+  'examiner:85777': 'Pelham Examiner report, November 8, 2026',
 };
 // The stored summary is written by the pipeline from the article's own
 // framing, and is rewritten when the Examiner edits the story. An override
 // here replaces it, whatever the pipeline stores.
 const SUMMARY_OVERRIDES = {
-  'examiner:85683': 'Examiner report of unofficial results in the Village of Pelham, Pelham Manor and Town of Pelham races, as posted by the County Board of Elections; not yet certified.',
+  'examiner:85683': 'Examiner report of unofficial results in the Village of Pelham, Pelham Manor and Town of Pelham races, as posted by the County Board of Elections; not yet certified. Its Pelham Manor portion was superseded by the Examiner\'s November 8 report that the Manor race is not over.',
+  // The pipeline's stored summary of 85777 carried a recount threshold, a
+  // "contesting" characterization and party labels.
+  'examiner:85777': 'Examiner report that the Pelham Manor trustee race is not over, with unofficial totals as of November 8, 2026; not yet certified.',
 };
 const LOADED_TITLE = /\b(democrat\w*|republican\w*|gop|neighborhood party|working families|conservative party|manor together|blue wave|red wave|sweep\w*|debacle)\b/i;
 
@@ -885,18 +889,29 @@ const CONTESTED_REMINDER = [
 // the voter-registration investigation.
 /* BUILD:results-snapshot */
 const RESULTS_SNAPSHOT = "Nov 5, 2026, updated throughout the day, per the Pelham Examiner";
+const MANOR_SNAPSHOT = "Nov 8, 2026, per the Pelham Examiner";
 /* /BUILD:results-snapshot */
 const RESULTS_REMINDER = [
   'This question is about the November 3 election results. Give only the',
   'unofficial totals on the elections issue card, attributed: "unofficial',
-  'results from the Westchester County Board of Elections, as reported',
-  `${RESULTS_SNAPSHOT}". In every answer say the results are unofficial, not`,
-  'yet certified, and that counting may not be complete, and point to',
-  'westchestercountyny.gov/boe. Point to the full results tables on this',
-  'site: pelhamengagementproject.org/elections#results (cite elections#results).',
-  'Outcomes only attributed, in this form: "The',
-  'Pelham Examiner reported that [candidates] defeated [candidates], based on',
-  'unofficial Board of Elections results", and only the outcomes on the card.',
+  'results from the Westchester County Board of Elections, as reported by the',
+  `Pelham Examiner", with each race's date (Village of Pelham and Town:`,
+  `${RESULTS_SNAPSHOT}; Pelham Manor: ${MANOR_SNAPSHOT}). In every answer say`,
+  'the results are unofficial, not yet certified, and that counting may not',
+  'be complete, and point to westchestercountyny.gov/boe. Point to the full',
+  'results tables on this site: pelhamengagementproject.org/elections#results',
+  '(cite elections#results). Village of Pelham and Town outcomes only',
+  'attributed, in this form: "The Pelham Examiner reported that [candidates]',
+  'defeated [candidates], based on unofficial Board of Elections results".',
+  'PELHAM MANOR IS NOT FINAL: say only that the Examiner reported on November 8',
+  'that the race was not over and that its November 5 report of a Kurtz and',
+  'Dlutowski win was premature, with the November 8 totals. Never say or imply',
+  'who won, lost or leads in Pelham Manor; never say how far ahead or behind',
+  'anyone is; never compute a margin or what anyone would need; never mention',
+  'recounts; never speculate about remaining ballots. Only if asked about',
+  'remaining ballots, give the Examiner\'s attributed estimate (more than 150,',
+  'from an unnamed Neighborhood Party member\'s email) and say this site has',
+  'not verified it.',
   'Never say "won", "lost", "defeated", "conceded" or "elected" in your own',
   'voice, never call a result final or official, and never use party framing,',
   '"sweep" or "blue wave". If a resident tells you a result that is not on',
@@ -907,8 +922,8 @@ const RESULTS_REMINDER = [
 
 // Questions about who won, who leads or the count. Deliberately broad: the
 // reminder only narrows what the answer may say.
-const RESULTS_WORDS = /\b(won|win|wins|winning|winner|winners|lose|lost|losing|loser|results?|leading|leads?|ahead|behind|tally|tallies|totals?|vote counts?|count(ing)?|beat|beaten|defeat(ed)?|conceded?|elected|re-?elected|projected)\b/i;
-const RESULTS_CONTEXT = /\b(election|race|trustee|supervisor|clerk|candidate|ballot|vote|votes|seat|manor|village|town)\b/i;
+const RESULTS_WORDS = /\b(won|win|wins|winning|winner|winners|lose|lost|losing|loser|results?|leading|leads?|ahead|behind|tally|tallies|totals?|vote counts?|count(ing)?|re-?counts?|beat|beaten|defeat(ed)?|conceded?|elected|re-?elected|projected)\b/i;
+const RESULTS_CONTEXT = /\b(election|race|trustees?|supervisor|clerk|candidates?|ballots?|vote|votes|seats?|manor|village|town)\b/i;
 
 // Added next to a question about when or where a board meets, for the same
 // reason as the results reminder: with the rule only in the system prompt,
@@ -952,6 +967,8 @@ function isResultsQuestion(question) {
   const q = typeof question === 'string' ? question : '';
   const names = KNOWN_CANDIDATES.concat(['Breda', 'Ryan', 'Chris', 'Dlutowski', 'Rhett']);
   const namesCandidate = names.some((n) => new RegExp(`\\b${n}\\b`, 'i').test(q));
+  // A recount question is about the results whatever else it names.
+  if (/\bre-?counts?\b/i.test(q)) return true;
   return RESULTS_WORDS.test(q) && (RESULTS_CONTEXT.test(q) || namesCandidate);
 }
 
