@@ -413,6 +413,7 @@ const SITE_ANCHORS = {
   "meetings#pelham-board-sep22-2026": "Meeting summary — Village of Pelham · Board of Trustees · September 22, 2026",
   "meetings#pelham-board-sep2026": "Meeting summary — Village of Pelham · Board of Trustees · September 8, 2026",
   "meetings#pelham-board-jul2026": "Meeting summary — Village of Pelham · Board of Trustees · July 14, 2026",
+  "meetings#town-council-nov2026": "Meeting summary — Town of Pelham · Town Council · November 9, 2026",
   "meetings#town-council-oct2026": "Meeting summary — Town of Pelham · Town Council · October 5, 2026",
   "meetings#town-council-sep2026": "Meeting summary — Town of Pelham · Town Council · September 14, 2026",
   "meetings#town-council-aug2026": "Meeting summary — Town of Pelham · Town Council · August 3, 2026",

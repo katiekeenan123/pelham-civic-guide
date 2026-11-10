@@ -299,7 +299,7 @@
       "status_label": "Town Council and library board in discussion",
       "tag": "Public Facilities",
       "tag_style": "budget",
-      "description": "What started as maintenance review in 2019 expanded to {{fact:library-transformation-estimate}} project. Town Council said it's not a top priority (May 2026). Public debate underway via letters to the editor and trustee response in August 2026.",
+      "description": "What started as maintenance review in 2019 expanded to {{fact:library-transformation-estimate}} project. Town Council said it's not a top priority (May 2026). Public debate underway via letters to the editor and trustee response in August 2026. At the Town Council's November 9, 2026 meeting, Councilman Michael Jenks reported that the library's design and scoping process is nearing its end, after positive feedback on renderings shown at Timber Fest, and that cost estimates are expected for both the transformation project and the library's other capital needs, to be shared with the Town Council when received. Councilman Jenks also reported that library-related costs that used to appear in the Town budget are being moved into the library's own budget, to give a clearer picture of what the library costs.",
       "governing_body": [
         "town-of-pelham"
       ],
@@ -323,9 +323,18 @@
           "url": "https://pelhamexaminer.com/85439/latest-news/theresa-mohan-and-scott-wolfgang-face-off-in-pelham-town-supervisor-debate-town-clerk-forum-features-miller-and-borsella/",
           "label": "Pelham Examiner — Town Supervisor debate recap, library transformation discussed, October 29, 2026",
           "date": "2026-10-29"
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=6DEz0q1hRcc",
+          "label": "Town of Pelham Town Council — November 9, 2026 (recording)",
+          "date": "2026-11-09"
         }
       ],
-      "last_updated": "2026-10-29",
+      "last_updated": "2026-11-10",
+      "last_meeting_update": {
+        "meeting_id": "town-council-nov2026",
+        "note": "Councilman Jenks reported that the library's design phase is nearing its end and that cost estimates for the transformation project and the library's other capital needs are expected, to be shared with the Town Council. No vote."
+      },
       "keywords": [
         "library",
         "transformation project",

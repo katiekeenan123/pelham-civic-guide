@@ -28,3 +28,4 @@ https://pelhamny.portal.civicclerk.com/event/2542/overview	issues.json rising-pr
 https://vimeo.com/1219072948	issues.json amtrak-forest-road
 https://vimeo.com/1239665290	issues.json november-2026-elections
 https://www.pelhamlibrary.org	quick-reference.json library
+https://www.youtube.com/watch?v=6DEz0q1hRcc	issues.json public-library-transformation
