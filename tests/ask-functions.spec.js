@@ -222,14 +222,15 @@ test('contested — tax cap and debt questions use the issue card, with both sid
 
 test('prompt — latest meeting per board, floor-based public comment, citing and drafting rules', () => {
   const prompt = require('../netlify/functions/system-prompt');
-  // Board of Education, October 21 finance work session: the latest school
+  // Board of Education, November 4 business meeting: the latest school
   // board summary is in the prompt in full. Earlier meetings stay citable.
+  expect(prompt).toContain('(cite as meetings#board-of-ed-nov4-2026)');
   expect(prompt).toContain('(cite as meetings#board-of-ed-oct21-2026)');
   expect(prompt).toContain('(cite as meetings#board-of-ed-oct2026)');
-  expect(prompt).toContain('very, very lean');
-  expect(prompt).toMatch(/Universal Pre-K is coming/);
+  expect(prompt).toContain('not waiting for the state to pass a law');
+  expect(prompt).toMatch(/opt their children out of computer use/);
   // Every board's latest summary is there.
-  for (const id of ['pelham-board-oct27-2026', 'manor-board-nov9-2026', 'town-council-nov2026', 'board-of-ed-oct21-2026']) {
+  for (const id of ['pelham-board-oct27-2026', 'manor-board-nov9-2026', 'town-council-nov2026', 'board-of-ed-nov4-2026']) {
     expect(prompt, id).toContain(`### `);
     expect(prompt, id).toContain(`(cite as meetings#${id})`);
   }
